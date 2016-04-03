@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Velociraptor</string>
+
+
+    <string name="notif_content">Touch to open settings</string>
+    <string name="notif_title">Velociraptor Speed Limit</string>
+
+    <string name="dialog_draw_overlay">To show floating elements on Android 6.0+, grant the \"Draw Over Other Apps\" permission</string>
+    <string name="open_settings">Open Settings Page</string>
+</resources>

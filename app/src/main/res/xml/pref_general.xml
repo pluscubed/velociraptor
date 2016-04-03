@@ -1,0 +1,8 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <SwitchPreference
+        android:key="pref_enable_speed_limit"
+        android:summary=""
+        android:title="Enable speed limit" />
+
+</PreferenceScreen>
