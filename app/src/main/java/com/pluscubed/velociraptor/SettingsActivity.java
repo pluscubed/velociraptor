@@ -4,7 +4,6 @@ package com.pluscubed.velociraptor;
 import android.Manifest;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -12,44 +11,14 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.SwitchPreference;
-import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
 
 public class SettingsActivity extends AppCompatActivity {
 
     private static final int REQUEST_LOCATION = 105;
-
-    public static boolean isAccessibilityServiceEnabled(Context context) {
-        int accessibilityEnabled = 0;
-        final String service = BuildConfig.APPLICATION_ID + "/" + FloatingService.class.getName();
-        try {
-            accessibilityEnabled = Settings.Secure.getInt(context.getContentResolver(), android.provider.Settings.Secure.ACCESSIBILITY_ENABLED);
-        } catch (Settings.SettingNotFoundException e) {
-            e.printStackTrace();
-        }
-        TextUtils.SimpleStringSplitter splitter = new TextUtils.SimpleStringSplitter(':');
-
-        if (accessibilityEnabled == 1) {
-            String settingValue = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES);
-            if (settingValue != null) {
-                splitter.setString(settingValue);
-                while (splitter.hasNext()) {
-                    String accessibilityService = splitter.next();
-                    if (accessibilityService.equalsIgnoreCase(service)) {
-                        return true;
-                    }
-                }
-            }
-        } else {
-            //Accessibility is disabled
-        }
-
-        return false;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,7 +83,7 @@ public class SettingsActivity extends AppCompatActivity {
                     return true;
                 }
             });
-            preference.setChecked(isAccessibilityServiceEnabled(getActivity()));
+            preference.setChecked(Utils.isFloatingServiceEnabled(getActivity()));
         }
 
         void openSettings(String settingsAction, String packageName) {

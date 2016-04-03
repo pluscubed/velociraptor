@@ -183,9 +183,12 @@ public class FloatingService extends Service {
     public void onDestroy() {
         super.onDestroy();
 
-        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, mLocationListener);
 
-        mGoogleApiClient.disconnect();
+        if (mGoogleApiClient.isConnected()) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, mLocationListener);
+            mGoogleApiClient.disconnect();
+        }
+
         if (mFloatingView.isShown())
             mWindowManager.removeView(mFloatingView);
     }
