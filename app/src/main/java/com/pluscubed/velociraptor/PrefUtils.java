@@ -36,4 +36,12 @@ public abstract class PrefUtils {
     public static int getVersionCode(Context context) {
         return getSharedPreferences(context).getInt(PREF_VERSION_CODE, 0);
     }
+
+    public static void setFloatingLocation(Context context, int y, boolean left) {
+        edit(context).putString(PREF_FLOATING_LOCATION, left + "," + y).apply();
+    }
+
+    public static String getFloatingLocation(Context context) {
+        return getSharedPreferences(context).getString(PREF_FLOATING_LOCATION, "true,0");
+    }
 }

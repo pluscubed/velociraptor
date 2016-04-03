@@ -100,8 +100,24 @@ public class FloatingService extends Service {
                 PixelFormat.TRANSLUCENT);
 
         params.gravity = Gravity.TOP | Gravity.START;
-        params.x = 0;
-        params.y = 0;
+
+        mFloatingView.post(new Runnable() {
+            @Override
+            public void run() {
+                WindowManager.LayoutParams params = (WindowManager.LayoutParams) mFloatingView.getLayoutParams();
+
+                String[] split = PrefUtils.getFloatingLocation(FloatingService.this).split(",");
+                boolean left = Boolean.parseBoolean(split[0]);
+                int y = Integer.parseInt(split[1]);
+
+                Point screenSize = new Point();
+                mWindowManager.getDefaultDisplay().getSize(screenSize);
+                params.x = left ? 0 : screenSize.x - mFloatingView.getWidth();
+                params.y = y;
+
+                mWindowManager.updateViewLayout(mFloatingView, params);
+            }
+        });
 
         mWindowManager.addView(mFloatingView, params);
 
@@ -204,6 +220,8 @@ public class FloatingService extends Service {
         } else {
             endX = 0;
         }
+
+        PrefUtils.setFloatingLocation(FloatingService.this, params.y, endX == 0);
 
         ValueAnimator valueAnimator = ValueAnimator.ofInt(params.x, endX)
                 .setDuration(300);
