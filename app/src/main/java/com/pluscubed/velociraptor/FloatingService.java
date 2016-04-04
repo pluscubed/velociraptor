@@ -102,7 +102,7 @@ public class FloatingService extends Service {
 
         params.gravity = Gravity.TOP | Gravity.START;
 
-        initFloatingViewPostion();
+        initFloatingViewPosition();
 
         mWindowManager.addView(mFloatingView, params);
 
@@ -180,7 +180,7 @@ public class FloatingService extends Service {
         mGoogleApiClient.connect();
     }
 
-    private void initFloatingViewPostion() {
+    private void initFloatingViewPosition() {
         mFloatingView.post(new Runnable() {
             @Override
             public void run() {
@@ -250,7 +250,7 @@ public class FloatingService extends Service {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
 
-        initFloatingViewPostion();
+        initFloatingViewPosition();
     }
 
     private interface HereService {
