@@ -7,5 +7,13 @@
 
     <string name="dialog_draw_overlay">To show floating elements on Android 6.0+, grant the \"Draw Over Other Apps\" permission</string>
     <string name="open_settings">Open Settings Page</string>
-    <string name="accessibility_service_description" />
+    <string name="accessibility_service_description">To detect the foreground mapp app and display the speed limit, the accessibility service must be enabled</string>
+
+
+    <string name="enable_accessibility_service">Enable Accessibility Service</string>
+    <string name="enable_accessibility_service_desc">To automatically display the speed limit in map apps, turn on the accessibility service</string>
+    <string name="enable_floating_desc">To display the overlay, enable the Draw Over Other Apps permission</string>
+    <string name="open_settings_page">Open settings page</string>
+    <string name="grant_permission">Grant permission</string>
+    <string name="enable_location_desc">To determine the speed limit at your location, please grant the location permission</string>
 </resources>

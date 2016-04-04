@@ -1,14 +1,15 @@
 package com.pluscubed.velociraptor;
 
+import android.accessibilityservice.AccessibilityService;
 import android.content.Context;
 import android.provider.Settings;
 import android.text.TextUtils;
 
 public abstract class Utils {
 
-    public static boolean isFloatingServiceEnabled(Context context) {
+    public static boolean isAccessibilityServiceEnabled(Context context, Class<? extends AccessibilityService> c) {
         int accessibilityEnabled = 0;
-        final String service = BuildConfig.APPLICATION_ID + "/" + FloatingService.class.getName();
+        final String service = BuildConfig.APPLICATION_ID + "/" + c.getName();
         try {
             accessibilityEnabled = Settings.Secure.getInt(context.getContentResolver(), android.provider.Settings.Secure.ACCESSIBILITY_ENABLED);
         } catch (Settings.SettingNotFoundException e) {

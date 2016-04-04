@@ -1,95 +1,120 @@
 package com.pluscubed.velociraptor;
 
-
 import android.Manifest;
-import android.app.Fragment;
-import android.app.FragmentManager;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.preference.Preference;
-import android.preference.PreferenceFragment;
-import android.preference.SwitchPreference;
+import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
 
 public class SettingsActivity extends AppCompatActivity {
 
     private static final int REQUEST_LOCATION = 105;
 
+    private Button mEnableServiceButton;
+    private ImageView mEnabledServiceImage;
+    private Button mEnableFloatingButton;
+    private ImageView mEnabledFloatingImage;
+    private Button mEnableLocationButton;
+    private ImageView mEnabledLocationImage;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setupActionBar();
+        setContentView(R.layout.activity_settings);
 
-        FragmentManager fm = getFragmentManager();
-        Fragment f = fm.findFragmentById(android.R.id.content);
-        if (f == null) {
-            fm.beginTransaction()
-                    .replace(android.R.id.content, new SettingsFragment())
-                    .commit();
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        mEnableServiceButton = (Button) findViewById(R.id.button_enable_service);
+        mEnabledServiceImage = (ImageView) findViewById(R.id.image_service_enabled);
+        mEnableFloatingButton = (Button) findViewById(R.id.button_floating_enabled);
+        mEnabledFloatingImage = (ImageView) findViewById(R.id.image_floating_enabled);
+        mEnableLocationButton = (Button) findViewById(R.id.button_location_enabled);
+        mEnabledLocationImage = (ImageView) findViewById(R.id.image_location_enabled);
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            ((View) mEnabledFloatingImage.getParent()).setVisibility(View.GONE);
+            mEnableFloatingButton.setVisibility(View.GONE);
+
+            ((View) mEnabledLocationImage.getParent()).setVisibility(View.GONE);
+            mEnableLocationButton.setVisibility(View.GONE);
         }
-    }
 
-    private void setupActionBar() {
-        ActionBar actionBar = getSupportActionBar();
-    }
-
-    public static class SettingsFragment extends PreferenceFragment {
-        @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.pref_general);
-            setHasOptionsMenu(true);
-
-            SwitchPreference preference = (SwitchPreference) findPreference("pref_enable_speed_limit");
-            preference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object newValue) {
-                    boolean on = (boolean) newValue;
-                    Intent intent = new Intent(getActivity(), FloatingService.class);
-                    if (on) {
-                        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
-                            return false;
-                        } else {
-                            getActivity().startService(intent);
-                        }
-
-                        /*new MaterialDialog.Builder(getActivity())
-                                .content(R.string.dialog_draw_overlay)
-                                .positiveText(R.string.open_settings)
-                                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                                    @TargetApi(Build.VERSION_CODES.M)
-                                    @Override
-                                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                        try {
-                                            //Open the current default browswer App Info page
-                                            openSettings(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, BuildConfig.APPLICATION_ID);
-                                        } catch (ActivityNotFoundException ignored) {
-                                            //Crashlytics.logException(ignored);
-                                            //Toast.makeText(MainActivity.this, R.string.open_settings_failed_overlay, Toast.LENGTH_LONG).show();
-                                        }
-                                    }
-                                })
-                                .show();*/
-                    } else {
-                        getActivity().stopService(intent);
-                    }
-
-                    return true;
+        mEnableServiceButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    startActivity(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS));
+                } catch (ActivityNotFoundException e) {
+                    //Toast.makeText(this, R.string.open_settings_failed_accessibility, Toast.LENGTH_LONG).show();
                 }
-            });
-            preference.setChecked(Utils.isFloatingServiceEnabled(getActivity()));
-        }
+            }
+        });
 
-        void openSettings(String settingsAction, String packageName) {
-            Intent intent = new Intent(settingsAction);
-            intent.setData(Uri.parse("package:" + packageName));
-            startActivity(intent);
+        mEnableFloatingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    //Open the current default browswer App Info page
+                    openSettings(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, BuildConfig.APPLICATION_ID);
+                } catch (ActivityNotFoundException ignored) {
+                    // Toast.makeText(this, R.string.open_settings_failed_overlay, Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+        mEnableLocationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityCompat.requestPermissions(SettingsActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
+            }
+        });
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+
+        if (hasFocus) {
+            invalidateStates();
         }
+    }
+
+    private void invalidateStates() {
+        boolean permissionGranted =
+                ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                        == PackageManager.PERMISSION_GRANTED;
+        mEnabledLocationImage.setImageResource(permissionGranted ? R.drawable.ic_done_green_40dp : R.drawable.ic_cross_red_40dp);
+        mEnableLocationButton.setEnabled(!permissionGranted);
+
+        boolean overlayEnabled = Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(this);
+        mEnabledFloatingImage.setImageResource(overlayEnabled ? R.drawable.ic_done_green_40dp : R.drawable.ic_cross_red_40dp);
+        mEnableFloatingButton.setEnabled(!overlayEnabled);
+
+        boolean serviceEnabled = Utils.isAccessibilityServiceEnabled(this, AppDetectionService.class);
+        mEnabledServiceImage.setImageResource(serviceEnabled ? R.drawable.ic_done_green_40dp : R.drawable.ic_cross_red_40dp);
+        mEnableServiceButton.setEnabled(!serviceEnabled);
+
+        if (permissionGranted && overlayEnabled && serviceEnabled) {
+            Intent intent = new Intent(this, FloatingService.class);
+            startService(intent);
+        }
+    }
+
+    void openSettings(String settingsAction, String packageName) {
+        Intent intent = new Intent(settingsAction);
+        intent.setData(Uri.parse("package:" + packageName));
+        startActivity(intent);
     }
 }
