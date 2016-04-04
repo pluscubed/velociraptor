@@ -8,6 +8,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.location.Location;
@@ -101,23 +102,7 @@ public class FloatingService extends Service {
 
         params.gravity = Gravity.TOP | Gravity.START;
 
-        mFloatingView.post(new Runnable() {
-            @Override
-            public void run() {
-                WindowManager.LayoutParams params = (WindowManager.LayoutParams) mFloatingView.getLayoutParams();
-
-                String[] split = PrefUtils.getFloatingLocation(FloatingService.this).split(",");
-                boolean left = Boolean.parseBoolean(split[0]);
-                int y = Integer.parseInt(split[1]);
-
-                Point screenSize = new Point();
-                mWindowManager.getDefaultDisplay().getSize(screenSize);
-                params.x = left ? 0 : screenSize.x - mFloatingView.getWidth();
-                params.y = y;
-
-                mWindowManager.updateViewLayout(mFloatingView, params);
-            }
-        });
+        initFloatingViewPostion();
 
         mWindowManager.addView(mFloatingView, params);
 
@@ -195,6 +180,26 @@ public class FloatingService extends Service {
         mGoogleApiClient.connect();
     }
 
+    private void initFloatingViewPostion() {
+        mFloatingView.post(new Runnable() {
+            @Override
+            public void run() {
+                WindowManager.LayoutParams params = (WindowManager.LayoutParams) mFloatingView.getLayoutParams();
+
+                String[] split = PrefUtils.getFloatingLocation(FloatingService.this).split(",");
+                boolean left = Boolean.parseBoolean(split[0]);
+                float yRatio = Float.parseFloat(split[1]);
+
+                Point screenSize = new Point();
+                mWindowManager.getDefaultDisplay().getSize(screenSize);
+                params.x = left ? 0 : screenSize.x - mFloatingView.getWidth();
+                params.y = (int) (yRatio * screenSize.y + 0.5f);
+
+                mWindowManager.updateViewLayout(mFloatingView, params);
+            }
+        });
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -209,19 +214,19 @@ public class FloatingService extends Service {
             mWindowManager.removeView(mFloatingView);
     }
 
-    void animateViewToSideSlot(final View view) {
+    void animateViewToSideSlot() {
         Point screenSize = new Point();
         mWindowManager.getDefaultDisplay().getSize(screenSize);
 
-        WindowManager.LayoutParams params = (WindowManager.LayoutParams) view.getLayoutParams();
+        WindowManager.LayoutParams params = (WindowManager.LayoutParams) mFloatingView.getLayoutParams();
         int endX;
-        if (params.x + view.getWidth() / 2 >= screenSize.x / 2) {
-            endX = screenSize.x - view.getWidth();
+        if (params.x + mFloatingView.getWidth() / 2 >= screenSize.x / 2) {
+            endX = screenSize.x - mFloatingView.getWidth();
         } else {
             endX = 0;
         }
 
-        PrefUtils.setFloatingLocation(FloatingService.this, params.y, endX == 0);
+        PrefUtils.setFloatingLocation(FloatingService.this, (float) params.y / screenSize.y, endX == 0);
 
         ValueAnimator valueAnimator = ValueAnimator.ofInt(params.x, endX)
                 .setDuration(300);
@@ -229,16 +234,23 @@ public class FloatingService extends Service {
         valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-                WindowManager.LayoutParams params = (WindowManager.LayoutParams) view.getLayoutParams();
+                WindowManager.LayoutParams params = (WindowManager.LayoutParams) mFloatingView.getLayoutParams();
                 params.x = (int) animation.getAnimatedValue();
 
-                if (view.isShown()) {
-                    mWindowManager.updateViewLayout(view, params);
+                if (mFloatingView.isShown()) {
+                    mWindowManager.updateViewLayout(mFloatingView, params);
                 }
             }
         });
 
         valueAnimator.start();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        initFloatingViewPostion();
     }
 
     private interface HereService {
@@ -294,7 +306,7 @@ public class FloatingService extends Service {
                     if (mIsClick && System.currentTimeMillis() - mStartClickTime <= ViewConfiguration.getLongPressTimeout()) {
                         //TODO: On Click
                     } else {
-                        animateViewToSideSlot(mFloatingView);
+                        animateViewToSideSlot();
                     }
                     return true;
             }
