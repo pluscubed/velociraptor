@@ -23,5 +23,6 @@
 
     <string name="open_settings_failed_overlay">Unable to open settings. Please manually enable the \"Draw Over Other Apps\" setting for Velociraptor.</string>
     <string name="open_settings_failed_accessibility">Unable to open settings. Please manually enable the Accessibility Service setting for Velociraptor.</string>
-    <string name="permissions_warning">Velociraptor doesn\'t have adequate permissions.\nPlease open the app to grant them.</string>
+    <string name="permissions_warning">Velociraptor doesn\'t have adequate permissions. Please open the app to grant them.</string>
+    <string name="location_settings_warning">GPS is not turned on. Please enable for Velociraptor\'s speed limit monitor.</string>
 </resources>

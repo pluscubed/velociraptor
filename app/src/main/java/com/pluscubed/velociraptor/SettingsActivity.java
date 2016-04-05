@@ -116,14 +116,16 @@ public class SettingsActivity extends AppCompatActivity {
         mStyleSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                PrefUtils.setSignStyle(SettingsActivity.this, position);
-                mStyleSpinner.setDropDownVerticalOffset(
-                        Utils.convertDpToPx(SettingsActivity.this, mStyleSpinner.getSelectedItemPosition() * -48));
+                if (position != PrefUtils.getSignStyle(SettingsActivity.this)) {
+                    PrefUtils.setSignStyle(SettingsActivity.this, position);
+                    mStyleSpinner.setDropDownVerticalOffset(
+                            Utils.convertDpToPx(SettingsActivity.this, mStyleSpinner.getSelectedItemPosition() * -48));
 
-                if (isServiceReady()) {
-                    Intent intent = new Intent(SettingsActivity.this, FloatingService.class);
-                    stopService(intent);
-                    startService(intent);
+                    if (isServiceReady()) {
+                        Intent intent = new Intent(SettingsActivity.this, FloatingService.class);
+                        stopService(intent);
+                        startService(intent);
+                    }
                 }
             }
 

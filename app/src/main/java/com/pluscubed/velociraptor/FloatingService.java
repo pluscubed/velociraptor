@@ -12,6 +12,7 @@ import android.content.res.Configuration;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -27,6 +28,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -81,13 +83,15 @@ public class FloatingService extends Service {
 
         if (ContextCompat.checkSelfPermission(FloatingService.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 || (Build.VERSION.SDK_INT < Build.VERSION_CODES.M && !Settings.canDrawOverlays(this))) {
-            Handler handler = new Handler(Looper.getMainLooper());
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(FloatingService.this.getApplicationContext(), R.string.permissions_warning, Toast.LENGTH_LONG).show();
-                }
-            });
+            showToast(R.string.permissions_warning);
+            stopSelf();
+            return;
+        }
+
+        LocationManager manager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            showToast(R.string.location_settings_warning);
+            stopSelf();
             return;
         }
 
@@ -205,10 +209,20 @@ public class FloatingService extends Service {
         mGoogleApiClient.connect();
     }
 
-    private void initFloatingViewPosition() {
-        mFloatingView.post(new Runnable() {
+    private void showToast(final int string) {
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(new Runnable() {
             @Override
             public void run() {
+                Toast.makeText(FloatingService.this.getApplicationContext(), string, Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void initFloatingViewPosition() {
+        mFloatingView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
                 WindowManager.LayoutParams params = (WindowManager.LayoutParams) mFloatingView.getLayoutParams();
 
                 String[] split = PrefUtils.getFloatingLocation(FloatingService.this).split(",");
@@ -220,7 +234,10 @@ public class FloatingService extends Service {
                 params.x = left ? 0 : screenSize.x - mFloatingView.getWidth();
                 params.y = (int) (yRatio * screenSize.y + 0.5f);
 
-                mWindowManager.updateViewLayout(mFloatingView, params);
+                if (mFloatingView.isShown())
+                    mWindowManager.updateViewLayout(mFloatingView, params);
+
+                mFloatingView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
         });
     }
@@ -229,13 +246,12 @@ public class FloatingService extends Service {
     public void onDestroy() {
         super.onDestroy();
 
-
-        if (mGoogleApiClient.isConnected()) {
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, mLocationListener);
             mGoogleApiClient.disconnect();
         }
 
-        if (mFloatingView.isShown())
+        if (mFloatingView != null && mFloatingView.isShown())
             mWindowManager.removeView(mFloatingView);
     }
 
