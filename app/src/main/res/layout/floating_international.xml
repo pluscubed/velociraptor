@@ -6,6 +6,7 @@
     android:theme="@style/Theme.Velociraptor">
 
     <FrameLayout
+        android:id="@+id/limit"
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:layout_margin="8dp"
@@ -23,6 +24,8 @@
             android:textSize="24sp" />
 
     </FrameLayout>
+
+    <include layout="@layout/speedometer" />
 
     <TextView
         android:id="@+id/subtext"

@@ -21,6 +21,7 @@ import android.os.Looper;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v4.view.animation.LinearOutSlowInInterpolator;
 import android.support.v7.app.NotificationCompat;
 import android.view.Gravity;
@@ -33,12 +34,15 @@ import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.gigamole.library.ArcProgressStackView;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.pluscubed.velociraptor.hereapi.GetLinkInfo;
 import com.pluscubed.velociraptor.hereapi.Link;
+
+import java.util.ArrayList;
 
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
@@ -60,12 +64,18 @@ public class FloatingService extends Service {
     private View mFloatingView;
     private TextView mLimitText;
     private TextView mStreetText;
+    private TextView mSpeedometerText;
+    private TextView mSpeedometerUnits;
+    private ArcProgressStackView mArcView;
 
     private GoogleApiClient mGoogleApiClient;
 
     private HereService mService;
     private Subscription mHereLocationSubscription;
     private LocationListener mLocationListener;
+
+    private Location mLastLocation;
+    private long mLastSpeedTimestamp;
 
     public static int convertDpToPx(Context context, float dp) {
         return (int) (dp * context.getResources().getDisplayMetrics().density + 0.5f);
@@ -125,6 +135,9 @@ public class FloatingService extends Service {
 
         mLimitText = (TextView) mFloatingView.findViewById(R.id.text);
         mStreetText = (TextView) mFloatingView.findViewById(R.id.subtext);
+        mArcView = (ArcProgressStackView) mFloatingView.findViewById(R.id.arcview);
+        mSpeedometerText = (TextView) mFloatingView.findViewById(R.id.speed);
+        mSpeedometerUnits = (TextView) mFloatingView.findViewById(R.id.speedUnits);
 
         WindowManager.LayoutParams params = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
@@ -141,6 +154,14 @@ public class FloatingService extends Service {
 
         mFloatingView.setOnTouchListener(new FloatingOnTouchListener());
 
+        updateUnits();
+
+        final ArrayList<ArcProgressStackView.Model> models = new ArrayList<>();
+        models.add(new ArcProgressStackView.Model("", 0, ContextCompat.getColor(this, R.color.colorPrimary), ContextCompat.getColor(this, R.color.colorAccent)));
+        mArcView.setTextColor(ContextCompat.getColor(this, R.color.colorAccent));
+        mArcView.setInterpolator(new FastOutSlowInInterpolator());
+        mArcView.setModels(models);
+
         Retrofit restAdapter = new Retrofit.Builder()
                 .baseUrl("http://route.st.nlp.nokia.com/routing/6.2/")
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
@@ -153,6 +174,31 @@ public class FloatingService extends Service {
             public void onLocationChanged(Location location) {
                 if (mHereLocationSubscription == null) {
                     final String text = location.getLatitude() + "," + location.getLongitude();
+
+                    if (mLastSpeedTimestamp != 0 && mLastLocation != null) {
+                        float metersPerMilliseconds = location.distanceTo(mLastLocation) /
+                                (System.currentTimeMillis() - mLastSpeedTimestamp);
+
+                        int speed;
+                        int percentage;
+                        if (PrefUtils.getUseMetric(FloatingService.this)) {
+                            speed = (int) ((metersPerMilliseconds * 60 * 60) + 0.5f); //km/h
+                            percentage = (int) ((float) speed / 200 * 100 + 0.5f);
+                        } else {
+                            speed = (int) ((metersPerMilliseconds * 1000 * 60 * 60 / 1609.344) + 0.5f); //mph
+                            percentage = (int) ((float) speed / 120 * 100 + 0.5f);
+                        }
+
+                        updateUnits();
+
+                        mSpeedometerText.setText(String.valueOf(speed));
+
+                        mArcView.getModels().get(0).setProgress(percentage);
+                    }
+
+                    mLastSpeedTimestamp = System.currentTimeMillis();
+                    mLastLocation = location;
+
                     mHereLocationSubscription = mService.getLinkInfo(text, getString(R.string.here_app_id), getString(R.string.here_app_code))
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
@@ -192,8 +238,8 @@ public class FloatingService extends Service {
                     @Override
                     public void onConnected(@Nullable Bundle bundle) {
                         LocationRequest locationRequest = new LocationRequest();
-                        locationRequest.setInterval(5000);
-                        locationRequest.setFastestInterval(5000);
+                        locationRequest.setInterval(1000);
+                        locationRequest.setFastestInterval(1000);
                         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
                         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, locationRequest, mLocationListener);
                     }
@@ -217,6 +263,14 @@ public class FloatingService extends Service {
                 Toast.makeText(FloatingService.this.getApplicationContext(), string, Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    private void updateUnits() {
+        if (PrefUtils.getUseMetric(FloatingService.this)) {
+            mSpeedometerUnits.setText("km/h");
+        } else {
+            mSpeedometerUnits.setText("mph");
+        }
     }
 
     private void initFloatingViewPosition() {
@@ -253,6 +307,10 @@ public class FloatingService extends Service {
 
         if (mFloatingView != null && mFloatingView.isShown())
             mWindowManager.removeView(mFloatingView);
+
+        if (mHereLocationSubscription != null) {
+            mHereLocationSubscription.unsubscribe();
+        }
     }
 
     void animateViewToSideSlot() {

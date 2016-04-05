@@ -45,6 +45,8 @@ dependencies {
     compile 'com.squareup.retrofit2:converter-jackson:2.0.1'
     compile 'com.squareup.okhttp3:okhttp:3.2.0'
 
+    compile 'com.github.gigamole.arcprogressstackview:library:1.0.0'
+
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.4-beta2'
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2'
 }
