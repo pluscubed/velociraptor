@@ -4,14 +4,22 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.ColorInt;
+import android.support.annotation.IntDef;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 public abstract class PrefUtils {
 
     public static final String PREF_FLOATING_LOCATION = "pref_floating_location";
     public static final String PREF_METRIC = "pref_metric";
+    public static final String PREF_SIGN_STYLE = "pref_international";
 
     public static final String PREF_FIRSTRUN = "pref_firstrun";
     public static final String PREF_VERSION_CODE = "pref_version_code";
+
+    public static final int STYLE_US = 0;
+    public static final int STYLE_INTERNATIONAL = 1;
 
     private static SharedPreferences.Editor edit(Context context) {
         return getSharedPreferences(context).edit();
@@ -52,5 +60,20 @@ public abstract class PrefUtils {
 
     public static void setUseMetric(Context context, boolean metric) {
         edit(context).putBoolean(PREF_METRIC, metric).apply();
+    }
+
+    @SuppressWarnings("WrongConstant")
+    @SignStyle
+    public static int getSignStyle(Context context) {
+        return getSharedPreferences(context).getInt(PREF_SIGN_STYLE, STYLE_US);
+    }
+
+    public static void setSignStyle(Context context, @SignStyle int style) {
+        edit(context).putInt(PREF_SIGN_STYLE, style).apply();
+    }
+
+    @IntDef({STYLE_US, STYLE_INTERNATIONAL})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface SignStyle {
     }
 }

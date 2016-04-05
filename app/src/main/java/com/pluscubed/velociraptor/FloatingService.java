@@ -88,7 +88,18 @@ public class FloatingService extends Service {
 
         mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
 
-        mFloatingView = LayoutInflater.from(this).inflate(R.layout.floating, null, false);
+        int layout;
+        switch (PrefUtils.getSignStyle(this)) {
+            case PrefUtils.STYLE_US:
+                layout = R.layout.floating_us;
+                break;
+            case PrefUtils.STYLE_INTERNATIONAL:
+            default:
+                layout = R.layout.floating_international;
+                break;
+        }
+
+        mFloatingView = LayoutInflater.from(this).inflate(layout, null, false);
 
         mLimitText = (TextView) mFloatingView.findViewById(R.id.text);
         mStreetText = (TextView) mFloatingView.findViewById(R.id.subtext);

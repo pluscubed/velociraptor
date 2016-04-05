@@ -17,4 +17,5 @@
     <string name="grant_permission">Grant permission</string>
     <string name="enable_location_desc">To determine the speed limit at your location, please grant the location permission</string>
     <string name="speed_unit">Speed Units:</string>
+    <string name="style">Style:</string>
 </resources>

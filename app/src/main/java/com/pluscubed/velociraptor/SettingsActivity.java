@@ -31,6 +31,7 @@ public class SettingsActivity extends AppCompatActivity {
     private ImageView mEnabledLocationImage;
 
     private Spinner mUnitSpinner;
+    private Spinner mStyleSpinner;
 
 
     @Override
@@ -49,6 +50,7 @@ public class SettingsActivity extends AppCompatActivity {
         mEnabledLocationImage = (ImageView) findViewById(R.id.image_location_enabled);
 
         mUnitSpinner = (Spinner) findViewById(R.id.spinner_unit);
+        mStyleSpinner = (Spinner) findViewById(R.id.spinner_style);
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             ((View) mEnabledFloatingImage.getParent()).setVisibility(View.GONE);
@@ -88,8 +90,8 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, new String[]{"mph", "km/h"});
-        mUnitSpinner.setAdapter(adapter);
+        ArrayAdapter<String> unitAdapter = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, new String[]{"mph", "km/h"});
+        mUnitSpinner.setAdapter(unitAdapter);
         mUnitSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -105,6 +107,30 @@ public class SettingsActivity extends AppCompatActivity {
         });
         mUnitSpinner.setSelection(PrefUtils.getUseMetric(this) ? 1 : 0);
         mUnitSpinner.setDropDownVerticalOffset(Utils.convertDpToPx(this, mUnitSpinner.getSelectedItemPosition() * -48));
+
+        ArrayAdapter<String> styleAdapter = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, new String[]{"United States", "International"});
+        mStyleSpinner.setAdapter(styleAdapter);
+        mStyleSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                PrefUtils.setSignStyle(SettingsActivity.this, position);
+                mStyleSpinner.setDropDownVerticalOffset(
+                        Utils.convertDpToPx(SettingsActivity.this, mUnitSpinner.getSelectedItemPosition() * -48));
+
+                if (isServiceReady()) {
+                    Intent intent = new Intent(SettingsActivity.this, FloatingService.class);
+                    stopService(intent);
+                    startService(intent);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        mStyleSpinner.setSelection(PrefUtils.getSignStyle(this));
+        mStyleSpinner.setDropDownVerticalOffset(Utils.convertDpToPx(this, mStyleSpinner.getSelectedItemPosition() * -48));
 
         invalidateStates();
     }
@@ -137,6 +163,15 @@ public class SettingsActivity extends AppCompatActivity {
             Intent intent = new Intent(this, FloatingService.class);
             startService(intent);
         }
+    }
+
+    private boolean isServiceReady() {
+        boolean permissionGranted =
+                ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                        == PackageManager.PERMISSION_GRANTED;
+        boolean overlayEnabled = Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(this);
+        boolean serviceEnabled = Utils.isAccessibilityServiceEnabled(this, AppDetectionService.class);
+        return permissionGranted && overlayEnabled && serviceEnabled;
     }
 
     void openSettings(String settingsAction, String packageName) {
