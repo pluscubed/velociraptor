@@ -13,8 +13,11 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Spinner;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -26,6 +29,8 @@ public class SettingsActivity extends AppCompatActivity {
     private ImageView mEnabledFloatingImage;
     private Button mEnableLocationButton;
     private ImageView mEnabledLocationImage;
+
+    private Spinner mUnitSpinner;
 
 
     @Override
@@ -42,6 +47,8 @@ public class SettingsActivity extends AppCompatActivity {
         mEnabledFloatingImage = (ImageView) findViewById(R.id.image_floating_enabled);
         mEnableLocationButton = (Button) findViewById(R.id.button_location_enabled);
         mEnabledLocationImage = (ImageView) findViewById(R.id.image_location_enabled);
+
+        mUnitSpinner = (Spinner) findViewById(R.id.spinner_unit);
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             ((View) mEnabledFloatingImage.getParent()).setVisibility(View.GONE);
@@ -80,6 +87,26 @@ public class SettingsActivity extends AppCompatActivity {
                 ActivityCompat.requestPermissions(SettingsActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
             }
         });
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, new String[]{"mph", "km/h"});
+        mUnitSpinner.setAdapter(adapter);
+        mUnitSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                PrefUtils.setUseMetric(SettingsActivity.this, position == 1);
+                mUnitSpinner.setDropDownVerticalOffset(
+                        Utils.convertDpToPx(SettingsActivity.this, mUnitSpinner.getSelectedItemPosition() * -48));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        mUnitSpinner.setSelection(PrefUtils.getUseMetric(this) ? 1 : 0);
+        mUnitSpinner.setDropDownVerticalOffset(Utils.convertDpToPx(this, mUnitSpinner.getSelectedItemPosition() * -48));
+
+        invalidateStates();
     }
 
     @Override

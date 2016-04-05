@@ -8,6 +8,7 @@ import android.support.annotation.ColorInt;
 public abstract class PrefUtils {
 
     public static final String PREF_FLOATING_LOCATION = "pref_floating_location";
+    public static final String PREF_METRIC = "pref_metric";
 
     public static final String PREF_FIRSTRUN = "pref_firstrun";
     public static final String PREF_VERSION_CODE = "pref_version_code";
@@ -43,5 +44,13 @@ public abstract class PrefUtils {
 
     public static String getFloatingLocation(Context context) {
         return getSharedPreferences(context).getString(PREF_FLOATING_LOCATION, "true,0");
+    }
+
+    public static boolean getUseMetric(Context context) {
+        return getSharedPreferences(context).getBoolean(PREF_METRIC, false);
+    }
+
+    public static void setUseMetric(Context context, boolean metric) {
+        edit(context).putBoolean(PREF_METRIC, metric).apply();
     }
 }

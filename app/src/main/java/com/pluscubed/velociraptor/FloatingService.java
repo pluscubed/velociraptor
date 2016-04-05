@@ -129,7 +129,8 @@ public class FloatingService extends Service {
                                     Link link = getLinkInfo.getResponse().getLink().get(0);
                                     Double speedLimit = link.getSpeedLimit();
                                     if (speedLimit != null) {
-                                        int limit = (int) (speedLimit * 2.23 + 0.5d);
+                                        double factor = PrefUtils.getUseMetric(FloatingService.this) ? 3.6 : 2.23;
+                                        int limit = (int) (speedLimit * factor + 0.5d);
                                         mLimitText.setText(String.valueOf(limit));
                                     } else {
                                         mLimitText.setText("--");

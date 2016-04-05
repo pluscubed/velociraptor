@@ -34,4 +34,8 @@ public abstract class Utils {
 
         return false;
     }
+
+    public static int convertDpToPx(Context context, float dp) {
+        return (int) (dp * context.getResources().getDisplayMetrics().density + 0.5f);
+    }
 }
