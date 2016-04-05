@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -66,7 +67,7 @@ public class SettingsActivity extends AppCompatActivity {
                 try {
                     startActivity(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS));
                 } catch (ActivityNotFoundException e) {
-                    //Toast.makeText(this, R.string.open_settings_failed_accessibility, Toast.LENGTH_LONG).show();
+                    Snackbar.make(mEnableServiceButton, R.string.open_settings_failed_accessibility, Snackbar.LENGTH_LONG).show();
                 }
             }
         });
@@ -78,7 +79,7 @@ public class SettingsActivity extends AppCompatActivity {
                     //Open the current default browswer App Info page
                     openSettings(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, BuildConfig.APPLICATION_ID);
                 } catch (ActivityNotFoundException ignored) {
-                    // Toast.makeText(this, R.string.open_settings_failed_overlay, Toast.LENGTH_LONG).show();
+                    Snackbar.make(mEnableFloatingButton, R.string.open_settings_failed_overlay, Snackbar.LENGTH_LONG).show();
                 }
             }
         });
@@ -90,7 +91,8 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-        ArrayAdapter<String> unitAdapter = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, new String[]{"mph", "km/h"});
+        ArrayAdapter<String> unitAdapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item,
+                new String[]{"mph", "km/h"});
         mUnitSpinner.setAdapter(unitAdapter);
         mUnitSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -108,14 +110,15 @@ public class SettingsActivity extends AppCompatActivity {
         mUnitSpinner.setSelection(PrefUtils.getUseMetric(this) ? 1 : 0);
         mUnitSpinner.setDropDownVerticalOffset(Utils.convertDpToPx(this, mUnitSpinner.getSelectedItemPosition() * -48));
 
-        ArrayAdapter<String> styleAdapter = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, new String[]{"United States", "International"});
+        ArrayAdapter<String> styleAdapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item,
+                new String[]{getString(R.string.united_states), getString(R.string.international)});
         mStyleSpinner.setAdapter(styleAdapter);
         mStyleSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 PrefUtils.setSignStyle(SettingsActivity.this, position);
                 mStyleSpinner.setDropDownVerticalOffset(
-                        Utils.convertDpToPx(SettingsActivity.this, mUnitSpinner.getSelectedItemPosition() * -48));
+                        Utils.convertDpToPx(SettingsActivity.this, mStyleSpinner.getSelectedItemPosition() * -48));
 
                 if (isServiceReady()) {
                     Intent intent = new Intent(SettingsActivity.this, FloatingService.class);

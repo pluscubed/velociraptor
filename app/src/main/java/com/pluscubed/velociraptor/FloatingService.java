@@ -12,8 +12,12 @@ import android.content.res.Configuration;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.animation.LinearOutSlowInInterpolator;
@@ -25,6 +29,7 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.WindowManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -73,6 +78,19 @@ public class FloatingService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        if (ContextCompat.checkSelfPermission(FloatingService.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                || (Build.VERSION.SDK_INT < Build.VERSION_CODES.M && !Settings.canDrawOverlays(this))) {
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(FloatingService.this.getApplicationContext(), R.string.permissions_warning, Toast.LENGTH_LONG).show();
+                }
+            });
+            return;
+        }
+
         Intent notificationIntent = new Intent(this, SettingsActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, PENDING_CLOSE, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
@@ -169,11 +187,6 @@ public class FloatingService extends Service {
                 .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
                     @Override
                     public void onConnected(@Nullable Bundle bundle) {
-                        if (ContextCompat.checkSelfPermission(FloatingService.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                            // TODO: Open settings to grant permission
-                            return;
-                        }
-
                         LocationRequest locationRequest = new LocationRequest();
                         locationRequest.setInterval(5000);
                         locationRequest.setFastestInterval(5000);

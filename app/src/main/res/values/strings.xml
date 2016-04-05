@@ -18,4 +18,10 @@
     <string name="enable_location_desc">To determine the speed limit at your location, please grant the location permission</string>
     <string name="speed_unit">Speed Units:</string>
     <string name="style">Style:</string>
+    <string name="united_states">United States</string>
+    <string name="international">International</string>
+
+    <string name="open_settings_failed_overlay">Unable to open settings. Please manually enable the \"Draw Over Other Apps\" setting for Velociraptor.</string>
+    <string name="open_settings_failed_accessibility">Unable to open settings. Please manually enable the Accessibility Service setting for Velociraptor.</string>
+    <string name="permissions_warning">Velociraptor doesn\'t have adequate permissions.\nPlease open the app to grant them.</string>
 </resources>
