@@ -33,6 +33,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     private Spinner mUnitSpinner;
     private Spinner mStyleSpinner;
+    private Spinner mOverspeedSpinner;
 
 
     @Override
@@ -52,6 +53,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         mUnitSpinner = (Spinner) findViewById(R.id.spinner_unit);
         mStyleSpinner = (Spinner) findViewById(R.id.spinner_style);
+        mOverspeedSpinner = (Spinner) findViewById(R.id.spinner_overspeed);
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             ((View) mEnabledFloatingImage.getParent()).setVisibility(View.GONE);
@@ -136,6 +138,25 @@ public class SettingsActivity extends AppCompatActivity {
         });
         mStyleSpinner.setSelection(PrefUtils.getSignStyle(this));
         mStyleSpinner.setDropDownVerticalOffset(Utils.convertDpToPx(this, mStyleSpinner.getSelectedItemPosition() * -48));
+
+        ArrayAdapter<String> overspeedAdapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item,
+                new String[]{"0%", "5%", "10%", "15%", "20%"});
+        mOverspeedSpinner.setAdapter(overspeedAdapter);
+        mOverspeedSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                PrefUtils.setOverspeedPercent(SettingsActivity.this, position * 5);
+                mOverspeedSpinner.setDropDownVerticalOffset(
+                        Utils.convertDpToPx(SettingsActivity.this, mOverspeedSpinner.getSelectedItemPosition() * -48));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        mOverspeedSpinner.setSelection(PrefUtils.getOverspeedPercent(this) / 5);
+        mOverspeedSpinner.setDropDownVerticalOffset(Utils.convertDpToPx(this, mOverspeedSpinner.getSelectedItemPosition() * -48));
 
         invalidateStates();
     }

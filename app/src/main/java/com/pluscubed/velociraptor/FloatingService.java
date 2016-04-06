@@ -1,6 +1,7 @@
 package com.pluscubed.velociraptor;
 
 import android.Manifest;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -76,6 +77,7 @@ public class FloatingService extends Service {
 
     private Location mLastLocation;
     private long mLastSpeedTimestamp;
+    private int mLastSpeedLimit;
 
     public static int convertDpToPx(Context context, float dp) {
         return (int) (dp * context.getResources().getDisplayMetrics().density + 0.5f);
@@ -194,6 +196,15 @@ public class FloatingService extends Service {
                         mSpeedometerText.setText(String.valueOf(speed));
 
                         mArcView.getModels().get(0).setProgress(percentage);
+                        mArcView.setAnimatorListener(new AnimatorListenerAdapter() {
+                        });
+                        mArcView.animateProgress();
+
+                        if (mLastSpeedLimit != 0 && mLastSpeedLimit * (1 + (double) PrefUtils.getOverspeedPercent(FloatingService.this) / 100) < speed) {
+                            mSpeedometerText.setTextColor(ContextCompat.getColor(FloatingService.this, R.color.red_500));
+                        } else {
+                            mSpeedometerText.setTextColor(ContextCompat.getColor(FloatingService.this, R.color.primary_text_default_material_light));
+                        }
                     }
 
                     mLastSpeedTimestamp = System.currentTimeMillis();
@@ -209,9 +220,10 @@ public class FloatingService extends Service {
                                     Double speedLimit = link.getSpeedLimit();
                                     if (speedLimit != null) {
                                         double factor = PrefUtils.getUseMetric(FloatingService.this) ? 3.6 : 2.23;
-                                        int limit = (int) (speedLimit * factor + 0.5d);
-                                        mLimitText.setText(String.valueOf(limit));
+                                        mLastSpeedLimit = (int) (speedLimit * factor + 0.5d);
+                                        mLimitText.setText(String.valueOf(mLastSpeedLimit));
                                     } else {
+                                        mLastSpeedLimit = 0;
                                         mLimitText.setText("--");
                                     }
 

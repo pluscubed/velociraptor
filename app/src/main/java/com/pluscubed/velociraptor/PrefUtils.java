@@ -13,6 +13,7 @@ public abstract class PrefUtils {
 
     public static final String PREF_FLOATING_LOCATION = "pref_floating_location";
     public static final String PREF_METRIC = "pref_metric";
+    public static final String PREF_OVERSPEED = "pref_overspeed";
     public static final String PREF_SIGN_STYLE = "pref_international";
 
     public static final String PREF_FIRSTRUN = "pref_firstrun";
@@ -70,6 +71,14 @@ public abstract class PrefUtils {
 
     public static void setSignStyle(Context context, @SignStyle int style) {
         edit(context).putInt(PREF_SIGN_STYLE, style).apply();
+    }
+
+    public static int getOverspeedPercent(Context context) {
+        return getSharedPreferences(context).getInt(PREF_OVERSPEED, 0);
+    }
+
+    public static void setOverspeedPercent(Context context, int amount) {
+        edit(context).putInt(PREF_OVERSPEED, amount).apply();
     }
 
     @IntDef({STYLE_US, STYLE_INTERNATIONAL})

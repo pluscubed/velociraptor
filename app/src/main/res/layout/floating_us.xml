@@ -8,11 +8,11 @@
 
     <android.support.v7.widget.CardView
         android:id="@+id/limit"
-        android:layout_width="69.17dp"
+        android:layout_width="61.17dp"
         android:layout_height="79.17dp"
         android:layout_marginBottom="4.415dp"
-        android:layout_marginLeft="5.415dp"
-        android:layout_marginRight="5.415dp"
+        android:layout_marginLeft="9.415dp"
+        android:layout_marginRight="9.415dp"
         android:layout_marginTop="4.415dp"
         app:cardCornerRadius="2dp"
         app:cardElevation="2dp"
