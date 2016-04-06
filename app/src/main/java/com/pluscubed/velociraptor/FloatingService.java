@@ -63,6 +63,7 @@ public class FloatingService extends Service {
     private WindowManager mWindowManager;
 
     private View mFloatingView;
+    private View mSpeedometer;
     private TextView mLimitText;
     private TextView mStreetText;
     private TextView mSpeedometerText;
@@ -140,6 +141,7 @@ public class FloatingService extends Service {
         mArcView = (ArcProgressStackView) mFloatingView.findViewById(R.id.arcview);
         mSpeedometerText = (TextView) mFloatingView.findViewById(R.id.speed);
         mSpeedometerUnits = (TextView) mFloatingView.findViewById(R.id.speedUnits);
+        mSpeedometer = mFloatingView.findViewById(R.id.speedometer);
 
         WindowManager.LayoutParams params = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
@@ -174,41 +176,44 @@ public class FloatingService extends Service {
         mLocationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                if (mHereLocationSubscription == null) {
-                    final String text = location.getLatitude() + "," + location.getLongitude();
+                if (mLastSpeedTimestamp != 0 && mLastLocation != null) {
+                    float metersPerMilliseconds = location.distanceTo(mLastLocation) /
+                            (System.currentTimeMillis() - mLastSpeedTimestamp);
 
-                    if (mLastSpeedTimestamp != 0 && mLastLocation != null) {
-                        float metersPerMilliseconds = location.distanceTo(mLastLocation) /
-                                (System.currentTimeMillis() - mLastSpeedTimestamp);
-
-                        int speed;
-                        int percentage;
-                        if (PrefUtils.getUseMetric(FloatingService.this)) {
-                            speed = (int) ((metersPerMilliseconds * 60 * 60) + 0.5f); //km/h
-                            percentage = (int) ((float) speed / 200 * 100 + 0.5f);
-                        } else {
-                            speed = (int) ((metersPerMilliseconds * 1000 * 60 * 60 / 1609.344) + 0.5f); //mph
-                            percentage = (int) ((float) speed / 120 * 100 + 0.5f);
-                        }
-
-                        updateUnits();
-
-                        mSpeedometerText.setText(String.valueOf(speed));
-
-                        mArcView.getModels().get(0).setProgress(percentage);
-                        mArcView.setAnimatorListener(new AnimatorListenerAdapter() {
-                        });
-                        mArcView.animateProgress();
-
-                        if (mLastSpeedLimit != 0 && mLastSpeedLimit * (1 + (double) PrefUtils.getOverspeedPercent(FloatingService.this) / 100) < speed) {
-                            mSpeedometerText.setTextColor(ContextCompat.getColor(FloatingService.this, R.color.red_500));
-                        } else {
-                            mSpeedometerText.setTextColor(ContextCompat.getColor(FloatingService.this, R.color.primary_text_default_material_light));
-                        }
+                    int speed;
+                    int percentage;
+                    if (PrefUtils.getUseMetric(FloatingService.this)) {
+                        speed = (int) ((metersPerMilliseconds * 60 * 60) + 0.5f); //km/h
+                        percentage = (int) ((float) speed / 200 * 100 + 0.5f);
+                    } else {
+                        speed = (int) ((metersPerMilliseconds * 1000 * 60 * 60 / 1609.344) + 0.5f); //mph
+                        percentage = (int) ((float) speed / 120 * 100 + 0.5f);
                     }
 
-                    mLastSpeedTimestamp = System.currentTimeMillis();
-                    mLastLocation = location;
+                    updateUnits();
+
+                    mSpeedometerText.setText(String.valueOf(speed));
+
+                    mArcView.getModels().get(0).setProgress(percentage);
+                    mArcView.setAnimatorListener(new AnimatorListenerAdapter() {
+                    });
+                    mArcView.animateProgress();
+
+                    if (mLastSpeedLimit != 0 && mLastSpeedLimit * (1 + (double) PrefUtils.getOverspeedPercent(FloatingService.this) / 100) < speed) {
+                        mSpeedometerText.setTextColor(ContextCompat.getColor(FloatingService.this, R.color.red_500));
+                    } else {
+                        mSpeedometerText.setTextColor(ContextCompat.getColor(FloatingService.this, R.color.primary_text_default_material_light));
+                    }
+                }
+
+                mLastSpeedTimestamp = System.currentTimeMillis();
+                mLastLocation = location;
+
+                mSpeedometer.setVisibility(PrefUtils.getShowSpeedometer(FloatingService.this) ? View.VISIBLE : View.GONE);
+
+
+                if (mHereLocationSubscription == null) {
+                    final String text = location.getLatitude() + "," + location.getLongitude();
 
                     mHereLocationSubscription = mService.getLinkInfo(text, getString(R.string.here_app_id), getString(R.string.here_app_code))
                             .subscribeOn(Schedulers.io())

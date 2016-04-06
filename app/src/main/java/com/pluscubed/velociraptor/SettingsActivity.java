@@ -19,6 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Switch;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -54,6 +55,7 @@ public class SettingsActivity extends AppCompatActivity {
         mUnitSpinner = (Spinner) findViewById(R.id.spinner_unit);
         mStyleSpinner = (Spinner) findViewById(R.id.spinner_style);
         mOverspeedSpinner = (Spinner) findViewById(R.id.spinner_overspeed);
+        final Switch showSpeedometer = (Switch) findViewById(R.id.switch_speedometer);
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             ((View) mEnabledFloatingImage.getParent()).setVisibility(View.GONE);
@@ -157,6 +159,16 @@ public class SettingsActivity extends AppCompatActivity {
         });
         mOverspeedSpinner.setSelection(PrefUtils.getOverspeedPercent(this) / 5);
         mOverspeedSpinner.setDropDownVerticalOffset(Utils.convertDpToPx(this, mOverspeedSpinner.getSelectedItemPosition() * -48));
+
+        showSpeedometer.setChecked(PrefUtils.getShowSpeedometer(this));
+        ((View) showSpeedometer.getParent()).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSpeedometer.setChecked(!showSpeedometer.isChecked());
+
+                PrefUtils.setShowSpeedometer(SettingsActivity.this, showSpeedometer.isChecked());
+            }
+        });
 
         invalidateStates();
     }
