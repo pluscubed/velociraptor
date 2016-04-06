@@ -300,8 +300,9 @@ public class FloatingService extends Service {
                 params.x = left ? 0 : screenSize.x - mFloatingView.getWidth();
                 params.y = (int) (yRatio * screenSize.y + 0.5f);
 
-                if (mFloatingView.isShown())
-                    mWindowManager.updateViewLayout(mFloatingView, params);
+                mWindowManager.updateViewLayout(mFloatingView, params);
+
+                mFloatingView.setVisibility(View.VISIBLE);
 
                 mFloatingView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
