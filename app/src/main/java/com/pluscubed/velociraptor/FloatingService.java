@@ -200,7 +200,7 @@ public class FloatingService extends Service {
                     mArcView.animateProgress();
 
                     if (mLastSpeedLimit != 0 && mLastSpeedLimit * (1 + (double) PrefUtils.getOverspeedPercent(FloatingService.this) / 100) < speed) {
-                        mSpeedometerText.setTextColor(ContextCompat.getColor(FloatingService.this, R.color.red_500));
+                        mSpeedometerText.setTextColor(ContextCompat.getColor(FloatingService.this, R.color.red500));
                     } else {
                         mSpeedometerText.setTextColor(ContextCompat.getColor(FloatingService.this, R.color.primary_text_default_material_light));
                     }
