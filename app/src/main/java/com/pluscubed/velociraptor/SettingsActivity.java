@@ -14,12 +14,17 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
+
+import com.afollestad.materialdialogs.MaterialDialog;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -176,6 +181,38 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        Intent intent = new Intent(this, FloatingService.class);
+        stopService(intent);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_settings, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_settings_about:
+                showAboutDialog();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void showAboutDialog() {
+        new MaterialDialog.Builder(this)
+                .title(getString(R.string.about_dialog_title, BuildConfig.VERSION_NAME))
+                .positiveText(R.string.dismiss)
+                .content(Html.fromHtml(getString(R.string.about_body)))
+                .iconRes(R.mipmap.ic_launcher)
+                .show();
+    }
+
+    @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
 
@@ -199,7 +236,7 @@ public class SettingsActivity extends AppCompatActivity {
         mEnabledServiceImage.setImageResource(serviceEnabled ? R.drawable.ic_done_green_40dp : R.drawable.ic_cross_red_40dp);
         mEnableServiceButton.setEnabled(!serviceEnabled);
 
-        if (permissionGranted && overlayEnabled && serviceEnabled) {
+        if (permissionGranted && overlayEnabled) {
             Intent intent = new Intent(this, FloatingService.class);
             startService(intent);
         }
@@ -210,8 +247,7 @@ public class SettingsActivity extends AppCompatActivity {
                 ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                         == PackageManager.PERMISSION_GRANTED;
         boolean overlayEnabled = Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(this);
-        boolean serviceEnabled = Utils.isAccessibilityServiceEnabled(this, AppDetectionService.class);
-        return permissionGranted && overlayEnabled && serviceEnabled;
+        return permissionGranted && overlayEnabled;
     }
 
     void openSettings(String settingsAction, String packageName) {
