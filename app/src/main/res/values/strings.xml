@@ -31,8 +31,7 @@
     <string name="about_dialog_title">Velociraptor v%s</string>
     <string name="dismiss">Dismiss</string>
     <string name="about_body"><![CDATA[
-        <b>Velociraptor</b> is a tool to display speed limits and speeding warnings in map apps,
-            using Nokia HERE Map\'s speed limit data.
+        <b>Velociraptor</b> is a floating speed limit monitor with speedometer and warning features, using HERE Map\'s speed limit data.
         <br/><br/>
 
         Developed by <b>Daniel Ciao</b><br/>
