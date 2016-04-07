@@ -25,6 +25,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v4.view.animation.LinearOutSlowInInterpolator;
 import android.support.v7.app.NotificationCompat;
+import android.support.v7.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -95,7 +96,7 @@ public class FloatingService extends Service {
         super.onCreate();
 
         if (ContextCompat.checkSelfPermission(FloatingService.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                || (Build.VERSION.SDK_INT < Build.VERSION_CODES.M && !Settings.canDrawOverlays(this))) {
+                || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this))) {
             showToast(R.string.permissions_warning);
             stopSelf();
             return;
@@ -115,7 +116,7 @@ public class FloatingService extends Service {
                 .setContentTitle(getString(R.string.notif_title))
                 .setContentText(getString(R.string.notif_content))
                 .setPriority(Notification.PRIORITY_MIN)
-                .setSmallIcon(R.drawable.ic_my_location_black_24dp)
+                .setSmallIcon(R.drawable.ic_speedometer)
                 .setContentIntent(pendingIntent)
                 .build();
 
@@ -134,7 +135,8 @@ public class FloatingService extends Service {
                 break;
         }
 
-        mFloatingView = LayoutInflater.from(this).inflate(layout, null, false);
+        mFloatingView = LayoutInflater.from(new ContextThemeWrapper(this, R.style.Theme_Velociraptor))
+                .inflate(layout, null, false);
 
         mLimitText = (TextView) mFloatingView.findViewById(R.id.text);
         mStreetText = (TextView) mFloatingView.findViewById(R.id.subtext);

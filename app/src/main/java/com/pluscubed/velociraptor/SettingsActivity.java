@@ -12,6 +12,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
@@ -19,7 +20,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.Switch;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -55,14 +55,16 @@ public class SettingsActivity extends AppCompatActivity {
         mUnitSpinner = (Spinner) findViewById(R.id.spinner_unit);
         mStyleSpinner = (Spinner) findViewById(R.id.spinner_style);
         mOverspeedSpinner = (Spinner) findViewById(R.id.spinner_overspeed);
-        final Switch showSpeedometer = (Switch) findViewById(R.id.switch_speedometer);
+        final SwitchCompat showSpeedometer = (SwitchCompat) findViewById(R.id.switch_speedometer);
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             ((View) mEnabledFloatingImage.getParent()).setVisibility(View.GONE);
             mEnableFloatingButton.setVisibility(View.GONE);
+            findViewById(R.id.floating_enabled_space).setVisibility(View.GONE);
 
             ((View) mEnabledLocationImage.getParent()).setVisibility(View.GONE);
             mEnableLocationButton.setVisibility(View.GONE);
+            findViewById(R.id.location_enabled_space).setVisibility(View.GONE);
         }
 
         mEnableServiceButton.setOnClickListener(new View.OnClickListener() {
