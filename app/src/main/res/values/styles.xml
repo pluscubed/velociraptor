@@ -12,4 +12,8 @@
         <item name="android:textColor">?android:textColorPrimary</item>
     </style>
 
+    <style name="Widget.Button.Colored" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:textColor">@color/btn_colored_text_material</item>
+    </style>
+
 </resources>

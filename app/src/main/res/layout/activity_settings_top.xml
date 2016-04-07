@@ -50,7 +50,7 @@
 
         <Button
             android:id="@+id/button_location_enabled"
-            style="@style/Widget.AppCompat.Button.Colored"
+            style="@style/Widget.Button.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -89,12 +89,11 @@
 
         <Button
             android:id="@+id/button_floating_enabled"
-            style="@style/Widget.AppCompat.Button.Colored"
+            style="@style/Widget.Button.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="@string/open_settings_page"
-            android:textColor="?android:textColorPrimaryInverse" />
+            android:text="@string/open_settings_page" />
 
         <Space
             android:id="@+id/floating_enabled_space"
@@ -130,7 +129,7 @@
 
         <Button
             android:id="@+id/button_enable_service"
-            style="@style/Widget.AppCompat.Button.Colored"
+            style="@style/Widget.Button.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
