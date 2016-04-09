@@ -77,8 +77,6 @@ public class FloatingService extends Service {
     private Subscription mHereLocationSubscription;
     private LocationListener mLocationListener;
 
-    private Location mLastLocation;
-    private long mLastSpeedTimestamp;
     private int mLastSpeedLimit;
 
     public static int convertDpToPx(Context context, float dp) {
@@ -178,38 +176,32 @@ public class FloatingService extends Service {
         mLocationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                if (mLastSpeedTimestamp != 0 && mLastLocation != null) {
-                    float metersPerMilliseconds = location.distanceTo(mLastLocation) /
-                            (System.currentTimeMillis() - mLastSpeedTimestamp);
+                float metersPerSeconds = location.getSpeed();
 
-                    int speed;
-                    int percentage;
-                    if (PrefUtils.getUseMetric(FloatingService.this)) {
-                        speed = (int) ((metersPerMilliseconds * 60 * 60) + 0.5f); //km/h
-                        percentage = (int) ((float) speed / 200 * 100 + 0.5f);
-                    } else {
-                        speed = (int) ((metersPerMilliseconds * 1000 * 60 * 60 / 1609.344) + 0.5f); //mph
-                        percentage = (int) ((float) speed / 120 * 100 + 0.5f);
-                    }
-
-                    updateUnits();
-
-                    mSpeedometerText.setText(String.valueOf(speed));
-
-                    mArcView.getModels().get(0).setProgress(percentage);
-                    mArcView.setAnimatorListener(new AnimatorListenerAdapter() {
-                    });
-                    mArcView.animateProgress();
-
-                    if (mLastSpeedLimit != 0 && mLastSpeedLimit * (1 + (double) PrefUtils.getOverspeedPercent(FloatingService.this) / 100) < speed) {
-                        mSpeedometerText.setTextColor(ContextCompat.getColor(FloatingService.this, R.color.red500));
-                    } else {
-                        mSpeedometerText.setTextColor(ContextCompat.getColor(FloatingService.this, R.color.primary_text_default_material_light));
-                    }
+                int speed;
+                int percentage;
+                if (PrefUtils.getUseMetric(FloatingService.this)) {
+                    speed = (int) ((metersPerSeconds * 60 * 60 / 1000) + 0.5f); //km/h
+                    percentage = (int) ((float) speed / 200 * 100 + 0.5f);
+                } else {
+                    speed = (int) ((metersPerSeconds * 60 * 60 / 1000 / 1.609344) + 0.5f); //mph
+                    percentage = (int) ((float) speed / 120 * 100 + 0.5f);
                 }
 
-                mLastSpeedTimestamp = System.currentTimeMillis();
-                mLastLocation = location;
+                updateUnits();
+
+                mSpeedometerText.setText(String.valueOf(speed));
+
+                mArcView.getModels().get(0).setProgress(percentage);
+                mArcView.setAnimatorListener(new AnimatorListenerAdapter() {
+                });
+                mArcView.animateProgress();
+
+                if (mLastSpeedLimit != 0 && mLastSpeedLimit * (1 + (double) PrefUtils.getOverspeedPercent(FloatingService.this) / 100) < speed) {
+                    mSpeedometerText.setTextColor(ContextCompat.getColor(FloatingService.this, R.color.red500));
+                } else {
+                    mSpeedometerText.setTextColor(ContextCompat.getColor(FloatingService.this, R.color.primary_text_default_material_light));
+                }
 
                 mSpeedometer.setVisibility(PrefUtils.getShowSpeedometer(FloatingService.this) ? View.VISIBLE : View.GONE);
 
@@ -265,7 +257,9 @@ public class FloatingService extends Service {
 
                     @Override
                     public void onConnectionSuspended(int i) {
-
+                        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+                            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, mLocationListener);
+                        }
                     }
                 })
                 .addApi(LocationServices.API)
