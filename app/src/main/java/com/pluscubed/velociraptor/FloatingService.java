@@ -36,31 +36,43 @@ import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
 import com.gigamole.library.ArcProgressStackView;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.pluscubed.velociraptor.hereapi.GetLinkInfo;
 import com.pluscubed.velociraptor.hereapi.Link;
+import com.pluscubed.velociraptor.hereapi.LinkInfo;
+import com.pluscubed.velociraptor.osm.Element;
+import com.pluscubed.velociraptor.osm.OsmApi;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
+import rx.Observable;
 import rx.Single;
 import rx.SingleSubscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 public class FloatingService extends Service {
     public static final int PENDING_CLOSE = 5;
+    public static final String HERE_ROUTING_API = "http://route.st.nlp.nokia.com/routing/6.2/";
+    public static final String OSM_OVERPASS_API = "http://overpass-api.de/api/";
     private static final int NOTIFICATION_FLOATING_WINDOW = 303;
-
     private WindowManager mWindowManager;
 
     private View mFloatingView;
@@ -73,11 +85,13 @@ public class FloatingService extends Service {
 
     private GoogleApiClient mGoogleApiClient;
 
-    private HereService mService;
-    private Subscription mHereLocationSubscription;
+    private HereService mHereService;
+    private Subscription mLocationSubscription;
     private LocationListener mLocationListener;
 
     private int mLastSpeedLimit;
+    private Location mLastSpeedLimitLocation;
+    private OsmService mOsmService;
 
     public static int convertDpToPx(Context context, float dp) {
         return (int) (dp * context.getResources().getDisplayMetrics().density + 0.5f);
@@ -166,19 +180,32 @@ public class FloatingService extends Service {
         mArcView.setInterpolator(new FastOutSlowInInterpolator());
         mArcView.setModels(models);
 
-        Retrofit restAdapter = new Retrofit.Builder()
-                .baseUrl("http://route.st.nlp.nokia.com/routing/6.2/")
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
+
+        Retrofit hereRest = new Retrofit.Builder()
+                .baseUrl(HERE_ROUTING_API)
+                .client(client)
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .addConverterFactory(JacksonConverterFactory.create())
                 .build();
-        mService = restAdapter.create(HereService.class);
+        mHereService = hereRest.create(HereService.class);
+
+        final Retrofit osmRest = new Retrofit.Builder()
+                .baseUrl(OSM_OVERPASS_API)
+                .client(client)
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .addConverterFactory(JacksonConverterFactory.create())
+                .build();
+        mOsmService = osmRest.create(OsmService.class);
 
         mLocationListener = new LocationListener() {
             @Override
-            public void onLocationChanged(Location location) {
+            public void onLocationChanged(final Location location) {
                 float metersPerSeconds = location.getSpeed();
 
-                int speed;
+                final int speed;
                 int percentage;
                 if (PrefUtils.getUseMetric(FloatingService.this)) {
                     speed = (int) ((metersPerSeconds * 60 * 60 / 1000) + 0.5f); //km/h
@@ -206,37 +233,35 @@ public class FloatingService extends Service {
                 mSpeedometer.setVisibility(PrefUtils.getShowSpeedometer(FloatingService.this) ? View.VISIBLE : View.GONE);
 
 
-                if (mHereLocationSubscription == null) {
-                    final String text = location.getLatitude() + "," + location.getLongitude();
+                if (mLocationSubscription == null &&
+                        (mLastSpeedLimitLocation == null || location.distanceTo(mLastSpeedLimitLocation) > 50)) {
 
-                    mHereLocationSubscription = mService.getLinkInfo(text, getString(R.string.here_app_id), getString(R.string.here_app_code))
-                            .subscribeOn(Schedulers.io())
+                    mLocationSubscription = getOsmSpeedLimit(location)
+                            .switchIfEmpty(getHereSpeedLimit(location).toObservable())
+                            .toSingle()
                             .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(new SingleSubscriber<GetLinkInfo>() {
+                            .subscribe(new SingleSubscriber<Integer>() {
                                 @Override
-                                public void onSuccess(GetLinkInfo getLinkInfo) {
-                                    Link link = getLinkInfo.getResponse().getLink().get(0);
-                                    Double speedLimit = link.getSpeedLimit();
+                                public void onSuccess(Integer speedLimit) {
+                                    mLastSpeedLimitLocation = location;
+
                                     if (speedLimit != null) {
-                                        double factor = PrefUtils.getUseMetric(FloatingService.this) ? 3.6 : 2.23;
-                                        mLastSpeedLimit = (int) (speedLimit * factor + 0.5d);
-                                        mLimitText.setText(String.valueOf(mLastSpeedLimit));
+                                        mLastSpeedLimit = speedLimit;
+                                        mLimitText.setText(String.valueOf(speedLimit));
                                     } else {
                                         mLastSpeedLimit = 0;
                                         mLimitText.setText("--");
                                     }
 
-                                    mStreetText.setText(link.getAddress().getLabel());
-
-                                    //mLimitText.append("\n"+text);
-
-                                    mHereLocationSubscription = null;
+                                    mLocationSubscription = null;
                                 }
 
                                 @Override
                                 public void onError(Throwable error) {
                                     error.printStackTrace();
-                                    mHereLocationSubscription = null;
+                                    Crashlytics.logException(error);
+
+                                    mLocationSubscription = null;
                                 }
                             });
                 }
@@ -266,6 +291,91 @@ public class FloatingService extends Service {
                 .build();
 
         mGoogleApiClient.connect();
+    }
+
+    private String getOsmQuery(Location location) {
+        return "[out:json];" +
+                "way(around:" +
+                (int) (location.getAccuracy() + 0.5f) + ","
+                + location.getLatitude() + ","
+                + location.getLongitude() +
+                ")" +
+                "[\"highway\"][\"maxspeed\"];(._;>;);out;";
+    }
+
+    private Observable<Integer> getOsmSpeedLimit(final Location location) {
+        return mOsmService.getOsm(getOsmQuery(location))
+                .subscribeOn(Schedulers.io())
+                .toObservable()
+                .onErrorResumeNext(Observable.<OsmApi>empty())
+                .doOnNext(new Action1<OsmApi>() {
+                    @Override
+                    public void call(OsmApi osmApi) {
+                        if (!BuildConfig.DEBUG)
+                            Answers.getInstance().logCustom(new CustomEvent("OSM Request")
+                                    .putCustomAttribute("location", location.toString()));
+                    }
+                })
+                .flatMap(new Func1<OsmApi, Observable<Integer>>() {
+                    @Override
+                    public Observable<Integer> call(OsmApi osmApi) {
+                        boolean useMetric = PrefUtils.getUseMetric(FloatingService.this);
+
+                        List<Element> elements = osmApi.getElements();
+                        if (!elements.isEmpty()) {
+                            Element element = elements.get(elements.size() - 1);
+                            String maxspeed = element.getTags().getMaxspeed();
+                            if (maxspeed.matches("^-?\\d+$")) {
+                                //is integer -> km/h
+                                Integer limit = Integer.valueOf(maxspeed);
+                                if (!useMetric) {
+                                    limit = (int) (limit / 1.609344);
+                                }
+                                return Observable.just(limit);
+                            } else if (maxspeed.contains("mph")) {
+                                String[] split = maxspeed.split(" ");
+                                Integer limit = Integer.valueOf(split[0]);
+                                if (useMetric) {
+                                    limit = (int) (limit * 1.609344);
+                                }
+                                return Observable.just(limit);
+                            }
+                        }
+                        return Observable.empty();
+                    }
+                });
+    }
+
+    private Single<Integer> getHereSpeedLimit(final Location location) {
+        final String query = location.getLatitude() + "," + location.getLongitude();
+        return mHereService.getLinkInfo(query, getString(R.string.here_app_id), getString(R.string.here_app_code))
+                .subscribeOn(Schedulers.io())
+                .onErrorReturn(new Func1<Throwable, LinkInfo>() {
+                    @Override
+                    public LinkInfo call(Throwable throwable) {
+                        return null;
+                    }
+                })
+                .doOnSuccess(new Action1<LinkInfo>() {
+                    @Override
+                    public void call(LinkInfo linkInfo) {
+                        if (!BuildConfig.DEBUG)
+                            Answers.getInstance().logCustom(new CustomEvent("OSM Request")
+                                    .putCustomAttribute("location", location.toString()));
+                    }
+                })
+                .map(new Func1<LinkInfo, Integer>() {
+                    @Override
+                    public Integer call(LinkInfo linkInfo) {
+                        Link link = linkInfo.getResponse().getLink().get(0);
+                        Double speedLimit = link.getSpeedLimit();
+                        if (speedLimit != null) {
+                            double factor = PrefUtils.getUseMetric(FloatingService.this) ? 3.6 : 2.23;
+                            return (int) (speedLimit * factor + 0.5d);
+                        }
+                        return null;
+                    }
+                });
     }
 
     private void showToast(final int string) {
@@ -322,8 +432,8 @@ public class FloatingService extends Service {
         if (mFloatingView != null && mFloatingView.isShown())
             mWindowManager.removeView(mFloatingView);
 
-        if (mHereLocationSubscription != null) {
-            mHereLocationSubscription.unsubscribe();
+        if (mLocationSubscription != null) {
+            mLocationSubscription.unsubscribe();
         }
     }
 
@@ -368,7 +478,12 @@ public class FloatingService extends Service {
 
     private interface HereService {
         @GET("getlinkinfo.json")
-        Single<GetLinkInfo> getLinkInfo(@Query("waypoint") String waypoint, @Query("app_id") String appId, @Query("app_code") String appCode);
+        Single<LinkInfo> getLinkInfo(@Query("waypoint") String waypoint, @Query("app_id") String appId, @Query("app_code") String appCode);
+    }
+
+    private interface OsmService {
+        @GET("interpreter")
+        Single<OsmApi> getOsm(@Query("data") String data);
     }
 
     private class FloatingOnTouchListener implements View.OnTouchListener {

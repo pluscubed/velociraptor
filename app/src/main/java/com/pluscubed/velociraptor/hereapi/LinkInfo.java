@@ -16,7 +16,7 @@ import java.util.Map;
 @JsonPropertyOrder({
         "Response"
 })
-public class GetLinkInfo {
+public class LinkInfo {
 
     @JsonProperty("Response")
     private Response Response;

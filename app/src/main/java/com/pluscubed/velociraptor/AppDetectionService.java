@@ -57,9 +57,9 @@ public class AppDetectionService extends AccessibilityService {
                             }
                         }
 
-                        if (appPackage.equals(BuildConfig.APPLICATION_ID) || isMapApp) {
+                        if (isMapApp) {
                             startService(intent);
-                        } else {
+                        } else if (!appPackage.equals(BuildConfig.APPLICATION_ID)) {
                             stopService(intent);
                         }
                     }
