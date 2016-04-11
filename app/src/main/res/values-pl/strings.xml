@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<resources>
+    <string name="app_name">Velociraptor</string>
+    <string name="notif_content">Kliknij, aby otworzyć ustawienia</string>
+    <string name="notif_title">Velociraptor - Ograniczenie prędkości</string>
+    <string name="dialog_draw_overlay">Aby wyświetlić pływające elementy na Androidzie 6.0+ niezbędne jest nadanie uprawnienia \"Wyświetlanie nad innymi aplikacjami\"</string>
+    <string name="open_settings">Otwórz ustawienia</string>
+    <string name="accessibility_service_description">W celu wykrycia działania aplikacji i wyświetlenia ograniczenia prędkości niezbędne jest włączenie usługi ułatwień dostępu.</string>
+    <string name="enable_accessibility_service">Włącz usługę ułatwień dostepu</string>
+    <string name="enable_accessibility_service_desc">W celu automatycznego wyświetlenia limitu prędkości należy włączyć usługę ułatwień dostępu</string>
+    <string name="enable_floating_desc">Aby wyświetlić nakładkę należy zezwolić na użycie uprawnienia \"Wyświetlanie nad innymi aplikacjami\"</string>
+    <string name="open_settings_page">Otwórz ustawienia</string>
+    <string name="grant_permission">Nadaj uprawnienia</string>
+    <string name="enable_location_desc">W celu określenia limitu prędkości w twojej lokalizacji niezbędne jest nadanie uprawnienia Lokalizacja</string>
+    <string name="speed_unit">Jednostki prędkości:</string>
+    <string name="style">Styl:</string>
+    <string name="united_states">USA</string>
+    <string name="international">Międzynarodowe</string>
+    <string name="open_settings_failed_overlay">Nie można otworzyć ustawień. Należy ręcznie nadać uprawnienie \"Wyświetlanie nad innymi aplikacjami\" dla Velociraptora.</string>
+    <string name="open_settings_failed_accessibility">Nie można otworzyć ustawień. Należy ręcznie włączyć usługę ułatwień dostępu dla Velociraptora.</string>
+    <string name="permissions_warning">Velociraptor nie ma odpowiednich uprawień. Uruchom aplikację, aby je nadać.</string>
+    <string name="location_settings_warning">W celu użycia monitora ograniczenia prędkości niezbędne jest włączenie GPS dla tej aplikacji.</string>
+    <string name="speeding_amount">Ostrzeżenie o przekroczeniu prędkości:</string>
+    <string name="show_speedometer">Pokaż prędkościomierz</string>
+    <string name="about_dialog_title">Velociraptor v%s</string>
+    <string name="dismiss">Zamknij</string>
+    <string name="about_body"><![CDATA[
+        <b>Velociraptor</b> jest aplikacją wyświetlającą aktualną prędkość oraz limity prędkości wraz z opcją ostrzegania o przekroczeniu prędkości. Dane o dopuszczalnej prędkości bazują na danych z map HERE.
+        <br/><br/>
+
+        Aplikacja stworzona przez <b>Daniel Ciao</b><br/>
+
+        <a href=\'http://pluscubed.com\'>Strona www</a>&nbsp;&nbsp;
+        <a href=\'https://twitter.com/plusCubed\'>Twitter</a>&nbsp;&nbsp;
+        <a href=\'https://google.com/+DanielCiao\'>Google+</a>&nbsp;&nbsp;
+        <a href=\'https://github.com/pluscubed\'>GitHub</a>&nbsp;&nbsp;
+        <a href=\'https://www.linkedin.com/in/dciao\'>LinkedIn</a><br/><br/>
+
+        <a href=\'https://github.com/pluscubed/velociraptor\'>GitHub</a> - pliki źródłowe, problemy oraz prośby zmian<br/>
+    ]]></string>
+    <string name="about">O aplikacji</string>
+</resources>

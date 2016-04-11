@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<resources>
+    <string name="app_name">Velociraptor</string>
+    <string name="notif_content">輕觸以設定</string>
+    <string name="notif_title">Velociraptor 速限提醒</string>
+    <string name="dialog_draw_overlay">為了要在 Android 6.0+ 的系統顯示懸浮介面，請啟用「在其他應用程式上繪製內容」權限</string>
+    <string name="open_settings">前往設定頁面</string>
+    <string name="accessibility_service_description">為了使 Velociraptor 能夠偵測目前執行的應用程式以便適時地顯示速限提醒，必須啟用此項無障礙服務。</string>
+    <string name="enable_accessibility_service">啟用無障礙服務</string>
+    <string name="enable_accessibility_service_desc">要讓速限提醒自動顯示在地圖類型的應用程式上，請啟用必要的無障礙服務</string>
+    <string name="enable_floating_desc">為了要在其他程式上懸浮顯示，請啟用「在其他應用程式上繪製內容」權限</string>
+    <string name="open_settings_page">前往設定頁面</string>
+    <string name="grant_permission">授予權限</string>
+    <string name="enable_location_desc">為了取得您所在位置的行車速限，請允許存取位置資訊的權限</string>
+    <string name="speed_unit">速度單位</string>
+    <string name="style">標誌樣式</string>
+    <string name="united_states">美國</string>
+    <string name="international">國際</string>
+    <string name="open_settings_failed_overlay">無法自動前往設定頁面，請自行允許 Velociraptor 在其他應用程式上繪製內容</string>
+    <string name="open_settings_failed_accessibility">無法自動前往設定頁面，請自行啟用 Velociraptor 的無障礙服務</string>
+    <string name="permissions_warning">Velociraptor 尚未取得必要的系統權限，請開啟本程式以進行授予</string>
+    <string name="location_settings_warning">GPS 未開啟，啟用後即可執行 Velociraptor</string>
+    <string name="speeding_amount">超速警示</string>
+    <string name="show_speedometer">顯示時速表</string>
+    <string name="about_dialog_title">Velociraptor v%s</string>
+    <string name="dismiss">關閉</string>
+    <string name="about">關於</string>
+</resources>

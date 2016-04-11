@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<resources>
+    <string name="app_name">Velociraptor</string>
+    <string name="notif_content">Tryck för att öppna inställningar</string>
+    <string name="notif_title">Velociraptor Hastighetsbegränsning</string>
+    <string name="dialog_draw_overlay">För att visa flytande element i Android 6.0+, tillåt \"Visa Över Andra Applikationer\" behörigheten.</string>
+    <string name="open_settings">Öppna Inställningssidan</string>
+    <string name="enable_accessibility_service">Aktivera Tillgänglighetstjänster</string>
+    <string name="enable_accessibility_service_desc">För att automatiskt visa hastighetsbegränsningen i kartappen, slå på tillgänglighetstjänster</string>
+    <string name="open_settings_page">Öppna inställningssidan</string>
+    <string name="grant_permission">Tillåt behörighet</string>
+    <string name="enable_location_desc">För att bestämma hastighetsbegränsningen där du befinner dig måste du tillåta plats behörigheten</string>
+    <string name="speed_unit">Hastighetsenhet:</string>
+    <string name="style">Stil:</string>
+    <string name="united_states">Förenta staterna</string>
+    <string name="international">Internationell</string>
+    <string name="permissions_warning">Velociraptor har inte tillräckliga behörigheter. Öppna appen för att godkänna dom.</string>
+    <string name="location_settings_warning">GPS är inte påsatt. Sätt på för Velociraptors hastighetskontroll</string>
+    <string name="speeding_amount">Hastighetsvarning:</string>
+    <string name="show_speedometer">Visa hastighetsmätare</string>
+    <string name="dismiss">Avfärda</string>
+    <string name="about_body"><![CDATA[<b>Velociraptor </b> är en svävande hastighetsbegränsningsövervakare med hastighetsmätare och varningsfunktioner, använder HERE Maps hastighetsbegränsningsdata.
+<br/><br/> 
+
+Utvecklad av <b>Daniel Ciao</b><br/> 
+
+<a href=\'http://pluscubed.com\'>Hemsida</a>&nbsp;&nbsp;
+<a href=\'https://twitter.com/plusCubed\'>Twitter</a>&nbsp;&nbsp;
+<a href=\'https://google.com/+DanielCiao\'>Google+</a>&nbsp;&nbsp;
+<a href=\'https://github.com/pluscubed\'>GitHub</a>&nbsp;&nbsp;
+<a href=\'https://www.linkedin.com/in/dciao\'>LinkedIn</a><br/><br/>
+
+<a href=\'https://github.com/pluscubed/velociraptor\'>GitHub</a> - källa, problem, funktionsförfrågningar<br/> ]]></string>
+    <string name="about">Om</string>
+</resources>

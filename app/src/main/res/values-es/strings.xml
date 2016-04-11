@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<resources>
+    <string name="app_name">Velociraptor</string>
+    <string name="notif_content">Toque para abrir ajustes</string>
+    <string name="notif_title">Velociraptor: Límite de velocidad</string>
+    <string name="dialog_draw_overlay">Para mostrar los elementos flotantes en Android 6.0 o superior, concede el permiso \"Dibujar sobre otras aplicaciones\"</string>
+    <string name="open_settings">Abrir ajustes</string>
+    <string name="accessibility_service_description">Para detectar la aplicación en primer plano y mostrar el límite de velocidad, el servicio de accesibilidad debe estar habilitado.</string>
+    <string name="enable_accessibility_service">Habilitar el servicio de accesibilidad</string>
+    <string name="enable_accessibility_service_desc">Para mostrar automáticamente el límite de velocidad en el mapa, habilitar el servicio de accesibilidad</string>
+    <string name="enable_floating_desc">Para mostrar la superposición, conceder el permiso \"Dibujar sobre otras aplicaciones\"</string>
+    <string name="open_settings_page">Abrir página de ajustes</string>
+    <string name="grant_permission">Conceder permiso</string>
+    <string name="enable_location_desc">Para determinar el límite de velocidad en su ubicación, por favor, conceder el permiso de ubicación</string>
+    <string name="speed_unit">Unidades de velocidad:</string>
+    <string name="style">Estilo:</string>
+    <string name="united_states">Estados Unidos</string>
+    <string name="international">Internacional</string>
+    <string name="open_settings_failed_overlay">No se puede abrir la configuración. Por favor, activa manualmente \"Dibujar sobre otras aplicaciones\" en los ajustes.</string>
+    <string name="open_settings_failed_accessibility">No se puede abrir la configuración. Por favor, activa manualmente \"Dibujar sobre otras aplicaciones\" en los ajustes.</string>
+    <string name="permissions_warning">Velociraptor no tiene los permisos adecuados. Por favor, abra la aplicación para concederlos.</string>
+    <string name="location_settings_warning">El GPS no está activado. Por favor, activalo para visualizar el monitor del límite de velocidad de Velociraptor.</string>
+    <string name="speeding_amount">Advertencia, exceso de velocidad:</string>
+    <string name="show_speedometer">Mostrar indicador de velocidad</string>
+    <string name="about_dialog_title">Velociraptor v&amp;s</string>
+    <string name="dismiss">Cerrar</string>
+    <string name="about_body"><![CDATA[<b>Velociraptor</b> es un monitor de límite de velocidad variable con las características del velocímetro y de advertencia, utilizando aquí los datos de límite de velocidad establecidos.
+<br/><br/>
+Desarrollado por <b>Daniel Ciao</b><br/>
+
+<a href=\'http://pluscubed.com\'>Website</a>&nbsp;&nbsp;
+<a href=\'https://twitter.com/plusCubed\'>Twitter</a>&nbsp;&nbsp;
+<a href=\'https://google.com/+DanielCiao\'>Google+</a>&nbsp;&nbsp;
+<a href=\'https://github.com/pluscubed\'>GitHub</a>&nbsp;&nbsp;
+<a href=\'https://www.linkedin.com/in/dciao\'>LinkedIn</a><br/><br/>
+
+<a href=\'https://github.com/pluscubed/velociraptor\'>GitHub</a> - código fuente, reporte de errores, pedir nuevas funciones<br/>]]></string>
+    <string name="about">Acerca</string>
+</resources>

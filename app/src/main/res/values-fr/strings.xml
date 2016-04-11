@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<resources>
+    <string name="app_name">Velociraptor</string>
+    <string name="notif_content">Appuyer pour accéder aux paramètres</string>
+    <string name="notif_title">Vitesse limite Velociraptor</string>
+    <string name="dialog_draw_overlay">Pour afficher les éléments flottants sur Android 6.0+ autoriser Velociraptor à se superposer aux autres applications</string>
+    <string name="open_settings">Accéder aux paramètres</string>
+    <string name="accessibility_service_description">Pour détecter l\'application en arrière plan et afficher la limitation de vitesse, le service d\'accessibilité doit être activé.</string>
+    <string name="enable_accessibility_service">Activer le service d\'accessibilité</string>
+    <string name="enable_accessibility_service_desc">Pour afficher automatiquement la vitesse limite dans les applications de cartographie, activer le service d\'accessibilité</string>
+    <string name="enable_floating_desc">Pour afficher en superposition, activer l\'autorisation \"Se superposer aux autres applications\"</string>
+    <string name="open_settings_page">Ouvrir les paramètres</string>
+    <string name="grant_permission">Accorder l\'autorisation</string>
+    <string name="enable_location_desc">Afin de déterminer la vitesse limite de votre position, veuillez accorder l\'autorisation de localisation</string>
+    <string name="speed_unit">Unités de vitesse :</string>
+    <string name="style">Style :</string>
+    <string name="united_states">États-Unis</string>
+    <string name="international">International</string>
+    <string name="open_settings_failed_overlay">Impossible d\'accéder aux paramètres. Veuillez activer le paramètre \"Se superposer aux autres applications\" pour Velociraptor.</string>
+    <string name="open_settings_failed_accessibility">Impossible d\'accéder aux paramètres. Veuillez activer le paramètre du service d\'accessibilité pour Velociraptor.</string>
+    <string name="permissions_warning">Velociraptor n\'a pas les autorisations requises. Veuillez ouvrir l\'application pour les accorder.</string>
+    <string name="location_settings_warning">Le GPS est désactivé. Veuillez l\'activer pour que Velociraptor fonctionne.</string>
+    <string name="speeding_amount">Excès de vitesse :</string>
+    <string name="show_speedometer">Afficher le compteur de vitesse</string>
+    <string name="about_dialog_title">Velociraptor v%s</string>
+    <string name="dismiss">Annuler</string>
+    <string name="about_body"><![CDATA[<b>Velociraptor</b> est un compteur de vitesse flottant indiquant les limites de vitesses en utilisant la base de donnée de HERE Maps.
+<br/><br/>
+
+Développé par <b>Daniel Ciao</b><br/>
+
+<a href=\'http://pluscubed.com\'>Site Web</a>&nbsp;&nbsp;
+<a href=\'https://twitter.com/plusCubed\'>Twitter</a>&nbsp;&nbsp;
+<a href=\'https://google.com/+DanielCiao\'>Google+</a>&nbsp;&nbsp;
+<a href=\'https://github.com/pluscubed\'>GitHub</a>&nbsp;&nbsp;
+<a href=\'https://www.linkedin.com/in/dciao\'>LinkedIn</a><br/><br/>
+
+<a href=\'https://github.com/pluscubed/velociraptor\'>GitHub</a> - source, bogues, demandes de nouvelles fonctionnalités<br/>]]></string>
+    <string name="about">À propos</string>
+</resources>

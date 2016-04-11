@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<resources>
+    <string name="app_name">Velociraptor</string>
+    <string name="notif_content">Antippen, um Einstellungen zu öffnen</string>
+    <string name="notif_title">Velociraptor -  Geschwindigkeitsbeschränkung</string>
+    <string name="dialog_draw_overlay">Um schwebende Elemente in Android 6.0 oder höher anzuzeigen, ist die Berechtigung \"über andere Apps zeichnen\" nötig.</string>
+    <string name="open_settings">Einstellungsseite öffnen</string>
+    <string name="accessibility_service_description">Um die Vordergrund-App zu bestimmen und die Geschwindigkeit anzuzeigen, muss der \"Bedienungshilfen\"-Dienst  aktiviert werden.</string>
+    <string name="enable_accessibility_service">Dienst aktivieren</string>
+    <string name="enable_accessibility_service_desc">Um Geschwindigkeitsbeschränkungen in Maps automatisch anzuzeigen, muss der \"Bedienungshilfen\"-Dienst aktiviert werden.</string>
+    <string name="enable_floating_desc">Um das Overlay anzuzeigen, ist die  Berechtigung \"über andere Apps zeichnen\" nötig.</string>
+    <string name="open_settings_page">Einstellungsseite öffnen</string>
+    <string name="grant_permission">Berechtigung erteilen</string>
+    <string name="enable_location_desc">Um die erlaubte Geschwindigkeit zu bestimmen, ist die Berechtigung zur Standortbestimmung nötig.</string>
+    <string name="speed_unit">Einheit der Geschwindigkeit:</string>
+    <string name="style">Stil:</string>
+    <string name="united_states">USA</string>
+    <string name="international">International</string>
+    <string name="open_settings_failed_overlay">Einstellungen können nicht geöffnet werden. Bitte erlauben Sie \"über andere Apps zeichnen\" für Velociraptor von Hand.</string>
+    <string name="open_settings_failed_accessibility">Einstellungen können nicht geöffnet werden. Bitte aktivieren Sie die Bedienungshilfen in den Systemeinstellungen von Hand.</string>
+    <string name="permissions_warning">Velociraptor hat nicht die nötigen Berechtigungen. Bitte starten Sie die App, um sie zu vergeben.</string>
+    <string name="location_settings_warning">GPS ist ausgeschaltet. Bitte aktivieren Sie es, damit Velociraptor die Geschwindigkeit überwachen kann.</string>
+    <string name="speeding_amount">Warnung bei Überschreiten der Höchstgeschwindigkeit:</string>
+    <string name="show_speedometer">Geschwindigkeit anzeigen</string>
+    <string name="about_dialog_title">Velociraptor v%s</string>
+    <string name="dismiss">Schließen</string>
+    <string name="about_body"><![CDATA[
+        <b>Velociraptor</b> zeigt die erlaubte Höchstgeschwindigkeit an und warnt bei Überschreitung. Es verwendet die Daten von HERE Map.
+        <br/><br/>
+
+        Entwickelt von <b>Daniel Ciao</b><br/>
+
+        <a href=\'http://pluscubed.com\'>Webseite</a>&nbsp;&nbsp;
+        <a href=\'https://twitter.com/plusCubed\'>Twitter</a>&nbsp;&nbsp;
+        <a href=\'https://google.com/+DanielCiao\'>Google+</a>&nbsp;&nbsp;
+        <a href=\'https://github.com/pluscubed\'>GitHub</a>&nbsp;&nbsp;
+        <a href=\'https://www.linkedin.com/in/dciao\'>LinkedIn</a><br/><br/>
+
+        <a href=\'https://github.com/pluscubed/velociraptor\'>GitHub</a> - Quelltext, Probleme, Feature-Wünsche<br/>
+    ]]></string>
+    <string name="about">Über</string>
+</resources>
