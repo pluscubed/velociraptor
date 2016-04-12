@@ -133,9 +133,8 @@ public class SettingsActivity extends AppCompatActivity {
                             Utils.convertDpToPx(SettingsActivity.this, mStyleSpinner.getSelectedItemPosition() * -48));
 
                     if (isServiceReady()) {
-                        Intent intent = new Intent(SettingsActivity.this, FloatingService.class);
-                        stopService(intent);
-                        startService(intent);
+                        enableService(false);
+                        enableService(true);
                     }
                 }
             }
@@ -183,8 +182,7 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        Intent intent = new Intent(this, FloatingService.class);
-        stopService(intent);
+        enableService(false);
     }
 
     @Override
@@ -237,8 +235,16 @@ public class SettingsActivity extends AppCompatActivity {
         mEnableServiceButton.setEnabled(!serviceEnabled);
 
         if (permissionGranted && overlayEnabled) {
-            Intent intent = new Intent(this, FloatingService.class);
+            enableService(true);
+        }
+    }
+
+    private void enableService(boolean start) {
+        Intent intent = new Intent(this, FloatingService.class);
+        if (start) {
             startService(intent);
+        } else {
+            stopService(intent);
         }
     }
 

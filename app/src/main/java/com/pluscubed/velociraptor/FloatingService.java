@@ -203,31 +203,33 @@ public class FloatingService extends Service {
         mLocationListener = new LocationListener() {
             @Override
             public void onLocationChanged(final Location location) {
-                float metersPerSeconds = location.getSpeed();
+                if (location.hasSpeed()) {
+                    float metersPerSeconds = location.getSpeed();
 
-                final int speed;
-                int percentage;
-                if (PrefUtils.getUseMetric(FloatingService.this)) {
-                    speed = (int) ((metersPerSeconds * 60 * 60 / 1000) + 0.5f); //km/h
-                    percentage = (int) ((float) speed / 200 * 100 + 0.5f);
-                } else {
-                    speed = (int) ((metersPerSeconds * 60 * 60 / 1000 / 1.609344) + 0.5f); //mph
-                    percentage = (int) ((float) speed / 120 * 100 + 0.5f);
-                }
+                    final int speed;
+                    int percentage;
+                    if (PrefUtils.getUseMetric(FloatingService.this)) {
+                        speed = (int) ((metersPerSeconds * 60 * 60 / 1000) + 0.5f); //km/h
+                        percentage = (int) ((float) speed / 200 * 100 + 0.5f);
+                    } else {
+                        speed = (int) ((metersPerSeconds * 60 * 60 / 1000 / 1.609344) + 0.5f); //mph
+                        percentage = (int) ((float) speed / 120 * 100 + 0.5f);
+                    }
 
-                updateUnits();
+                    updateUnits();
 
-                mSpeedometerText.setText(String.valueOf(speed));
+                    mSpeedometerText.setText(String.valueOf(speed));
 
-                mArcView.getModels().get(0).setProgress(percentage);
-                mArcView.setAnimatorListener(new AnimatorListenerAdapter() {
-                });
-                mArcView.animateProgress();
+                    mArcView.getModels().get(0).setProgress(percentage);
+                    mArcView.setAnimatorListener(new AnimatorListenerAdapter() {
+                    });
+                    mArcView.animateProgress();
 
-                if (mLastSpeedLimit != 0 && mLastSpeedLimit * (1 + (double) PrefUtils.getOverspeedPercent(FloatingService.this) / 100) < speed) {
-                    mSpeedometerText.setTextColor(ContextCompat.getColor(FloatingService.this, R.color.red500));
-                } else {
-                    mSpeedometerText.setTextColor(ContextCompat.getColor(FloatingService.this, R.color.primary_text_default_material_light));
+                    if (mLastSpeedLimit != 0 && mLastSpeedLimit * (1 + (double) PrefUtils.getOverspeedPercent(FloatingService.this) / 100) < speed) {
+                        mSpeedometerText.setTextColor(ContextCompat.getColor(FloatingService.this, R.color.red500));
+                    } else {
+                        mSpeedometerText.setTextColor(ContextCompat.getColor(FloatingService.this, R.color.primary_text_default_material_light));
+                    }
                 }
 
                 mSpeedometer.setVisibility(PrefUtils.getShowSpeedometer(FloatingService.this) ? View.VISIBLE : View.GONE);
@@ -312,8 +314,7 @@ public class FloatingService extends Service {
                     @Override
                     public void call(OsmApi osmApi) {
                         if (!BuildConfig.DEBUG)
-                            Answers.getInstance().logCustom(new CustomEvent("OSM Request")
-                                    .putCustomAttribute("location", location.toString()));
+                            Answers.getInstance().logCustom(new CustomEvent("OSM Request"));
                     }
                 })
                 .flatMap(new Func1<OsmApi, Observable<Integer>>() {
@@ -360,8 +361,7 @@ public class FloatingService extends Service {
                     @Override
                     public void call(LinkInfo linkInfo) {
                         if (!BuildConfig.DEBUG)
-                            Answers.getInstance().logCustom(new CustomEvent("OSM Request")
-                                    .putCustomAttribute("location", location.toString()));
+                            Answers.getInstance().logCustom(new CustomEvent("HERE Request"));
                     }
                 })
                 .map(new Func1<LinkInfo, Integer>() {
@@ -421,9 +421,18 @@ public class FloatingService extends Service {
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public boolean stopService(Intent name) {
+        onStop();
+        return super.stopService(name);
+    }
 
+    @Override
+    public void onDestroy() {
+        onStop();
+        super.onDestroy();
+    }
+
+    private void onStop() {
         if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, mLocationListener);
             mGoogleApiClient.disconnect();
