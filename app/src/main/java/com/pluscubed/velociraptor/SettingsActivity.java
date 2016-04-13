@@ -78,11 +78,10 @@ public class SettingsActivity extends AppCompatActivity {
         findViewById(R.id.open_openstreetmap).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent website = ShareCompat.IntentBuilder.from(SettingsActivity.this)
+                ShareCompat.IntentBuilder.from(SettingsActivity.this)
                         .setText("https://www.openstreetmap.org")
                         .setType("text/plain")
-                        .getIntent();
-                startActivity(website);
+                        .startChooser();
             }
         });
 
