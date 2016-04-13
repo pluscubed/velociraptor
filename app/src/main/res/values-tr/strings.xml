@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<resources>
+    <string name="app_name">Velociraptor</string>
+    <string name="notif_content">Ayarları açmak için dokunun</string>
+    <string name="notif_title">Velociraptor Hız Limiti</string>
+    <string name="dialog_draw_overlay">Android 6.0+ cihazlarda bilgi baloncuklarını göstermek için, \"Diğer uygulamaların üzerinde görüntüleme\" iznini verin</string>
+    <string name="open_settings">Ayarlar Sayfasını Aç</string>
+    <string name="accessibility_service_description">Uygulamanın ön planda olup olmadığının algılanması ve hız limitinin gösterilmesi için Erişilebilirlik Servisi aktif olmalıdır.</string>
+    <string name="enable_accessibility_service">Erişilebilirlik Servisini Aktifleştir</string>
+    <string name="enable_accessibility_service_desc">Hız limitini harita uygulamaları üzerinde otomatik olarak göstermek için, Erişilebilirlik servisini aktif edin</string>
+    <string name="enable_floating_desc">Görüntünün kaplaması için, \"Diğer uygulamaların üzerinde görüntüleme\" iznini onaylayın</string>
+    <string name="open_settings_page">Ayarlar sayfasını aç</string>
+    <string name="grant_permission">İzin onayı gerekiyor</string>
+    <string name="enable_location_desc">Konumunuzdaki hız limitini algılayabilmek için, lütfen konum iznini onaylayın</string>
+    <string name="speed_unit">Hız Birimleri:</string>
+    <string name="style">Stil:</string>
+    <string name="united_states">Amerika</string>
+    <string name="international">Uluslararası</string>
+    <string name="open_settings_failed_overlay">Ayarlar açılamıyor. Lütfen manuel olarak \"Diğer uygulamaların üzerinde görüntüleme\" iznini onaylayın</string>
+    <string name="open_settings_failed_accessibility">Ayarlar açılamıyor. Lütfen Velociraptor için manuel olarak Erişilebilirlik Servisini aktif edin</string>
+    <string name="permissions_warning">Velociraptor yeterli izinlere sahip değil. Lütfen uygulamayı açıp izinleri onaylayın.</string>
+    <string name="location_settings_warning">GPS kapalı. Lütfen Velociraptor\'ın hız limitini görüntüleyebilmesi için aktif edin.</string>
+    <string name="speeding_amount">Hız Töleransı:</string>
+    <string name="show_speedometer">Hız Göstergesini Göster</string>
+    <string name="about_dialog_title">Velociraptor v%s</string>
+    <string name="dismiss">Yoksay</string>
+</resources>

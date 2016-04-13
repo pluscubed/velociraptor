@@ -5,6 +5,7 @@
     <string name="notif_title">Velociraptor Hastighetsbegränsning</string>
     <string name="dialog_draw_overlay">För att visa flytande element i Android 6.0+, tillåt \"Visa Över Andra Applikationer\" behörigheten.</string>
     <string name="open_settings">Öppna Inställningssidan</string>
+    <string name="accessibility_service_description">För att upptäcka förgrundsappen och visa hastighetsbegränsingen så måste tillgänglighets inställningen vara aktiverad.</string>
     <string name="enable_accessibility_service">Aktivera Tillgänglighetstjänster</string>
     <string name="enable_accessibility_service_desc">För att automatiskt visa hastighetsbegränsningen i kartappen, slå på tillgänglighetstjänster</string>
     <string name="open_settings_page">Öppna inställningssidan</string>
@@ -14,10 +15,13 @@
     <string name="style">Stil:</string>
     <string name="united_states">Förenta staterna</string>
     <string name="international">Internationell</string>
+    <string name="open_settings_failed_overlay">Misslyckades att öppna inställningar. Aktivera vänligen manuellt \"Program som kan visas överst\" inställningen för Anticipate.</string>
+    <string name="open_settings_failed_accessibility">Misslyckades att öppna inställningar. Aktivera vänligen manuellt \"Tillgänglighet\" inställningen för Anticipate.</string>
     <string name="permissions_warning">Velociraptor har inte tillräckliga behörigheter. Öppna appen för att godkänna dom.</string>
     <string name="location_settings_warning">GPS är inte påsatt. Sätt på för Velociraptors hastighetskontroll</string>
     <string name="speeding_amount">Hastighetsvarning:</string>
     <string name="show_speedometer">Visa hastighetsmätare</string>
+    <string name="about_dialog_title">Velociraptor v%s</string>
     <string name="dismiss">Avfärda</string>
     <string name="about_body"><![CDATA[<b>Velociraptor </b> är en svävande hastighetsbegränsningsövervakare med hastighetsmätare och varningsfunktioner, använder HERE Maps hastighetsbegränsningsdata.
 <br/><br/> 

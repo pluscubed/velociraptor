@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<resources>
+    <string name="app_name">Velociraptor</string>
+    <string name="notif_content">Нажмите, чтобы открыть настройки</string>
+    <string name="notif_title">Velociraptor Ограничение скорости</string>
+    <string name="accessibility_service_description">Включение службы</string>
+    <string name="enable_accessibility_service">Включение службы</string>
+    <string name="enable_accessibility_service_desc">Для автоматического отображения ограничения скорости на карте приложения , включите службу</string>
+    <string name="enable_floating_desc">Чтобы отобразить наложение, включите разрешение \"поверх других окон\"</string>
+    <string name="open_settings_page">Открыть страницу настроек</string>
+    <string name="enable_location_desc">Для определения допустимой скорости в ваше районе, пожалуйста, разрешете обнаружение местоположения</string>
+    <string name="speed_unit">Единицы измерения скорости</string>
+    <string name="style">Стиль:</string>
+    <string name="united_states">Соединенные Штаты</string>
+    <string name="international">Международный</string>
+    <string name="open_settings_failed_overlay">Международный</string>
+    <string name="permissions_warning">Velociraptor не имеет соответствующих разрешений. Пожалуйста, откройте приложение, чтобы предоставить их.</string>
+    <string name="location_settings_warning">GPS не включен. Пожалуйста, включите для монитора ограничения скорости Velociraptor.</string>
+    <string name="speeding_amount">Допустимое отклонение превышения скорости:</string>
+    <string name="show_speedometer">Показать спидометр</string>
+    <string name="about_dialog_title">Velociraptor v%s</string>
+    <string name="about">About</string>
+</resources>

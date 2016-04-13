@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<resources>
+    <string name="app_name">Velociraptor</string>
+    <string name="notif_content">Érintsd meg a beállításokhoz</string>
+    <string name="notif_title">Velociraptor sebességhatár</string>
+    <string name="dialog_draw_overlay">A lebegő elemek megjelenítéséhez kérlek add meg \"Megjelenítés más alkalmazások felett\" engedélyt</string>
+    <string name="open_settings">Beállítások megnyitása</string>
+    <string name="accessibility_service_description">Az aktív alkalmazás felismeréséhez és a sebességhatár megjelenítéséhez a kisegítő lehetőségek szolgáltatást engedélyezni kell</string>
+    <string name="enable_accessibility_service">Kisegítő lehetőségek szolgáltatás engedélyezése</string>
+    <string name="enable_accessibility_service_desc">A sebességhatár automatikus megjelenítéséhez kérlek kapcsold be a kisegítő lehetőségek szolgáltatást</string>
+    <string name="enable_floating_desc">Az extra réteg megjelenítéséhez kérlek add meg a \"Megjelenítés más alkalmazások felett\" engedélyt</string>
+    <string name="open_settings_page">Beállítások megnyitása</string>
+    <string name="grant_permission">Engedély megadása</string>
+    <string name="enable_location_desc">A pozíciódban érvényes sebességhatár meghatározásához kérlek engedélyezd a Helyadatokhoz való hozzáférést</string>
+    <string name="speed_unit">Mértékegység:</string>
+    <string name="style">Stílus:</string>
+    <string name="united_states">Egyesült Államok</string>
+    <string name="international">Nemzetközi</string>
+    <string name="open_settings_failed_overlay">Nem tudtam megnyitni a Beállításokat. Kérlek kézzel add meg a \"Megjelenítés más alkalmazások felett\" engedélyt</string>
+    <string name="open_settings_failed_accessibility">Nem tudtam megnyitni a Beállításokat. Kérlek kézzel add a Kisegítő lehetőségekhez való hozzáférést</string>
+    <string name="permissions_warning">A Velociraptornak nincsenek meg a megfelelő engedélyei. Kérlek nyisd meg az alkalmazást az beállításhoz.</string>
+    <string name="location_settings_warning">GPS nincs bekapcsolva. Kérlek kapcsold be, hogy a Velociraptor felismerje a sebességet.</string>
+    <string name="speeding_amount">Gyorshajtási tolerancia:</string>
+    <string name="show_speedometer">Sebességmérő megjelenítése</string>
+    <string name="about_dialog_title">Velociraptor v%s</string>
+    <string name="dismiss">Eltüntetés</string>
+    <string name="about_body"><![CDATA[A <b>Velociraptor</b> egy extra réteg sebességhatár figyelő alkalmazás, sebességmérő és figyelmeztető funkciókkal, a HERE térkép sebességhatár információi alapján.
+<br/><br/> 
+
+Fejlesztette: <b>Daniel Ciao</b><br/> 
+
+<a href=\'http://pluscubed.com\'>Weboldal</a>&nbsp;&nbsp; 
+<a href=\'https://twitter.com/plusCubed\'>Twitter</a>&nbsp;&nbsp; 
+<a href=\'https://google.com/+DanielCiao\'>Google+</a>&nbsp;&nbsp; 
+<a href=\'https://github.com/pluscubed\'>GitHub</a>&nbsp;&nbsp; 
+<a href=\'https://www.linkedin.com/in/dciao\'>LinkedIn</a><br/><br/> 
+
+<a href=\'https://github.com/pluscubed/velociraptor\'>GitHub</a> - forrás, hibák, funkciókérések<br/> 
+<a href=\'http://ost4cel.oneskyapp.com/collaboration/project/64120\'>OneSky</a> - fordítsd le az alkalmazást a saját nyelvedre
+]]></string>
+    <string name="about">Névjegy</string>
+</resources>
