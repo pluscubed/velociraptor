@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ShareCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
@@ -73,6 +74,17 @@ public class SettingsActivity extends AppCompatActivity {
             mEnableLocationButton.setVisibility(View.GONE);
             findViewById(R.id.location_enabled_space).setVisibility(View.GONE);
         }
+
+        findViewById(R.id.open_openstreetmap).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent website = ShareCompat.IntentBuilder.from(SettingsActivity.this)
+                        .setText("https://www.openstreetmap.org")
+                        .setType("text/plain")
+                        .getIntent();
+                startActivity(website);
+            }
+        });
 
         mEnableServiceButton.setOnClickListener(new View.OnClickListener() {
             @Override

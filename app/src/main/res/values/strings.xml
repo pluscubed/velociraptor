@@ -25,6 +25,7 @@
     <string name="open_settings_failed_accessibility">Unable to open settings. Please manually enable the Accessibility Service setting for Velociraptor.</string>
     <string name="permissions_warning">Velociraptor doesn\'t have adequate permissions. Please open the app to grant them.</string>
     <string name="location_settings_warning">GPS is not turned on. Please enable for Velociraptor\'s speed limit monitor.</string>
+    <string name="network_warning">Network is not connected. Velociraptor requires Internet connectivity to fetch the speed limit.</string>
     <string name="speeding_amount">Speeding Tolerance:</string>
     <string name="show_speedometer">Show speedometer</string>
 
@@ -46,4 +47,6 @@
         <a href=\'http://ost4cel.oneskyapp.com/collaboration/project/64120\'>OneSky</a> - translate the app to your language
     ]]></string>
     <string name="about">About</string>
+    <string name="wrong_speed_limit">Wrong or missing speed limit?</string>
+    <string name="wrong_speed_limit_desc">Go to OpenStreetMap on your computer to edit the data. Touch to share link (https://openstreetmap.org)</string>
 </resources>

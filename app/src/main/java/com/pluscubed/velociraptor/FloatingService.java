@@ -6,6 +6,7 @@ import android.animation.ValueAnimator;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -13,6 +14,8 @@ import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -83,19 +86,7 @@ public class FloatingService extends Service {
     public void onCreate() {
         super.onCreate();
 
-        if (ContextCompat.checkSelfPermission(FloatingService.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this))) {
-            showToast(getString(R.string.permissions_warning));
-            stopSelf();
-            return;
-        }
-
-        LocationManager manager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            showToast(getString(R.string.location_settings_warning));
-            stopSelf();
-            return;
-        }
+        if (prequisitesNotMet()) return;
 
         Intent notificationIntent = new Intent(this, SettingsActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, PENDING_CLOSE, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
@@ -185,6 +176,32 @@ public class FloatingService extends Service {
         mGoogleApiClient.connect();
     }
 
+    private boolean prequisitesNotMet() {
+        if (ContextCompat.checkSelfPermission(FloatingService.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this))) {
+            showToast(getString(R.string.permissions_warning));
+            stopSelf();
+            return true;
+        }
+
+        LocationManager manager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            showToast(getString(R.string.location_settings_warning));
+            stopSelf();
+            return true;
+        }
+
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+        if (!isConnected) {
+            showToast(getString(R.string.network_warning));
+            stopSelf();
+            return true;
+        }
+        return false;
+    }
+
     private void onLocationChanged(final Location location) {
         updateSpeedometer(location);
 
@@ -212,9 +229,10 @@ public class FloatingService extends Service {
                         @Override
                         public void onError(Throwable error) {
                             error.printStackTrace();
-                            Crashlytics.logException(error);
+                            if (!BuildConfig.DEBUG)
+                                Crashlytics.logException(error);
 
-                            showToast("Error: " + error);
+                            showToast("Velociraptor Error: " + error);
 
                             mLocationSubscription = null;
                         }
