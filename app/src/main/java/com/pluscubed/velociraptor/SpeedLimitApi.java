@@ -76,7 +76,7 @@ public class SpeedLimitApi {
         mOsmApiSelectionInterceptor = new OsmApiSelectionInterceptor();
         OkHttpClient osmClient = client.newBuilder()
                 .addInterceptor(mOsmApiSelectionInterceptor)
-                .connectTimeout(5000, TimeUnit.MILLISECONDS)
+                .connectTimeout(2000, TimeUnit.MILLISECONDS)
                 .readTimeout(5000, TimeUnit.MILLISECONDS)
                 .build();
         Retrofit osmRest = buildRetrofit(osmClient, OSM_OVERPASS_APIS[0]);
