@@ -25,6 +25,8 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.pluscubed.velociraptor.utils.PrefUtils;
+import com.pluscubed.velociraptor.utils.Utils;
 
 public class SettingsActivity extends AppCompatActivity {
 

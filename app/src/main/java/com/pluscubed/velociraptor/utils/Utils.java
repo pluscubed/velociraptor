@@ -1,9 +1,11 @@
-package com.pluscubed.velociraptor;
+package com.pluscubed.velociraptor.utils;
 
 import android.accessibilityservice.AccessibilityService;
 import android.content.Context;
 import android.provider.Settings;
 import android.text.TextUtils;
+
+import com.pluscubed.velociraptor.BuildConfig;
 
 public abstract class Utils {
 
@@ -37,5 +39,9 @@ public abstract class Utils {
 
     public static int convertDpToPx(Context context, float dp) {
         return (int) (dp * context.getResources().getDisplayMetrics().density + 0.5f);
+    }
+
+    public static int compare(int lhs, int rhs) {
+        return lhs < rhs ? -1 : (lhs == rhs ? 0 : 1);
     }
 }

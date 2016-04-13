@@ -1,5 +1,5 @@
 
-package com.pluscubed.velociraptor.osm;
+package com.pluscubed.velociraptor.osmapi;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
@@ -21,7 +21,7 @@ import java.util.Map;
         "osm3s",
         "elements"
 })
-public class OsmApi {
+public class OsmResponse {
 
     @JsonProperty("version")
     private Double version;
@@ -30,9 +30,9 @@ public class OsmApi {
     @JsonProperty("osm3s")
     private Osm3s osm3s;
     @JsonProperty("elements")
-    private List<Element> elements = new ArrayList<Element>();
+    private List<Element> elements = new ArrayList<>();
     @JsonIgnore
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    private Map<String, Object> additionalProperties = new HashMap<>();
 
     /**
      * @return The version

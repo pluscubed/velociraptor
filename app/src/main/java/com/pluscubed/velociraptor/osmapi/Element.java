@@ -1,5 +1,5 @@
 
-package com.pluscubed.velociraptor.osm;
+package com.pluscubed.velociraptor.osmapi;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
@@ -18,10 +18,8 @@ import java.util.Map;
 @JsonPropertyOrder({
         "type",
         "id",
-        "lat",
-        "lon",
-        "tags",
-        "nodes"
+        "nodes",
+        "tags"
 })
 public class Element {
 
@@ -29,14 +27,10 @@ public class Element {
     private String type;
     @JsonProperty("id")
     private Integer id;
-    @JsonProperty("lat")
-    private Double lat;
-    @JsonProperty("lon")
-    private Double lon;
+    @JsonProperty("nodes")
+    private List<Long> nodes = new ArrayList<>();
     @JsonProperty("tags")
     private Tags tags;
-    @JsonProperty("nodes")
-    private List<Integer> nodes = new ArrayList<Integer>();
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -73,38 +67,6 @@ public class Element {
     }
 
     /**
-     * @return The lat
-     */
-    @JsonProperty("lat")
-    public Double getLat() {
-        return lat;
-    }
-
-    /**
-     * @param lat The lat
-     */
-    @JsonProperty("lat")
-    public void setLat(Double lat) {
-        this.lat = lat;
-    }
-
-    /**
-     * @return The lon
-     */
-    @JsonProperty("lon")
-    public Double getLon() {
-        return lon;
-    }
-
-    /**
-     * @param lon The lon
-     */
-    @JsonProperty("lon")
-    public void setLon(Double lon) {
-        this.lon = lon;
-    }
-
-    /**
      * @return The tags
      */
     @JsonProperty("tags")
@@ -124,7 +86,7 @@ public class Element {
      * @return The nodes
      */
     @JsonProperty("nodes")
-    public List<Integer> getNodes() {
+    public List<Long> getNodes() {
         return nodes;
     }
 
@@ -132,7 +94,7 @@ public class Element {
      * @param nodes The nodes
      */
     @JsonProperty("nodes")
-    public void setNodes(List<Integer> nodes) {
+    public void setNodes(List<Long> nodes) {
         this.nodes = nodes;
     }
 

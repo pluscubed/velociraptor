@@ -1,4 +1,4 @@
-package com.pluscubed.velociraptor;
+package com.pluscubed.velociraptor.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;

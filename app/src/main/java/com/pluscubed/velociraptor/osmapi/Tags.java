@@ -1,5 +1,5 @@
 
-package com.pluscubed.velociraptor.osm;
+package com.pluscubed.velociraptor.osmapi;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
@@ -24,14 +24,7 @@ import java.util.Map;
         "oneway",
         "ref",
         "source:hgv:national_network",
-        "source:maxspeed",
-        "tiger:cfcc",
-        "tiger:county",
-        "tiger:name_base",
-        "tiger:name_base_1",
-        "tiger:name_direction_prefix",
-        "tiger:zip_left",
-        "tiger:zip_right"
+        "source:maxspeed"
 })
 public class Tags {
 
@@ -57,20 +50,6 @@ public class Tags {
     private String sourceHgvNationalNetwork;
     @JsonProperty("source:maxspeed")
     private String sourceMaxspeed;
-    @JsonProperty("tiger:cfcc")
-    private String tigerCfcc;
-    @JsonProperty("tiger:county")
-    private String tigerCounty;
-    @JsonProperty("tiger:name_base")
-    private String tigerNameBase;
-    @JsonProperty("tiger:name_base_1")
-    private String tigerNameBase1;
-    @JsonProperty("tiger:name_direction_prefix")
-    private String tigerNameDirectionPrefix;
-    @JsonProperty("tiger:zip_left")
-    private String tigerZipLeft;
-    @JsonProperty("tiger:zip_right")
-    private String tigerZipRight;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -248,118 +227,6 @@ public class Tags {
     @JsonProperty("source:maxspeed")
     public void setSourceMaxspeed(String sourceMaxspeed) {
         this.sourceMaxspeed = sourceMaxspeed;
-    }
-
-    /**
-     * @return The tigerCfcc
-     */
-    @JsonProperty("tiger:cfcc")
-    public String getTigerCfcc() {
-        return tigerCfcc;
-    }
-
-    /**
-     * @param tigerCfcc The tiger:cfcc
-     */
-    @JsonProperty("tiger:cfcc")
-    public void setTigerCfcc(String tigerCfcc) {
-        this.tigerCfcc = tigerCfcc;
-    }
-
-    /**
-     * @return The tigerCounty
-     */
-    @JsonProperty("tiger:county")
-    public String getTigerCounty() {
-        return tigerCounty;
-    }
-
-    /**
-     * @param tigerCounty The tiger:county
-     */
-    @JsonProperty("tiger:county")
-    public void setTigerCounty(String tigerCounty) {
-        this.tigerCounty = tigerCounty;
-    }
-
-    /**
-     * @return The tigerNameBase
-     */
-    @JsonProperty("tiger:name_base")
-    public String getTigerNameBase() {
-        return tigerNameBase;
-    }
-
-    /**
-     * @param tigerNameBase The tiger:name_base
-     */
-    @JsonProperty("tiger:name_base")
-    public void setTigerNameBase(String tigerNameBase) {
-        this.tigerNameBase = tigerNameBase;
-    }
-
-    /**
-     * @return The tigerNameBase1
-     */
-    @JsonProperty("tiger:name_base_1")
-    public String getTigerNameBase1() {
-        return tigerNameBase1;
-    }
-
-    /**
-     * @param tigerNameBase1 The tiger:name_base_1
-     */
-    @JsonProperty("tiger:name_base_1")
-    public void setTigerNameBase1(String tigerNameBase1) {
-        this.tigerNameBase1 = tigerNameBase1;
-    }
-
-    /**
-     * @return The tigerNameDirectionPrefix
-     */
-    @JsonProperty("tiger:name_direction_prefix")
-    public String getTigerNameDirectionPrefix() {
-        return tigerNameDirectionPrefix;
-    }
-
-    /**
-     * @param tigerNameDirectionPrefix The tiger:name_direction_prefix
-     */
-    @JsonProperty("tiger:name_direction_prefix")
-    public void setTigerNameDirectionPrefix(String tigerNameDirectionPrefix) {
-        this.tigerNameDirectionPrefix = tigerNameDirectionPrefix;
-    }
-
-    /**
-     * @return The tigerZipLeft
-     */
-    @JsonProperty("tiger:zip_left")
-    public String getTigerZipLeft() {
-        return tigerZipLeft;
-    }
-
-    /**
-     * @param tigerZipLeft The tiger:zip_left
-     */
-    @JsonProperty("tiger:zip_left")
-    public void setTigerZipLeft(String tigerZipLeft) {
-        this.tigerZipLeft = tigerZipLeft;
-    }
-
-    /**
-     * @return The tigerZipRight
-     */
-    @JsonProperty("tiger:zip_right")
-    public String getTigerZipRight() {
-        return tigerZipRight;
-    }
-
-    /**
-     * @param tigerZipRight The tiger:zip_right
-     */
-    @JsonProperty("tiger:zip_right")
-    public void setTigerZipRight(String tigerZipRight) {
-        this.tigerZipRight = tigerZipRight;
     }
 
     @JsonAnyGetter
