@@ -83,8 +83,8 @@
 
                 <ImageView
                     android:id="@+id/image_service_enabled"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:contentDescription="@null"
                     app:srcCompat="@drawable/ic_done_green_40dp" />
 

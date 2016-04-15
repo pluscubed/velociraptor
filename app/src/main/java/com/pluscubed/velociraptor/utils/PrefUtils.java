@@ -5,13 +5,9 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.ColorInt;
 import android.support.annotation.IntDef;
-import android.text.TextUtils;
-
-import com.pluscubed.velociraptor.appselection.AppInfo;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.util.List;
 
 public abstract class PrefUtils {
 
@@ -20,7 +16,6 @@ public abstract class PrefUtils {
     public static final String PREF_OVERSPEED = "pref_overspeed";
     public static final String PREF_SIGN_STYLE = "pref_international";
     public static final String PREF_SPEEDOMETER = "pref_speedometer";
-    public static final String PREF_ENABLED_APPS = "pref_enabled_apps";
     public static final String PREF_AUTO_DISPLAY = "pref_auto_display";
 
     public static final String PREF_FIRSTRUN = "pref_firstrun";
@@ -94,15 +89,6 @@ public abstract class PrefUtils {
 
     public static void setShowSpeedometer(Context context, boolean show) {
         edit(context).putBoolean(PREF_SPEEDOMETER, show).apply();
-    }
-
-    public static void setEnabledApps(Context context, List<AppInfo> apps) {
-        String appString = TextUtils.join(",", apps);
-        edit(context).putString(PREF_ENABLED_APPS, appString).apply();
-    }
-
-    public static String[] getEnabledApps(Context context) {
-        return getSharedPreferences(context).getString(PREF_ENABLED_APPS, "").split(",");
     }
 
     public static boolean isAutoDisplayEnabled(Context context) {

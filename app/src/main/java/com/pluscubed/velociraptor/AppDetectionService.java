@@ -2,49 +2,55 @@ package com.pluscubed.velociraptor;
 
 import android.accessibilityservice.AccessibilityService;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
-import android.net.Uri;
-import android.os.Build;
 import android.view.accessibility.AccessibilityEvent;
 
+import com.pluscubed.velociraptor.appselection.AppInfo;
+import com.pluscubed.velociraptor.appselection.AppInfoEntity;
+import com.pluscubed.velociraptor.appselection.SelectedAppDatabase;
 import com.pluscubed.velociraptor.utils.PrefUtils;
 
 import java.util.List;
 
+import rx.functions.Action1;
+
 public class AppDetectionService extends AccessibilityService {
 
-    private List<ResolveInfo> mMapApps;
-    private long mLastMapAppQuery;
+    private static AppDetectionService sInstance;
+
+    private List<AppInfoEntity> mEnabledApps;
+
+    public static AppDetectionService get() {
+        return sInstance;
+    }
 
     @Override
     protected void onServiceConnected() {
         super.onServiceConnected();
+        sInstance = this;
 
-        queryMapApps();
+        updateSelectedApps();
     }
 
-    private void queryMapApps() {
-        Uri gmmIntentUri = Uri.parse("geo:37.421999,-122.084056");
-        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-        PackageManager manager = getPackageManager();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            mMapApps = manager.queryIntentActivities(mapIntent, PackageManager.MATCH_ALL);
-        } else {
-            mMapApps = manager.queryIntentActivities(mapIntent, PackageManager.MATCH_DEFAULT_ONLY);
-        }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        sInstance = null;
+    }
 
-        mLastMapAppQuery = System.currentTimeMillis();
+    public void updateSelectedApps() {
+        SelectedAppDatabase.getSelectedApps(this)
+                .subscribe(new Action1<List<AppInfoEntity>>() {
+                    @Override
+                    public void call(List<AppInfoEntity> appInfos) {
+                        mEnabledApps = appInfos;
+                    }
+                });
     }
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
         if (!PrefUtils.isAutoDisplayEnabled(this)) {
             return;
-        }
-
-        if (System.currentTimeMillis() - mLastMapAppQuery > 300000) {
-            queryMapApps();
         }
 
         if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
@@ -55,15 +61,15 @@ public class AppDetectionService extends AccessibilityService {
                     if (className.toLowerCase().contains("activity") || className.toLowerCase().contains("launcher")) {
                         Intent intent = new Intent(this, FloatingService.class);
 
-                        boolean isMapApp = false;
-                        for (ResolveInfo info : mMapApps) {
-                            if (info.activityInfo.packageName.equals(appPackage)) {
-                                isMapApp = true;
+                        boolean isSelectedApp = false;
+                        for (AppInfo info : mEnabledApps) {
+                            if (info.packageName.equals(appPackage)) {
+                                isSelectedApp = true;
                                 break;
                             }
                         }
 
-                        if (isMapApp) {
+                        if (isSelectedApp) {
                             startService(intent);
                         } else if (!appPackage.equals(BuildConfig.APPLICATION_ID)) {
                             stopService(intent);

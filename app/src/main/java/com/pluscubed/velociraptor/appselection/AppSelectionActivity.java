@@ -1,7 +1,5 @@
 package com.pluscubed.velociraptor.appselection;
 
-import android.content.Context;
-import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -14,67 +12,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.pluscubed.velociraptor.App;
+import com.pluscubed.velociraptor.AppDetectionService;
 import com.pluscubed.velociraptor.R;
-import com.pluscubed.velociraptor.utils.PrefUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import rx.Observable;
-import rx.Single;
 import rx.SingleSubscriber;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 
 public class AppSelectionActivity extends AppCompatActivity {
 
     private AppAdapter mAdapter;
-
-    /**
-     * Returns sorted list of AppInfos.
-     */
-    public static Single<List<AppInfo>> getInstalledApps(final Context context) {
-        return Single.create(new Single.OnSubscribe<List<ApplicationInfo>>() {
-            @Override
-            public void call(SingleSubscriber<? super List<ApplicationInfo>> singleSubscriber) {
-                singleSubscriber.onSuccess(context.getPackageManager().getInstalledApplications(0));
-            }
-        }).subscribeOn(Schedulers.io())
-                .flatMapObservable(new Func1<List<ApplicationInfo>, Observable<ApplicationInfo>>() {
-                    @Override
-                    public Observable<ApplicationInfo> call(List<ApplicationInfo> appInfos) {
-                        return Observable.from(appInfos);
-                    }
-                })
-                .map(new Func1<ApplicationInfo, AppInfo>() {
-                    @Override
-                    public AppInfo call(ApplicationInfo applicationInfo) {
-                        AppInfo appInfo = new AppInfo();
-                        appInfo.packageName = applicationInfo.packageName;
-                        appInfo.name = applicationInfo.loadLabel(context.getPackageManager()).toString();
-                        return appInfo;
-                    }
-                })
-                .toSortedList().toSingle()
-                .map(new Func1<List<AppInfo>, List<AppInfo>>() {
-                    @Override
-                    public List<AppInfo> call(List<AppInfo> appInfos) {
-                        List<String> enabledApps = new ArrayList<>(Arrays.asList(PrefUtils.getEnabledApps(context)));
-                        for (String enabled : enabledApps) {
-                            for (AppInfo info : appInfos) {
-                                if (info.packageName.equals(enabled)) {
-                                    info.enabled = true;
-                                    break;
-                                }
-                            }
-                        }
-
-                        return appInfos;
-                    }
-                });
-    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -87,11 +37,11 @@ public class AppSelectionActivity extends AppCompatActivity {
         view.setAdapter(mAdapter);
         view.setLayoutManager(new LinearLayoutManager(this));
 
-        getInstalledApps(this)
+        SelectedAppDatabase.getInstalledApps(this)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new SingleSubscriber<List<AppInfo>>() {
+                .subscribe(new SingleSubscriber<List<AppInfoEntity>>() {
                     @Override
-                    public void onSuccess(List<AppInfo> list) {
+                    public void onSuccess(List<AppInfoEntity> list) {
                         mAdapter.setAppInfos(list);
                     }
 
@@ -102,19 +52,37 @@ public class AppSelectionActivity extends AppCompatActivity {
                 });
     }
 
-    private void onItemClick(int index, AppInfo appInfo) {
+    private void onItemClick(AppInfoEntity appInfo, boolean checked) {
+        SingleSubscriber<Object> subscriber = new SingleSubscriber<Object>() {
+            @Override
+            public void onSuccess(Object value) {
+                if (AppDetectionService.get() != null) {
+                    AppDetectionService.get().updateSelectedApps();
+                }
+            }
 
+            @Override
+            public void onError(Throwable error) {
+                error.printStackTrace();
+            }
+        };
+        if (checked) {
+            App.getData(this).insert(appInfo).subscribe(subscriber);
+        } else {
+            App.getData(this).delete(appInfo).subscribe(subscriber);
+        }
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
+        mAdapter.onSaveInstanceState(outState);
         super.onSaveInstanceState(outState);
     }
 
     private class AppAdapter extends RecyclerView.Adapter<AppAdapter.ViewHolder> {
 
         public static final String STATE_APPS = "state_apps";
-        private List<AppInfo> mAppInfos;
+        private List<AppInfoEntity> mAppInfos;
 
         public AppAdapter(Bundle savedInstanceState) {
             super();
@@ -126,13 +94,13 @@ public class AppSelectionActivity extends AppCompatActivity {
             }
         }
 
-        public void setAppInfos(List<AppInfo> list) {
+        public void setAppInfos(List<AppInfoEntity> list) {
             mAppInfos = list;
             notifyDataSetChanged();
         }
 
         public Bundle onSaveInstanceState(Bundle outState) {
-            outState.putParcelableArrayList(STATE_APPS, (ArrayList<AppInfo>) mAppInfos);
+            outState.putParcelableArrayList(STATE_APPS, (ArrayList<AppInfoEntity>) mAppInfos);
             return outState;
         }
 
@@ -185,9 +153,11 @@ public class AppSelectionActivity extends AppCompatActivity {
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        checkbox.toggle();
+
                         int adapterPosition = getAdapterPosition();
                         if (adapterPosition != RecyclerView.NO_POSITION) {
-                            onItemClick(adapterPosition, mAppInfos.get(adapterPosition));
+                            onItemClick(mAppInfos.get(adapterPosition), checkbox.isChecked());
                         }
                     }
                 });
