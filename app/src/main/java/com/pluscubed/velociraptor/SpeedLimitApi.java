@@ -86,7 +86,8 @@ public class SpeedLimitApi {
 
     public Single<Integer> getSpeedLimit(Location location) {
         return getOsmSpeedLimit(location)
-                .switchIfEmpty(getHereSpeedLimit(location).toObservable())
+                //.switchIfEmpty(getHereSpeedLimit(location).toObservable())
+                .defaultIfEmpty(null)
                 .toSingle();
     }
 

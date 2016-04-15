@@ -22,7 +22,7 @@
     <string name="location_settings_warning">El GPS no está activado. Por favor, activalo para visualizar el monitor del límite de velocidad de Velociraptor.</string>
     <string name="speeding_amount">Advertencia, exceso de velocidad:</string>
     <string name="show_speedometer">Mostrar indicador de velocidad</string>
-    <string name="about_dialog_title">Velociraptor v&amp;s</string>
+    <string name="about_dialog_title">Velociraptor v%s</string>
     <string name="dismiss">Cerrar</string>
     <string name="about_body"><![CDATA[<b>Velociraptor</b> es un monitor de límite de velocidad variable con las características del velocímetro y de advertencia, utilizando aquí los datos de límite de velocidad establecidos.
 <br/><br/>

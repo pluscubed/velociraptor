@@ -25,6 +25,8 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".appselection.AppSelectionActivity" />
+
         <service android:name=".FloatingService" />
 
         <service

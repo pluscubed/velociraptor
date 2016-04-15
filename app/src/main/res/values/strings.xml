@@ -11,12 +11,12 @@
 
 
     <string name="enable_accessibility_service">Enable Accessibility Service</string>
-    <string name="enable_accessibility_service_desc">To automatically display the speed limit in map apps, turn on the accessibility service</string>
+    <string name="enable_accessibility_service_desc">Allow Velociraptor to detect the current app by turning on its accessibility service</string>
     <string name="enable_floating_desc">To display the overlay, enable the \"Draw Over Other Apps\" permission</string>
     <string name="open_settings_page">Open settings page</string>
     <string name="grant_permission">Grant permission</string>
     <string name="enable_location_desc">To determine the speed limit at your location, please grant the location permission</string>
-    <string name="speed_unit">Speed Units:</string>
+    <string name="speed_unit">Speed units:</string>
     <string name="style">Style:</string>
     <string name="united_states">United States</string>
     <string name="international">International</string>
@@ -26,7 +26,7 @@
     <string name="permissions_warning">Velociraptor doesn\'t have adequate permissions. Please open the app to grant them.</string>
     <string name="location_settings_warning">GPS is not turned on. Please enable for Velociraptor\'s speed limit monitor.</string>
     <string name="network_warning">Network is not connected. Velociraptor requires Internet connectivity to fetch the speed limit.</string>
-    <string name="speeding_amount">Speeding Tolerance:</string>
+    <string name="speeding_amount">Speeding tolerance:</string>
     <string name="show_speedometer">Show speedometer</string>
 
     <string name="about_dialog_title">Velociraptor v%s</string>
@@ -50,4 +50,10 @@
     <string name="about">About</string>
     <string name="wrong_speed_limit">Wrong or missing speed limit?</string>
     <string name="wrong_speed_limit_desc">Go to OpenStreetMap on your computer to edit the data. Touch to share link (https://openstreetmap.org)</string>
+    <string name="configure">Configure</string>
+    <string name="automatically_show">Show/hide in specified apps</string>
+    <string name="select_overlay_usage">Floating monitor usage</string>
+    <string name="enable">Enable</string>
+    <string name="select_apps">Show in these apps:</string>
+    <string name="persistent_notification_controls">Persistent notification controls</string>
 </resources>

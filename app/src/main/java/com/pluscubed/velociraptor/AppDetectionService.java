@@ -8,6 +8,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.view.accessibility.AccessibilityEvent;
 
+import com.pluscubed.velociraptor.utils.PrefUtils;
+
 import java.util.List;
 
 public class AppDetectionService extends AccessibilityService {
@@ -37,6 +39,10 @@ public class AppDetectionService extends AccessibilityService {
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
+        if (!PrefUtils.isAutoDisplayEnabled(this)) {
+            return;
+        }
+
         if (System.currentTimeMillis() - mLastMapAppQuery > 300000) {
             queryMapApps();
         }

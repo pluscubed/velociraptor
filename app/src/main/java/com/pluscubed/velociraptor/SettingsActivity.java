@@ -1,6 +1,7 @@
 package com.pluscubed.velociraptor;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -19,6 +20,7 @@ import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -26,6 +28,7 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.pluscubed.velociraptor.appselection.AppSelectionActivity;
 import com.pluscubed.velociraptor.utils.PrefUtils;
 import com.pluscubed.velociraptor.utils.Utils;
 
@@ -43,8 +46,13 @@ public class SettingsActivity extends AppCompatActivity {
     private Spinner mUnitSpinner;
     private Spinner mStyleSpinner;
     private Spinner mOverspeedSpinner;
+    private SwitchCompat mShowSpeedometerSwitch;
+    private SwitchCompat mAutoDisplaySwitch;
+    private ViewGroup mAutoDisplayOptionsContainer;
+    private ViewGroup mOpenAppSelectionContainer;
 
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,8 +61,6 @@ public class SettingsActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        mEnableServiceButton = (Button) findViewById(R.id.button_enable_service);
-        mEnabledServiceImage = (ImageView) findViewById(R.id.image_service_enabled);
         mEnableFloatingButton = (Button) findViewById(R.id.button_floating_enabled);
         mEnabledFloatingImage = (ImageView) findViewById(R.id.image_floating_enabled);
         mEnableLocationButton = (Button) findViewById(R.id.button_location_enabled);
@@ -63,16 +69,18 @@ public class SettingsActivity extends AppCompatActivity {
         mUnitSpinner = (Spinner) findViewById(R.id.spinner_unit);
         mStyleSpinner = (Spinner) findViewById(R.id.spinner_style);
         mOverspeedSpinner = (Spinner) findViewById(R.id.spinner_overspeed);
-        final SwitchCompat showSpeedometer = (SwitchCompat) findViewById(R.id.switch_speedometer);
+        mShowSpeedometerSwitch = (SwitchCompat) findViewById(R.id.switch_speedometer);
+
+        mAutoDisplaySwitch = (SwitchCompat) findViewById(R.id.switch_auto_display);
+        mAutoDisplayOptionsContainer = (ViewGroup) findViewById(R.id.linear_auto_display_options);
+        mEnableServiceButton = (Button) findViewById(R.id.button_enable_service);
+        mEnabledServiceImage = (ImageView) findViewById(R.id.image_service_enabled);
+
+        mOpenAppSelectionContainer = (ViewGroup) findViewById(R.id.linear_app_selection);
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            ((View) mEnabledFloatingImage.getParent()).setVisibility(View.GONE);
-            mEnableFloatingButton.setVisibility(View.GONE);
-            findViewById(R.id.floating_enabled_space).setVisibility(View.GONE);
-
-            ((View) mEnabledLocationImage.getParent()).setVisibility(View.GONE);
-            mEnableLocationButton.setVisibility(View.GONE);
-            findViewById(R.id.location_enabled_space).setVisibility(View.GONE);
+            View marshmallowPermissionsCard = findViewById(R.id.card_m_permissions);
+            marshmallowPermissionsCard.setVisibility(View.GONE);
         }
 
         findViewById(R.id.open_openstreetmap).setOnClickListener(new View.OnClickListener() {
@@ -82,6 +90,24 @@ public class SettingsActivity extends AppCompatActivity {
                         .setText("https://www.openstreetmap.org")
                         .setType("text/plain")
                         .startChooser();
+            }
+        });
+
+        Button openAppSelection = (Button) findViewById(R.id.button_app_selection);
+        openAppSelection.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(SettingsActivity.this, AppSelectionActivity.class));
+            }
+        });
+
+        mAutoDisplaySwitch.setChecked(PrefUtils.isAutoDisplayEnabled(this));
+        mAutoDisplaySwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean autoDisplayEnabled = mAutoDisplaySwitch.isChecked();
+                PrefUtils.setAutoDisplay(SettingsActivity.this, autoDisplayEnabled);
+                updateAutoDisplaySwitchEnabled(autoDisplayEnabled);
             }
         });
 
@@ -179,17 +205,23 @@ public class SettingsActivity extends AppCompatActivity {
         mOverspeedSpinner.setSelection(PrefUtils.getOverspeedPercent(this) / 5);
         mOverspeedSpinner.setDropDownVerticalOffset(Utils.convertDpToPx(this, mOverspeedSpinner.getSelectedItemPosition() * -48));
 
-        showSpeedometer.setChecked(PrefUtils.getShowSpeedometer(this));
-        ((View) showSpeedometer.getParent()).setOnClickListener(new View.OnClickListener() {
+        mShowSpeedometerSwitch.setChecked(PrefUtils.getShowSpeedometer(this));
+        ((View) mShowSpeedometerSwitch.getParent()).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showSpeedometer.setChecked(!showSpeedometer.isChecked());
+                mShowSpeedometerSwitch.setChecked(!mShowSpeedometerSwitch.isChecked());
 
-                PrefUtils.setShowSpeedometer(SettingsActivity.this, showSpeedometer.isChecked());
+                PrefUtils.setShowSpeedometer(SettingsActivity.this, mShowSpeedometerSwitch.isChecked());
             }
         });
 
         invalidateStates();
+    }
+
+    private void updateAutoDisplaySwitchEnabled(boolean enabled) {
+        enableDisableAllChildren(enabled, mAutoDisplayOptionsContainer);
+        updateOpenAppSelectionEnabled(Utils.isAccessibilityServiceEnabled(this, AppDetectionService.class), enabled);
+        mEnabledServiceImage.setAlpha(enabled ? 1f : 0.38f);
     }
 
     @Override
@@ -232,6 +264,10 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
+    private void updateOpenAppSelectionEnabled(boolean accessibilityServiceEnabled, boolean autoDisplayEnabled) {
+        enableDisableAllChildren(accessibilityServiceEnabled && autoDisplayEnabled, mOpenAppSelectionContainer);
+    }
+
     private void invalidateStates() {
         boolean permissionGranted =
                 ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -239,16 +275,28 @@ public class SettingsActivity extends AppCompatActivity {
         mEnabledLocationImage.setImageResource(permissionGranted ? R.drawable.ic_done_green_40dp : R.drawable.ic_cross_red_40dp);
         mEnableLocationButton.setEnabled(!permissionGranted);
 
-        boolean overlayEnabled = Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(this);
+        @SuppressLint({"NewApi", "LocalSuppress"}) boolean overlayEnabled = Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(this);
         mEnabledFloatingImage.setImageResource(overlayEnabled ? R.drawable.ic_done_green_40dp : R.drawable.ic_cross_red_40dp);
         mEnableFloatingButton.setEnabled(!overlayEnabled);
 
         boolean serviceEnabled = Utils.isAccessibilityServiceEnabled(this, AppDetectionService.class);
-        mEnabledServiceImage.setImageResource(serviceEnabled ? R.drawable.ic_done_green_40dp : R.drawable.ic_cross_red_40dp);
-        mEnableServiceButton.setEnabled(!serviceEnabled);
+        mEnabledServiceImage.setVisibility(serviceEnabled ? View.VISIBLE : View.GONE);
+        mEnableServiceButton.setVisibility(serviceEnabled ? View.GONE : View.VISIBLE);
+
+        updateAutoDisplaySwitchEnabled(PrefUtils.isAutoDisplayEnabled(this));
 
         if (permissionGranted && overlayEnabled) {
             enableService(true);
+        }
+    }
+
+    private void enableDisableAllChildren(boolean enable, ViewGroup viewgroup) {
+        for (int i = 0; i < viewgroup.getChildCount(); i++) {
+            View child = viewgroup.getChildAt(i);
+            child.setEnabled(enable);
+            if (child instanceof ViewGroup) {
+                enableDisableAllChildren(enable, (ViewGroup) child);
+            }
         }
     }
 
@@ -265,7 +313,7 @@ public class SettingsActivity extends AppCompatActivity {
         boolean permissionGranted =
                 ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                         == PackageManager.PERMISSION_GRANTED;
-        boolean overlayEnabled = Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(this);
+        @SuppressLint({"NewApi", "LocalSuppress"}) boolean overlayEnabled = Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(this);
         return permissionGranted && overlayEnabled;
     }
 

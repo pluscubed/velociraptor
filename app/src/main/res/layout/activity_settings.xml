@@ -30,7 +30,9 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <include layout="@layout/activity_settings_top" />
+                <include layout="@layout/activity_settings_mperm" />
+
+                <include layout="@layout/activity_settings_use" />
 
                 <include layout="@layout/activity_settings_report" />
 
