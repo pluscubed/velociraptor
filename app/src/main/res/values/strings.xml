@@ -54,6 +54,8 @@
     <string name="automatically_show">Show/hide in specified apps</string>
     <string name="select_overlay_usage">Floating monitor usage</string>
     <string name="enable">Enable</string>
-    <string name="select_apps">Show in these apps:</string>
+    <string name="show_in_apps">Show in these apps:</string>
     <string name="persistent_notification_controls">Persistent notification controls</string>
+    <string name="done">Done</string>
+    <string name="select_apps">Select apps</string>
 </resources>

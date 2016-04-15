@@ -5,6 +5,9 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -12,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.pluscubed.recyclerfastscroll.RecyclerFastScroller;
 import com.pluscubed.velociraptor.App;
 import com.pluscubed.velociraptor.AppDetectionService;
 import com.pluscubed.velociraptor.R;
@@ -29,13 +33,18 @@ public class AppSelectionActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_appselection);
 
-        RecyclerView view = new RecyclerView(this);
-        setContentView(view);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         mAdapter = new AppAdapter(savedInstanceState);
-        view.setAdapter(mAdapter);
-        view.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(mAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        RecyclerFastScroller scroller = (RecyclerFastScroller) findViewById(R.id.fastscroller);
+        scroller.attachRecyclerView(recyclerView);
 
         SelectedAppDatabase.getInstalledApps(this)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -50,6 +59,24 @@ public class AppSelectionActivity extends AppCompatActivity {
 
                     }
                 });
+
+        setTitle(R.string.select_apps);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_app_selection, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_app_selection_done:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void onItemClick(AppInfoEntity appInfo, boolean checked) {
@@ -71,6 +98,7 @@ public class AppSelectionActivity extends AppCompatActivity {
         } else {
             App.getData(this).delete(appInfo).subscribe(subscriber);
         }
+        appInfo.enabled = checked;
     }
 
     @Override

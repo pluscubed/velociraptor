@@ -106,7 +106,7 @@
                     android:layout_weight="1"
                     android:paddingEnd="16dp"
                     android:paddingRight="16dp"
-                    android:text="@string/select_apps"
+                    android:text="@string/show_in_apps"
                     android:textSize="14sp"
                     tools:ignore="RtlSymmetry" />
 
