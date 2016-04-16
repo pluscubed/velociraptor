@@ -54,7 +54,6 @@ public class SelectedAppDatabase {
                             for (AppInfo enabledApp : enabledApps) {
                                 if (info.packageName.equals(enabledApp.packageName)) {
                                     info.enabled = true;
-                                    info.id = enabledApp.id;
                                     break;
                         }
                     }
@@ -122,7 +121,6 @@ public class SelectedAppDatabase {
                             for (AppInfo info : appInfos) {
                                 if (info.packageName.equals(enabledApp.packageName)) {
                                     info.enabled = true;
-                                    info.id = enabledApp.id;
                                 }
                             }
                         }
