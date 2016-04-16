@@ -2,7 +2,11 @@ package com.pluscubed.velociraptor;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -11,6 +15,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -33,9 +38,11 @@ import com.pluscubed.velociraptor.utils.PrefUtils;
 import com.pluscubed.velociraptor.utils.Utils;
 
 public class SettingsActivity extends AppCompatActivity {
-
+    public static final int PENDING_SERVICE = 4;
+    public static final int PENDING_SERVICE_CLOSE = 3;
+    public static final int PENDING_SETTINGS = 2;
+    public static final int NOTIFICATION_CONTROLS = 42;
     private static final int REQUEST_LOCATION = 105;
-
     private Button mEnableServiceButton;
     private ImageView mEnabledServiceImage;
     private Button mEnableFloatingButton;
@@ -50,6 +57,7 @@ public class SettingsActivity extends AppCompatActivity {
     private SwitchCompat mAutoDisplaySwitch;
     private ViewGroup mAutoDisplayOptionsContainer;
     private ViewGroup mOpenAppSelectionContainer;
+    private NotificationManager mNotificationManager;
 
 
     @SuppressWarnings("ConstantConditions")
@@ -92,6 +100,36 @@ public class SettingsActivity extends AppCompatActivity {
                         .startChooser();
             }
         });
+
+        mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        View notifControls = findViewById(R.id.switch_notif_controls);
+        notifControls.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SettingsActivity.this, FloatingService.class);
+                PendingIntent pending = PendingIntent.getService(SettingsActivity.this,
+                        PENDING_SERVICE, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+                Intent intentClose = new Intent(SettingsActivity.this, FloatingService.class);
+                intentClose.putExtra(FloatingService.EXTRA_CLOSE, true);
+                PendingIntent pendingClose = PendingIntent.getService(SettingsActivity.this,
+                        PENDING_SERVICE_CLOSE, intentClose, PendingIntent.FLAG_CANCEL_CURRENT);
+                Intent settings = new Intent(SettingsActivity.this, SettingsActivity.class);
+                PendingIntent settingsIntent = PendingIntent.getActivity(SettingsActivity.this,
+                        PENDING_SETTINGS, settings, PendingIntent.FLAG_CANCEL_CURRENT);
+
+                NotificationCompat.Builder builder =
+                        new NotificationCompat.Builder(SettingsActivity.this)
+                                .setSmallIcon(R.drawable.ic_speedometer)
+                                .setContentTitle(getString(R.string.controls_notif_title))
+                                .setContentText(getString(R.string.controls_notif_desc))
+                                .addAction(0, getString(R.string.show), pending)
+                                .addAction(0, getString(R.string.hide), pendingClose)
+                                .setContentIntent(settingsIntent);
+                Notification notification = builder.build();
+                mNotificationManager.notify(NOTIFICATION_CONTROLS, notification);
+            }
+        });
+
 
         Button openAppSelection = (Button) findViewById(R.id.button_app_selection);
         openAppSelection.setOnClickListener(new View.OnClickListener() {

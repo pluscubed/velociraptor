@@ -120,17 +120,29 @@
             </LinearLayout>
         </LinearLayout>
 
-        <android.support.v7.widget.SwitchCompat
+        <LinearLayout
+            android:id="@+id/switch_notif_controls"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:background="@null"
-            android:foreground="?selectableItemBackground"
-            android:paddingEnd="12dp"
+            android:background="?selectableItemBackground"
+            android:baselineAligned="false"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
             android:paddingLeft="16dp"
-            android:paddingRight="12dp"
             android:paddingStart="16dp"
-            android:text="@string/persistent_notification_controls"
-            android:textSize="16sp" />
+            tools:ignore="UseCompoundDrawables">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingEnd="16dp"
+                android:paddingRight="16dp"
+                android:text="@string/persistent_notification_controls"
+                android:textSize="16sp"
+                tools:ignore="RtlSymmetry" />
+
+        </LinearLayout>
 
         <Space
             android:id="@+id/service_enabled_space"

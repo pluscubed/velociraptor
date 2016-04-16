@@ -53,7 +53,8 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 
 public class FloatingService extends Service {
-    public static final int PENDING_CLOSE = 5;
+    public static final int PENDING_SETTINGS = 5;
+    public static final String EXTRA_CLOSE = "com.pluscubed.velociraptor.EXTRA_CLOSE";
 
     private static final int NOTIFICATION_FLOATING_WINDOW = 303;
     private WindowManager mWindowManager;
@@ -83,13 +84,21 @@ public class FloatingService extends Service {
     }
 
     @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        if (intent != null && intent.getBooleanExtra(EXTRA_CLOSE, false)) {
+            stopSelf();
+        }
+        return super.onStartCommand(intent, flags, startId);
+    }
+
+    @Override
     public void onCreate() {
         super.onCreate();
 
         if (prequisitesNotMet()) return;
 
         Intent notificationIntent = new Intent(this, SettingsActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, PENDING_CLOSE, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, PENDING_SETTINGS, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
         Notification notification = new NotificationCompat.Builder(this)
                 .setContentTitle(getString(R.string.notif_title))
@@ -157,8 +166,8 @@ public class FloatingService extends Service {
                     @Override
                     public void onConnected(@Nullable Bundle bundle) {
                         LocationRequest locationRequest = new LocationRequest();
-                        locationRequest.setInterval(1000);
-                        locationRequest.setFastestInterval(1000);
+                        locationRequest.setInterval(500);
+                        locationRequest.setFastestInterval(200);
                         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
                         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, locationRequest, mLocationListener);
                     }
@@ -232,7 +241,7 @@ public class FloatingService extends Service {
                             if (!BuildConfig.DEBUG)
                                 Crashlytics.logException(error);
 
-                            showToast("Velociraptor Error: " + error);
+                            //showToast("Velociraptor Error: " + error);
 
                             mLocationSubscription = null;
                         }
@@ -334,7 +343,7 @@ public class FloatingService extends Service {
         }
 
         if (mFloatingView != null && mFloatingView.isShown())
-            mWindowManager.removeView(mFloatingView);
+            mWindowManager.removeViewImmediate(mFloatingView);
 
         if (mLocationSubscription != null) {
             mLocationSubscription.unsubscribe();

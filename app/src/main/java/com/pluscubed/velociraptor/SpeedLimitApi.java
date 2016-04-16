@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
@@ -61,6 +60,7 @@ public class SpeedLimitApi {
         for (String api : OSM_OVERPASS_APIS) {
             mOsmOverpassApis.add(new OsmApiEndpoint(api));
         }
+        Collections.shuffle(mOsmOverpassApis);
 
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -76,12 +76,9 @@ public class SpeedLimitApi {
         mOsmApiSelectionInterceptor = new OsmApiSelectionInterceptor();
         OkHttpClient osmClient = client.newBuilder()
                 .addInterceptor(mOsmApiSelectionInterceptor)
-                .connectTimeout(2000, TimeUnit.MILLISECONDS)
-                .readTimeout(5000, TimeUnit.MILLISECONDS)
                 .build();
         Retrofit osmRest = buildRetrofit(osmClient, OSM_OVERPASS_APIS[0]);
         mOsmService = osmRest.create(OsmService.class);
-        ;
     }
 
     public Single<Integer> getSpeedLimit(Location location) {

@@ -2,8 +2,8 @@
     <string name="app_name">Velociraptor</string>
 
 
-    <string name="notif_content">Touch to open settings</string>
-    <string name="notif_title">Velociraptor Speed Limit</string>
+    <string name="notif_content">Touch to open settings.</string>
+    <string name="notif_title">Velociraptor monitor running</string>
 
     <string name="dialog_draw_overlay">To show floating elements on Android 6.0+, grant the \"Draw Over Other Apps\" permission</string>
     <string name="open_settings">Open Settings Page</string>
@@ -55,8 +55,12 @@
     <string name="select_overlay_usage">Floating monitor usage</string>
     <string name="enable">Enable</string>
     <string name="show_in_apps">Show in these apps:</string>
-    <string name="persistent_notification_controls">Persistent notification controls</string>
+    <string name="persistent_notification_controls">Show notification controls</string>
     <string name="done">Done</string>
     <string name="select_apps">Select apps</string>
     <string name="show_map_apps">Show map apps</string>
+    <string name="show">Show</string>
+    <string name="hide">Hide</string>
+    <string name="controls_notif_title">Velociraptor controls</string>
+    <string name="controls_notif_desc">Show or hide speed limit monitor</string>
 </resources>
