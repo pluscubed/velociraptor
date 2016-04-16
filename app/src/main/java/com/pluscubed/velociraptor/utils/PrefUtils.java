@@ -18,7 +18,7 @@ public abstract class PrefUtils {
     public static final String PREF_SPEEDOMETER = "pref_speedometer";
     public static final String PREF_AUTO_DISPLAY = "pref_auto_display";
 
-    public static final String PREF_FIRSTRUN = "pref_firstrun";
+    public static final String PREF_FIRSTRUN = "pref_first";
     public static final String PREF_VERSION_CODE = "pref_version_code";
 
     public static final int STYLE_US = 0;

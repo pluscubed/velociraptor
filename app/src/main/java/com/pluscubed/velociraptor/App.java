@@ -85,7 +85,7 @@ public class App extends Application {
                 source.setTableCreationMode(TableCreationMode.DROP_CREATE);
             }
             Configuration configuration = source.getConfiguration();
-            dataStore = new EntityDataStore<Persistable>(configuration);
+            dataStore = new EntityDataStore<>(configuration);
         }
         return dataStore;
     }
