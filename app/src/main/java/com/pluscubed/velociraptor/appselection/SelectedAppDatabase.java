@@ -48,17 +48,21 @@ public class SelectedAppDatabase {
                 .flatMapObservable(new Func1<List<AppInfoEntity>, Observable<AppInfoEntity>>() {
                     @Override
                     public Observable<AppInfoEntity> call(List<AppInfoEntity> mapApps) {
-                        List<AppInfoEntity> enabledApps = getSelectedApps(context).toBlocking().value();
+                        try {
+                            List<AppInfoEntity> enabledApps = getSelectedApps(context).toBlocking().value();
 
-                        for (AppInfo info : mapApps) {
-                            for (AppInfo enabledApp : enabledApps) {
-                                if (info.packageName.equals(enabledApp.packageName)) {
-                                    info.enabled = true;
-                                    break;
+                            for (AppInfo info : mapApps) {
+                                for (AppInfo enabledApp : enabledApps) {
+                                    if (info.packageName.equals(enabledApp.packageName)) {
+                                        info.enabled = true;
+                                        break;
+                                    }
+                                }
+                            }
+                            return Observable.from(mapApps);
+                        } catch (Exception e) {
+                            return Observable.error(e);
                         }
-                    }
-                        }
-                        return Observable.from(mapApps);
                     }
                 }).toSortedList().toSingle();
     }
@@ -116,16 +120,20 @@ public class SelectedAppDatabase {
                 .flatMapObservable(new Func1<List<AppInfoEntity>, Observable<AppInfoEntity>>() {
                     @Override
                     public Observable<AppInfoEntity> call(List<AppInfoEntity> appInfos) {
-                        List<AppInfoEntity> enabledApps = getSelectedApps(context).toBlocking().value();
-                        for (AppInfo enabledApp : enabledApps) {
-                            for (AppInfo info : appInfos) {
-                                if (info.packageName.equals(enabledApp.packageName)) {
-                                    info.enabled = true;
+                        try {
+                            List<AppInfoEntity> enabledApps = getSelectedApps(context).toBlocking().value();
+                            for (AppInfo enabledApp : enabledApps) {
+                                for (AppInfo info : appInfos) {
+                                    if (info.packageName.equals(enabledApp.packageName)) {
+                                        info.enabled = true;
+                                    }
                                 }
                             }
-                        }
 
-                        return Observable.from(appInfos);
+                            return Observable.from(appInfos);
+                        } catch (Exception e) {
+                            return Observable.error(e);
+                        }
                     }
                 })
                 .filter(new Func1<AppInfoEntity, Boolean>() {

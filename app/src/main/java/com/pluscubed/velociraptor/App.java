@@ -25,6 +25,7 @@ import io.requery.sql.Configuration;
 import io.requery.sql.EntityDataStore;
 import io.requery.sql.TableCreationMode;
 import rx.Single;
+import rx.SingleSubscriber;
 import rx.functions.Func1;
 
 public class App extends Application {
@@ -55,7 +56,19 @@ public class App extends Application {
                         public Single<?> call(List<AppInfoEntity> mapInfos) {
                             return getData(App.this).insert(mapInfos);
                         }
-                    }).subscribe();
+                    }).subscribe(new SingleSubscriber<Object>() {
+                @Override
+                public void onSuccess(Object value) {
+
+                }
+
+                @Override
+                public void onError(Throwable error) {
+                    error.printStackTrace();
+                    if (!BuildConfig.DEBUG)
+                        Crashlytics.logException(error);
+                }
+            });
 
             PrefUtils.setVersionCode(this, BuildConfig.VERSION_CODE);
             PrefUtils.setFirstRun(this, false);

@@ -1,4 +1,3 @@
-
 package com.pluscubed.velociraptor.osmapi;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;

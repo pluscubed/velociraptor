@@ -218,6 +218,8 @@ public class AppSelectionActivity extends AppCompatActivity {
             @Override
             public void onError(Throwable error) {
                 error.printStackTrace();
+                if (!BuildConfig.DEBUG)
+                    Crashlytics.logException(error);
             }
         };
         if (checked) {
