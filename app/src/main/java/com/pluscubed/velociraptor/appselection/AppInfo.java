@@ -55,7 +55,7 @@ public class AppInfo implements Comparable<AppInfo>, Parcelable {
 
     @Override
     public int compareTo(@NonNull AppInfo another) {
-        return name.compareTo(another.name);
+        return name.toLowerCase().compareTo(another.name.toLowerCase());
     }
 
     @Override
