@@ -30,9 +30,11 @@ import com.pluscubed.velociraptor.utils.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import rx.Single;
 import rx.SingleSubscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 public class AppSelectionActivity extends AppCompatActivity {
@@ -223,9 +225,9 @@ public class AppSelectionActivity extends AppCompatActivity {
             }
         };
         if (checked) {
-            App.getData(this).insert(appInfo).subscribe(subscriber);
+            Single.just(App.getData(this).insert(appInfo)).subscribeOn(Schedulers.io()).subscribe(subscriber);
         } else {
-            App.getData(this).delete(appInfo).subscribe(subscriber);
+            Single.just(App.getData(this).delete(appInfo)).subscribeOn(Schedulers.io()).subscribe(subscriber);
         }
         appInfo.enabled = checked;
     }
