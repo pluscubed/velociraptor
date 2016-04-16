@@ -10,6 +10,7 @@ import com.pluscubed.velociraptor.appselection.AppInfoEntity;
 import com.pluscubed.velociraptor.appselection.SelectedAppDatabase;
 import com.pluscubed.velociraptor.utils.PrefUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import rx.SingleSubscriber;
@@ -29,6 +30,7 @@ public class AppDetectionService extends AccessibilityService {
         super.onServiceConnected();
         sInstance = this;
 
+        mEnabledApps = new ArrayList<>();
         updateSelectedApps();
     }
 
