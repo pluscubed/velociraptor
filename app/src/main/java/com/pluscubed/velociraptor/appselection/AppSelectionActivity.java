@@ -25,6 +25,7 @@ import com.pluscubed.velociraptor.App;
 import com.pluscubed.velociraptor.AppDetectionService;
 import com.pluscubed.velociraptor.BuildConfig;
 import com.pluscubed.velociraptor.R;
+import com.pluscubed.velociraptor.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -178,7 +179,7 @@ public class AppSelectionActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_app_selection, menu);
         MenuItem item = menu.findItem(R.id.menu_app_selection_maps);
-        Drawable drawable = ContextCompat.getDrawable(this, R.drawable.ic_map_black_24dp).mutate();
+        Drawable drawable = Utils.getVectorDrawableCompat(this, R.drawable.ic_map_white_24dp).mutate();
         drawable = DrawableCompat.wrap(drawable);
         if (mMapsOnly) {
             DrawableCompat.setTint(drawable, ContextCompat.getColor(this, R.color.colorAccent));

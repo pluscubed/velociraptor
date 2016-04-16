@@ -2,7 +2,12 @@ package com.pluscubed.velociraptor.utils;
 
 import android.accessibilityservice.AccessibilityService;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.provider.Settings;
+import android.support.annotation.DrawableRes;
+import android.support.graphics.drawable.VectorDrawableCompat;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 
 import com.pluscubed.velociraptor.BuildConfig;
@@ -35,6 +40,12 @@ public abstract class Utils {
         }
 
         return false;
+    }
+
+    public static Drawable getVectorDrawableCompat(Context context, @DrawableRes int drawable) {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ?
+                ContextCompat.getDrawable(context, drawable) :
+                VectorDrawableCompat.create(context.getResources(), drawable, context.getTheme());
     }
 
     public static int convertDpToPx(Context context, float dp) {
