@@ -7,7 +7,7 @@
     <string name="open_settings">Instellingen openen</string>
     <string name="accessibility_service_description">Toegankelijkheid moet worden ingeschakeld om de actieve app te kunnen detecteren en de snelheidslimiet weer te kunnen geven.</string>
     <string name="enable_accessibility_service">Toegankelijkheid inschakelen</string>
-    <string name="enable_accessibility_service_desc">Schakel \'Toegankelijkheid \' in om de maximumsnelheid in kaart-apps automatisch weer te geven</string>
+    <string name="enable_accessibility_service_desc">Schakel \'Toegankelijkheid\' in om de maximumsnelheid in kaart-apps automatisch weer te geven</string>
     <string name="enable_floating_desc">Schakel \'Over andere apps tekenen\' in om de overlay weer te geven</string>
     <string name="open_settings_page">Instellingen openen</string>
     <string name="grant_permission">Toestemming geven</string>
@@ -20,6 +20,7 @@
     <string name="open_settings_failed_accessibility">Kan instellingen niet openen. Schakel \'Toegankelijk\' handmatig in voor Velociraptor.</string>
     <string name="permissions_warning">Velociraptor heeft niet voldoende machtigingen. Open de app om deze te verlenen.</string>
     <string name="location_settings_warning">GPS is uitgeschakeld. Schakel GPS in voor de maximumsnelheid in Velociraptor.</string>
+    <string name="network_warning">Netwerk is niet verbonden. Velociraptor heeft een internetverbinding nodig om de snelheidslimieten op te halen.</string>
     <string name="speeding_amount">Snelheidswaarschuwing:</string>
     <string name="show_speedometer">Snelheidsmeter weergeven</string>
     <string name="about_dialog_title">Velociraptor v%s</string>
@@ -31,12 +32,15 @@
         Ontwikkeld door <b>Daniel Ciao</b><br/>
 
         <a href=\'http://pluscubed.com\'>Website</a>&nbsp;&nbsp;
+        <a href=\'mailto:pluscubed@gmail.com\'>E-mail</a>&nbsp;&nbsp; 
         <a href=\'https://twitter.com/plusCubed\'>Twitter</a>&nbsp;&nbsp;
         <a href=\'https://google.com/+DanielCiao\'>Google+</a>&nbsp;&nbsp;
         <a href=\'https://github.com/pluscubed\'>GitHub</a>&nbsp;&nbsp;
         <a href=\'https://www.linkedin.com/in/dciao\'>LinkedIn</a><br/><br/>
 
         <a href=\'https://github.com/pluscubed/velociraptor\'>GitHub</a> - bron, issues, feature requests<br/>
-        <a href=\'http://ost4cel.oneskyapp.com/collaboration/project/64120\'>OneSky</a> - vertaal de app in uw taal]]></string>
+        <a href=\'http://pluscubed.oneskyapp.com/collaboration/project/64120\'>OneSky</a> - vertaal de app in uw taal]]></string>
     <string name="about">Over</string>
+    <string name="wrong_speed_limit">Verkeerde of missende snelheidslimiet?</string>
+    <string name="wrong_speed_limit_desc">Ga op de computer naar OpenStreetMap om de gegevens aan te passen. Tik hier om link te delen (https://openstreetmap.org)</string>
 </resources>

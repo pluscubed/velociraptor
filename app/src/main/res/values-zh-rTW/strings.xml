@@ -5,7 +5,7 @@
     <string name="notif_title">Velociraptor 速限提醒</string>
     <string name="dialog_draw_overlay">為了要在 Android 6.0+ 的系統顯示懸浮介面，請啟用「在其他應用程式上繪製內容」權限</string>
     <string name="open_settings">前往設定頁面</string>
-    <string name="accessibility_service_description">為了使 Velociraptor 能夠偵測目前執行的應用程式以便適時地顯示速限提醒，必須啟用此項無障礙服務。</string>
+    <string name="accessibility_service_description">為了使 Velociraptor 能夠偵測目前執行的應用程式以便適時地顯示速限提醒，請啟用此項無障礙服務。</string>
     <string name="enable_accessibility_service">啟用無障礙服務</string>
     <string name="enable_accessibility_service_desc">要讓速限提醒自動顯示在地圖類型的應用程式上，請啟用必要的無障礙服務</string>
     <string name="enable_floating_desc">為了要在其他程式上懸浮顯示，請啟用「在其他應用程式上繪製內容」權限</string>
@@ -20,9 +20,28 @@
     <string name="open_settings_failed_accessibility">無法自動前往設定頁面，請自行啟用 Velociraptor 的無障礙服務</string>
     <string name="permissions_warning">Velociraptor 尚未取得必要的系統權限，請開啟本程式以進行授予</string>
     <string name="location_settings_warning">GPS 未開啟，啟用後即可執行 Velociraptor</string>
-    <string name="speeding_amount">超速警示</string>
+    <string name="network_warning">沒有網路連線，Velociraptor 需要連線到網路以取得速限資料</string>
+    <string name="speeding_amount">准許超速範圍：</string>
     <string name="show_speedometer">顯示時速表</string>
     <string name="about_dialog_title">Velociraptor v%s</string>
     <string name="dismiss">關閉</string>
+    <string name="about_body"><![CDATA[
+        <b>Velociraptor</b> 通過OpenStreetMap 和 HERE 地圖獲得速限信息，以浮動圖標的形式顯示。同時還具備實時車速以及超速提醒功能。
+        <br/><br/>
+
+        由 <b>Daniel Ciao</b><br/> 開發
+
+        <a href=\'http://pluscubed.com\'>官方網站</a>&nbsp;&nbsp;
+        <a href=\'mailto:pluscubed@gmail.com\'>Email</a>&nbsp;&nbsp;
+        <a href=\'https://twitter.com/plusCubed\'>Twitter</a>&nbsp;&nbsp;
+        <a href=\'https://google.com/+DanielCiao\'>Google+</a>&nbsp;&nbsp;
+        <a href=\'https://github.com/pluscubed\'>GitHub</a>&nbsp;&nbsp;
+        <a href=\'https://www.linkedin.com/in/dciao\'>LinkedIn</a><br/><br/>
+
+        <a href=\'https://github.com/pluscubed/velociraptor\'>GitHub</a> - 代碼，更新，功能建議<br/>
+        <a href=\'http://ost4cel.oneskyapp.com/collaboration/project/64120\'>OneSky</a> - translate the app to your language
+    ]]></string>
     <string name="about">關於</string>
+    <string name="wrong_speed_limit">速限有誤或遺漏嗎？</string>
+    <string name="wrong_speed_limit_desc">請使用您的電腦前往 OpenStreetMap 編輯正確的速限資料。輕觸此處可分享網址 (https://openstreetmap.org)</string>
 </resources>

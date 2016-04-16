@@ -2,7 +2,7 @@
     <string name="app_name">Velociraptor</string>
 
 
-    <string name="notif_content">Touch to open settings.</string>
+    <string name="notif_content">Touch to open settings</string>
     <string name="notif_title">Velociraptor monitor running</string>
 
     <string name="dialog_draw_overlay">To show floating elements on Android 6.0+, grant the \"Draw Over Other Apps\" permission</string>

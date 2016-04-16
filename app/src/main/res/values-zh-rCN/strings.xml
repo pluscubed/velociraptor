@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<resources>
+    <string name="app_name">Velociraptor</string>
+    <string name="notif_content">轻触来打开设置</string>
+    <string name="notif_title">Velociraptor速度限制</string>
+    <string name="dialog_draw_overlay">为了在安卓6.0以上显示浮动界面，请允许Velociraptor在其它应用的上层显示</string>
+    <string name="open_settings">打开设置界面</string>
+    <string name="accessibility_service_description">Velociraptor可以随谷歌地图自动开启速度提醒，请在设置中开启无障碍服务</string>
+    <string name="enable_accessibility_service">启用无障碍服务</string>
+    <string name="enable_accessibility_service_desc">Velociraptor可以随谷歌地图自动进行速度提醒，请在设置中开启无障碍服务</string>
+    <string name="enable_floating_desc">请手动允许Velociraptor在其它应用的上层显示。</string>
+    <string name="open_settings_page">打开设置界面</string>
+    <string name="grant_permission">授予权限</string>
+    <string name="enable_location_desc">Velociraptor需要访问您的地理位置，来获得精确的速度限制信息</string>
+    <string name="speed_unit">速度单位：</string>
+    <string name="style">显示风格：</string>
+    <string name="united_states">美国</string>
+    <string name="international">国际</string>
+    <string name="open_settings_failed_overlay">无法自动打开设置。请手动允许Velociraptor在其它应用的上层显示。</string>
+    <string name="open_settings_failed_accessibility">无法自动打开设置。请手动为Velociraptor开启辅助无障碍服务。</string>
+    <string name="permissions_warning">Velociraptor需要获取一定的权限才可以正常使用，请在设置中打开它们。</string>
+    <string name="location_settings_warning">GPS未启用，请在设置中打开。</string>
+    <string name="network_warning">网络不可用。Velociraptor需要联网以获得速度限制信息。</string>
+    <string name="speeding_amount">允许超速范围：</string>
+    <string name="show_speedometer">显示时速表</string>
+    <string name="about_dialog_title">Velociraptor v%s</string>
+    <string name="dismiss">关闭</string>
+    <string name="about_body"><![CDATA[
+        <b>Velociraptor</b> 通过OpenStreetMap 和 HERE 地图获取道路限速信息，以浮动图标的形式显示。同时还具备实时车速以及超速提醒功能。
+        <br/><br/>
+
+        由 <b>Daniel Ciao</b><br/> 开发
+
+        <a href=\'http://pluscubed.com\'>官方网站</a>&nbsp;&nbsp;
+        <a href=\'mailto:pluscubed@gmail.com\'>Email</a>&nbsp;&nbsp;
+        <a href=\'https://twitter.com/plusCubed\'>Twitter</a>&nbsp;&nbsp;
+        <a href=\'https://google.com/+DanielCiao\'>Google+</a>&nbsp;&nbsp;
+        <a href=\'https://github.com/pluscubed\'>GitHub</a>&nbsp;&nbsp;
+        <a href=\'https://www.linkedin.com/in/dciao\'>LinkedIn</a><br/><br/>
+
+        <a href=\'https://github.com/pluscubed/velociraptor\'>GitHub</a> - 代码，更新，功能建议<br/>
+        <a href=\'http://ost4cel.oneskyapp.com/collaboration/project/64120\'>OneSky</a> - translate the app to your language
+    ]]></string>
+    <string name="about">关于</string>
+    <string name="wrong_speed_limit">速度限制信息错误或缺失？</string>
+    <string name="wrong_speed_limit_desc">在电脑上访问 OpenStreetMap来修正数据。点击链接分享（https://openstreetmap.org）</string>
+</resources>
