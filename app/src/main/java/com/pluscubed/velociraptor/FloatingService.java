@@ -342,8 +342,11 @@ public class FloatingService extends Service {
             mGoogleApiClient.disconnect();
         }
 
-        if (mFloatingView != null && mFloatingView.isShown())
-            mWindowManager.removeViewImmediate(mFloatingView);
+        if (mFloatingView != null)
+            try {
+                mWindowManager.removeView(mFloatingView);
+            } catch (Exception ignore) {
+            }
 
         if (mLocationSubscription != null) {
             mLocationSubscription.unsubscribe();
