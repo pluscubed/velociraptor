@@ -7,10 +7,14 @@ import com.bumptech.glide.Glide;
 import com.crashlytics.android.Crashlytics;
 import com.pluscubed.velociraptor.appselection.AppIconLoader;
 import com.pluscubed.velociraptor.appselection.AppInfo;
+import com.pluscubed.velociraptor.appselection.AppInfoEntity;
 import com.pluscubed.velociraptor.appselection.Models;
+import com.pluscubed.velociraptor.appselection.SelectedAppDatabase;
+import com.pluscubed.velociraptor.utils.PrefUtils;
 import com.squareup.leakcanary.LeakCanary;
 
 import java.io.InputStream;
+import java.util.List;
 
 import io.fabric.sdk.android.Fabric;
 import io.requery.Persistable;
@@ -20,6 +24,8 @@ import io.requery.rx.SingleEntityStore;
 import io.requery.sql.Configuration;
 import io.requery.sql.EntityDataStore;
 import io.requery.sql.TableCreationMode;
+import rx.Single;
+import rx.functions.Func1;
 
 public class App extends Application {
 
@@ -41,6 +47,18 @@ public class App extends Application {
 
         Glide.get(this)
                 .register(AppInfo.class, InputStream.class, new AppIconLoader.Factory());
+
+        if (PrefUtils.isFirstRun(this)) {
+            SelectedAppDatabase.getMapApps(this)
+                    .flatMap(new Func1<List<AppInfoEntity>, Single<?>>() {
+                        @Override
+                        public Single<?> call(List<AppInfoEntity> mapInfos) {
+                            return getData(App.this).insert(mapInfos);
+                        }
+                    }).subscribe();
+
+            PrefUtils.setVersionCode(this, BuildConfig.VERSION_CODE);
+        }
     }
 
     /**

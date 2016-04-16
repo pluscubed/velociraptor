@@ -93,7 +93,7 @@ dependencies {
     compile 'com.squareup.okio:okio:1.7.0'
 
     compile 'com.github.gigamole.arcprogressstackview:library:1.0.0'
-    compile 'com.github.pluscubed:recycler-fast-scroll:0.3.0'
+    compile 'com.github.pluscubed:recycler-fast-scroll:0.3.1'
 
     compile 'com.github.bumptech.glide:glide:3.7.0'
 

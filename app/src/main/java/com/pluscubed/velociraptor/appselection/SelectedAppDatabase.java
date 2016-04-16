@@ -12,7 +12,9 @@ import android.support.annotation.NonNull;
 import com.pluscubed.velociraptor.App;
 import com.pluscubed.velociraptor.BuildConfig;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import rx.Observable;
 import rx.Single;
@@ -22,40 +24,72 @@ import rx.schedulers.Schedulers;
 
 public class SelectedAppDatabase {
 
+    /**
+     * Returns list of selected apps (packageName, id, enabled)
+     */
     @NonNull
     public static Single<List<AppInfoEntity>> getSelectedApps(final Context context) {
         return App.getData(context).select(AppInfoEntity.class)
                 .get().toObservable()
                 .subscribeOn(Schedulers.io())
-                .toList().toSingle()
-                .flatMap(new Func1<List<AppInfoEntity>, Single<List<AppInfoEntity>>>() {
-                    @Override
-                    public Single<List<AppInfoEntity>> call(List<AppInfoEntity> appInfos) {
-                        if (appInfos.isEmpty()) {
-                            Uri gmmIntentUri = Uri.parse("geo:37.421999,-122.084056");
-                            Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-                            PackageManager manager = context.getPackageManager();
-                            List<ResolveInfo> mapApps;
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                mapApps = manager.queryIntentActivities(mapIntent, PackageManager.MATCH_ALL);
-                            } else {
-                                mapApps = manager.queryIntentActivities(mapIntent, PackageManager.MATCH_DEFAULT_ONLY);
-                            }
-
-                            for (ResolveInfo info : mapApps) {
-                                AppInfoEntity appInfo = new AppInfoEntity();
-                                appInfo.packageName = info.activityInfo.packageName;
-                                appInfos.add(appInfo);
-                            }
-                            appInfos = (List<AppInfoEntity>) App.getData(context).insert(appInfos).toBlocking().value();
-                        }
-                        return Single.just(appInfos);
-                    }
-                });
+                .toList().toSingle();
     }
 
     /**
-     * Returns sorted list of AppInfos.
+     * Returns list of map apps (packageName, id, name, enabled)
+     */
+    public static Single<List<AppInfoEntity>> getMapApps(final Context context) {
+        return Single.fromCallable(new Callable<List<AppInfoEntity>>() {
+            @Override
+            public List<AppInfoEntity> call() throws Exception {
+                return getMapAppsSync(context);
+            }
+        }).subscribeOn(Schedulers.io())
+                .flatMapObservable(new Func1<List<AppInfoEntity>, Observable<AppInfoEntity>>() {
+                    @Override
+                    public Observable<AppInfoEntity> call(List<AppInfoEntity> mapApps) {
+                        List<AppInfoEntity> enabledApps = getSelectedApps(context).toBlocking().value();
+
+                        for (AppInfo info : mapApps) {
+                            for (AppInfo enabledApp : enabledApps) {
+                                if (info.packageName.equals(enabledApp.packageName)) {
+                                    info.enabled = true;
+                                    info.id = enabledApp.id;
+                                    break;
+                        }
+                    }
+                        }
+                        return Observable.from(mapApps);
+                    }
+                }).toSortedList().toSingle();
+    }
+
+    /**
+     * Returns list of map apps (packageName, name)
+     */
+    private static List<AppInfoEntity> getMapAppsSync(Context context) {
+        List<AppInfoEntity> appInfos = new ArrayList<>();
+        Uri gmmIntentUri = Uri.parse("geo:37.421999,-122.084056");
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+        PackageManager manager = context.getPackageManager();
+        List<ResolveInfo> mapApps;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            mapApps = manager.queryIntentActivities(mapIntent, PackageManager.MATCH_ALL);
+        } else {
+            mapApps = manager.queryIntentActivities(mapIntent, PackageManager.MATCH_DEFAULT_ONLY);
+        }
+
+        for (ResolveInfo info : mapApps) {
+            AppInfoEntity appInfo = new AppInfoEntity();
+            appInfo.packageName = info.activityInfo.packageName;
+            appInfo.name = info.loadLabel(context.getPackageManager()).toString();
+            appInfos.add(appInfo);
+        }
+        return appInfos;
+    }
+
+    /**
+     * Returns sorted list of AppInfos (packageName, name, id, enabled)
      */
     public static Single<List<AppInfoEntity>> getInstalledApps(final Context context) {
         return Single.create(new Single.OnSubscribe<List<ApplicationInfo>>() {
