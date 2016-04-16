@@ -58,6 +58,7 @@ public class App extends Application {
                     }).subscribe();
 
             PrefUtils.setVersionCode(this, BuildConfig.VERSION_CODE);
+            PrefUtils.setFirstRun(this, false);
         }
     }
 

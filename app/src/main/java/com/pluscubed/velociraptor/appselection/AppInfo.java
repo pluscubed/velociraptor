@@ -5,7 +5,6 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import io.requery.Entity;
-import io.requery.Generated;
 import io.requery.Key;
 import io.requery.Transient;
 
@@ -24,8 +23,6 @@ public class AppInfo implements Comparable<AppInfo>, Parcelable {
         }
     };
     @Key
-    @Generated
-    public int id;
     public String packageName;
     @Transient
     public boolean enabled;
@@ -37,9 +34,8 @@ public class AppInfo implements Comparable<AppInfo>, Parcelable {
     }
 
     protected AppInfo(Parcel in) {
-        this.id = in.readInt();
-        this.enabled = in.readByte() != 0;
         this.packageName = in.readString();
+        this.enabled = in.readByte() != 0;
         this.name = in.readString();
     }
 
@@ -70,9 +66,8 @@ public class AppInfo implements Comparable<AppInfo>, Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.id);
-        dest.writeByte(enabled ? (byte) 1 : (byte) 0);
         dest.writeString(this.packageName);
+        dest.writeByte(enabled ? (byte) 1 : (byte) 0);
         dest.writeString(this.name);
     }
 }
