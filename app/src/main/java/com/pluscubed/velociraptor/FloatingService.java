@@ -315,7 +315,10 @@ public class FloatingService extends Service {
                 params.x = left ? 0 : screenSize.x - mFloatingView.getWidth();
                 params.y = (int) (yRatio * screenSize.y + 0.5f);
 
-                mWindowManager.updateViewLayout(mFloatingView, params);
+                try {
+                    mWindowManager.updateViewLayout(mFloatingView, params);
+                } catch (IllegalArgumentException ignore) {
+                }
 
                 mFloatingView.setVisibility(View.VISIBLE);
 
@@ -345,7 +348,7 @@ public class FloatingService extends Service {
         if (mFloatingView != null)
             try {
                 mWindowManager.removeView(mFloatingView);
-            } catch (Exception ignore) {
+            } catch (IllegalArgumentException ignore) {
             }
 
         if (mLocationSubscription != null) {

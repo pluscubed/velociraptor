@@ -22,6 +22,7 @@ import io.requery.android.sqlite.DatabaseSource;
 import io.requery.sql.Configuration;
 import io.requery.sql.EntityDataStore;
 import io.requery.sql.TableCreationMode;
+import rx.Observable;
 import rx.Single;
 import rx.SingleSubscriber;
 import rx.functions.Func1;
@@ -47,12 +48,18 @@ public class App extends Application {
         Glide.get(this)
                 .register(AppInfo.class, InputStream.class, new AppIconLoader.Factory());
 
-        if (PrefUtils.isFirstRun(this)) {
+        if (PrefUtils.isFirstRun(this) || PrefUtils.getVersionCode(this) == 6) {
             SelectedAppDatabase.getMapApps(this)
                     .flatMap(new Func1<List<AppInfoEntity>, Single<?>>() {
                         @Override
                         public Single<?> call(List<AppInfoEntity> mapInfos) {
-                            return Single.just(getData(App.this).insert(mapInfos));
+                            return Observable.from(mapInfos)
+                                    .map(new Func1<AppInfoEntity, AppInfoEntity>() {
+                                        @Override
+                                        public AppInfoEntity call(AppInfoEntity appInfoEntity) {
+                                            return getData(App.this).upsert(appInfoEntity);
+                                        }
+                                    }).toList().toSingle();
                         }
                     }).subscribe(new SingleSubscriber<Object>() {
                 @Override
@@ -67,10 +74,10 @@ public class App extends Application {
                         Crashlytics.logException(error);
                 }
             });
-
-            PrefUtils.setVersionCode(this, BuildConfig.VERSION_CODE);
-            PrefUtils.setFirstRun(this, false);
         }
+
+        PrefUtils.setVersionCode(this, BuildConfig.VERSION_CODE);
+        PrefUtils.setFirstRun(this, false);
     }
 
     /**
