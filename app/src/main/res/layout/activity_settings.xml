@@ -32,11 +32,13 @@
 
                 <include layout="@layout/activity_settings_mperm" />
 
-                <include layout="@layout/activity_settings_use" />
+                <include layout="@layout/activity_settings_activation" />
+
+                <include layout="@layout/activity_settings_general" />
 
                 <include layout="@layout/activity_settings_report" />
 
-                <include layout="@layout/activity_settings_misc" />
+                <include layout="@layout/activity_settings_advanced" />
 
             </LinearLayout>
 

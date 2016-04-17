@@ -3,6 +3,7 @@ package com.pluscubed.velociraptor;
 import android.content.Context;
 import android.location.Location;
 import android.support.annotation.NonNull;
+import android.util.Pair;
 
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
@@ -13,6 +14,7 @@ import com.pluscubed.velociraptor.osmapi.Element;
 import com.pluscubed.velociraptor.osmapi.OsmApiEndpoint;
 import com.pluscubed.velociraptor.osmapi.OsmResponse;
 import com.pluscubed.velociraptor.osmapi.OsmService;
+import com.pluscubed.velociraptor.osmapi.Tags;
 import com.pluscubed.velociraptor.utils.PrefUtils;
 
 import java.io.IOException;
@@ -29,7 +31,6 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.jackson.JacksonConverterFactory;
-import rx.Observable;
 import rx.Single;
 import rx.functions.Action0;
 import rx.functions.Action1;
@@ -50,7 +51,6 @@ public class SpeedLimitApi {
     private OsmService mOsmService;
     private HereService mHereService;
     private OsmApiSelectionInterceptor mOsmApiSelectionInterceptor;
-
     private List<OsmApiEndpoint> mOsmOverpassApis;
 
     public SpeedLimitApi(Context context) {
@@ -81,11 +81,12 @@ public class SpeedLimitApi {
         mOsmService = osmRest.create(OsmService.class);
     }
 
-    public Single<Integer> getSpeedLimit(Location location) {
-        return getOsmSpeedLimit(location)
-                //.switchIfEmpty(getHereSpeedLimit(location).toObservable())
-                .defaultIfEmpty(null)
-                .toSingle();
+    public List<OsmApiEndpoint> getOsmOverpassApis() {
+        return mOsmOverpassApis;
+    }
+
+    public Single<Pair<Integer, Tags>> getSpeedLimit(Location location) {
+        return getOsmSpeedLimit(location);
     }
 
     private String getOsmQuery(Location location) {
@@ -107,7 +108,7 @@ public class SpeedLimitApi {
                 .build();
     }
 
-    private Observable<Integer> getOsmSpeedLimit(final Location location) {
+    private Single<Pair<Integer, Tags>> getOsmSpeedLimit(final Location location) {
         final List<OsmApiEndpoint> endpoints = new ArrayList<>(mOsmOverpassApis);
         return mOsmService.getOsm(getOsmQuery(location))
                 .subscribeOn(Schedulers.io())
@@ -134,37 +135,34 @@ public class SpeedLimitApi {
                         return mOsmService.getOsm(getOsmQuery(location));
                     }
                 })
-                .onErrorResumeNext(Single.just((OsmResponse) null))
-                .flatMapObservable(new Func1<OsmResponse, Observable<Integer>>() {
+                .flatMap(new Func1<OsmResponse, Single<Pair<Integer, Tags>>>() {
                     @Override
-                    public Observable<Integer> call(OsmResponse osmApi) {
-                        if (osmApi == null) {
-                            return Observable.empty();
-                        }
-
+                    public Single<Pair<Integer, Tags>> call(OsmResponse osmApi) {
                         boolean useMetric = PrefUtils.getUseMetric(mContext);
 
                         List<Element> elements = osmApi.getElements();
                         if (!elements.isEmpty()) {
                             Element element = elements.get(0);
-                            String maxspeed = element.getTags().getMaxspeed();
+                            Tags tags = element.getTags();
+                            String maxspeed = tags.getMaxspeed();
                             if (maxspeed.matches("^-?\\d+$")) {
                                 //is integer -> km/h
                                 Integer limit = Integer.valueOf(maxspeed);
                                 if (!useMetric) {
                                     limit = (int) (limit / 1.609344);
                                 }
-                                return Observable.just(limit);
+                                return Single.just(new Pair<>(limit, tags));
                             } else if (maxspeed.contains("mph")) {
                                 String[] split = maxspeed.split(" ");
                                 Integer limit = Integer.valueOf(split[0]);
                                 if (useMetric) {
                                     limit = (int) (limit * 1.609344);
                                 }
-                                return Observable.just(limit);
+                                return Single.just(new Pair<>(limit, tags));
                             }
+                            return Single.just(new Pair<>((Integer) null, tags));
                         }
-                        return Observable.empty();
+                        return Single.just(new Pair<>((Integer) null, (Tags) null));
                     }
                 });
     }
@@ -220,9 +218,19 @@ public class SpeedLimitApi {
 
             long start = System.currentTimeMillis();
             try {
-                return chain.proceed(request);
+                Response proceed = chain.proceed(request);
+                long timestamp = System.currentTimeMillis();
+                api.timeTakenTimestamp = timestamp;
+                if (!proceed.isSuccessful()) {
+                    throw new IOException(proceed.toString());
+                } else {
+                    api.timeTaken = (int) (timestamp - start);
+                }
+                return proceed;
+            } catch (IOException e) {
+                api.timeTaken = Integer.MAX_VALUE;
+                throw e;
             } finally {
-                api.timeTaken = (int) (System.currentTimeMillis() - start);
                 Collections.sort(mOsmOverpassApis);
             }
         }

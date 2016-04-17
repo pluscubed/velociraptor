@@ -3,6 +3,7 @@ package com.pluscubed.velociraptor;
 import android.Manifest;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -28,6 +29,7 @@ import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v4.view.animation.LinearOutSlowInInterpolator;
 import android.support.v7.app.NotificationCompat;
 import android.support.v7.view.ContextThemeWrapper;
+import android.util.Pair;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -44,6 +46,8 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.pluscubed.velociraptor.osmapi.OsmApiEndpoint;
+import com.pluscubed.velociraptor.osmapi.Tags;
 import com.pluscubed.velociraptor.utils.PrefUtils;
 
 import java.util.ArrayList;
@@ -67,7 +71,10 @@ public class FloatingService extends Service {
     private TextView mStreetText;
     private TextView mSpeedometerText;
     private TextView mSpeedometerUnits;
+    private TextView mDebuggingText;
     private ArcProgressStackView mArcView;
+
+    private String mDebuggingNetworkInfo;
 
     private GoogleApiClient mGoogleApiClient;
 
@@ -100,6 +107,7 @@ public class FloatingService extends Service {
         return super.onStartCommand(intent, flags, startId);
     }
 
+    @SuppressLint("InflateParams")
     @Override
     public void onCreate() {
         super.onCreate();
@@ -140,6 +148,19 @@ public class FloatingService extends Service {
         mSpeedometerText = (TextView) mFloatingView.findViewById(R.id.speed);
         mSpeedometerUnits = (TextView) mFloatingView.findViewById(R.id.speedUnits);
         mSpeedometer = mFloatingView.findViewById(R.id.speedometer);
+
+        mDebuggingNetworkInfo = "";
+        mDebuggingText = (TextView) LayoutInflater.from(new ContextThemeWrapper(this, R.style.Theme_Velociraptor))
+                .inflate(R.layout.floating_stats, null, false);
+        WindowManager.LayoutParams debuggingParams = new WindowManager.LayoutParams(
+                WindowManager.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.TYPE_PHONE,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                PixelFormat.TRANSLUCENT);
+        debuggingParams.gravity = Gravity.BOTTOM;
+        mWindowManager.addView(mDebuggingText, debuggingParams);
+        updatePrefDebugging();
 
         WindowManager.LayoutParams params = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
@@ -194,6 +215,10 @@ public class FloatingService extends Service {
         mGoogleApiClient.connect();
     }
 
+    private void updatePrefDebugging() {
+        mDebuggingText.setVisibility(PrefUtils.isDebuggingEnabled(this) ? View.VISIBLE : View.GONE);
+    }
+
     private boolean prequisitesNotMet() {
         if (ContextCompat.checkSelfPermission(FloatingService.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this))) {
@@ -222,23 +247,47 @@ public class FloatingService extends Service {
 
     private void onLocationChanged(final Location location) {
         updateSpeedometer(location);
+        updatePrefDebugging();
+
+        if (PrefUtils.isDebuggingEnabled(this)) {
+            mDebuggingText.setText("Location: " + location);
+            mDebuggingText.append(mDebuggingNetworkInfo);
+        }
 
         if (mLocationSubscription == null &&
                 (mLastSpeedLimitLocation == null || location.distanceTo(mLastSpeedLimitLocation) > 50)) {
 
             mLocationSubscription = mSpeedLimitApi.getSpeedLimit(location)
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new SingleSubscriber<Integer>() {
+                    .subscribe(new SingleSubscriber<Pair<Integer, Tags>>() {
+                        @SuppressLint("SetTextI18n")
                         @Override
-                        public void onSuccess(Integer speedLimit) {
+                        public void onSuccess(Pair<Integer, Tags> speedLimit) {
                             mLastSpeedLimitLocation = location;
 
-                            if (speedLimit != null) {
-                                mLastSpeedLimit = speedLimit;
-                                mLimitText.setText(String.valueOf(speedLimit));
+                            if (speedLimit.first != null) {
+                                mLastSpeedLimit = speedLimit.first;
+                                mLimitText.setText(String.valueOf(speedLimit.first));
                             } else {
                                 mLastSpeedLimit = 0;
                                 mLimitText.setText("--");
+                            }
+
+                            if (PrefUtils.isDebuggingEnabled(FloatingService.this)) {
+                                mDebuggingText.setText("Location: " + location);
+
+                                mDebuggingNetworkInfo = ("\nEndpoints:\n");
+                                for (OsmApiEndpoint endpoint : mSpeedLimitApi.getOsmOverpassApis()) {
+                                    mDebuggingNetworkInfo += (endpoint.toString() + "\n");
+                                }
+                                if (speedLimit.second != null) {
+                                    Tags tags = speedLimit.second;
+                                    mDebuggingNetworkInfo += ("Name: " + tags.getName() + "\nRef: " + tags.getRef());
+                                } else {
+                                    mDebuggingNetworkInfo += ("Connected, no speed limit data");
+                                }
+
+                                mDebuggingText.append(mDebuggingNetworkInfo);
                             }
 
                             mLocationSubscription = null;
@@ -250,7 +299,14 @@ public class FloatingService extends Service {
                             if (!BuildConfig.DEBUG)
                                 Crashlytics.logException(error);
 
-                            //showToast("Velociraptor Error: " + error);
+                            mLastSpeedLimit = 0;
+                            mLimitText.setText("--");
+
+                            if (PrefUtils.isDebuggingEnabled(FloatingService.this)) {
+                                mDebuggingText.setText("Location: " + location);
+                                mDebuggingNetworkInfo = ("Error: " + error);
+                                mDebuggingText.append("\n" + mDebuggingNetworkInfo);
+                            }
 
                             mLocationSubscription = null;
                         }
@@ -360,6 +416,12 @@ public class FloatingService extends Service {
         if (mFloatingView != null)
             try {
                 mWindowManager.removeView(mFloatingView);
+            } catch (IllegalArgumentException ignore) {
+            }
+
+        if (mDebuggingText != null)
+            try {
+                mWindowManager.removeView(mDebuggingText);
             } catch (IllegalArgumentException ignore) {
             }
 

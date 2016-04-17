@@ -4,7 +4,12 @@ import android.support.annotation.NonNull;
 
 import com.pluscubed.velociraptor.utils.Utils;
 
+import java.text.DateFormat;
+import java.util.Date;
+
 public class OsmApiEndpoint implements Comparable<OsmApiEndpoint> {
+    //Wait 2 minutes before trying a slow/errored endpoint again.
+    public long timeTakenTimestamp;
     public int timeTaken;
     public String baseUrl;
 
@@ -13,7 +18,27 @@ public class OsmApiEndpoint implements Comparable<OsmApiEndpoint> {
     }
 
     @Override
+    public String toString() {
+        String time = timeTaken + "ms";
+        if (timeTaken == Integer.MAX_VALUE) {
+            time = "error";
+        }
+        String s = baseUrl + " - " + time +
+                ", timestamp " + DateFormat.getTimeInstance().format(new Date(timeTakenTimestamp));
+        return s;
+    }
+
+    @Override
     public int compareTo(@NonNull OsmApiEndpoint another) {
-        return Utils.compare(timeTaken, another.timeTaken);
+        long currentTime = System.currentTimeMillis();
+
+        int compare = Utils.compare(timeTaken, another.timeTaken);
+
+        if (compare == 1 && currentTime > timeTakenTimestamp + 120000) {
+            return -1;
+        } else if (compare == -1 && currentTime > another.timeTakenTimestamp + 120000) {
+            return 1;
+        }
+        return compare;
     }
 }

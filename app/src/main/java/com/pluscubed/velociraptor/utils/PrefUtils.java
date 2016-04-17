@@ -16,6 +16,7 @@ public abstract class PrefUtils {
     public static final String PREF_SIGN_STYLE = "pref_international";
     public static final String PREF_SPEEDOMETER = "pref_speedometer";
     public static final String PREF_AUTO_DISPLAY = "pref_auto_display";
+    public static final String PREF_DEBUGGING = "pref_debugging";
 
     public static final String PREF_FIRSTRUN = "pref_first";
     public static final String PREF_VERSION_CODE = "pref_version_code";
@@ -95,6 +96,14 @@ public abstract class PrefUtils {
 
     public static void setAutoDisplay(Context context, boolean autoDisplay) {
         edit(context).putBoolean(PREF_AUTO_DISPLAY, autoDisplay).apply();
+    }
+
+    public static boolean isDebuggingEnabled(Context context) {
+        return getSharedPreferences(context).getBoolean(PREF_DEBUGGING, false);
+    }
+
+    public static void setDebugging(Context context, boolean debugging) {
+        edit(context).putBoolean(PREF_DEBUGGING, debugging).apply();
     }
 
     @IntDef({STYLE_US, STYLE_INTERNATIONAL})

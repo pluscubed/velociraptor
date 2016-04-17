@@ -55,6 +55,7 @@ public class SettingsActivity extends AppCompatActivity {
     private Spinner mOverspeedSpinner;
     private SwitchCompat mShowSpeedometerSwitch;
     private SwitchCompat mAutoDisplaySwitch;
+    private SwitchCompat mDebuggingSwitch;
     private ViewGroup mAutoDisplayOptionsContainer;
     private ViewGroup mOpenAppSelectionContainer;
     private NotificationManager mNotificationManager;
@@ -83,6 +84,8 @@ public class SettingsActivity extends AppCompatActivity {
         mAutoDisplayOptionsContainer = (ViewGroup) findViewById(R.id.linear_auto_display_options);
         mEnableServiceButton = (Button) findViewById(R.id.button_enable_service);
         mEnabledServiceImage = (ImageView) findViewById(R.id.image_service_enabled);
+
+        mDebuggingSwitch = (SwitchCompat) findViewById(R.id.switch_debugging);
 
         mOpenAppSelectionContainer = (ViewGroup) findViewById(R.id.linear_app_selection);
 
@@ -254,6 +257,16 @@ public class SettingsActivity extends AppCompatActivity {
                 mShowSpeedometerSwitch.setChecked(!mShowSpeedometerSwitch.isChecked());
 
                 PrefUtils.setShowSpeedometer(SettingsActivity.this, mShowSpeedometerSwitch.isChecked());
+            }
+        });
+
+        mDebuggingSwitch.setChecked(PrefUtils.isDebuggingEnabled(this));
+        ((View) mDebuggingSwitch.getParent()).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDebuggingSwitch.setChecked(!mDebuggingSwitch.isChecked());
+
+                PrefUtils.setDebugging(SettingsActivity.this, mDebuggingSwitch.isChecked());
             }
         });
 
