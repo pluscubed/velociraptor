@@ -48,7 +48,7 @@ public class App extends Application {
         Glide.get(this)
                 .register(AppInfo.class, InputStream.class, new AppIconLoader.Factory());
 
-        if (PrefUtils.isFirstRun(this) || PrefUtils.getVersionCode(this) == 6) {
+        if (PrefUtils.isFirstRun(this)) {
             SelectedAppDatabase.getMapApps(this)
                     .flatMap(new Func1<List<AppInfoEntity>, Single<?>>() {
                         @Override
