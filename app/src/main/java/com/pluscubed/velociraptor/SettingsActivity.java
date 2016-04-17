@@ -107,12 +107,15 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(SettingsActivity.this, FloatingService.class);
+                intent.putExtra(FloatingService.EXTRA_NOTIF_START, true);
                 PendingIntent pending = PendingIntent.getService(SettingsActivity.this,
                         PENDING_SERVICE, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+
                 Intent intentClose = new Intent(SettingsActivity.this, FloatingService.class);
-                intentClose.putExtra(FloatingService.EXTRA_CLOSE, true);
+                intentClose.putExtra(FloatingService.EXTRA_NOTIF_CLOSE, true);
                 PendingIntent pendingClose = PendingIntent.getService(SettingsActivity.this,
                         PENDING_SERVICE_CLOSE, intentClose, PendingIntent.FLAG_CANCEL_CURRENT);
+
                 Intent settings = new Intent(SettingsActivity.this, SettingsActivity.class);
                 PendingIntent settingsIntent = PendingIntent.getActivity(SettingsActivity.this,
                         PENDING_SETTINGS, settings, PendingIntent.FLAG_CANCEL_CURRENT);
@@ -124,6 +127,7 @@ public class SettingsActivity extends AppCompatActivity {
                                 .setContentText(getString(R.string.controls_notif_desc))
                                 .addAction(0, getString(R.string.show), pending)
                                 .addAction(0, getString(R.string.hide), pendingClose)
+                                .setDeleteIntent(pendingClose)
                                 .setContentIntent(settingsIntent);
                 Notification notification = builder.build();
                 mNotificationManager.notify(NOTIFICATION_CONTROLS, notification);
@@ -340,11 +344,10 @@ public class SettingsActivity extends AppCompatActivity {
 
     private void enableService(boolean start) {
         Intent intent = new Intent(this, FloatingService.class);
-        if (start) {
-            startService(intent);
-        } else {
-            stopService(intent);
+        if (!start) {
+            intent.putExtra(FloatingService.EXTRA_CLOSE, true);
         }
+        startService(intent);
     }
 
     private boolean isServiceReady() {

@@ -54,6 +54,8 @@ import rx.android.schedulers.AndroidSchedulers;
 
 public class FloatingService extends Service {
     public static final int PENDING_SETTINGS = 5;
+    public static final String EXTRA_NOTIF_START = "com.pluscubed.velociraptor.EXTRA_NOTIF_START";
+    public static final String EXTRA_NOTIF_CLOSE = "com.pluscubed.velociraptor.EXTRA_NOTIF_CLOSE";
     public static final String EXTRA_CLOSE = "com.pluscubed.velociraptor.EXTRA_CLOSE";
 
     private static final int NOTIFICATION_FLOATING_WINDOW = 303;
@@ -77,6 +79,8 @@ public class FloatingService extends Service {
 
     private SpeedLimitApi mSpeedLimitApi;
 
+    private boolean mNotifStart;
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -85,8 +89,13 @@ public class FloatingService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (intent != null && intent.getBooleanExtra(EXTRA_CLOSE, false)) {
-            stopSelf();
+        if (intent != null) {
+            if (intent.getBooleanExtra(EXTRA_NOTIF_START, false)) {
+                mNotifStart = true;
+            } else if (!mNotifStart && intent.getBooleanExtra(EXTRA_CLOSE, false) ||
+                    intent.getBooleanExtra(EXTRA_NOTIF_CLOSE, false)) {
+                stopSelf();
+            }
         }
         return super.onStartCommand(intent, flags, startId);
     }

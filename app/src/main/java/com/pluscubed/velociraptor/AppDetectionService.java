@@ -79,11 +79,10 @@ public class AppDetectionService extends AccessibilityService {
                             }
                         }
 
-                        if (isSelectedApp) {
-                            startService(intent);
-                        } else if (!appPackage.equals(BuildConfig.APPLICATION_ID)) {
-                            stopService(intent);
+                        if (!isSelectedApp && !appPackage.equals(BuildConfig.APPLICATION_ID)) {
+                            intent.putExtra(FloatingService.EXTRA_CLOSE, true);
                         }
+                        startService(intent);
                     }
                 }
             }

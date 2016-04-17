@@ -97,12 +97,9 @@ dependencies {
 
     compile 'com.github.bumptech.glide:glide:3.7.0'
 
-    /* compile 'io.requery:requery:1.0.0-beta14'
-     compile 'io.requery:requery-android:1.0.0-beta14'
-     apt 'io.requery:requery-processor:1.0.0-beta14'*/
-    compile 'com.github.pluscubed.requery:requery:a16da12ce9'
-    compile 'com.github.pluscubed.requery:requery-android:a16da12ce9'
-    apt 'com.github.pluscubed.requery:requery-processor:a16da12ce9'
+    compile 'com.github.requery.requery:requery:46112e6b04'
+    compile 'com.github.requery.requery:requery-android:46112e6b04'
+    apt 'com.github.requery.requery:requery-processor:46112e6b04'
 
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.4-beta2'
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2'

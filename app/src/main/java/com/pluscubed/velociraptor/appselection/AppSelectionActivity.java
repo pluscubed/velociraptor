@@ -230,7 +230,7 @@ public class AppSelectionActivity extends AppCompatActivity {
             @Override
             public Object call() throws Exception {
                 if (checked) {
-                    return App.getData(AppSelectionActivity.this).insert(appInfo);
+                    return App.getData(AppSelectionActivity.this).upsert(appInfo);
                 } else {
                     return App.getData(AppSelectionActivity.this).delete(appInfo);
                 }
