@@ -3,7 +3,6 @@ package com.pluscubed.velociraptor.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.support.annotation.ColorInt;
 import android.support.annotation.IntDef;
 
 import java.lang.annotation.Retention;
@@ -44,7 +43,6 @@ public abstract class PrefUtils {
         edit(context).putInt(PREF_VERSION_CODE, versionCode).apply();
     }
 
-    @ColorInt
     public static int getVersionCode(Context context) {
         return getSharedPreferences(context).getInt(PREF_VERSION_CODE, 0);
     }

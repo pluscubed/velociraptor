@@ -29,6 +29,7 @@ import com.pluscubed.velociraptor.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import rx.Single;
 import rx.SingleSubscriber;
@@ -208,7 +209,8 @@ public class AppSelectionActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void onItemClick(AppInfoEntity appInfo, boolean checked) {
+    private void onItemClick(final AppInfoEntity appInfo, final boolean checked) {
+        appInfo.enabled = checked;
         SingleSubscriber<Object> subscriber = new SingleSubscriber<Object>() {
             @Override
             public void onSuccess(Object value) {
@@ -224,12 +226,16 @@ public class AppSelectionActivity extends AppCompatActivity {
                     Crashlytics.logException(error);
             }
         };
-        if (checked) {
-            Single.just(App.getData(this).insert(appInfo)).subscribeOn(Schedulers.io()).subscribe(subscriber);
-        } else {
-            Single.just(App.getData(this).delete(appInfo)).subscribeOn(Schedulers.io()).subscribe(subscriber);
-        }
-        appInfo.enabled = checked;
+        Single.fromCallable(new Callable<Object>() {
+            @Override
+            public Object call() throws Exception {
+                if (checked) {
+                    return App.getData(AppSelectionActivity.this).insert(appInfo);
+                } else {
+                    return App.getData(AppSelectionActivity.this).delete(appInfo);
+                }
+            }
+        }).subscribeOn(Schedulers.io()).subscribe(subscriber);
     }
 
     @Override

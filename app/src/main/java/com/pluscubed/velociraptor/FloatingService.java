@@ -301,6 +301,9 @@ public class FloatingService extends Service {
     }
 
     private void initFloatingViewPosition() {
+        if (mFloatingView == null) {
+            return;
+        }
         mFloatingView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
@@ -378,9 +381,9 @@ public class FloatingService extends Service {
             public void onAnimationUpdate(ValueAnimator animation) {
                 WindowManager.LayoutParams params = (WindowManager.LayoutParams) mFloatingView.getLayoutParams();
                 params.x = (int) animation.getAnimatedValue();
-
-                if (mFloatingView.isShown()) {
+                try {
                     mWindowManager.updateViewLayout(mFloatingView, params);
+                } catch (IllegalArgumentException ignore) {
                 }
             }
         });
