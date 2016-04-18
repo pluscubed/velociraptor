@@ -25,21 +25,23 @@
     <string name="show_speedometer">Afficher le compteur de vitesse</string>
     <string name="about_dialog_title">Velociraptor v%s</string>
     <string name="dismiss">Annuler</string>
-    <string name="about_body"><![CDATA[<b>Velociraptor</b> est un compteur de vitesse flottant avec des fonctionnalités d\'avertissement via l\'utilisation des données de OpenStreetMap et de HERE Maps.<br/><br/>
+    <string name="about_body"><![CDATA[
+    <b>Velociraptor</b> est un compteur de vitesse flottant avec des fonctionnalités d\'avertissement via l\'utilisation des données de OpenStreetMap et de HERE Maps.
+    <br/><br/>
 
-Développé par <b>Daniel Ciao</b><br/>
+    Développé par <b>Daniel Ciao</b><br/>
 
-<a href=\'http://pluscubed.com\'>Site Web</a>&nbsp;&nbsp; 
-<a href=\'mailto:pluscubed@gmail.com\'>E-mail</a>&nbsp;&nbsp; 
-<a href=\'https://twitter.com/plusCubed\'>Twitter</a>&nbsp;&nbsp; 
-<a href=\'https://google.com/+DanielCiao\'>Google+</a>&nbsp;&nbsp; 
-<a href=\'https://github.com/pluscubed\'>GitHub</a>&nbsp;&nbsp; 
-<a href=\'https://www.linkedin.com/in/dciao\'>LinkedIn</a><br/><br/> 
+    <a href=\'http://pluscubed.com\'>Site Web</a>&nbsp;&nbsp;
+    <a href=\'mailto:pluscubed@gmail.com\'>E-mail</a>&nbsp;&nbsp;
+    <a href=\'https://twitter.com/plusCubed\'>Twitter</a>&nbsp;&nbsp;
+    <a href=\'https://google.com/+DanielCiao\'>Google+</a>&nbsp;&nbsp;
+    <a href=\'https://github.com/pluscubed\'>GitHub</a>&nbsp;&nbsp;
+    <a href=\'https://www.linkedin.com/in/dciao\'>LinkedIn</a><br/><br/>
 
-<a href=\'https://play.google.com/store/apps/details?id=com.pluscubed.velociraptor\'>Évaluer sur le Play Store !</a><br/><br/> 
+    <a href=\'https://play.google.com/store/apps/details?id=com.pluscubed.velociraptor\'>Évaluer sur le Play Store !</a><br/><br/>
 
-<a href=\'https://github.com/pluscubed/velociraptor\'>GitHub</a> - source, bugs, demandes de fonctionnalités<br/>
-<a href=\'http://pluscubed.oneskyapp.com/collaboration/project/64120\'>OneSky</a> - traduire l\\'application dans votre langue ]]></string>
+    <a href=\'https://github.com/pluscubed/velociraptor\'>GitHub</a> - source, bugs, demandes de fonctionnalités<br/>
+    <a href=\'http://pluscubed.oneskyapp.com/collaboration/project/64120\'>OneSky</a> - traduire l\'application dans votre langue ]]></string>
     <string name="about">À propos</string>
     <string name="wrong_speed_limit">Limitation de vitesse incorrecte ou manquante ?</string>
     <string name="wrong_speed_limit_desc">Aller à OpenStreetMap sur votre ordinateur pour modifier les données. Appuyer pour partager le lien (https://openstreetmap.org)</string>
