@@ -270,10 +270,8 @@ public class FloatingService extends Service {
     private void onLocationChanged(final Location location) {
         updateSpeedometer(location);
 
-        if (PrefUtils.isDebuggingEnabled(this)) {
-            mDebuggingText.setText("Location: " + location);
-            mDebuggingText.append(mDebuggingNetworkInfo);
-        }
+        mDebuggingText.setText("Location: " + location);
+        mDebuggingText.append(mDebuggingNetworkInfo);
 
         if (mLocationSubscription == null) {
 

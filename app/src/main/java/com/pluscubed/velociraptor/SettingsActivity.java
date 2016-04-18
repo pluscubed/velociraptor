@@ -274,6 +274,10 @@ public class SettingsActivity extends AppCompatActivity {
         });
 
         invalidateStates();
+
+        if (BuildConfig.VERSION_CODE > PrefUtils.getVersionCode(this)) {
+            showChangelog();
+        }
     }
 
     private void updateFloatingServicePrefs() {
@@ -308,6 +312,9 @@ public class SettingsActivity extends AppCompatActivity {
             case R.id.menu_settings_about:
                 showAboutDialog();
                 return true;
+            case R.id.menu_settings_changelog:
+                showChangelog();
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -319,6 +326,10 @@ public class SettingsActivity extends AppCompatActivity {
                 .content(Html.fromHtml(getString(R.string.about_body)))
                 .iconRes(R.mipmap.ic_launcher)
                 .show();
+    }
+
+    private void showChangelog() {
+        ChangelogDialog.newInstance().show(getFragmentManager(), "CHANGELOG_DIALOG");
     }
 
     @Override

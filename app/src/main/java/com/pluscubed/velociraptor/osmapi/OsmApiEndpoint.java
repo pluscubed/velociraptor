@@ -23,9 +23,8 @@ public class OsmApiEndpoint implements Comparable<OsmApiEndpoint> {
         if (timeTaken == Integer.MAX_VALUE) {
             time = "error";
         }
-        String s = baseUrl + " - " + time +
+        return baseUrl + " - " + time +
                 ", timestamp " + DateFormat.getTimeInstance().format(new Date(timeTakenTimestamp));
-        return s;
     }
 
     @Override
