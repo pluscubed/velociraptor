@@ -195,6 +195,8 @@ public class SettingsActivity extends AppCompatActivity {
                 PrefUtils.setUseMetric(SettingsActivity.this, position == 1);
                 mUnitSpinner.setDropDownVerticalOffset(
                         Utils.convertDpToPx(SettingsActivity.this, mUnitSpinner.getSelectedItemPosition() * -48));
+
+                updateFloatingServicePrefs();
             }
 
             @Override
@@ -216,10 +218,7 @@ public class SettingsActivity extends AppCompatActivity {
                     mStyleSpinner.setDropDownVerticalOffset(
                             Utils.convertDpToPx(SettingsActivity.this, mStyleSpinner.getSelectedItemPosition() * -48));
 
-                    if (isServiceReady()) {
-                        enableService(false);
-                        enableService(true);
-                    }
+                    updateFloatingServicePrefs();
                 }
             }
 
@@ -257,6 +256,8 @@ public class SettingsActivity extends AppCompatActivity {
                 mShowSpeedometerSwitch.setChecked(!mShowSpeedometerSwitch.isChecked());
 
                 PrefUtils.setShowSpeedometer(SettingsActivity.this, mShowSpeedometerSwitch.isChecked());
+
+                updateFloatingServicePrefs();
             }
         });
 
@@ -267,10 +268,20 @@ public class SettingsActivity extends AppCompatActivity {
                 mDebuggingSwitch.setChecked(!mDebuggingSwitch.isChecked());
 
                 PrefUtils.setDebugging(SettingsActivity.this, mDebuggingSwitch.isChecked());
+
+                updateFloatingServicePrefs();
             }
         });
 
         invalidateStates();
+    }
+
+    private void updateFloatingServicePrefs() {
+        if (isServiceReady()) {
+            Intent intent = new Intent(SettingsActivity.this, FloatingService.class);
+            intent.putExtra(FloatingService.EXTRA_PREF_CHANGE, true);
+            startService(intent);
+        }
     }
 
     private void updateAutoDisplaySwitchEnabled(boolean enabled) {

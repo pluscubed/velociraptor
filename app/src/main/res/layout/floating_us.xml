@@ -51,7 +51,7 @@
 
     </android.support.v7.widget.CardView>
 
-    <include layout="@layout/speedometer" />
+    <include layout="@layout/floating_speedometer_stub" />
 
     <TextView
         android:id="@+id/subtext"
