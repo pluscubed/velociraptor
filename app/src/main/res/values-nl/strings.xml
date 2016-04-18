@@ -2,12 +2,12 @@
 <resources>
     <string name="app_name">Velociraptor</string>
     <string name="notif_content">Tik om instellingen te openen</string>
-    <string name="notif_title">Velociraptor snelheidslimiet</string>
+    <string name="notif_title">Velociraptor actief</string>
     <string name="dialog_draw_overlay">Verleen in Android 6.0+ toestemming om elementen op de voorgrond weer te geven</string>
     <string name="open_settings">Instellingen openen</string>
     <string name="accessibility_service_description">Toegankelijkheid moet worden ingeschakeld om de actieve app te kunnen detecteren en de snelheidslimiet weer te kunnen geven.</string>
     <string name="enable_accessibility_service">Toegankelijkheid inschakelen</string>
-    <string name="enable_accessibility_service_desc">Schakel \'Toegankelijkheid\' in om de maximumsnelheid in kaart-apps automatisch weer te geven</string>
+    <string name="enable_accessibility_service_desc">Toestaan dat Velociraptor de huidige app kan detecteren door Toegankelijkheid in te schakelen</string>
     <string name="enable_floating_desc">Schakel \'Over andere apps tekenen\' in om de overlay weer te geven</string>
     <string name="open_settings_page">Instellingen openen</string>
     <string name="grant_permission">Toestemming geven</string>
@@ -38,9 +38,24 @@
         <a href=\'https://github.com/pluscubed\'>GitHub</a>&nbsp;&nbsp;
         <a href=\'https://www.linkedin.com/in/dciao\'>LinkedIn</a><br/><br/>
 
+<a href=\'https://play.google.com/store/apps/details?id=com.pluscubed.velociraptor\'>Waarderen in de Play Store!</a><br/><br/> 
+
         <a href=\'https://github.com/pluscubed/velociraptor\'>GitHub</a> - bron, issues, feature requests<br/>
         <a href=\'http://pluscubed.oneskyapp.com/collaboration/project/64120\'>OneSky</a> - vertaal de app in uw taal]]></string>
     <string name="about">Over</string>
     <string name="wrong_speed_limit">Verkeerde of missende snelheidslimiet?</string>
     <string name="wrong_speed_limit_desc">Ga op de computer naar OpenStreetMap om de gegevens aan te passen. Tik hier om link te delen (https://openstreetmap.org)</string>
+    <string name="configure">Instellen</string>
+    <string name="automatically_show">Weergeven/verbergen in bepaalde apps</string>
+    <string name="select_overlay_usage">Zwevende weergave</string>
+    <string name="enable">Inschakelen</string>
+    <string name="show_in_apps">Weergeven in deze apps:</string>
+    <string name="persistent_notification_controls">Melding met opties weergeven</string>
+    <string name="done">Gereed</string>
+    <string name="select_apps">Apps selecteren</string>
+    <string name="show_map_apps">Kaart-apps weergeven</string>
+    <string name="show">Weergeven</string>
+    <string name="hide">Verbergen</string>
+    <string name="controls_notif_title">Velociraptor bediening</string>
+    <string name="controls_notif_desc">Snelheidmonitor weergeven of verbergen</string>
 </resources>

@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<resources>
+    <string name="app_name">Velociraptor</string>
+    <string name="notif_content">Tryk for at åbne indstillinger</string>
+    <string name="notif_title">Velociraptorovervåger kører</string>
+    <string name="dialog_draw_overlay">For at vise flydende elementer i Android 6.0+, skal der gives tilladelse til \"Tegn over andre apps\"</string>
+    <string name="open_settings">Åbn indstillinger</string>
+    <string name="accessibility_service_description">For at se forgrundsappen og vise hastighedsgrænsen, skal tilgængelighedstjeneste være aktiveret.</string>
+    <string name="enable_accessibility_service">Aktivér tilgængelighedstjeneste</string>
+    <string name="enable_accessibility_service_desc">Tillad Velociraptor at registrere den åbne app ved at slå tilgængelighedstjeneste til</string>
+    <string name="enable_floating_desc">For at vise overlejring, skal der gives tilladelse til \"Tegn over andre apps\"</string>
+    <string name="open_settings_page">Åbn indstillinger</string>
+    <string name="grant_permission">Giv tilladelse</string>
+    <string name="enable_location_desc">For at bestemme hastighedsgrænsen ved din placering, skal du give placeringstilladelse</string>
+    <string name="speed_unit">Hastighedsenheder:</string>
+    <string name="style">Stilart:</string>
+    <string name="united_states">USA</string>
+    <string name="international">International</string>
+    <string name="open_settings_failed_overlay">Kunne ikke åbne indstillinger. Aktivér venligst \"Tegn over andre apps\"-indstillingen til Velociraptor manuelt.</string>
+    <string name="open_settings_failed_accessibility">Kunne ikke åbne indstillinger. Aktivér venligst Tilgænglighedstjenesten for Velociraptor manuelt.</string>
+    <string name="permissions_warning">Velociraptor har ikke tilstrækkelige tilladelser. Åbn appen til at give dem.</string>
+    <string name="location_settings_warning">GPS er ikke slået til. Aktivér venligst til Velociraptors hastighedsgrænseovervåger.</string>
+    <string name="network_warning">Netværk er ikke tilsluttet. Velociraptor kræver en internetforbindelse for at hente fartgrænser.</string>
+    <string name="speeding_amount">Tolerance for overtrædelse af fartgrænsen:</string>
+    <string name="show_speedometer">Vis speedometer</string>
+    <string name="about_dialog_title">Velociraptor v%s</string>
+    <string name="dismiss">Luk</string>
+    <string name="about_body"><![CDATA[
+        <b>Velociraptor</b> er en flydende fartsbegrænsningsovervåger med hastighedsmåler og advarselsfunktioner, der bruger hastighedsgrænsedata fra OpenStreetMap og HERE Maps.
+        <br/><br/>
+
+        Udviklet af <b>Daniel Ciao</b><br/>
+
+        <a href=\'http://pluscubed.com\'>Hjemmeside</a>&nbsp;&nbsp;
+        <a href=\'mailto:pluscubed@gmail.com\'>Email</a>&nbsp;&nbsp;
+        <a href=\'https://twitter.com/plusCubed\'>Twitter</a>&nbsp;&nbsp;
+        <a href=\'https://google.com/+DanielCiao\'>Google+</a>&nbsp;&nbsp;
+        <a href=\'https://github.com/pluscubed\'>GitHub</a>&nbsp;&nbsp;
+        <a href=\'https://www.linkedin.com/in/dciao\'>LinkedIn</a><br/><br/>
+
+        <a href=\'https://play.google.com/store/apps/details?id=com.pluscubed.velociraptor\'>Bedøm i Play Butik!</a><br/><br/>
+
+        <a href=\'https://github.com/pluscubed/velociraptor\'>GitHub</a> - kildekode, spørgsmål, funktionsanmodninger<br/>
+        <a href=\'http://pluscubed.oneskyapp.com/collaboration/project/64120\'>OneSky</a> - oversæt appen til dit sprog
+    ]]></string>
+    <string name="about">Om</string>
+    <string name="wrong_speed_limit">Forkert eller manglende fartgrænse?</string>
+    <string name="wrong_speed_limit_desc">Gå til OpenStreetMap på computeren for at redigere dataene. Tryk på for at dele link (https://openstreetmap.org)</string>
+    <string name="configure">Indstil</string>
+    <string name="automatically_show">Vis/skjul i bestemte apps</string>
+    <string name="select_overlay_usage">Brug af svævende overvåger</string>
+    <string name="enable">Aktivér</string>
+    <string name="show_in_apps">Vis i disse apps:</string>
+    <string name="persistent_notification_controls">Vis notifikationsknapper</string>
+    <string name="done">Færdig</string>
+    <string name="select_apps">Vælg apps</string>
+    <string name="show_map_apps">Vis kortapps</string>
+    <string name="show">Vis</string>
+    <string name="hide">Skjul</string>
+    <string name="controls_notif_title">Velociraptorknapper</string>
+    <string name="controls_notif_desc">Vis eller skjul hastighedsgrænseovervåger</string>
+</resources>

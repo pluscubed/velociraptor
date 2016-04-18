@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<resources>
+    <string name="app_name">فيلوسيرابتور</string>
+    <string name="notif_content">المس لفتح الإعدادات</string>
+    <string name="notif_title">مراقبة فيلوسيرابتور تعمل</string>
+    <string name="dialog_draw_overlay">لإظهار عناصر تطفو على أندرويد 6.0+، امنح إذن \"الرسم على  تطبيقات أخرى\"</string>
+    <string name="open_settings">افتح صفحة الاعدادات</string>
+    <string name="accessibility_service_description">للكشف عن التطبيقات بالواجهة وعرض حدود السرعة المسموح بها، يجب تمكين خدمة الوصول.</string>
+    <string name="enable_accessibility_service">تفعيل خدمة الوصول.</string>
+    <string name="enable_accessibility_service_desc">السماح لفيلوسيرابتور بالكشف عن التطبيق الحالي عن طريق تشغيل خدمة الوصول</string>
+    <string name="enable_floating_desc">لإظهار عناصر تطفو ، امنح إذن \"الرسم على  تطبيقات أخرى\"</string>
+    <string name="open_settings_page">افتح صفحة الاعدادات</string>
+    <string name="grant_permission">منح الإذن</string>
+    <string name="enable_location_desc">لتحديد الحد الأقصى للسرعة في موقعك، يرجى منح اذن  تحديد الموقع</string>
+    <string name="speed_unit">وحدات السرعة:</string>
+    <string name="style">نمط:</string>
+    <string name="united_states">الولايات المتحدة الأمريكية</string>
+    <string name="international">دولي</string>
+    <string name="open_settings_failed_overlay">غير قادر على فتح الإعدادات. يرجى تمكين  اعداد \"رسم على تطبيقات أخرى\" لفيلوسيرابتور يدويا.</string>
+    <string name="open_settings_failed_accessibility">غير قادر على فتح الإعدادات. يرجى تمكين خدمة الوصول لفيلوسيرابتور يدويا.</string>
+    <string name="permissions_warning">لا يتملك فيلوسيرابتور الأذونات الكافية. يرجى فتح التطبيق لمنحهم.</string>
+    <string name="location_settings_warning">لم يتم تشغيل نظام تحديد المواقع على. يرجى التفعيل ليتمكن  فيلوسيرابتور من رصد الحد الأقصى للسرعة.</string>
+    <string name="network_warning">أنت غير متصل بالشبكة. فيلوسيرابتور يتطلب الاتصال بالإنترنت لجلب الحد الأقصى للسرعة.</string>
+    <string name="speeding_amount">سماحية التسارع:</string>
+    <string name="show_speedometer">اظهار مقياس السرعة</string>
+    <string name="about_dialog_title">فيلوسيرابتور v%s</string>
+    <string name="dismiss">صرف</string>
+    <string name="about_body"><![CDATA[
+        <b>فيلوسيرابتور</b> هو شاشة طافية  لمراقبة الحدود القصوى للسرعة مع مقياس السرعة و الإنذارات ، وذلك باستخدام بيانات  الحدود القصوى للسرعة  من OpenStreetMap وHERE Maps.
+        <br/><br/>
+
+        تم التطوير عن طريق <b>Daniel Ciao</b><br/>
+
+        <a href=\'http://pluscubed.com\'>الموقع الإلكتروني</a>&nbsp;&nbsp;
+        <a href=\'mailto:pluscubed@gmail.com\'>البريد الإلكتروني</a>&nbsp;&nbsp;
+        <a href=\'https://twitter.com/plusCubed\'>تويتر</a>&nbsp;&nbsp;
+        <a href=\'https://google.com/+DanielCiao\'>جوجل بلس</a>&nbsp;&nbsp;
+        <a href=\'https://github.com/pluscubed\'>GitHub</a>&nbsp;&nbsp;
+        <a href=\'https://www.linkedin.com/in/dciao\'>لنكد ان</a><br/><br/>
+
+        <a href=\'https://play.google.com/store/apps/details?id=com.pluscubed.velociraptor\'>قيمنا على البلاي ستوور</a><br/><br/>
+
+        <a href=\'https://github.com/pluscubed/velociraptor\'>GitHub</a> - المصدر والمشكلات وطلبات الميزات الجديدة<br/>
+        <a href=\'http://pluscubed.oneskyapp.com/collaboration/project/64120\'>OneSky</a> -ترجم التطبيق للغتك
+    ]]></string>
+    <string name="about">عن</string>
+    <string name="wrong_speed_limit">حد أقصى للسرعة خاطئ أو مفقود؟</string>
+    <string name="wrong_speed_limit_desc">إذهب إلى OpenStreetMap على جهاز الكمبيوتر الخاص بك لتعديل البيانات. المس لمشاركة الرابط (https://openstreetmap.org)</string>
+    <string name="configure">تهيئة</string>
+    <string name="automatically_show">اظهار/اخفاء في تطبيقات معينة</string>
+    <string name="select_overlay_usage">استخدام المراقبة الطافية</string>
+    <string name="enable">تفعيل</string>
+    <string name="show_in_apps">اظهار بهذه التطبيقات:</string>
+    <string name="persistent_notification_controls">اظهار ادوات تحكم التنبيهات</string>
+    <string name="done">تم</string>
+    <string name="select_apps">اختيار تطبيقات</string>
+    <string name="show_map_apps">اظهار تطبيقات الخرائط</string>
+    <string name="show">اظهار</string>
+    <string name="hide">اخفاء</string>
+    <string name="controls_notif_title">ادوات تحكم فيلوسيرابتور</string>
+    <string name="controls_notif_desc">إظهار أو إخفاء مراقب الحد الأقصى للسرعة</string>
+</resources>
