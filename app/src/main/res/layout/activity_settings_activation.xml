@@ -129,15 +129,13 @@
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingLeft="16dp"
-            android:paddingStart="16dp"
+            android:paddingRight="16dp"
             tools:ignore="UseCompoundDrawables">
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:paddingEnd="16dp"
-                android:paddingRight="16dp"
                 android:text="@string/persistent_notification_controls"
                 android:textSize="16sp"
                 tools:ignore="RtlSymmetry" />

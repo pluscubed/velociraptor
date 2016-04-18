@@ -59,7 +59,7 @@
                 android:layout_weight="1"
                 android:paddingEnd="8dp"
                 android:paddingRight="8dp"
-                android:text="Stats for nerds/debugging"
+                android:text="@string/debugging_stats"
                 android:textSize="16sp"
                 tools:ignore="RtlSymmetry" />
 
