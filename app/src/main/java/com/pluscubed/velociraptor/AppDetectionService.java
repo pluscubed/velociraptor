@@ -10,10 +10,7 @@ import com.pluscubed.velociraptor.appselection.AppInfoEntity;
 import com.pluscubed.velociraptor.appselection.SelectedAppDatabase;
 import com.pluscubed.velociraptor.utils.PrefUtils;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import rx.SingleSubscriber;
 
 public class AppDetectionService extends AccessibilityService {
 
@@ -30,7 +27,6 @@ public class AppDetectionService extends AccessibilityService {
         super.onServiceConnected();
         sInstance = this;
 
-        mEnabledApps = new ArrayList<>();
         updateSelectedApps();
     }
 
@@ -41,20 +37,13 @@ public class AppDetectionService extends AccessibilityService {
     }
 
     public void updateSelectedApps() {
-        SelectedAppDatabase.getSelectedApps(this)
-                .subscribe(new SingleSubscriber<List<AppInfoEntity>>() {
-                    @Override
-                    public void onSuccess(List<AppInfoEntity> value) {
-                        mEnabledApps = value;
-                    }
-
-                    @Override
-                    public void onError(Throwable error) {
-                        error.printStackTrace();
-                        if (!BuildConfig.DEBUG)
-                            Crashlytics.logException(error);
-                    }
-                });
+        try {
+            mEnabledApps = SelectedAppDatabase.getSelectedApps(this).toBlocking().value();
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (!BuildConfig.DEBUG)
+                Crashlytics.logException(e);
+        }
     }
 
     @Override
@@ -63,27 +52,31 @@ public class AppDetectionService extends AccessibilityService {
             return;
         }
 
-        if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
-            if (event.getPackageName() != null) {
-                String appPackage = event.getPackageName().toString();
-                if (event.getClassName() != null) {
-                    String className = event.getClassName().toString();
-                    if (className.toLowerCase().contains("activity") || className.toLowerCase().contains("launcher")) {
-                        Intent intent = new Intent(this, FloatingService.class);
+        if (mEnabledApps == null) {
+            updateSelectedApps();
+        }
 
-                        boolean isSelectedApp = false;
-                        for (AppInfo info : mEnabledApps) {
-                            if (info.packageName.equals(appPackage)) {
-                                isSelectedApp = true;
-                                break;
-                            }
-                        }
+        if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED
+                && event.getPackageName() != null
+                && mEnabledApps != null) {
+            String appPackage = event.getPackageName().toString();
+            if (event.getClassName() != null) {
+                String className = event.getClassName().toString();
+                if (className.toLowerCase().contains("activity") || className.toLowerCase().contains("launcher")) {
+                    Intent intent = new Intent(this, FloatingService.class);
 
-                        if (!isSelectedApp && !appPackage.equals(BuildConfig.APPLICATION_ID)) {
-                            intent.putExtra(FloatingService.EXTRA_CLOSE, true);
+                    boolean isSelectedApp = false;
+                    for (AppInfo info : mEnabledApps) {
+                        if (info.packageName.equals(appPackage)) {
+                            isSelectedApp = true;
+                            break;
                         }
-                        startService(intent);
                     }
+
+                    if (!isSelectedApp && !appPackage.equals(BuildConfig.APPLICATION_ID)) {
+                        intent.putExtra(FloatingService.EXTRA_CLOSE, true);
+                    }
+                    startService(intent);
                 }
             }
         }

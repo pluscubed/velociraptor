@@ -211,31 +211,34 @@ public class AppSelectionActivity extends AppCompatActivity {
 
     private void onItemClick(final AppInfoEntity appInfo, final boolean checked) {
         appInfo.enabled = checked;
-        SingleSubscriber<Object> subscriber = new SingleSubscriber<Object>() {
-            @Override
-            public void onSuccess(Object value) {
-                if (AppDetectionService.get() != null) {
-                    AppDetectionService.get().updateSelectedApps();
-                }
-            }
 
-            @Override
-            public void onError(Throwable error) {
-                error.printStackTrace();
-                if (!BuildConfig.DEBUG)
-                    Crashlytics.logException(error);
-            }
-        };
-        Single.fromCallable(new Callable<Object>() {
-            @Override
-            public Object call() throws Exception {
-                if (checked) {
-                    return App.getData(AppSelectionActivity.this).upsert(appInfo);
-                } else {
-                    return App.getData(AppSelectionActivity.this).delete(appInfo);
+        if (appInfo.packageName != null && !appInfo.packageName.isEmpty()) {
+            SingleSubscriber<Object> subscriber = new SingleSubscriber<Object>() {
+                @Override
+                public void onSuccess(Object value) {
+                    if (AppDetectionService.get() != null) {
+                        AppDetectionService.get().updateSelectedApps();
+                    }
                 }
-            }
-        }).subscribeOn(Schedulers.io()).subscribe(subscriber);
+
+                @Override
+                public void onError(Throwable error) {
+                    error.printStackTrace();
+                    if (!BuildConfig.DEBUG)
+                        Crashlytics.logException(error);
+                }
+            };
+            Single.fromCallable(new Callable<Object>() {
+                @Override
+                public Object call() throws Exception {
+                    if (checked) {
+                        return App.getData(AppSelectionActivity.this).upsert(appInfo);
+                    } else {
+                        return App.getData(AppSelectionActivity.this).delete(appInfo);
+                    }
+                }
+            }).subscribeOn(Schedulers.io()).subscribe(subscriber);
+        }
     }
 
     @Override

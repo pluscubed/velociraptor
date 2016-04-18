@@ -23,7 +23,6 @@ import io.requery.sql.Configuration;
 import io.requery.sql.EntityDataStore;
 import io.requery.sql.TableCreationMode;
 import rx.Observable;
-import rx.Single;
 import rx.SingleSubscriber;
 import rx.functions.Func1;
 
@@ -50,30 +49,39 @@ public class App extends Application {
 
         if (PrefUtils.isFirstRun(this)) {
             SelectedAppDatabase.getMapApps(this)
-                    .flatMap(new Func1<List<AppInfoEntity>, Single<?>>() {
+                    .flatMapObservable(new Func1<List<AppInfoEntity>, Observable<AppInfoEntity>>() {
                         @Override
-                        public Single<?> call(List<AppInfoEntity> mapInfos) {
-                            return Observable.from(mapInfos)
-                                    .map(new Func1<AppInfoEntity, AppInfoEntity>() {
-                                        @Override
-                                        public AppInfoEntity call(AppInfoEntity appInfoEntity) {
-                                            return getData(App.this).upsert(appInfoEntity);
-                                        }
-                                    }).toList().toSingle();
+                        public Observable<AppInfoEntity> call(List<AppInfoEntity> mapInfos) {
+                            return Observable.from(mapInfos);
                         }
-                    }).subscribe(new SingleSubscriber<Object>() {
-                @Override
-                public void onSuccess(Object value) {
+                    })
+                    .filter(new Func1<AppInfoEntity, Boolean>() {
+                        @Override
+                        public Boolean call(AppInfoEntity appInfoEntity) {
+                            return appInfoEntity.packageName != null &&
+                                    !appInfoEntity.packageName.isEmpty();
+                        }
+                    })
+                    .map(new Func1<AppInfoEntity, AppInfoEntity>() {
+                        @Override
+                        public AppInfoEntity call(AppInfoEntity appInfoEntity) {
+                            return getData(App.this).upsert(appInfoEntity);
+                        }
+                    })
+                    .toList().toSingle()
+                    .subscribe(new SingleSubscriber<Object>() {
+                        @Override
+                        public void onSuccess(Object value) {
 
-                }
+                        }
 
-                @Override
-                public void onError(Throwable error) {
-                    error.printStackTrace();
-                    if (!BuildConfig.DEBUG)
-                        Crashlytics.logException(error);
-                }
-            });
+                        @Override
+                        public void onError(Throwable error) {
+                            error.printStackTrace();
+                            if (!BuildConfig.DEBUG)
+                                Crashlytics.logException(error);
+                        }
+                    });
         }
 
         PrefUtils.setFirstRun(this, false);
