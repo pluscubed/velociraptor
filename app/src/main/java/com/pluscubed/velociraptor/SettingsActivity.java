@@ -202,11 +202,13 @@ public class SettingsActivity extends AppCompatActivity {
         mUnitSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                PrefUtils.setUseMetric(SettingsActivity.this, position == 1);
-                mUnitSpinner.setDropDownVerticalOffset(
-                        Utils.convertDpToPx(SettingsActivity.this, mUnitSpinner.getSelectedItemPosition() * -48));
+                if (PrefUtils.getUseMetric(SettingsActivity.this) != (position == 1)) {
+                    PrefUtils.setUseMetric(SettingsActivity.this, position == 1);
+                    mUnitSpinner.setDropDownVerticalOffset(
+                            Utils.convertDpToPx(SettingsActivity.this, mUnitSpinner.getSelectedItemPosition() * -48));
 
-                updateFloatingServicePrefs();
+                    updateFloatingServicePrefs();
+                }
             }
 
             @Override

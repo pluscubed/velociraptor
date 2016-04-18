@@ -127,6 +127,8 @@ public class FloatingService extends Service {
 
         startNotification();
 
+        mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
+
         inflateMonitor();
 
         mDebuggingNetworkInfo = "";
@@ -192,8 +194,6 @@ public class FloatingService extends Service {
                 .setContentIntent(pendingIntent)
                 .build();
         startForeground(NOTIFICATION_FLOATING_WINDOW, notification);
-
-        mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
     }
 
     private void inflateMonitor() {
@@ -225,7 +225,8 @@ public class FloatingService extends Service {
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
         params.gravity = Gravity.TOP | Gravity.START;
-        mWindowManager.addView(mFloatingView, params);
+        if (mWindowManager != null)
+            mWindowManager.addView(mFloatingView, params);
         mFloatingView.setOnTouchListener(new FloatingOnTouchListener());
 
         initMonitorPosition();
@@ -448,7 +449,7 @@ public class FloatingService extends Service {
     }
 
     private void removeWindowView(View view) {
-        if (view != null)
+        if (view != null && mWindowManager != null)
             try {
                 mWindowManager.removeView(view);
             } catch (IllegalArgumentException ignore) {
