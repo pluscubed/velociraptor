@@ -35,6 +35,7 @@ import rx.Single;
 import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.functions.Func1;
+import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 
 public class SpeedLimitApi {
@@ -110,34 +111,35 @@ public class SpeedLimitApi {
 
     private Single<Pair<Integer, Tags>> getOsmSpeedLimit(final Location location) {
         final List<OsmApiEndpoint> endpoints = new ArrayList<>(mOsmOverpassApis);
+        mOsmApiSelectionInterceptor.setApi(endpoints.get(0));
         return mOsmService.getOsm(getOsmQuery(location))
                 .subscribeOn(Schedulers.io())
                 .doOnSubscribe(new Action0() {
                     @Override
                     public void call() {
                         logOsmRequest();
-                        mOsmApiSelectionInterceptor.setApi(endpoints.get(0));
                     }
                 })
-                .onErrorResumeNext(new Func1<Throwable, Single<? extends OsmResponse>>() {
+                .retry(new Func2<Integer, Throwable, Boolean>() {
                     @Override
-                    public Single<? extends OsmResponse> call(Throwable throwable) {
-                        logOsmRequest();
-                        mOsmApiSelectionInterceptor.setApi(endpoints.get(1));
-                        return mOsmService.getOsm(getOsmQuery(location));
-                    }
-                })
-                .onErrorResumeNext(new Func1<Throwable, Single<? extends OsmResponse>>() {
-                    @Override
-                    public Single<? extends OsmResponse> call(Throwable throwable) {
-                        logOsmRequest();
-                        mOsmApiSelectionInterceptor.setApi(endpoints.get(2));
-                        return mOsmService.getOsm(getOsmQuery(location));
+                    public Boolean call(Integer integer, Throwable throwable) {
+                        endpoints.get(integer - 1).timeTaken = Integer.MAX_VALUE;
+                        Collections.sort(mOsmOverpassApis);
+                        if (integer <= 2) {
+                            mOsmApiSelectionInterceptor.setApi(endpoints.get(integer));
+                            return true;
+                        } else {
+                            return false;
+                        }
                     }
                 })
                 .flatMap(new Func1<OsmResponse, Single<Pair<Integer, Tags>>>() {
                     @Override
                     public Single<Pair<Integer, Tags>> call(OsmResponse osmApi) {
+                        if (osmApi == null) {
+                            return Single.just(new Pair<>((Integer) null, (Tags) null));
+                        }
+
                         boolean useMetric = PrefUtils.getUseMetric(mContext);
 
                         List<Element> elements = osmApi.getElements();
@@ -227,9 +229,6 @@ public class SpeedLimitApi {
                     api.timeTaken = (int) (timestamp - start);
                 }
                 return proceed;
-            } catch (IOException e) {
-                api.timeTaken = Integer.MAX_VALUE;
-                throw e;
             } finally {
                 Collections.sort(mOsmOverpassApis);
             }

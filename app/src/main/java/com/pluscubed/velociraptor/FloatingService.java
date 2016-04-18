@@ -23,6 +23,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
@@ -43,6 +44,8 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.gigamole.library.ArcProgressStackView;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -171,9 +174,6 @@ public class FloatingService extends Service {
 
                     @Override
                     public void onConnectionSuspended(int i) {
-                        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
-                            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, mLocationListener);
-                        }
                     }
                 })
                 .addApi(LocationServices.API)
@@ -239,7 +239,9 @@ public class FloatingService extends Service {
     }
 
     private void updatePrefDebugging() {
-        mDebuggingText.setVisibility(PrefUtils.isDebuggingEnabled(this) ? View.VISIBLE : View.GONE);
+        if (mDebuggingText != null) {
+            mDebuggingText.setVisibility(PrefUtils.isDebuggingEnabled(this) ? View.VISIBLE : View.GONE);
+        }
     }
 
     private boolean prequisitesNotMet() {
@@ -290,22 +292,20 @@ public class FloatingService extends Service {
 
                             updateLimitText();
 
-                            if (PrefUtils.isDebuggingEnabled(FloatingService.this)) {
-                                mDebuggingText.setText("Location: " + location);
+                            mDebuggingText.setText("Location: " + location);
 
-                                mDebuggingNetworkInfo = ("\nEndpoints:\n");
-                                for (OsmApiEndpoint endpoint : mSpeedLimitApi.getOsmOverpassApis()) {
-                                    mDebuggingNetworkInfo += (endpoint.toString() + "\n");
-                                }
-                                if (speedLimit.second != null) {
-                                    Tags tags = speedLimit.second;
-                                    mDebuggingNetworkInfo += ("Name: " + tags.getName() + "\nRef: " + tags.getRef());
-                                } else {
-                                    mDebuggingNetworkInfo += ("Connected, no speed limit data");
-                                }
-
-                                mDebuggingText.append(mDebuggingNetworkInfo);
+                            mDebuggingNetworkInfo = ("\nEndpoints:\n");
+                            for (OsmApiEndpoint endpoint : mSpeedLimitApi.getOsmOverpassApis()) {
+                                mDebuggingNetworkInfo += (endpoint.toString() + "\n");
                             }
+                            if (speedLimit.second != null) {
+                                Tags tags = speedLimit.second;
+                                mDebuggingNetworkInfo += ("Name: " + tags.getName() + "\nRef: " + tags.getRef());
+                            } else {
+                                mDebuggingNetworkInfo += ("Connected, no speed limit data");
+                            }
+
+                            mDebuggingText.append(mDebuggingNetworkInfo);
 
                             mLocationSubscription = null;
                         }
@@ -319,11 +319,13 @@ public class FloatingService extends Service {
                             mLastSpeedLimit = -1;
                             updateLimitText();
 
-                            if (PrefUtils.isDebuggingEnabled(FloatingService.this)) {
-                                mDebuggingText.setText("Location: " + location);
-                                mDebuggingNetworkInfo = ("Error: " + error);
-                                mDebuggingText.append("\n" + mDebuggingNetworkInfo);
+                            mDebuggingText.setText("Location: " + location);
+                            mDebuggingNetworkInfo = ("\nEndpoints:\n");
+                            for (OsmApiEndpoint endpoint : mSpeedLimitApi.getOsmOverpassApis()) {
+                                mDebuggingNetworkInfo += (endpoint.toString() + "\n");
                             }
+                            mDebuggingNetworkInfo += ("Error: " + error);
+                            mDebuggingText.append(mDebuggingNetworkInfo);
 
                             mLocationSubscription = null;
                         }
@@ -332,15 +334,17 @@ public class FloatingService extends Service {
     }
 
     private void updateLimitText() {
-        if (mLastSpeedLimit != -1) {
-            mLimitText.setText(String.valueOf(mLastSpeedLimit));
-        } else {
-            mLimitText.setText("--");
+        if (mLimitText != null) {
+            if (mLastSpeedLimit != -1) {
+                mLimitText.setText(String.valueOf(mLastSpeedLimit));
+            } else {
+                mLimitText.setText("--");
+            }
         }
     }
 
     private void updateSpeedometer(Location location) {
-        if (location != null && location.hasSpeed()) {
+        if (location != null && location.hasSpeed() && mSpeedometerText != null) {
             float metersPerSeconds = location.getSpeed();
 
             final int speed;
@@ -371,7 +375,9 @@ public class FloatingService extends Service {
     }
 
     private void updatePrefSpeedometer() {
-        mSpeedometer.setVisibility(PrefUtils.getShowSpeedometer(FloatingService.this) ? View.VISIBLE : View.GONE);
+        if (mSpeedometer != null) {
+            mSpeedometer.setVisibility(PrefUtils.getShowSpeedometer(FloatingService.this) ? View.VISIBLE : View.GONE);
+        }
     }
 
     private void showToast(final String string) {
@@ -385,10 +391,12 @@ public class FloatingService extends Service {
     }
 
     private void updatePrefUnits() {
-        if (PrefUtils.getUseMetric(FloatingService.this)) {
-            mSpeedometerUnits.setText("km/h");
-        } else {
-            mSpeedometerUnits.setText("mph");
+        if (mSpeedometerUnits != null) {
+            if (PrefUtils.getUseMetric(FloatingService.this)) {
+                mSpeedometerUnits.setText("km/h");
+            } else {
+                mSpeedometerUnits.setText("mph");
+            }
         }
     }
 
@@ -436,8 +444,13 @@ public class FloatingService extends Service {
 
     private void onStop() {
         if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
-            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, mLocationListener);
-            mGoogleApiClient.disconnect();
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, mLocationListener).setResultCallback(new ResultCallback<Status>() {
+                @Override
+                public void onResult(@NonNull Status status) {
+                    if (mGoogleApiClient != null && mGoogleApiClient.isConnected())
+                        mGoogleApiClient.disconnect();
+                }
+            });
         }
 
         removeWindowView(mFloatingView);
