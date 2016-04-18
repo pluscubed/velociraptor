@@ -31,9 +31,54 @@
 -keepattributes Signature
 -keepattributes Exceptions
 
+-keepclasseswithmembers class * {
+    @retrofit2.http.* <methods>;
+}
+
 #Glide
 -keep public class * implements com.bumptech.glide.module.GlideModule
 -keep public enum com.bumptech.glide.load.resource.bitmap.ImageHeaderParser$** {
     **[] $VALUES;
     public *;
+}
+
+#Requery
+-dontwarn net.sqlcipher.**
+-dontwarn javax.**
+-dontwarn org.w3c.**
+-dontwarn io.requery.**
+-dontwarn java.util.**
+-dontwarn java.time.**
+-dontwarn java.sql.**
+-dontwarn java.lang.**
+-dontwarn java.lang.*
+
+#Jackson
+-dontwarn java.beans.**
+-keep class com.fasterxml.jackson.databind.ObjectMapper {
+    public <methods>;
+    protected <methods>;
+}
+-keep class com.fasterxml.jackson.databind.ObjectWriter {
+    public ** writeValueAsString(**);
+}
+
+-keepnames class com.fasterxml.jackson.** { *; }
+
+#RxJava
+-keep class rx.** { *; }
+
+-dontwarn sun.misc.**
+
+-keepclassmembers class rx.internal.util.unsafe.*ArrayQueue*Field* {
+   long producerIndex;
+   long consumerIndex;
+}
+
+-keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueProducerNodeRef {
+    rx.internal.util.atomic.LinkedQueueNode producerNode;
+}
+
+-keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueConsumerNodeRef {
+    rx.internal.util.atomic.LinkedQueueNode consumerNode;
 }
