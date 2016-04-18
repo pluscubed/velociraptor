@@ -51,7 +51,7 @@
     ]]></string>
     <string name="about">About</string>
     <string name="wrong_speed_limit">Wrong or missing speed limit?</string>
-    <string name="wrong_speed_limit_desc">Go to OpenStreetMap on your computer to edit the data. Touch to share link (https://openstreetmap.org)</string>
+    <string name="wrong_speed_limit_desc">Go to OpenStreetMap on your computer. Touch to share the link (https://openstreetmap.org)</string>
     <string name="configure">Configure</string>
     <string name="automatically_show">Show/hide in specified apps</string>
     <string name="select_overlay_usage">Activation</string>
@@ -68,4 +68,7 @@
     <string name="general">General</string>
     <string name="advanced">Advanced</string>
     <string name="changelog">Changelog</string>
+    <string name="help_edit">Help edit the speed limit data</string>
+    <string name="check_coverage_desc">If yes and the speed limit is not shown, there may be a bug. Use the feedback button on the top.</string>
+    <string name="check_coverage">Touch to check if your area is covered</string>
 </resources>

@@ -104,6 +104,16 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
+        findViewById(R.id.check_coverage).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setData(Uri.parse("http://product.itoworld.com/map/124"));
+                intent.setAction(Intent.ACTION_VIEW);
+                startActivity(intent);
+            }
+        });
+
         mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         View notifControls = findViewById(R.id.switch_notif_controls);
         notifControls.setOnClickListener(new View.OnClickListener() {
