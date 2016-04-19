@@ -2,7 +2,7 @@
 =========
 Floating speed limit monitor for Android, using OpenStreetMap and HERE Maps APIs.
 
-[![Get it on Google Play](http://i.imgur.com/MIXbzVC.png)](https://play.google.com/store/apps/details?id=com.pluscubed.velociraptor)
+[![Get it on Google Play](http://i.imgur.com/PeDVOwW.png)](https://play.google.com/store/apps/details?id=com.pluscubed.velociraptor)
 
     Copyright (C) 2016  Daniel Ciao
 
