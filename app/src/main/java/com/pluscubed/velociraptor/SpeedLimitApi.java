@@ -124,6 +124,7 @@ public class SpeedLimitApi {
                     @Override
                     public Boolean call(Integer integer, Throwable throwable) {
                         endpoints.get(integer - 1).timeTaken = Integer.MAX_VALUE;
+                        Collections.shuffle(mOsmOverpassApis);
                         Collections.sort(mOsmOverpassApis);
                         if (integer <= 2) {
                             mOsmApiSelectionInterceptor.setApi(endpoints.get(integer));
@@ -221,15 +222,14 @@ public class SpeedLimitApi {
             long start = System.currentTimeMillis();
             try {
                 Response proceed = chain.proceed(request);
-                long timestamp = System.currentTimeMillis();
-                api.timeTakenTimestamp = timestamp;
                 if (!proceed.isSuccessful()) {
                     throw new IOException(proceed.toString());
                 } else {
-                    api.timeTaken = (int) (timestamp - start);
+                    api.timeTaken = (int) (System.currentTimeMillis() - start);
                 }
                 return proceed;
             } finally {
+                api.timeTakenTimestamp = System.currentTimeMillis();
                 Collections.sort(mOsmOverpassApis);
             }
         }

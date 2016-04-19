@@ -78,7 +78,7 @@ public class FloatingService extends Service {
     private TextView mDebuggingText;
     private ArcProgressStackView mArcView;
 
-    private String mDebuggingNetworkInfo;
+    private String mDebuggingRequestInfo;
 
     private GoogleApiClient mGoogleApiClient;
 
@@ -87,6 +87,7 @@ public class FloatingService extends Service {
 
     private int mLastSpeedLimit = -1;
     private Location mLastSpeedLocation;
+    private Location mLastLimitLocation;
 
     private SpeedLimitApi mSpeedLimitApi;
 
@@ -114,7 +115,7 @@ public class FloatingService extends Service {
                 updatePrefDebugging();
                 updatePrefSpeedometer();
 
-                updateLimitText();
+                updateLimitText(false);
                 updateSpeedometer(mLastSpeedLocation);
             }
         }
@@ -134,7 +135,7 @@ public class FloatingService extends Service {
 
         inflateMonitor();
 
-        mDebuggingNetworkInfo = "";
+        mDebuggingRequestInfo = "";
         mDebuggingText = (TextView) LayoutInflater.from(new ContextThemeWrapper(this, R.style.Theme_Velociraptor))
                 .inflate(R.layout.floating_stats, null, false);
         WindowManager.LayoutParams debuggingParams = new WindowManager.LayoutParams(
@@ -165,10 +166,9 @@ public class FloatingService extends Service {
                     @SuppressWarnings("MissingPermission")
                     public void onConnected(@Nullable Bundle bundle) {
                         LocationRequest locationRequest = new LocationRequest();
-                        locationRequest.setInterval(500);
+                        locationRequest.setInterval(1000);
                         locationRequest.setFastestInterval(200);
                         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-                        locationRequest.setSmallestDisplacement(50);
                         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, locationRequest, mLocationListener);
                     }
 
@@ -272,40 +272,28 @@ public class FloatingService extends Service {
 
     private void onLocationChanged(final Location location) {
         updateSpeedometer(location);
+        updateDebuggingText(location, null, null);
 
-        mDebuggingText.setText("Location: " + location);
-        mDebuggingText.append(mDebuggingNetworkInfo);
-
-        if (mLocationSubscription == null) {
+        if (mLocationSubscription == null &&
+                (mLastLimitLocation == null || location.distanceTo(mLastLimitLocation) > 50)) {
 
             mLocationSubscription = mSpeedLimitApi.getSpeedLimit(location)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new SingleSubscriber<Pair<Integer, Tags>>() {
                         @SuppressLint("SetTextI18n")
                         @Override
-                        public void onSuccess(Pair<Integer, Tags> speedLimit) {
-                            if (speedLimit.first != null) {
-                                mLastSpeedLimit = speedLimit.first;
+                        public void onSuccess(Pair<Integer, Tags> speedLimitAndTags) {
+                            mLastLimitLocation = location;
+
+                            if (speedLimitAndTags.first != null) {
+                                mLastSpeedLimit = speedLimitAndTags.first;
                             } else {
                                 mLastSpeedLimit = -1;
                             }
 
-                            updateLimitText();
+                            updateLimitText(true);
 
-                            mDebuggingText.setText("Location: " + location);
-
-                            mDebuggingNetworkInfo = ("\nEndpoints:\n");
-                            for (OsmApiEndpoint endpoint : mSpeedLimitApi.getOsmOverpassApis()) {
-                                mDebuggingNetworkInfo += (endpoint.toString() + "\n");
-                            }
-                            if (speedLimit.second != null) {
-                                Tags tags = speedLimit.second;
-                                mDebuggingNetworkInfo += ("Name: " + tags.getName() + "\nRef: " + tags.getRef());
-                            } else {
-                                mDebuggingNetworkInfo += ("Connected, no speed limit data");
-                            }
-
-                            mDebuggingText.append(mDebuggingNetworkInfo);
+                            updateDebuggingText(location, speedLimitAndTags, null);
 
                             mLocationSubscription = null;
                         }
@@ -316,16 +304,9 @@ public class FloatingService extends Service {
                             if (!BuildConfig.DEBUG)
                                 Crashlytics.logException(error);
 
-                            mLastSpeedLimit = -1;
-                            updateLimitText();
+                            updateLimitText(false);
 
-                            mDebuggingText.setText("Location: " + location);
-                            mDebuggingNetworkInfo = ("\nEndpoints:\n");
-                            for (OsmApiEndpoint endpoint : mSpeedLimitApi.getOsmOverpassApis()) {
-                                mDebuggingNetworkInfo += (endpoint.toString() + "\n");
-                            }
-                            mDebuggingNetworkInfo += ("Error: " + error);
-                            mDebuggingText.append(mDebuggingNetworkInfo);
+                            updateDebuggingText(location, null, error);
 
                             mLocationSubscription = null;
                         }
@@ -333,10 +314,36 @@ public class FloatingService extends Service {
         }
     }
 
-    private void updateLimitText() {
+    private void updateDebuggingText(Location location, Pair<Integer, Tags> speedLimitAndTags, Throwable error) {
+        mDebuggingText.setText("Location: " + location);
+
+        mDebuggingText.append("\nEndpoints:\n");
+        for (OsmApiEndpoint endpoint : mSpeedLimitApi.getOsmOverpassApis()) {
+            mDebuggingText.append(endpoint.toString() + "\n");
+        }
+
+        if (error == null && speedLimitAndTags != null) {
+            if (speedLimitAndTags.second != null) {
+                Tags tags = speedLimitAndTags.second;
+                mDebuggingRequestInfo = ("Name: " + tags.getName() + "\nRef: " + tags.getRef());
+            } else {
+                mDebuggingRequestInfo = ("Success, no speed limit data");
+            }
+        } else if (error != null) {
+            mDebuggingRequestInfo = ("Last Error: " + error);
+        }
+
+        mDebuggingText.append(mDebuggingRequestInfo);
+    }
+
+    private void updateLimitText(boolean connected) {
         if (mLimitText != null) {
             if (mLastSpeedLimit != -1) {
-                mLimitText.setText(String.valueOf(mLastSpeedLimit));
+                if (connected) {
+                    mLimitText.setText(String.valueOf(mLastSpeedLimit));
+                } else {
+                    mLimitText.setText(String.format("(%s)", String.valueOf(mLastSpeedLimit)));
+                }
             } else {
                 mLimitText.setText("--");
             }
@@ -447,10 +454,12 @@ public class FloatingService extends Service {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, mLocationListener).setResultCallback(new ResultCallback<Status>() {
                 @Override
                 public void onResult(@NonNull Status status) {
-                    if (mGoogleApiClient != null && mGoogleApiClient.isConnected())
+                    if (mGoogleApiClient != null)
                         mGoogleApiClient.disconnect();
                 }
             });
+        } else if (mGoogleApiClient != null) {
+            mGoogleApiClient.disconnect();
         }
 
         removeWindowView(mFloatingView);

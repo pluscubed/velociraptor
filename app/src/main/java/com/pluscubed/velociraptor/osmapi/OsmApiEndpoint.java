@@ -8,7 +8,7 @@ import java.text.DateFormat;
 import java.util.Date;
 
 public class OsmApiEndpoint implements Comparable<OsmApiEndpoint> {
-    //Wait 2 minutes before trying a slow/errored endpoint again.
+    //Wait 1 minute before trying a slow/errored endpoint again.
     public long timeTakenTimestamp;
     public int timeTaken;
     public String baseUrl;
@@ -22,6 +22,8 @@ public class OsmApiEndpoint implements Comparable<OsmApiEndpoint> {
         String time = timeTaken + "ms";
         if (timeTaken == Integer.MAX_VALUE) {
             time = "error";
+        } else if (timeTaken == 0) {
+            time = "pending";
         }
         return baseUrl + " - " + time +
                 ", timestamp " + DateFormat.getTimeInstance().format(new Date(timeTakenTimestamp));
@@ -33,9 +35,9 @@ public class OsmApiEndpoint implements Comparable<OsmApiEndpoint> {
 
         int compare = Utils.compare(timeTaken, another.timeTaken);
 
-        if (compare == 1 && currentTime > timeTakenTimestamp + 120000) {
+        if (compare == 1 && currentTime > timeTakenTimestamp + 60000) {
             return -1;
-        } else if (compare == -1 && currentTime > another.timeTakenTimestamp + 120000) {
+        } else if (compare == -1 && currentTime > another.timeTakenTimestamp + 60000) {
             return 1;
         }
         return compare;

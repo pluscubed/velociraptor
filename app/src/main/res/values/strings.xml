@@ -69,7 +69,7 @@
     <string name="advanced">Advanced</string>
     <string name="changelog">Changelog</string>
     <string name="help_edit">Help edit the speed limit data</string>
-    <string name="check_coverage_desc">If yes and the speed limit is not shown, there may be a bug. Use the feedback button on the top.</string>
+    <string name="check_coverage_desc">If yes and the speed limit is not shown, there may be a bug. Use the debugging stats option and feedback button.</string>
     <string name="check_coverage">Touch to check if your area is covered</string>
     <string name="obtaining_gps_location">Obtaining GPS location…</string>
     <string name="debugging_stats">Stats for nerds/debugging</string>
