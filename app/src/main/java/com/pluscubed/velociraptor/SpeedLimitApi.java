@@ -217,6 +217,7 @@ public class SpeedLimitApi {
             HttpUrl newUrl = HttpUrl.parse(url);
             request = request.newBuilder()
                     .url(newUrl)
+                    .addHeader("User-Agent", "Velociraptor/" + BuildConfig.VERSION_NAME)
                     .build();
 
             long start = System.currentTimeMillis();
