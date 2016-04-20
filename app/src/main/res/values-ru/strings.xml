@@ -2,22 +2,65 @@
 <resources>
     <string name="app_name">Velociraptor</string>
     <string name="notif_content">Нажмите, чтобы открыть настройки</string>
-    <string name="notif_title">Velociraptor Ограничение скорости</string>
-    <string name="accessibility_service_description">Включение службы</string>
-    <string name="enable_accessibility_service">Включение службы</string>
+    <string name="notif_title">Velociraptor монитор работает</string>
+    <string name="dialog_draw_overlay">Чтобы показать плавающие элементы на Android 6.0+, предоставить разрешение \"рисовать поверх других приложений\"</string>
+    <string name="open_settings">Открыть параметры страницы</string>
+    <string name="accessibility_service_description">Чтобы обнаружить приложение на переднем плане и дисплей ограничения скорости, доступность услуг должны быть включены.</string>
+    <string name="enable_accessibility_service">"Включить службу "</string>
     <string name="enable_accessibility_service_desc">Для автоматического отображения ограничения скорости на карте приложения , включите службу</string>
     <string name="enable_floating_desc">Чтобы отобразить наложение, включите разрешение \"поверх других окон\"</string>
     <string name="open_settings_page">Открыть страницу настроек</string>
+    <string name="grant_permission">Предоставить разрешение</string>
     <string name="enable_location_desc">Для определения допустимой скорости в ваше районе, пожалуйста, разрешете обнаружение местоположения</string>
-    <string name="speed_unit">Единицы измерения скорости</string>
+    <string name="speed_unit">Единицы скорости:</string>
     <string name="style">Стиль:</string>
     <string name="united_states">Соединенные Штаты</string>
     <string name="international">Международный</string>
-    <string name="open_settings_failed_overlay">Международный</string>
+    <string name="open_settings_failed_overlay">Не удалось открыть параметры. Пожалуйста, вручную включите \"рисовать поверх других приложений\"  в настройках  Велоцираптор.</string>
+    <string name="open_settings_failed_accessibility">Не удается открыть настройки. Включите параметр доступности службы для Velociraptor вручную.</string>
     <string name="permissions_warning">Velociraptor не имеет соответствующих разрешений. Пожалуйста, откройте приложение, чтобы предоставить их.</string>
     <string name="location_settings_warning">GPS не включен. Пожалуйста, включите для монитора ограничения скорости Velociraptor.</string>
+    <string name="network_warning">Сеть не подключена. VelociRaptor требует подключения к Интернету для получения ограничение скорости.</string>
     <string name="speeding_amount">Допустимое отклонение превышения скорости:</string>
     <string name="show_speedometer">Показать спидометр</string>
     <string name="about_dialog_title">Velociraptor v%s</string>
-    <string name="about">About</string>
+    <string name="dismiss">Закрыть</string>
+    <string name="about_body"><![CDATA[<b>Velociraptor</b> это плавающий монитор ограничения скорости со спидометром и предупреждения с помощью OpenStreetMap и карты here ограничения скорости сведения.
+<br/><br/> 
+
+Разработан <b>Daniel Ciao</b><br/> 
+
+<a href=\'http://pluscubed.com\'>Веб-сайт</a>&nbsp;&nbsp; 
+<a href=\'mailto:pluscubed@gmail.com\'>Email</a>&nbsp;&nbsp; 
+<a href=\'https://twitter.com/plusCubed\'>Twitter</a>&nbsp;&nbsp; 
+<a href=\'https://google.com/+DanielCiao\'>Google+</a>&nbsp;&nbsp; 
+<a href=\'https://github.com/pluscubed\'>GitHub</a>&nbsp;&nbsp; 
+<a href=\'https://www.linkedin.com/in/dciao\'>LinkedIn</a><br/><br/> 
+
+<a href=\'https://play.google.com/store/apps/details?id=com.pluscubed.velociraptor\'>Оценить на Play Store!</a><br/><br/> 
+
+<a href=\'https://github.com/pluscubed/velociraptor\'>GitHub</a> - Источник, вопросы, пожелания<br/> 
+<a href=\'http://pluscubed.oneskyapp.com/collaboration/project/64120\'>OneSky</a> - переведите приложение на свой язык]]></string>
+    <string name="about">О приложении</string>
+    <string name="wrong_speed_limit">Неправильное или отсутствует ограничение скорости?</string>
+    <string name="wrong_speed_limit_desc">Перейдите к OpenStreetMap на вашем компьютере. Коснитесь , чтобы поделиться ссылкой (https://openstreetmap.org)</string>
+    <string name="configure">Настроить</string>
+    <string name="automatically_show">Показать/Скрыть в указанных приложениях</string>
+    <string name="select_overlay_usage">Активация</string>
+    <string name="enable">Включить</string>
+    <string name="show_in_apps">Показать в этих приложениях:</string>
+    <string name="persistent_notification_controls">Показать уведомления элементов управления</string>
+    <string name="done">Готово</string>
+    <string name="select_apps">Выбрать приложения</string>
+    <string name="show_map_apps">Показать карту приложения</string>
+    <string name="show">Показать</string>
+    <string name="hide">Скрыть</string>
+    <string name="controls_notif_title">VelociRaptor элементы управления</string>
+    <string name="controls_notif_desc">Показать или скрыть ограничение скорости монитора</string>
+    <string name="general">Общие</string>
+    <string name="advanced">Дополнительно</string>
+    <string name="changelog">История изменений</string>
+    <string name="help_edit">Помочь изменить ограничение скорости передачи данных</string>
+    <string name="check_coverage_desc">Если да и ограничение скорости не проявляется, там может быть ошибка. Используйте кнопку обратной связи на самом верху.</string>
+    <string name="check_coverage">Прикоснуться, чтобы проверить, если ваш район</string>
 </resources>

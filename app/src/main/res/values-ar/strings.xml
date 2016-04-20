@@ -48,7 +48,7 @@
     <string name="wrong_speed_limit_desc">إذهب إلى OpenStreetMap على جهاز الكمبيوتر الخاص بك لتعديل البيانات. المس لمشاركة الرابط (https://openstreetmap.org)</string>
     <string name="configure">تهيئة</string>
     <string name="automatically_show">اظهار/اخفاء في تطبيقات معينة</string>
-    <string name="select_overlay_usage">استخدام المراقبة الطافية</string>
+    <string name="select_overlay_usage">التفعيل</string>
     <string name="enable">تفعيل</string>
     <string name="show_in_apps">اظهار بهذه التطبيقات:</string>
     <string name="persistent_notification_controls">اظهار ادوات تحكم التنبيهات</string>
@@ -59,4 +59,10 @@
     <string name="hide">اخفاء</string>
     <string name="controls_notif_title">ادوات تحكم فيلوسيرابتور</string>
     <string name="controls_notif_desc">إظهار أو إخفاء مراقب الحد الأقصى للسرعة</string>
+    <string name="general">عام</string>
+    <string name="advanced">متقدم</string>
+    <string name="changelog">سجل التحديثات</string>
+    <string name="help_edit">ساعد في تعديل بيانات السرعة القصوى</string>
+    <string name="check_coverage_desc">إذا كانت الإجابة بنعم ولا يظهر الحد الأقصى للسرعة، قد يكون هناك خلل. استخدم زر التعليقات بالأعلى</string>
+    <string name="check_coverage">اضغط لمعرفة ما اذا كان يتم تغطية منطقتك</string>
 </resources>

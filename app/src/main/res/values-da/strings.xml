@@ -57,6 +57,12 @@
     <string name="show_map_apps">Vis kortapps</string>
     <string name="show">Vis</string>
     <string name="hide">Skjul</string>
-    <string name="controls_notif_title">Velociraptorknapper</string>
-    <string name="controls_notif_desc">Vis eller skjul hastighedsgrænseovervåger</string>
+    <string name="controls_notif_title">Velociraptor indstillinger</string>
+    <string name="controls_notif_desc">Vis eller skjul overvågning af hastighedsbegrænsning</string>
+    <string name="general">Generelle</string>
+    <string name="advanced">Avanceret</string>
+    <string name="changelog">Liste over ændringer</string>
+    <string name="help_edit">Hjælp med at redigere data om hastigedsbegrænsninger</string>
+    <string name="check_coverage_desc">Hvis ja og hastighedsbegrænsningen ikke er vist, er der muligvis en fejl. Brug feedback knappen øverst-</string>
+    <string name="check_coverage">Berør for at teste om dit område er dækket</string>
 </resources>
