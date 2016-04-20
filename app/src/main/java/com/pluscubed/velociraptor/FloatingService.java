@@ -88,6 +88,7 @@ public class FloatingService extends Service {
     private int mLastSpeedLimit = -1;
     private Location mLastSpeedLocation;
     private Location mLastLimitLocation;
+    private long mLastRequestTime;
 
     private SpeedLimitApi mSpeedLimitApi;
 
@@ -166,7 +167,7 @@ public class FloatingService extends Service {
                     @SuppressWarnings("MissingPermission")
                     public void onConnected(@Nullable Bundle bundle) {
                         LocationRequest locationRequest = new LocationRequest();
-                        locationRequest.setInterval(1000);
+                        locationRequest.setInterval(500);
                         locationRequest.setFastestInterval(200);
                         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
                         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, locationRequest, mLocationListener);
@@ -275,8 +276,10 @@ public class FloatingService extends Service {
         updateDebuggingText(location, null, null);
 
         if (mLocationSubscription == null &&
-                (mLastLimitLocation == null || location.distanceTo(mLastLimitLocation) > 50)) {
+                (mLastLimitLocation == null || location.distanceTo(mLastLimitLocation) > 100) &&
+                System.currentTimeMillis() > mLastRequestTime + 5000) {
 
+            mLastRequestTime = System.currentTimeMillis();
             mLocationSubscription = mSpeedLimitApi.getSpeedLimit(location)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new SingleSubscriber<Pair<Integer, Tags>>() {
