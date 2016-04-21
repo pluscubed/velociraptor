@@ -23,7 +23,6 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
@@ -44,8 +43,6 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.gigamole.library.ArcProgressStackView;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -72,7 +69,6 @@ public class FloatingService extends Service {
     private View mFloatingView;
     private View mSpeedometer;
     private TextView mLimitText;
-    private TextView mStreetText;
     private TextView mSpeedometerText;
     private TextView mSpeedometerUnits;
     private TextView mDebuggingText;
@@ -92,6 +88,7 @@ public class FloatingService extends Service {
 
     private SpeedLimitApi mSpeedLimitApi;
 
+    private boolean mInitialized;
     private boolean mNotifStart;
 
     @Nullable
@@ -100,14 +97,16 @@ public class FloatingService extends Service {
         return null;
     }
 
+    @SuppressLint("InflateParams")
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent != null) {
-            if (intent.getBooleanExtra(EXTRA_NOTIF_START, false)) {
-                mNotifStart = true;
-            } else if (!mNotifStart && intent.getBooleanExtra(EXTRA_CLOSE, false) ||
+            if (!mNotifStart && intent.getBooleanExtra(EXTRA_CLOSE, false) ||
                     intent.getBooleanExtra(EXTRA_NOTIF_CLOSE, false)) {
                 stopSelf();
+                return super.onStartCommand(intent, flags, startId);
+            } else if (intent.getBooleanExtra(EXTRA_NOTIF_START, false)) {
+                mNotifStart = true;
             } else if (intent.getBooleanExtra(EXTRA_PREF_CHANGE, false)) {
                 removeWindowView(mFloatingView);
                 inflateMonitor();
@@ -120,15 +119,10 @@ public class FloatingService extends Service {
                 updateSpeedometer(mLastSpeedLocation);
             }
         }
-        return super.onStartCommand(intent, flags, startId);
-    }
 
-    @SuppressLint("InflateParams")
-    @Override
-    public void onCreate() {
-        super.onCreate();
 
-        if (prequisitesNotMet()) return;
+        if (mInitialized || prequisitesNotMet())
+            return super.onStartCommand(intent, flags, startId);
 
         startNotification();
 
@@ -175,12 +169,19 @@ public class FloatingService extends Service {
 
                     @Override
                     public void onConnectionSuspended(int i) {
+                        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+                            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, mLocationListener).await();
+                        }
                     }
                 })
                 .addApi(LocationServices.API)
                 .build();
 
         mGoogleApiClient.connect();
+
+        mInitialized = true;
+
+        return super.onStartCommand(intent, flags, startId);
     }
 
     private void startNotification() {
@@ -213,7 +214,6 @@ public class FloatingService extends Service {
                 .inflate(layout, null, false);
 
         mLimitText = (TextView) mFloatingView.findViewById(R.id.text);
-        mStreetText = (TextView) mFloatingView.findViewById(R.id.subtext);
         mArcView = (ArcProgressStackView) mFloatingView.findViewById(R.id.arcview);
         mSpeedometerText = (TextView) mFloatingView.findViewById(R.id.speed);
         mSpeedometerUnits = (TextView) mFloatingView.findViewById(R.id.speedUnits);
@@ -454,14 +454,7 @@ public class FloatingService extends Service {
 
     private void onStop() {
         if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
-            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, mLocationListener).setResultCallback(new ResultCallback<Status>() {
-                @Override
-                public void onResult(@NonNull Status status) {
-                    if (mGoogleApiClient != null)
-                        mGoogleApiClient.disconnect();
-                }
-            });
-        } else if (mGoogleApiClient != null) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, mLocationListener).await();
             mGoogleApiClient.disconnect();
         }
 
