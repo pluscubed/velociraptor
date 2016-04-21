@@ -45,6 +45,8 @@ Desarrollado por <b>Daniel Ciao</b><br/>
     <string name="wrong_speed_limit_desc">Ve a OpenStreetMap en tu ordenador para modificar los datos. Pulsa para compartir el enlace (https://openstreetmap.org)</string>
     <string name="configure">Configurar</string>
     <string name="automatically_show">Mostrar/ocultar en ciertas aplicaciones</string>
+    <string name="select_overlay_usage">Activación</string>
+    <string name="enable">Activar</string>
     <string name="show_in_apps">Mostrar en estas aplicaciones:</string>
     <string name="persistent_notification_controls">Mostrar notificación con controles</string>
     <string name="done">Hecho</string>
@@ -52,6 +54,14 @@ Desarrollado por <b>Daniel Ciao</b><br/>
     <string name="show_map_apps">Mostrar aplicaciones de mapas</string>
     <string name="show">Mostrar</string>
     <string name="hide">Ocultar</string>
-    <string name="controls_notif_title">Velociraptor - controles</string>
+    <string name="controls_notif_title">Controles de Velociraptor</string>
     <string name="controls_notif_desc">Mostrar u ocultar el monitor de límite de velocidad</string>
+    <string name="general">Opciones generales</string>
+    <string name="advanced">Opciones avanzadas</string>
+    <string name="changelog">Listado de cambios</string>
+    <string name="help_edit">Ayuda a actualizar los datos de los límites de velocidad</string>
+    <string name="check_coverage_desc">Si el área está cubierta pero los límites no se muestran, entonces podría haber un error en la aplicación. Activa la casilla de depuración y pulsa el botón de contacto</string>
+    <string name="check_coverage">Pulsa para comprobar si tu área está cubierta</string>
+    <string name="obtaining_gps_location">Obteniendo ubicación GPS…</string>
+    <string name="debugging_stats">Estadísticas para novatos/depuración</string>
 </resources>

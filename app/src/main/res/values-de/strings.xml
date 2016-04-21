@@ -20,6 +20,7 @@
     <string name="open_settings_failed_accessibility">Einstellungen können nicht geöffnet werden. Bitte aktivieren Sie die Bedienungshilfen in den Systemeinstellungen von Hand.</string>
     <string name="permissions_warning">Velociraptor hat nicht die nötigen Berechtigungen. Bitte starten Sie die App, um sie zu vergeben.</string>
     <string name="location_settings_warning">GPS ist ausgeschaltet. Bitte aktivieren Sie es, damit Velociraptor die Geschwindigkeit überwachen kann.</string>
+    <string name="network_warning">Kein Netzwerk. Velociraptor braucht eine Internetverbindung um die Geschwindigkeitsbegrenzung zu laden.</string>
     <string name="speeding_amount">Warnung bei Überschreiten der Höchstgeschwindigkeit:</string>
     <string name="show_speedometer">Geschwindigkeit anzeigen</string>
     <string name="about_dialog_title">Velociraptor v%s</string>
@@ -39,4 +40,25 @@
         <a href=\'https://github.com/pluscubed/velociraptor\'>GitHub</a> - Quelltext, Probleme, Feature-Wünsche<br/>
     ]]></string>
     <string name="about">Über</string>
+    <string name="wrong_speed_limit">Falsche oder fehlende Geschwindigkeitsbegrenzung ?</string>
+    <string name="wrong_speed_limit_desc">Gehen Sie auf Ihrem Computer zu OpenStreetMap. Tippen Sie auf den Link zu teilen (https://openstreetmap.org)</string>
+    <string name="configure">Konfigurieren</string>
+    <string name="automatically_show">Anzeigen/Ausblenden in bestimmten Anwendungen</string>
+    <string name="select_overlay_usage">Aktivierung</string>
+    <string name="enable">Aktiviert</string>
+    <string name="show_in_apps">Zeige in diesen Apps</string>
+    <string name="persistent_notification_controls">Zeige Benachrichtigungkontrollen</string>
+    <string name="done">Erledigt</string>
+    <string name="select_apps">Ausgewählte Apps</string>
+    <string name="show_map_apps">Zeige Karten Apps</string>
+    <string name="show">Zeige</string>
+    <string name="hide">Verstecke</string>
+    <string name="controls_notif_title">Velociraptor Einstellungen</string>
+    <string name="controls_notif_desc">Zeig oder verstecke die Höchstgeschwindigkeit Anzeige</string>
+    <string name="general">General</string>
+    <string name="advanced">Fortgeschritten</string>
+    <string name="changelog">Änderungsprotokoll</string>
+    <string name="help_edit">Hilf mit, die Geschwindigkeitsbegrenzung Daten zu bearbeiten</string>
+    <string name="obtaining_gps_location">Suche GPS-Position …</string>
+    <string name="debugging_stats">Statistik für Nerds / Debugging</string>
 </resources>
