@@ -3,7 +3,6 @@ package com.pluscubed.velociraptor;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
@@ -11,7 +10,6 @@ import android.view.View;
 import android.webkit.WebView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.pluscubed.velociraptor.utils.PrefUtils;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -53,11 +51,5 @@ public class ChangelogDialog extends DialogFragment {
         }
 
         return dialog;
-    }
-
-    @Override
-    public void onDismiss(DialogInterface dialog) {
-        super.onDismiss(dialog);
-        PrefUtils.setVersionCode(getActivity(), BuildConfig.VERSION_CODE);
     }
 }

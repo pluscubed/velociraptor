@@ -46,22 +46,22 @@ public class SpeedLimitApi {
             "http://overpass.osm.rambler.ru/cgi/",
             "http://overpass-api.de/api/"
     };
-
+    private final List<OsmApiEndpoint> mOsmOverpassApis;
     private Context mContext;
-
     private OsmService mOsmService;
     private HereService mHereService;
     private OsmApiSelectionInterceptor mOsmApiSelectionInterceptor;
-    private List<OsmApiEndpoint> mOsmOverpassApis;
 
     public SpeedLimitApi(Context context) {
         mContext = context;
 
-        mOsmOverpassApis = new ArrayList<>();
-        for (String api : OSM_OVERPASS_APIS) {
-            mOsmOverpassApis.add(new OsmApiEndpoint(api));
+        mOsmOverpassApis = Collections.synchronizedList(new ArrayList<OsmApiEndpoint>());
+        synchronized (mOsmOverpassApis) {
+            for (String api : OSM_OVERPASS_APIS) {
+                mOsmOverpassApis.add(new OsmApiEndpoint(api));
+            }
+            Collections.shuffle(mOsmOverpassApis);
         }
-        Collections.shuffle(mOsmOverpassApis);
 
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -124,8 +124,10 @@ public class SpeedLimitApi {
                     @Override
                     public Boolean call(Integer integer, Throwable throwable) {
                         endpoints.get(integer - 1).timeTaken = Integer.MAX_VALUE;
-                        Collections.shuffle(mOsmOverpassApis);
-                        Collections.sort(mOsmOverpassApis);
+                        synchronized (mOsmOverpassApis) {
+                            Collections.shuffle(mOsmOverpassApis);
+                            Collections.sort(mOsmOverpassApis);
+                        }
                         if (integer <= 2) {
                             mOsmApiSelectionInterceptor.setApi(endpoints.get(integer));
                             return true;
@@ -231,7 +233,9 @@ public class SpeedLimitApi {
                 return proceed;
             } finally {
                 api.timeTakenTimestamp = System.currentTimeMillis();
-                Collections.sort(mOsmOverpassApis);
+                synchronized (mOsmOverpassApis) {
+                    Collections.sort(mOsmOverpassApis);
+                }
             }
         }
     }

@@ -321,8 +321,10 @@ public class FloatingService extends Service {
         mDebuggingText.setText("Location: " + location);
 
         mDebuggingText.append("\nEndpoints:\n");
-        for (OsmApiEndpoint endpoint : mSpeedLimitApi.getOsmOverpassApis()) {
-            mDebuggingText.append(endpoint.toString() + "\n");
+        synchronized (mSpeedLimitApi.getOsmOverpassApis()) {
+            for (OsmApiEndpoint endpoint : mSpeedLimitApi.getOsmOverpassApis()) {
+                mDebuggingText.append(endpoint.toString() + "\n");
+            }
         }
 
         if (error == null && speedLimitAndTags != null) {

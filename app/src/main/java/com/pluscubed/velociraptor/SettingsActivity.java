@@ -342,6 +342,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     private void showChangelog() {
         ChangelogDialog.newInstance().show(getFragmentManager(), "CHANGELOG_DIALOG");
+        PrefUtils.setVersionCode(this, BuildConfig.VERSION_CODE);
     }
 
     @Override
