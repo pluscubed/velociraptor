@@ -78,7 +78,7 @@ public class SpeedLimitApi {
         OkHttpClient osmClient = client.newBuilder()
                 .addInterceptor(mOsmApiSelectionInterceptor)
                 .build();
-        Retrofit osmRest = buildRetrofit(osmClient, OSM_OVERPASS_APIS[0]);
+        Retrofit osmRest = buildRetrofit(osmClient, mOsmOverpassApis.get(0).baseUrl);
         mOsmService = osmRest.create(OsmService.class);
     }
 

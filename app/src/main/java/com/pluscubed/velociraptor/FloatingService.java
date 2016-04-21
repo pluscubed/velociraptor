@@ -23,6 +23,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
@@ -43,6 +44,8 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.gigamole.library.ArcProgressStackView;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -103,6 +106,7 @@ public class FloatingService extends Service {
         if (intent != null) {
             if (!mNotifStart && intent.getBooleanExtra(EXTRA_CLOSE, false) ||
                     intent.getBooleanExtra(EXTRA_NOTIF_CLOSE, false)) {
+                onStop();
                 stopSelf();
                 return super.onStartCommand(intent, flags, startId);
             } else if (intent.getBooleanExtra(EXTRA_NOTIF_START, false)) {
@@ -170,7 +174,11 @@ public class FloatingService extends Service {
                     @Override
                     public void onConnectionSuspended(int i) {
                         if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
-                            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, mLocationListener).await();
+                            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, mLocationListener).setResultCallback(new ResultCallback<Status>() {
+                                @Override
+                                public void onResult(@NonNull Status status) {
+                                }
+                            });
                         }
                     }
                 })
@@ -443,12 +451,6 @@ public class FloatingService extends Service {
     }
 
     @Override
-    public boolean stopService(Intent name) {
-        onStop();
-        return super.stopService(name);
-    }
-
-    @Override
     public void onDestroy() {
         onStop();
         super.onDestroy();
@@ -456,7 +458,15 @@ public class FloatingService extends Service {
 
     private void onStop() {
         if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
-            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, mLocationListener).await();
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, mLocationListener).setResultCallback(new ResultCallback<Status>() {
+                @Override
+                public void onResult(@NonNull Status status) {
+                    if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+                        mGoogleApiClient.disconnect();
+                    }
+                }
+            });
+        } else if (mGoogleApiClient != null) {
             mGoogleApiClient.disconnect();
         }
 
