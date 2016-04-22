@@ -51,7 +51,6 @@
 -dontwarn java.time.**
 -dontwarn java.sql.**
 -dontwarn java.lang.**
--dontwarn java.lang.*
 
 #Jackson
 -dontwarn java.beans.**
