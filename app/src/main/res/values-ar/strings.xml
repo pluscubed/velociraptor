@@ -45,7 +45,7 @@
     ]]></string>
     <string name="about">عن</string>
     <string name="wrong_speed_limit">حد أقصى للسرعة خاطئ أو مفقود؟</string>
-    <string name="wrong_speed_limit_desc">إذهب إلى OpenStreetMap على جهاز الكمبيوتر الخاص بك لتعديل البيانات. المس لمشاركة الرابط (https://openstreetmap.org)</string>
+    <string name="wrong_speed_limit_desc">إذهب إلى OpenStreetMap على جهاز الكمبيوتر الخاص بك لتعديل البيانات. قم بمشاركة الرابط (https://openstreetmap.org)</string>
     <string name="configure">تهيئة</string>
     <string name="automatically_show">اظهار/اخفاء في تطبيقات معينة</string>
     <string name="select_overlay_usage">التفعيل</string>
@@ -63,6 +63,8 @@
     <string name="advanced">متقدم</string>
     <string name="changelog">سجل التحديثات</string>
     <string name="help_edit">ساعد في تعديل بيانات السرعة القصوى</string>
-    <string name="check_coverage_desc">إذا كانت الإجابة بنعم ولا يظهر الحد الأقصى للسرعة، قد يكون هناك خلل. استخدم زر التعليقات بالأعلى</string>
+    <string name="check_coverage_desc">إذا كانت الإجابة بنعم ولا يظهر الحد الأقصى للسرعة، قد يكون هناك خلل. استخدم قم بتفعيل المدقق (debugging stats option) وزر التعليقات بالأعلى</string>
     <string name="check_coverage">اضغط لمعرفة ما اذا كان يتم تغطية منطقتك</string>
+    <string name="obtaining_gps_location">تحديد الموقع الجغرافي ....</string>
+    <string name="debugging_stats">إحصاءات مفصلة / تدقيق الأخطاء</string>
 </resources>

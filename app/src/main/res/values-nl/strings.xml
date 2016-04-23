@@ -44,10 +44,10 @@
         <a href=\'http://pluscubed.oneskyapp.com/collaboration/project/64120\'>OneSky</a> - vertaal de app in uw taal]]></string>
     <string name="about">Over</string>
     <string name="wrong_speed_limit">Verkeerde of missende snelheidslimiet?</string>
-    <string name="wrong_speed_limit_desc">Ga op de computer naar OpenStreetMap om de gegevens aan te passen. Tik hier om link te delen (https://openstreetmap.org)</string>
+    <string name="wrong_speed_limit_desc">Ga op de computer naar OpenStreetMap. Tik hier om link te delen (https://openstreetmap.org)</string>
     <string name="configure">Instellen</string>
     <string name="automatically_show">Weergeven/verbergen in bepaalde apps</string>
-    <string name="select_overlay_usage">Zwevende weergave</string>
+    <string name="select_overlay_usage">Activeren</string>
     <string name="enable">Inschakelen</string>
     <string name="show_in_apps">Weergeven in deze apps:</string>
     <string name="persistent_notification_controls">Melding met opties weergeven</string>
@@ -58,4 +58,12 @@
     <string name="hide">Verbergen</string>
     <string name="controls_notif_title">Velociraptor bediening</string>
     <string name="controls_notif_desc">Snelheidmonitor weergeven of verbergen</string>
+    <string name="general">Algemeen</string>
+    <string name="advanced">Geavanceerd</string>
+    <string name="changelog">Veranderingen</string>
+    <string name="help_edit">Help met bewerken van de maximumsnelheid</string>
+    <string name="check_coverage_desc">Zo ja en de maximumsnelheid wordt niet weergegeven, dan kan het een bug te zijn. Gebruik de debugging- optie en feedback-knop.</string>
+    <string name="check_coverage">Tik op om te controleren of het uw gebied omvat</string>
+    <string name="obtaining_gps_location">GPS-locatie verkrijgen…</string>
+    <string name="debugging_stats">Statistieken voor nerds/debugging</string>
 </resources>
