@@ -64,6 +64,10 @@
 
 -keepnames class com.fasterxml.jackson.** { *; }
 
+-keepclasseswithmembers class * {
+    @com.fasterxml.jackson.annotation.* <methods>;
+}
+
 #RxJava
 -keep class rx.** { *; }
 
