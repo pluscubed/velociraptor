@@ -12,6 +12,7 @@ public class OsmApiEndpoint implements Comparable<OsmApiEndpoint> {
     public long timeTakenTimestamp;
     public int timeTaken;
     public String baseUrl;
+    public String name;
 
     public OsmApiEndpoint(String baseUrl) {
         this.baseUrl = baseUrl;
@@ -19,13 +20,23 @@ public class OsmApiEndpoint implements Comparable<OsmApiEndpoint> {
 
     @Override
     public String toString() {
-        String time = timeTaken + "ms";
+        String time;
         if (timeTaken == Integer.MAX_VALUE) {
             time = "error";
         } else if (timeTaken == 0) {
             time = "pending";
+        } else {
+            time = timeTaken + "ms";
         }
-        return baseUrl + " - " + time +
+
+        String title;
+        if (name != null) {
+            title = name;
+        } else {
+            title = this.baseUrl;
+        }
+
+        return title + " - " + time +
                 ", timestamp " + DateFormat.getTimeInstance().format(new Date(timeTakenTimestamp));
     }
 

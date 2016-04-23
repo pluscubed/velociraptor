@@ -5,6 +5,7 @@ import android.location.Location;
 import android.support.annotation.NonNull;
 import android.util.Pair;
 
+import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.pluscubed.velociraptor.hereapi.HereService;
@@ -41,7 +42,7 @@ import rx.schedulers.Schedulers;
 public class SpeedLimitApi {
 
     private static final String HERE_ROUTING_API = "http://route.st.nlp.nokia.com/routing/6.2/";
-    private static final String[] OSM_OVERPASS_APIS = new String[]{
+    private static final String[] PUBLIC_OVERPASS_APIS = new String[]{
             "http://api.openstreetmap.fr/oapi/",
             "http://overpass.osm.rambler.ru/cgi/",
             "http://overpass-api.de/api/"
@@ -57,10 +58,18 @@ public class SpeedLimitApi {
 
         mOsmOverpassApis = Collections.synchronizedList(new ArrayList<OsmApiEndpoint>());
         synchronized (mOsmOverpassApis) {
-            for (String api : OSM_OVERPASS_APIS) {
+            for (String api : PUBLIC_OVERPASS_APIS) {
                 mOsmOverpassApis.add(new OsmApiEndpoint(api));
             }
             Collections.shuffle(mOsmOverpassApis);
+
+            String[] stringArray = context.getResources().getStringArray(R.array.overpass_apis);
+            for (int i = 0; i < stringArray.length; i++) {
+                String api = stringArray[i];
+                OsmApiEndpoint endpoint = new OsmApiEndpoint(api);
+                endpoint.name = "velociraptor-server" + (i + 1);
+                mOsmOverpassApis.add(0, endpoint);
+            }
         }
 
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
@@ -123,11 +132,17 @@ public class SpeedLimitApi {
                 .retry(new Func2<Integer, Throwable, Boolean>() {
                     @Override
                     public Boolean call(Integer integer, Throwable throwable) {
+                        throwable.printStackTrace();
+                        if (!BuildConfig.DEBUG)
+                            Crashlytics.logException(throwable);
+
+
                         endpoints.get(integer - 1).timeTaken = Integer.MAX_VALUE;
                         synchronized (mOsmOverpassApis) {
                             Collections.shuffle(mOsmOverpassApis);
                             Collections.sort(mOsmOverpassApis);
                         }
+
                         if (integer <= 2) {
                             mOsmApiSelectionInterceptor.setApi(endpoints.get(integer));
                             return true;

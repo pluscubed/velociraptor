@@ -43,6 +43,7 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.gigamole.library.ArcProgressStackView;
+import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
@@ -182,6 +183,12 @@ public class FloatingService extends Service {
                         }
                     }
                 })
+                .addOnConnectionFailedListener(new GoogleApiClient.OnConnectionFailedListener() {
+                    @Override
+                    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+                        showToast("Velociraptor error: " + connectionResult.getErrorMessage());
+                    }
+                })
                 .addApi(LocationServices.API)
                 .build();
 
@@ -284,8 +291,8 @@ public class FloatingService extends Service {
         updateDebuggingText(location, null, null);
 
         if (mLocationSubscription == null &&
-                (mLastLimitLocation == null || location.distanceTo(mLastLimitLocation) > 100) &&
-                System.currentTimeMillis() > mLastRequestTime + 5000) {
+                (mLastLimitLocation == null || location.distanceTo(mLastLimitLocation) > 50) &&
+                System.currentTimeMillis() > mLastRequestTime + 2000) {
 
             mLastRequestTime = System.currentTimeMillis();
             mLocationSubscription = mSpeedLimitApi.getSpeedLimit(location)
