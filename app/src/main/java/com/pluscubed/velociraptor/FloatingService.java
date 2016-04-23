@@ -145,7 +145,11 @@ public class FloatingService extends Service {
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                 PixelFormat.TRANSLUCENT);
         debuggingParams.gravity = Gravity.BOTTOM;
-        mWindowManager.addView(mDebuggingText, debuggingParams);
+        try {
+            mWindowManager.addView(mDebuggingText, debuggingParams);
+        } catch (Exception e) {
+            showToast("Velociraptor error: " + e.getMessage());
+        }
 
         updatePrefSpeedometer();
         updatePrefDebugging();
@@ -242,7 +246,11 @@ public class FloatingService extends Service {
                 PixelFormat.TRANSLUCENT);
         params.gravity = Gravity.TOP | Gravity.START;
         if (mWindowManager != null)
-            mWindowManager.addView(mFloatingView, params);
+            try {
+                mWindowManager.addView(mFloatingView, params);
+            } catch (Exception e) {
+                showToast("Velociraptor error: " + e);
+            }
         mFloatingView.setOnTouchListener(new FloatingOnTouchListener());
 
         initMonitorPosition();
