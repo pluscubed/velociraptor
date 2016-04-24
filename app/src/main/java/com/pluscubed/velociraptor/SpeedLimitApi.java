@@ -53,6 +53,8 @@ public class SpeedLimitApi {
     private HereService mHereService;
     private OsmApiSelectionInterceptor mOsmApiSelectionInterceptor;
 
+    private Tags mLastTags;
+
     public SpeedLimitApi(Context context) {
         mContext = context;
 
@@ -162,8 +164,21 @@ public class SpeedLimitApi {
 
                         List<Element> elements = osmApi.getElements();
                         if (!elements.isEmpty()) {
-                            Element element = elements.get(0);
+                            Element element = null;
+
+                            for (Element newElement : elements) {
+                                Tags newTags = newElement.getTags();
+                                if (newTags.getName() != null && newTags.getName().equals(mLastTags.getName())
+                                        && newTags.getRef() != null && newTags.getRef().equals(mLastTags.getRef())) {
+                                    element = newElement;
+                                }
+                            }
+                            if (mLastTags == null || element == null) {
+                                element = elements.get(0);
+                            }
+
                             Tags tags = element.getTags();
+                            mLastTags = tags;
                             String maxspeed = tags.getMaxspeed();
                             if (maxspeed.matches("^-?\\d+$")) {
                                 //is integer -> km/h
