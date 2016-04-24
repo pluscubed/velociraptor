@@ -299,8 +299,8 @@ public class FloatingService extends Service {
         updateDebuggingText(location, null, null);
 
         if (mLocationSubscription == null &&
-                (mLastLimitLocation == null || location.distanceTo(mLastLimitLocation) > 50) &&
-                System.currentTimeMillis() > mLastRequestTime + 2000) {
+                (mLastLimitLocation == null || location.distanceTo(mLastLimitLocation) > 100) &&
+                System.currentTimeMillis() > mLastRequestTime + 5000) {
 
             mLastRequestTime = System.currentTimeMillis();
             mLocationSubscription = mSpeedLimitApi.getSpeedLimit(location)
