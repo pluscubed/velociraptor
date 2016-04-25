@@ -37,27 +37,53 @@ import com.pluscubed.velociraptor.appselection.AppSelectionActivity;
 import com.pluscubed.velociraptor.utils.PrefUtils;
 import com.pluscubed.velociraptor.utils.Utils;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class SettingsActivity extends AppCompatActivity {
     public static final int PENDING_SERVICE = 4;
     public static final int PENDING_SERVICE_CLOSE = 3;
     public static final int PENDING_SETTINGS = 2;
     public static final int NOTIFICATION_CONTROLS = 42;
     private static final int REQUEST_LOCATION = 105;
-    private Button mEnableServiceButton;
-    private ImageView mEnabledServiceImage;
-    private Button mEnableFloatingButton;
-    private ImageView mEnabledFloatingImage;
-    private Button mEnableLocationButton;
-    private ImageView mEnabledLocationImage;
 
-    private Spinner mUnitSpinner;
-    private Spinner mStyleSpinner;
-    private Spinner mOverspeedSpinner;
-    private SwitchCompat mShowSpeedometerSwitch;
-    private SwitchCompat mAutoDisplaySwitch;
-    private SwitchCompat mDebuggingSwitch;
-    private ViewGroup mAutoDisplayOptionsContainer;
-    private ViewGroup mOpenAppSelectionContainer;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.button_enable_service)
+    Button mEnableServiceButton;
+    @BindView(R.id.image_service_enabled)
+    ImageView mEnabledServiceImage;
+    @BindView(R.id.button_floating_enabled)
+    Button mEnableFloatingButton;
+    @BindView(R.id.image_floating_enabled)
+    ImageView mEnabledFloatingImage;
+    @BindView(R.id.button_location_enabled)
+    Button mEnableLocationButton;
+    @BindView(R.id.image_location_enabled)
+    ImageView mEnabledLocationImage;
+
+    @BindView(R.id.open_openstreetmap)
+    Button openStreetMapButton;
+    @BindView(R.id.check_coverage)
+    Button checkCoverageButton;
+
+    @BindView(R.id.spinner_unit)
+    Spinner mUnitSpinner;
+    @BindView(R.id.spinner_style)
+    Spinner mStyleSpinner;
+    @BindView(R.id.spinner_overspeed)
+    Spinner mOverspeedSpinner;
+    @BindView(R.id.switch_speedometer)
+    SwitchCompat mShowSpeedometerSwitch;
+    @BindView(R.id.switch_auto_display)
+    SwitchCompat mAutoDisplaySwitch;
+    @BindView(R.id.switch_debugging)
+    SwitchCompat mDebuggingSwitch;
+    @BindView(R.id.linear_auto_display_options)
+    ViewGroup mAutoDisplayOptionsContainer;
+    @BindView(R.id.linear_app_selection)
+    ViewGroup mOpenAppSelectionContainer;
+
     private NotificationManager mNotificationManager;
 
 
@@ -66,35 +92,16 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+        ButterKnife.bind(this);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        mEnableFloatingButton = (Button) findViewById(R.id.button_floating_enabled);
-        mEnabledFloatingImage = (ImageView) findViewById(R.id.image_floating_enabled);
-        mEnableLocationButton = (Button) findViewById(R.id.button_location_enabled);
-        mEnabledLocationImage = (ImageView) findViewById(R.id.image_location_enabled);
-
-        mUnitSpinner = (Spinner) findViewById(R.id.spinner_unit);
-        mStyleSpinner = (Spinner) findViewById(R.id.spinner_style);
-        mOverspeedSpinner = (Spinner) findViewById(R.id.spinner_overspeed);
-        mShowSpeedometerSwitch = (SwitchCompat) findViewById(R.id.switch_speedometer);
-
-        mAutoDisplaySwitch = (SwitchCompat) findViewById(R.id.switch_auto_display);
-        mAutoDisplayOptionsContainer = (ViewGroup) findViewById(R.id.linear_auto_display_options);
-        mEnableServiceButton = (Button) findViewById(R.id.button_enable_service);
-        mEnabledServiceImage = (ImageView) findViewById(R.id.image_service_enabled);
-
-        mDebuggingSwitch = (SwitchCompat) findViewById(R.id.switch_debugging);
-
-        mOpenAppSelectionContainer = (ViewGroup) findViewById(R.id.linear_app_selection);
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             View marshmallowPermissionsCard = findViewById(R.id.card_m_permissions);
             marshmallowPermissionsCard.setVisibility(View.GONE);
         }
 
-        findViewById(R.id.open_openstreetmap).setOnClickListener(new View.OnClickListener() {
+        openStreetMapButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ShareCompat.IntentBuilder.from(SettingsActivity.this)
@@ -104,7 +111,7 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-        findViewById(R.id.check_coverage).setOnClickListener(new View.OnClickListener() {
+        checkCoverageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();

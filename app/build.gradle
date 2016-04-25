@@ -101,9 +101,12 @@ dependencies {
 
     compile 'com.github.bumptech.glide:glide:3.7.0'
 
-    compile 'io.requery:requery:1.0.0-beta15'
-    compile 'io.requery:requery-android:1.0.0-beta15'
-    apt 'io.requery:requery-processor:1.0.0-beta15'
+    compile 'io.requery:requery:1.0.0-beta16'
+    compile 'io.requery:requery-android:1.0.0-beta16'
+    apt 'io.requery:requery-processor:1.0.0-beta16'
+
+    compile 'com.jakewharton:butterknife:8.0.0'
+    apt 'com.jakewharton:butterknife-compiler:8.0.0'
 
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.4-beta2'
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2'
