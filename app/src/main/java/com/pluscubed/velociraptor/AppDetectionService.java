@@ -26,8 +26,6 @@ public class AppDetectionService extends AccessibilityService {
     protected void onServiceConnected() {
         super.onServiceConnected();
         sInstance = this;
-
-        updateSelectedApps();
     }
 
     @Override
