@@ -46,9 +46,11 @@ public class OsmApiEndpoint implements Comparable<OsmApiEndpoint> {
 
         int compare = Utils.compare(timeTaken, another.timeTaken);
 
-        if (compare == 1 && currentTime > timeTakenTimestamp + 60000) {
+        if (compare == 1 && (currentTime > timeTakenTimestamp + 60000 ||
+                name != null && timeTaken != Integer.MAX_VALUE)) {
             return -1;
-        } else if (compare == -1 && currentTime > another.timeTakenTimestamp + 60000) {
+        } else if (compare == -1 && (currentTime > another.timeTakenTimestamp + 60000
+                || another.name != null && another.timeTaken != Integer.MAX_VALUE)) {
             return 1;
         }
         return compare;
