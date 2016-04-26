@@ -19,6 +19,7 @@
     <string name="open_settings_failed_accessibility">Misslyckades att öppna inställningar. Aktivera vänligen manuellt \"Tillgänglighet\" inställningen för Anticipate.</string>
     <string name="permissions_warning">Velociraptor har inte tillräckliga behörigheter. Öppna appen för att godkänna dom.</string>
     <string name="location_settings_warning">GPS är inte påsatt. Sätt på för Velociraptors hastighetskontroll</string>
+    <string name="network_warning">Nätverket är inte anslutet. Velociraptor behöver nätverksanslutning för att hämta hastighetsbegränsningen.</string>
     <string name="speeding_amount">Hastighetsvarning:</string>
     <string name="show_speedometer">Visa hastighetsmätare</string>
     <string name="about_dialog_title">Velociraptor v%s</string>
@@ -28,12 +29,34 @@
 
 Utvecklad av <b>Daniel Ciao</b><br/> 
 
-<a href=\'http://pluscubed.com\'>Hemsida</a>&nbsp;&nbsp;
-<a href=\'https://twitter.com/plusCubed\'>Twitter</a>&nbsp;&nbsp;
-<a href=\'https://google.com/+DanielCiao\'>Google+</a>&nbsp;&nbsp;
-<a href=\'https://github.com/pluscubed\'>GitHub</a>&nbsp;&nbsp;
-<a href=\'https://www.linkedin.com/in/dciao\'>LinkedIn</a><br/><br/>
+<a href=\'http://pluscubed.com\'>Hemsida</a>&nbsp;&nbsp; 
+<a href=\'https://twitter.com/plusCubed\'>Twitter</a>&nbsp;&nbsp; 
+<a href=\'https://google.com/+DanielCiao\'>Google+</a>&nbsp;&nbsp; 
+<a href=\'https://github.com/pluscubed\'>GitHub</a>&nbsp;&nbsp; 
+<a href=\'https://www.linkedin.com/in/dciao\'>LinkedIn</a><br/><br/> 
 
 <a href=\'https://github.com/pluscubed/velociraptor\'>GitHub</a> - källa, problem, funktionsförfrågningar<br/> ]]></string>
     <string name="about">Om</string>
+    <string name="wrong_speed_limit">Fel eller saknad hastighetsbegränsning?</string>
+    <string name="wrong_speed_limit_desc">Gå till OpenStreetMap på din dator.
+Tryck för att dela länken
+(https://openstreetmap.org)</string>
+    <string name="configure">Konfigurera</string>
+    <string name="automatically_show">Visa/dölj i specifika appar</string>
+    <string name="select_overlay_usage">Aktivering</string>
+    <string name="enable">Tillåt</string>
+    <string name="done">Klar</string>
+    <string name="select_apps">Välj appar</string>
+    <string name="show_map_apps">Visa kart applikationer</string>
+    <string name="show">Visa</string>
+    <string name="hide">Dölj</string>
+    <string name="controls_notif_desc">Visa eller dölj hastighetsövervakaren</string>
+    <string name="general">Allmänt</string>
+    <string name="advanced">Avancerat</string>
+    <string name="changelog">Logg över förändringar</string>
+    <string name="help_edit">Hjälp till att editera hastighetsbegränsnings information</string>
+    <string name="check_coverage_desc">Om ja och hastighetsbegränsningen inte visas, det kan finnas en bugg. Använd debug statistiks inställningar och feedback knappen.</string>
+    <string name="check_coverage">Tryck för att kontrollera om ditt område är täckt</string>
+    <string name="obtaining_gps_location">Hämtar GPS position…</string>
+    <string name="debugging_stats">Statistik för nördar/debugging</string>
 </resources>

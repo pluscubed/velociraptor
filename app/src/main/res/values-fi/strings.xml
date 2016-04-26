@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<resources>
+    <string name="app_name">Velociraptor</string>
+    <string name="notif_content">Kosketa avataksesi asetukset</string>
+    <string name="notif_title">Velociraptorin valvonta käynnissä</string>
+    <string name="dialog_draw_overlay">Salli käyttöoikeus \"piirrä muihin sovelluksiin\", jotta kelluvat elementit näkyvät Android 6.0+:ssa</string>
+    <string name="open_settings">Avaa Asetukset-sivu</string>
+    <string name="accessibility_service_description">Helppokäyttöisyyspalvelun tulee olla päällä, jotta etualalla oleva sovellus tunnistetaan ja nopeusrajoitus näytetään.</string>
+    <string name="enable_accessibility_service">Kytke helppokäyttöisyyspalvelu päälle</string>
+    <string name="enable_accessibility_service_desc">Salli Velociraptorin tunnistaa tämänhetkinen sovellus kytkemällä sen helppokäyttöisyyspalvelu päälle</string>
+    <string name="enable_floating_desc">Salli käyttöoikeus \"piirrä muihin sovelluksiin\", jotta päällys näytetään</string>
+    <string name="open_settings_page">Avaa asetussivu</string>
+    <string name="grant_permission">Salli käyttöoikeus</string>
+</resources>
