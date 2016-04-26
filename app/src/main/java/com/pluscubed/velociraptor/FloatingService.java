@@ -298,8 +298,8 @@ public class FloatingService extends Service {
         updateDebuggingText(location, null, null);
 
         if (mLocationSubscription == null &&
-                (mLastLimitLocation == null || location.distanceTo(mLastLimitLocation) > 75) &&
-                System.currentTimeMillis() > mLastRequestTime + 3000) {
+                (mLastLimitLocation == null || location.distanceTo(mLastLimitLocation) > 100) &&
+                System.currentTimeMillis() > mLastRequestTime + 5000) {
 
             mLastRequestTime = System.currentTimeMillis();
             mLocationSubscription = mSpeedLimitApi.getSpeedLimit(location)
@@ -350,7 +350,7 @@ public class FloatingService extends Service {
                 Tags tags = speedLimitAndTags.second;
                 mDebuggingRequestInfo = ("Name: " + tags.getName() + "\nRef: " + tags.getRef());
             } else {
-                mDebuggingRequestInfo = ("Success, no speed limit data");
+                mDebuggingRequestInfo = ("Success, no road data");
             }
         } else if (error != null) {
             mDebuggingRequestInfo = ("Last Error: " + error);

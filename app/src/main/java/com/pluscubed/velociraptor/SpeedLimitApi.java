@@ -107,7 +107,7 @@ public class SpeedLimitApi {
                 + location.getLatitude() + ","
                 + location.getLongitude() +
                 ")" +
-                "[\"highway\"][\"maxspeed\"];out;";
+                "[\"highway\"];out;";
     }
 
     @NonNull
@@ -194,20 +194,22 @@ public class SpeedLimitApi {
                             Tags tags = element.getTags();
                             mLastTags = tags;
                             String maxspeed = tags.getMaxspeed();
-                            if (maxspeed.matches("^-?\\d+$")) {
-                                //is integer -> km/h
-                                Integer limit = Integer.valueOf(maxspeed);
-                                if (!useMetric) {
-                                    limit = (int) (limit / 1.609344 + 0.5d);
+                            if (maxspeed != null) {
+                                if (maxspeed.matches("^-?\\d+$")) {
+                                    //is integer -> km/h
+                                    Integer limit = Integer.valueOf(maxspeed);
+                                    if (!useMetric) {
+                                        limit = (int) (limit / 1.609344 + 0.5d);
+                                    }
+                                    return Single.just(new Pair<>(limit, tags));
+                                } else if (maxspeed.contains("mph")) {
+                                    String[] split = maxspeed.split(" ");
+                                    Integer limit = Integer.valueOf(split[0]);
+                                    if (useMetric) {
+                                        limit = (int) (limit * 1.609344 + 0.5d);
+                                    }
+                                    return Single.just(new Pair<>(limit, tags));
                                 }
-                                return Single.just(new Pair<>(limit, tags));
-                            } else if (maxspeed.contains("mph")) {
-                                String[] split = maxspeed.split(" ");
-                                Integer limit = Integer.valueOf(split[0]);
-                                if (useMetric) {
-                                    limit = (int) (limit * 1.609344 + 0.5d);
-                                }
-                                return Single.just(new Pair<>(limit, tags));
                             }
                             return Single.just(new Pair<>((Integer) null, tags));
                         }
