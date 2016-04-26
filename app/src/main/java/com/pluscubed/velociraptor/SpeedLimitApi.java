@@ -175,20 +175,28 @@ public class SpeedLimitApi {
                         if (!elements.isEmpty()) {
                             Element element = null;
 
-                            if (mLastTags == null) {
-                                element = elements.get(0);
-                            } else {
+                            if (mLastTags != null) {
                                 for (Element newElement : elements) {
                                     Tags newTags = newElement.getTags();
-                                    if (newTags.getName() != null && newTags.getName().equals(mLastTags.getName()) &&
-                                            newTags.getRef() != null && newTags.getRef().equals(mLastTags.getRef())) {
+                                    if (mLastTags.getName() != null && mLastTags.getName().equals(newTags.getName()) ||
+                                            mLastTags.getRef() != null && mLastTags.getRef().equals(newTags.getRef())) {
                                         element = newElement;
                                         break;
                                     }
                                 }
-                                if (element == null) {
-                                    element = elements.get(0);
+                            }
+
+                            if (element == null) {
+                                for (Element newElement : elements) {
+                                    Tags newTags = newElement.getTags();
+                                    if (newTags.getMaxspeed() != null) {
+                                        element = newElement;
+                                    }
                                 }
+                            }
+
+                            if (element == null) {
+                                element = elements.get(0);
                             }
 
                             Tags tags = element.getTags();
