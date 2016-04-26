@@ -30,6 +30,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -63,9 +64,9 @@ public class SettingsActivity extends AppCompatActivity {
     ImageView mEnabledLocationImage;
 
     @BindView(R.id.open_openstreetmap)
-    Button openStreetMapButton;
+    LinearLayout openStreetMapView;
     @BindView(R.id.check_coverage)
-    Button checkCoverageButton;
+    LinearLayout checkCoverageView;
 
     @BindView(R.id.spinner_unit)
     Spinner mUnitSpinner;
@@ -101,7 +102,7 @@ public class SettingsActivity extends AppCompatActivity {
             marshmallowPermissionsCard.setVisibility(View.GONE);
         }
 
-        openStreetMapButton.setOnClickListener(new View.OnClickListener() {
+        openStreetMapView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ShareCompat.IntentBuilder.from(SettingsActivity.this)
@@ -111,7 +112,7 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-        checkCoverageButton.setOnClickListener(new View.OnClickListener() {
+        checkCoverageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();

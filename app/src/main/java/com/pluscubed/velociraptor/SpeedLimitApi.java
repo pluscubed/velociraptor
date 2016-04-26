@@ -123,28 +123,37 @@ public class SpeedLimitApi {
     private Single<Pair<Integer, Tags>> getOsmSpeedLimit(final Location location) {
         final List<OsmApiEndpoint> endpoints = new ArrayList<>(mOsmOverpassApis);
         mOsmApiSelectionInterceptor.setApi(endpoints.get(0));
+
         return mOsmService.getOsm(getOsmQuery(location))
                 .subscribeOn(Schedulers.io())
                 .doOnSubscribe(new Action0() {
                     @Override
                     public void call() {
-                        logOsmRequest();
+                        logOsmRequest(mOsmApiSelectionInterceptor.api);
+                    }
+                })
+                .doOnError(new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        if (!BuildConfig.DEBUG) {
+                            if (throwable instanceof IOException) {
+                                Answers.getInstance().logCustom(new CustomEvent("Network Error")
+                                        .putCustomAttribute("Server", mOsmApiSelectionInterceptor.api.baseUrl));
+                            } else {
+                                Crashlytics.logException(throwable);
+                            }
+                        }
+
+                        mOsmApiSelectionInterceptor.api.timeTaken = Integer.MAX_VALUE;
+                        synchronized (mOsmOverpassApis) {
+                            Collections.shuffle(mOsmOverpassApis);
+                            Collections.sort(mOsmOverpassApis);
+                        }
                     }
                 })
                 .retry(new Func2<Integer, Throwable, Boolean>() {
                     @Override
                     public Boolean call(Integer integer, Throwable throwable) {
-                        throwable.printStackTrace();
-                        if (!BuildConfig.DEBUG)
-                            Crashlytics.logException(throwable);
-
-
-                        endpoints.get(integer - 1).timeTaken = Integer.MAX_VALUE;
-                        synchronized (mOsmOverpassApis) {
-                            Collections.shuffle(mOsmOverpassApis);
-                            Collections.sort(mOsmOverpassApis);
-                        }
-
                         if (integer <= 2) {
                             mOsmApiSelectionInterceptor.setApi(endpoints.get(integer));
                             return true;
@@ -166,48 +175,51 @@ public class SpeedLimitApi {
                         if (!elements.isEmpty()) {
                             Element element = null;
 
-                            for (Element newElement : elements) {
-                                Tags newTags = newElement.getTags();
-                                if (newTags != null &&
-                                        newTags.getName() != null && newTags.getName().equals(mLastTags.getName()) &&
-                                        newTags.getRef() != null && newTags.getRef().equals(mLastTags.getRef())) {
-                                    element = newElement;
-                                }
-                            }
-                            if (mLastTags == null || element == null) {
+                            if (mLastTags == null) {
                                 element = elements.get(0);
+                            } else {
+                                for (Element newElement : elements) {
+                                    Tags newTags = newElement.getTags();
+                                    if (newTags.getName() != null && newTags.getName().equals(mLastTags.getName()) &&
+                                            newTags.getRef() != null && newTags.getRef().equals(mLastTags.getRef())) {
+                                        element = newElement;
+                                        break;
+                                    }
+                                }
+                                if (element == null) {
+                                    element = elements.get(0);
+                                }
                             }
 
                             Tags tags = element.getTags();
-                            if (tags != null) {
-                                mLastTags = tags;
-                                String maxspeed = tags.getMaxspeed();
-                                if (maxspeed.matches("^-?\\d+$")) {
-                                    //is integer -> km/h
-                                    Integer limit = Integer.valueOf(maxspeed);
-                                    if (!useMetric) {
-                                        limit = (int) (limit / 1.609344);
-                                    }
-                                    return Single.just(new Pair<>(limit, tags));
-                                } else if (maxspeed.contains("mph")) {
-                                    String[] split = maxspeed.split(" ");
-                                    Integer limit = Integer.valueOf(split[0]);
-                                    if (useMetric) {
-                                        limit = (int) (limit * 1.609344);
-                                    }
-                                    return Single.just(new Pair<>(limit, tags));
+                            mLastTags = tags;
+                            String maxspeed = tags.getMaxspeed();
+                            if (maxspeed.matches("^-?\\d+$")) {
+                                //is integer -> km/h
+                                Integer limit = Integer.valueOf(maxspeed);
+                                if (!useMetric) {
+                                    limit = (int) (limit / 1.609344 + 0.5d);
                                 }
-                                return Single.just(new Pair<>((Integer) null, tags));
+                                return Single.just(new Pair<>(limit, tags));
+                            } else if (maxspeed.contains("mph")) {
+                                String[] split = maxspeed.split(" ");
+                                Integer limit = Integer.valueOf(split[0]);
+                                if (useMetric) {
+                                    limit = (int) (limit * 1.609344 + 0.5d);
+                                }
+                                return Single.just(new Pair<>(limit, tags));
                             }
+                            return Single.just(new Pair<>((Integer) null, tags));
                         }
                         return Single.just(new Pair<>((Integer) null, (Tags) null));
                     }
                 });
     }
 
-    private void logOsmRequest() {
+    private void logOsmRequest(OsmApiEndpoint endpoint) {
         if (!BuildConfig.DEBUG)
-            Answers.getInstance().logCustom(new CustomEvent("OSM Request"));
+            Answers.getInstance().logCustom(new CustomEvent("OSM Request")
+                    .putCustomAttribute("Server", endpoint.baseUrl));
     }
 
     private Single<Integer> getHereSpeedLimit(final Location location) {

@@ -41,7 +41,6 @@ import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics;
 import com.gigamole.library.ArcProgressStackView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -171,7 +170,7 @@ public class FloatingService extends Service {
                     public void onConnected(@Nullable Bundle bundle) {
                         LocationRequest locationRequest = new LocationRequest();
                         locationRequest.setInterval(500);
-                        locationRequest.setFastestInterval(200);
+                        locationRequest.setFastestInterval(0);
                         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
                         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, locationRequest, mLocationListener);
                     }
@@ -299,8 +298,8 @@ public class FloatingService extends Service {
         updateDebuggingText(location, null, null);
 
         if (mLocationSubscription == null &&
-                (mLastLimitLocation == null || location.distanceTo(mLastLimitLocation) > 100) &&
-                System.currentTimeMillis() > mLastRequestTime + 5000) {
+                (mLastLimitLocation == null || location.distanceTo(mLastLimitLocation) > 75) &&
+                System.currentTimeMillis() > mLastRequestTime + 3000) {
 
             mLastRequestTime = System.currentTimeMillis();
             mLocationSubscription = mSpeedLimitApi.getSpeedLimit(location)
@@ -326,10 +325,6 @@ public class FloatingService extends Service {
 
                         @Override
                         public void onError(Throwable error) {
-                            error.printStackTrace();
-                            if (!BuildConfig.DEBUG)
-                                Crashlytics.logException(error);
-
                             updateLimitText(false);
 
                             updateDebuggingText(location, null, error);
