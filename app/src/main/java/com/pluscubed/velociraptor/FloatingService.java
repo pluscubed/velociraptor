@@ -588,7 +588,10 @@ public class FloatingService extends Service {
                         params.x = (int) (dX + mInitialX);
                         params.y = (int) (dY + mInitialY);
 
-                        mWindowManager.updateViewLayout(mFloatingView, params);
+                        try {
+                            mWindowManager.updateViewLayout(mFloatingView, params);
+                        } catch (IllegalArgumentException ignore) {
+                        }
                     }
                     return true;
                 case MotionEvent.ACTION_UP:

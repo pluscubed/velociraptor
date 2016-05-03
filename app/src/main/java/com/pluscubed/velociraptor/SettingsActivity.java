@@ -122,7 +122,11 @@ public class SettingsActivity extends AppCompatActivity {
                 Intent intent = new Intent();
                 intent.setData(Uri.parse("http://product.itoworld.com/map/124"));
                 intent.setAction(Intent.ACTION_VIEW);
-                startActivity(intent);
+                try {
+                    startActivity(intent);
+                } catch (ActivityNotFoundException e) {
+                    Snackbar.make(mEnableFloatingButton, R.string.open_coverage_map_failed, Snackbar.LENGTH_LONG).show();
+                }
             }
         });
 

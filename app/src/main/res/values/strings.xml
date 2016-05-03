@@ -75,4 +75,5 @@
     <string name="debugging_stats">Stats for nerds/debugging</string>
     <string name="test">Test</string>
     <string name="sound_alert">Sound alert</string>
+    <string name="open_coverage_map_failed">Unable to open link. Please manually go to http://product.itoworld.com/map/124.</string>
 </resources>
