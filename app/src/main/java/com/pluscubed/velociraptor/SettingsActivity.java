@@ -84,6 +84,10 @@ public class SettingsActivity extends AppCompatActivity {
     ViewGroup mAutoDisplayOptionsContainer;
     @BindView(R.id.linear_app_selection)
     ViewGroup mOpenAppSelectionContainer;
+    @BindView(R.id.switch_beep)
+    SwitchCompat beepSwitch;
+    @BindView(R.id.button_test_beep)
+    Button testBeepButton;
 
     private NotificationManager mNotificationManager;
 
@@ -292,6 +296,21 @@ public class SettingsActivity extends AppCompatActivity {
                 updateFloatingServicePrefs();
             }
         });
+
+        beepSwitch.setChecked(PrefUtils.isBeepAlertEnabled(this));
+        beepSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PrefUtils.setBeepAlertEnabled(SettingsActivity.this, beepSwitch.isChecked());
+            }
+        });
+        testBeepButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Utils.playBeep();
+            }
+        });
+
 
         invalidateStates();
 

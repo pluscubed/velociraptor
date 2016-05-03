@@ -3,6 +3,8 @@ package com.pluscubed.velociraptor.utils;
 import android.accessibilityservice.AccessibilityService;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.media.AudioManager;
+import android.media.ToneGenerator;
 import android.os.Build;
 import android.provider.Settings;
 import android.support.annotation.DrawableRes;
@@ -54,5 +56,10 @@ public abstract class Utils {
 
     public static int compare(int lhs, int rhs) {
         return lhs < rhs ? -1 : (lhs == rhs ? 0 : 1);
+    }
+
+    public static void playBeep() {
+        ToneGenerator toneGen1 = new ToneGenerator(AudioManager.STREAM_MUSIC, 100);
+        toneGen1.startTone(ToneGenerator.TONE_PROP_BEEP2, 500);
     }
 }

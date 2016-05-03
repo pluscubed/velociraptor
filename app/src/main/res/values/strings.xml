@@ -73,4 +73,6 @@
     <string name="check_coverage">Touch to check if your area is covered</string>
     <string name="obtaining_gps_location">Obtaining GPS location…</string>
     <string name="debugging_stats">Stats for nerds/debugging</string>
+    <string name="test">Test</string>
+    <string name="sound_alert">Sound alert</string>
 </resources>

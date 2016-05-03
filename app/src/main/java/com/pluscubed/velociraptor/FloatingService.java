@@ -52,6 +52,7 @@ import com.google.android.gms.location.LocationServices;
 import com.pluscubed.velociraptor.osmapi.OsmApiEndpoint;
 import com.pluscubed.velociraptor.osmapi.Tags;
 import com.pluscubed.velociraptor.utils.PrefUtils;
+import com.pluscubed.velociraptor.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -88,6 +89,8 @@ public class FloatingService extends Service {
     private Location mLastSpeedLocation;
     private Location mLastLimitLocation;
     private long mLastRequestTime;
+
+    private long mSpeedingStart = -1;
 
     private SpeedLimitApi mSpeedLimitApi;
 
@@ -387,17 +390,27 @@ public class FloatingService extends Service {
                 percentage = (int) ((float) speed / 120 * 100 + 0.5f);
             }
 
-            mSpeedometerText.setText(String.valueOf(speed));
+            if (PrefUtils.getShowSpeedometer(this)) {
+                mSpeedometerText.setText(String.valueOf(speed));
 
-            mArcView.getModels().get(0).setProgress(percentage);
-            mArcView.setAnimatorListener(new AnimatorListenerAdapter() {
-            });
-            mArcView.animateProgress();
+                mArcView.getModels().get(0).setProgress(percentage);
+                mArcView.setAnimatorListener(new AnimatorListenerAdapter() {
+                });
+                mArcView.animateProgress();
+            }
 
-            if (mLastSpeedLimit != -1 && mLastSpeedLimit * (1 + (double) PrefUtils.getOverspeedPercent(FloatingService.this) / 100) < speed) {
+            double speedingLimitWarning = mLastSpeedLimit * (1 + (double) PrefUtils.getOverspeedPercent(FloatingService.this) / 100);
+            if (mLastSpeedLimit != -1 && speed > speedingLimitWarning) {
                 mSpeedometerText.setTextColor(ContextCompat.getColor(FloatingService.this, R.color.red500));
+                if (mSpeedingStart == -1) {
+                    mSpeedingStart = System.currentTimeMillis();
+                } else if (System.currentTimeMillis() > mSpeedingStart + 2000L) {
+                    Utils.playBeep();
+                    mSpeedingStart = Long.MAX_VALUE - 2000L;
+                }
             } else {
                 mSpeedometerText.setTextColor(ContextCompat.getColor(FloatingService.this, R.color.primary_text_default_material_light));
+                mSpeedingStart = -1;
             }
 
             mLastSpeedLocation = location;

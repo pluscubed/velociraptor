@@ -16,6 +16,7 @@ public abstract class PrefUtils {
     public static final String PREF_SIGN_STYLE = "pref_international";
     public static final String PREF_SPEEDOMETER = "pref_speedometer";
     public static final String PREF_AUTO_DISPLAY = "pref_auto_display";
+    public static final String PREF_BEEP = "pref_beep";
     public static final String PREF_DEBUGGING = "pref_debugging";
 
     public static final String PREF_FIRSTRUN = "pref_first";
@@ -104,6 +105,14 @@ public abstract class PrefUtils {
 
     public static void setDebugging(Context context, boolean debugging) {
         edit(context).putBoolean(PREF_DEBUGGING, debugging).apply();
+    }
+
+    public static boolean isBeepAlertEnabled(Context context) {
+        return getSharedPreferences(context).getBoolean(PREF_BEEP, true);
+    }
+
+    public static void setBeepAlertEnabled(Context context, boolean beep) {
+        edit(context).putBoolean(PREF_BEEP, beep).apply();
     }
 
     @IntDef({STYLE_US, STYLE_INTERNATIONAL})

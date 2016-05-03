@@ -11,8 +11,7 @@
     app:cardBackgroundColor="@android:color/white"
     app:cardCornerRadius="0dp"
     app:cardElevation="4dp"
-    app:cardUseCompatPadding="true"
-    tools:showIn="@layout/activity_settings">
+    app:cardUseCompatPadding="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -69,6 +68,64 @@
 
             <android.support.v7.widget.SwitchCompat
                 android:id="@+id/switch_speedometer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:clickable="false"
+                android:focusable="false" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="?selectableItemBackground"
+            android:baselineAligned="false"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingEnd="12dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="12dp"
+            android:paddingStart="16dp"
+            tools:ignore="UseCompoundDrawables">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginRight="32dp"
+                android:tint="#8a000000"
+                app:srcCompat="@drawable/ic_volume_up_black_24dp" />
+
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingEnd="8dp"
+                android:paddingRight="8dp"
+                android:text="@string/sound_alert"
+                android:textSize="16sp"
+                tools:ignore="RtlSymmetry" />
+
+            <Space
+                android:layout_width="8dp"
+                android:layout_height="match_parent" />
+
+            <Button
+                android:id="@+id/button_test_beep"
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="0dp"
+                android:text="@string/test" />
+
+            <Space
+                android:layout_width="4dp"
+                android:layout_height="match_parent" />
+
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/switch_beep"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@null"
