@@ -37,9 +37,9 @@ public abstract class Utils {
                     }
                 }
             }
-        } else {
-            //Accessibility is disabled
         }
+
+        //Accessibility is disabled
 
         return false;
     }

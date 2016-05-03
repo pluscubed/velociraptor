@@ -404,7 +404,7 @@ public class FloatingService extends Service {
                 mSpeedometerText.setTextColor(ContextCompat.getColor(FloatingService.this, R.color.red500));
                 if (mSpeedingStart == -1) {
                     mSpeedingStart = System.currentTimeMillis();
-                } else if (System.currentTimeMillis() > mSpeedingStart + 2000L) {
+                } else if (System.currentTimeMillis() > mSpeedingStart + 2000L && PrefUtils.isBeepAlertEnabled(this)) {
                     Utils.playBeep();
                     mSpeedingStart = Long.MAX_VALUE - 2000L;
                 }
