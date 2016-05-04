@@ -1,7 +1,6 @@
 package com.pluscubed.velociraptor;
 
 import android.Manifest;
-import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Notification;
@@ -258,8 +257,12 @@ public class FloatingService extends Service {
         initMonitorPosition();
 
         final ArrayList<ArcProgressStackView.Model> models = new ArrayList<>();
-        models.add(new ArcProgressStackView.Model("", 0, ContextCompat.getColor(this, R.color.colorPrimary), ContextCompat.getColor(this, R.color.colorAccent)));
-        mArcView.setTextColor(ContextCompat.getColor(this, R.color.colorAccent));
+        models.add(new ArcProgressStackView.Model("", 0, ContextCompat.getColor(this, R.color.colorPrimary900),
+                new int[]{ContextCompat.getColor(this, R.color.colorPrimaryA400),
+                        ContextCompat.getColor(this, R.color.colorPrimaryA400),
+                        ContextCompat.getColor(this, R.color.red500),
+                        ContextCompat.getColor(this, R.color.red500)}));
+        mArcView.setTextColor(ContextCompat.getColor(this, android.R.color.transparent));
         mArcView.setInterpolator(new FastOutSlowInInterpolator());
         mArcView.setModels(models);
     }
@@ -390,18 +393,11 @@ public class FloatingService extends Service {
                 percentage = (int) ((float) speed / 120 * 100 + 0.5f);
             }
 
-            if (PrefUtils.getShowSpeedometer(this)) {
-                mSpeedometerText.setText(String.valueOf(speed));
-
-                mArcView.getModels().get(0).setProgress(percentage);
-                mArcView.setAnimatorListener(new AnimatorListenerAdapter() {
-                });
-                mArcView.animateProgress();
-            }
-
-            double speedingLimitWarning = mLastSpeedLimit * (1 + (double) PrefUtils.getOverspeedPercent(FloatingService.this) / 100);
+            int speedingLimitWarning =
+                    (int) (mLastSpeedLimit * (1 + (float) PrefUtils.getOverspeedPercent(FloatingService.this) / 100));
             if (mLastSpeedLimit != -1 && speed > speedingLimitWarning) {
                 mSpeedometerText.setTextColor(ContextCompat.getColor(FloatingService.this, R.color.red500));
+                mSpeedometerUnits.setTextColor(ContextCompat.getColor(FloatingService.this, R.color.red500));
                 if (mSpeedingStart == -1) {
                     mSpeedingStart = System.currentTimeMillis();
                 } else if (System.currentTimeMillis() > mSpeedingStart + 2000L && PrefUtils.isBeepAlertEnabled(this)) {
@@ -410,7 +406,19 @@ public class FloatingService extends Service {
                 }
             } else {
                 mSpeedometerText.setTextColor(ContextCompat.getColor(FloatingService.this, R.color.primary_text_default_material_light));
+                mSpeedometerUnits.setTextColor(ContextCompat.getColor(FloatingService.this, R.color.primary_text_default_material_light));
                 mSpeedingStart = -1;
+            }
+
+            if (PrefUtils.getShowSpeedometer(this)) {
+                mSpeedometerText.setText(String.valueOf(speed));
+
+                if (mLastSpeedLimit != -1) {
+                    percentage = (int) ((float) speed / speedingLimitWarning * 100 + 0.5f);
+                }
+
+                mArcView.getModels().get(0).setProgress(percentage);
+                mArcView.animateProgress();
             }
 
             mLastSpeedLocation = location;
