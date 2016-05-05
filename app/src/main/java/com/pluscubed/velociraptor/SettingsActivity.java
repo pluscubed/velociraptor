@@ -61,17 +61,17 @@ public class SettingsActivity extends AppCompatActivity {
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.button_enable_service)
-    Button mEnableServiceButton;
+    Button enableServiceButton;
     @BindView(R.id.image_service_enabled)
-    ImageView mEnabledServiceImage;
+    ImageView enabledServiceImage;
     @BindView(R.id.button_floating_enabled)
-    Button mEnableFloatingButton;
+    Button enableFloatingButton;
     @BindView(R.id.image_floating_enabled)
-    ImageView mEnabledFloatingImage;
+    ImageView enabledFloatingImage;
     @BindView(R.id.button_location_enabled)
-    Button mEnableLocationButton;
+    Button enableLocationButton;
     @BindView(R.id.image_location_enabled)
-    ImageView mEnabledLocationImage;
+    ImageView enabledLocationImage;
 
     @BindView(R.id.open_openstreetmap)
     LinearLayout openStreetMapView;
@@ -83,19 +83,19 @@ public class SettingsActivity extends AppCompatActivity {
     TextView toleranceOverview;
 
     @BindView(R.id.spinner_unit)
-    Spinner mUnitSpinner;
+    Spinner unitSpinner;
     @BindView(R.id.spinner_style)
-    Spinner mStyleSpinner;
+    Spinner styleSpinner;
     @BindView(R.id.switch_speedometer)
-    SwitchCompat mShowSpeedometerSwitch;
+    SwitchCompat showSpeedometerSwitch;
     @BindView(R.id.switch_auto_display)
-    SwitchCompat mAutoDisplaySwitch;
+    SwitchCompat autoDisplaySwitch;
     @BindView(R.id.switch_debugging)
-    SwitchCompat mDebuggingSwitch;
+    SwitchCompat debuggingSwitch;
     @BindView(R.id.linear_auto_display_options)
-    ViewGroup mAutoDisplayOptionsContainer;
+    ViewGroup autoDisplayOptionsContainer;
     @BindView(R.id.linear_app_selection)
-    ViewGroup mOpenAppSelectionContainer;
+    ViewGroup openAppSelectionContainer;
     @BindView(R.id.switch_beep)
     SwitchCompat beepSwitch;
     @BindView(R.id.button_test_beep)
@@ -137,7 +137,7 @@ public class SettingsActivity extends AppCompatActivity {
                 try {
                     startActivity(intent);
                 } catch (ActivityNotFoundException e) {
-                    Snackbar.make(mEnableFloatingButton, R.string.open_coverage_map_failed, Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(enableFloatingButton, R.string.open_coverage_map_failed, Snackbar.LENGTH_LONG).show();
                 }
             }
         });
@@ -184,40 +184,40 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-        mAutoDisplaySwitch.setChecked(PrefUtils.isAutoDisplayEnabled(this));
-        mAutoDisplaySwitch.setOnClickListener(new View.OnClickListener() {
+        autoDisplaySwitch.setChecked(PrefUtils.isAutoDisplayEnabled(this));
+        autoDisplaySwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean autoDisplayEnabled = mAutoDisplaySwitch.isChecked();
+                boolean autoDisplayEnabled = autoDisplaySwitch.isChecked();
                 PrefUtils.setAutoDisplay(SettingsActivity.this, autoDisplayEnabled);
                 updateAutoDisplaySwitchEnabled(autoDisplayEnabled);
             }
         });
 
-        mEnableServiceButton.setOnClickListener(new View.OnClickListener() {
+        enableServiceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
                     startActivity(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS));
                 } catch (ActivityNotFoundException e) {
-                    Snackbar.make(mEnableServiceButton, R.string.open_settings_failed_accessibility, Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(enableServiceButton, R.string.open_settings_failed_accessibility, Snackbar.LENGTH_LONG).show();
                 }
             }
         });
 
-        mEnableFloatingButton.setOnClickListener(new View.OnClickListener() {
+        enableFloatingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
                     //Open the current default browswer App Info page
                     openSettings(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, BuildConfig.APPLICATION_ID);
                 } catch (ActivityNotFoundException ignored) {
-                    Snackbar.make(mEnableFloatingButton, R.string.open_settings_failed_overlay, Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(enableFloatingButton, R.string.open_settings_failed_overlay, Snackbar.LENGTH_LONG).show();
                 }
             }
         });
 
-        mEnableLocationButton.setOnClickListener(new View.OnClickListener() {
+        enableLocationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ActivityCompat.requestPermissions(SettingsActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
@@ -226,14 +226,14 @@ public class SettingsActivity extends AppCompatActivity {
 
         ArrayAdapter<String> unitAdapter = new ArrayAdapter<>(this, R.layout.spinner_item_text, new String[]{"mph", "km/h"});
         unitAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-        mUnitSpinner.setAdapter(unitAdapter);
-        mUnitSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        unitSpinner.setAdapter(unitAdapter);
+        unitSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (PrefUtils.getUseMetric(SettingsActivity.this) != (position == 1)) {
                     PrefUtils.setUseMetric(SettingsActivity.this, position == 1);
-                    mUnitSpinner.setDropDownVerticalOffset(
-                            Utils.convertDpToPx(SettingsActivity.this, mUnitSpinner.getSelectedItemPosition() * -48));
+                    unitSpinner.setDropDownVerticalOffset(
+                            Utils.convertDpToPx(SettingsActivity.this, unitSpinner.getSelectedItemPosition() * -48));
 
                     updateFloatingServicePrefs();
                 }
@@ -244,20 +244,20 @@ public class SettingsActivity extends AppCompatActivity {
 
             }
         });
-        mUnitSpinner.setSelection(PrefUtils.getUseMetric(this) ? 1 : 0);
-        mUnitSpinner.setDropDownVerticalOffset(Utils.convertDpToPx(this, mUnitSpinner.getSelectedItemPosition() * -48));
+        unitSpinner.setSelection(PrefUtils.getUseMetric(this) ? 1 : 0);
+        unitSpinner.setDropDownVerticalOffset(Utils.convertDpToPx(this, unitSpinner.getSelectedItemPosition() * -48));
 
         ArrayAdapter<String> styleAdapter = new ArrayAdapter<>(this, R.layout.spinner_item_text,
                 new String[]{getString(R.string.united_states), getString(R.string.international)});
         styleAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-        mStyleSpinner.setAdapter(styleAdapter);
-        mStyleSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        styleSpinner.setAdapter(styleAdapter);
+        styleSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position != PrefUtils.getSignStyle(SettingsActivity.this)) {
                     PrefUtils.setSignStyle(SettingsActivity.this, position);
-                    mStyleSpinner.setDropDownVerticalOffset(
-                            Utils.convertDpToPx(SettingsActivity.this, mStyleSpinner.getSelectedItemPosition() * -48));
+                    styleSpinner.setDropDownVerticalOffset(
+                            Utils.convertDpToPx(SettingsActivity.this, styleSpinner.getSelectedItemPosition() * -48));
 
                     updateFloatingServicePrefs();
                 }
@@ -268,8 +268,8 @@ public class SettingsActivity extends AppCompatActivity {
 
             }
         });
-        mStyleSpinner.setSelection(PrefUtils.getSignStyle(this));
-        mStyleSpinner.setDropDownVerticalOffset(Utils.convertDpToPx(this, mStyleSpinner.getSelectedItemPosition() * -48));
+        styleSpinner.setSelection(PrefUtils.getSignStyle(this));
+        styleSpinner.setDropDownVerticalOffset(Utils.convertDpToPx(this, styleSpinner.getSelectedItemPosition() * -48));
 
         toleranceView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -278,25 +278,25 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-        mShowSpeedometerSwitch.setChecked(PrefUtils.getShowSpeedometer(this));
-        ((View) mShowSpeedometerSwitch.getParent()).setOnClickListener(new View.OnClickListener() {
+        showSpeedometerSwitch.setChecked(PrefUtils.getShowSpeedometer(this));
+        ((View) showSpeedometerSwitch.getParent()).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mShowSpeedometerSwitch.setChecked(!mShowSpeedometerSwitch.isChecked());
+                showSpeedometerSwitch.setChecked(!showSpeedometerSwitch.isChecked());
 
-                PrefUtils.setShowSpeedometer(SettingsActivity.this, mShowSpeedometerSwitch.isChecked());
+                PrefUtils.setShowSpeedometer(SettingsActivity.this, showSpeedometerSwitch.isChecked());
 
                 updateFloatingServicePrefs();
             }
         });
 
-        mDebuggingSwitch.setChecked(PrefUtils.isDebuggingEnabled(this));
-        ((View) mDebuggingSwitch.getParent()).setOnClickListener(new View.OnClickListener() {
+        debuggingSwitch.setChecked(PrefUtils.isDebuggingEnabled(this));
+        ((View) debuggingSwitch.getParent()).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mDebuggingSwitch.setChecked(!mDebuggingSwitch.isChecked());
+                debuggingSwitch.setChecked(!debuggingSwitch.isChecked());
 
-                PrefUtils.setDebugging(SettingsActivity.this, mDebuggingSwitch.isChecked());
+                PrefUtils.setDebugging(SettingsActivity.this, debuggingSwitch.isChecked());
 
                 updateFloatingServicePrefs();
             }
@@ -333,9 +333,9 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void updateAutoDisplaySwitchEnabled(boolean enabled) {
-        enableDisableAllChildren(enabled, mAutoDisplayOptionsContainer);
+        enableDisableAllChildren(enabled, autoDisplayOptionsContainer);
         updateOpenAppSelectionEnabled(Utils.isAccessibilityServiceEnabled(this, AppDetectionService.class), enabled);
-        mEnabledServiceImage.setAlpha(enabled ? 1f : 0.38f);
+        enabledServiceImage.setAlpha(enabled ? 1f : 0.38f);
     }
 
     @Override
@@ -387,23 +387,23 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void updateOpenAppSelectionEnabled(boolean accessibilityServiceEnabled, boolean autoDisplayEnabled) {
-        enableDisableAllChildren(accessibilityServiceEnabled && autoDisplayEnabled, mOpenAppSelectionContainer);
+        enableDisableAllChildren(accessibilityServiceEnabled && autoDisplayEnabled, openAppSelectionContainer);
     }
 
     private void invalidateStates() {
         boolean permissionGranted =
                 ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                         == PackageManager.PERMISSION_GRANTED;
-        mEnabledLocationImage.setImageResource(permissionGranted ? R.drawable.ic_done_green_40dp : R.drawable.ic_cross_red_40dp);
-        mEnableLocationButton.setEnabled(!permissionGranted);
+        enabledLocationImage.setImageResource(permissionGranted ? R.drawable.ic_done_green_40dp : R.drawable.ic_cross_red_40dp);
+        enableLocationButton.setEnabled(!permissionGranted);
 
         @SuppressLint({"NewApi", "LocalSuppress"}) boolean overlayEnabled = Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(this);
-        mEnabledFloatingImage.setImageResource(overlayEnabled ? R.drawable.ic_done_green_40dp : R.drawable.ic_cross_red_40dp);
-        mEnableFloatingButton.setEnabled(!overlayEnabled);
+        enabledFloatingImage.setImageResource(overlayEnabled ? R.drawable.ic_done_green_40dp : R.drawable.ic_cross_red_40dp);
+        enableFloatingButton.setEnabled(!overlayEnabled);
 
         boolean serviceEnabled = Utils.isAccessibilityServiceEnabled(this, AppDetectionService.class);
-        mEnabledServiceImage.setVisibility(serviceEnabled ? View.VISIBLE : View.GONE);
-        mEnableServiceButton.setVisibility(serviceEnabled ? View.GONE : View.VISIBLE);
+        enabledServiceImage.setVisibility(serviceEnabled ? View.VISIBLE : View.GONE);
+        enableServiceButton.setVisibility(serviceEnabled ? View.GONE : View.VISIBLE);
 
         String constant = getString(PrefUtils.getUseMetric(this) ? R.string.kmph : R.string.mph,
                 String.valueOf(PrefUtils.getSpeedingConstant(this)));

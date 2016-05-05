@@ -71,8 +71,8 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="-5dp"
             android:layout_marginRight="-5dp"
-            android:textOff="@string/and"
-            android:textOn="@string/and" />
+            android:textOff="@string/plus"
+            android:textOn="@string/plus" />
 
         <ToggleButton
             android:id="@+id/button_or"

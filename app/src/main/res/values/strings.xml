@@ -77,7 +77,7 @@
     <string name="sound_alert">Sound alert</string>
     <string name="open_coverage_map_failed">Unable to open link. Please manually go to http://product.itoworld.com/map/124.</string>
     <string name="tolerance_dialog_text">Warn when speed limit exceeded by:</string>
-    <string name="and">plus</string>
+    <string name="plus">plus</string>
     <string name="or">or</string>
     <string name="kmph">%s km/h</string>
     <string name="mph">%s mph</string>
