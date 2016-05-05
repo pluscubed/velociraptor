@@ -138,7 +138,9 @@
             android:baselineAligned="false"
             android:gravity="center_vertical"
             android:orientation="horizontal"
+            android:paddingEnd="12dp"
             android:paddingLeft="16dp"
+            android:paddingRight="12dp"
             android:paddingStart="16dp"
             tools:ignore="RtlSymmetry,UseCompoundDrawables">
 
@@ -180,7 +182,9 @@
             android:baselineAligned="false"
             android:gravity="center_vertical"
             android:orientation="horizontal"
+            android:paddingEnd="12dp"
             android:paddingLeft="16dp"
+            android:paddingRight="12dp"
             android:paddingStart="16dp"
             tools:ignore="RtlSymmetry,UseCompoundDrawables">
 
