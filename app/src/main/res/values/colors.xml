@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
-    <color name="colorPrimaryA400">#3D5AFE</color>
-    <color name="colorPrimary900">#283593</color>
+    <color name="colorPrimaryA200">#536dfe</color>
+    <color name="colorPrimary800">#283593</color>
     <color name="red500">#f44336</color>
 </resources>

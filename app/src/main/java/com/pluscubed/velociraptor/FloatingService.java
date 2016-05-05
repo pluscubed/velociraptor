@@ -257,9 +257,9 @@ public class FloatingService extends Service {
         initMonitorPosition();
 
         final ArrayList<ArcProgressStackView.Model> models = new ArrayList<>();
-        models.add(new ArcProgressStackView.Model("", 0, ContextCompat.getColor(this, R.color.colorPrimary900),
-                new int[]{ContextCompat.getColor(this, R.color.colorPrimaryA400),
-                        ContextCompat.getColor(this, R.color.colorPrimaryA400),
+        models.add(new ArcProgressStackView.Model("", 0, ContextCompat.getColor(this, R.color.colorPrimary800),
+                new int[]{ContextCompat.getColor(this, R.color.colorPrimaryA200),
+                        ContextCompat.getColor(this, R.color.colorPrimaryA200),
                         ContextCompat.getColor(this, R.color.red500),
                         ContextCompat.getColor(this, R.color.red500)}));
         mArcView.setTextColor(ContextCompat.getColor(this, android.R.color.transparent));
