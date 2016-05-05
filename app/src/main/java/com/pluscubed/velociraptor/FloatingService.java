@@ -385,7 +385,7 @@ public class FloatingService extends Service {
 
             final int speed;
             int percentage;
-            if (PrefUtils.getUseMetric(FloatingService.this)) {
+            if (PrefUtils.getUseMetric(this)) {
                 speed = (int) ((metersPerSeconds * 60 * 60 / 1000) + 0.5f); //km/h
                 percentage = (int) ((float) speed / 200 * 100 + 0.5f);
             } else {
@@ -393,11 +393,20 @@ public class FloatingService extends Service {
                 percentage = (int) ((float) speed / 120 * 100 + 0.5f);
             }
 
-            int speedingLimitWarning =
-                    (int) (mLastSpeedLimit * (1 + (float) PrefUtils.getSpeedingPercent(FloatingService.this) / 100));
+            float percentToleranceFactor = 1 + (float) PrefUtils.getSpeedingPercent(this) / 100;
+            int constantTolerance = PrefUtils.getSpeedingConstant(this);
+
+            int limitAndPercentTolerance = (int) (mLastSpeedLimit * percentToleranceFactor);
+            int speedingLimitWarning;
+            if (PrefUtils.getToleranceMode(this)) {
+                speedingLimitWarning = limitAndPercentTolerance + constantTolerance;
+            } else {
+                speedingLimitWarning = Math.min(limitAndPercentTolerance, mLastSpeedLimit + constantTolerance);
+            }
+
             if (mLastSpeedLimit != -1 && speed > speedingLimitWarning) {
-                mSpeedometerText.setTextColor(ContextCompat.getColor(FloatingService.this, R.color.red500));
-                mSpeedometerUnits.setTextColor(ContextCompat.getColor(FloatingService.this, R.color.red500));
+                mSpeedometerText.setTextColor(ContextCompat.getColor(this, R.color.red500));
+                mSpeedometerUnits.setTextColor(ContextCompat.getColor(this, R.color.red500));
                 if (mSpeedingStart == -1) {
                     mSpeedingStart = System.currentTimeMillis();
                 } else if (System.currentTimeMillis() > mSpeedingStart + 2000L && PrefUtils.isBeepAlertEnabled(this)) {
@@ -405,8 +414,8 @@ public class FloatingService extends Service {
                     mSpeedingStart = Long.MAX_VALUE - 2000L;
                 }
             } else {
-                mSpeedometerText.setTextColor(ContextCompat.getColor(FloatingService.this, R.color.primary_text_default_material_light));
-                mSpeedometerUnits.setTextColor(ContextCompat.getColor(FloatingService.this, R.color.primary_text_default_material_light));
+                mSpeedometerText.setTextColor(ContextCompat.getColor(this, R.color.primary_text_default_material_light));
+                mSpeedometerUnits.setTextColor(ContextCompat.getColor(this, R.color.primary_text_default_material_light));
                 mSpeedingStart = -1;
             }
 
