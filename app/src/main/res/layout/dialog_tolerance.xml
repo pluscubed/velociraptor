@@ -31,7 +31,73 @@
 
             <View
                 android:layout_width="2dp"
-                android:layout_height="12dp"
+                android:layout_height="8dp"
+                android:layout_gravity="center"
+                android:background="#000" />
+
+            <SeekBar
+                android:id="@+id/seekbar_percent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="50" />
+
+        </FrameLayout>
+
+        <EditText
+            android:id="@+id/edittext_percent"
+            android:layout_width="48dp"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:inputType="numberSigned" />
+
+        <TextView
+            android:id="@+id/text_percent"
+            android:layout_width="36dp"
+            android:layout_height="wrap_content"
+            tools:text="%" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:paddingBottom="8dp"
+        android:paddingTop="8dp">
+
+        <ToggleButton
+            android:id="@+id/button_and"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="-5dp"
+            android:layout_marginRight="-5dp"
+            android:textOff="@string/and"
+            android:textOn="@string/and" />
+
+        <ToggleButton
+            android:id="@+id/button_or"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="-5dp"
+            android:layout_marginStart="-5dp"
+            android:textOff="@string/or"
+            android:textOn="@string/or" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical">
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="8dp"
                 android:layout_gravity="center"
                 android:background="#000" />
 
@@ -56,73 +122,6 @@
             android:layout_width="36dp"
             android:layout_height="wrap_content"
             tools:text="mph" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp">
-
-        <ToggleButton
-            android:id="@+id/button_and"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="-6dp"
-            android:layout_marginRight="-6dp"
-            android:textOff="@string/and"
-            android:textOn="@string/and" />
-
-        <ToggleButton
-            android:id="@+id/button_or"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="-6dp"
-            android:layout_marginStart="-6dp"
-            android:textOff="@string/or"
-            android:textOn="@string/or" />
-
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical">
-
-        <FrameLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-            <View
-                android:layout_width="2dp"
-                android:layout_height="12dp"
-                android:layout_gravity="center"
-                android:background="#000" />
-
-            <SeekBar
-                android:id="@+id/seekbar_percent"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:max="50" />
-
-        </FrameLayout>
-
-        <EditText
-            android:id="@+id/edittext_percent"
-            android:layout_width="48dp"
-            android:layout_height="wrap_content"
-            android:gravity="end"
-            android:inputType="numberSigned" />
-
-        <TextView
-            android:id="@+id/text_percent"
-            android:layout_width="36dp"
-            android:layout_height="wrap_content"
-            tools:text="%" />
 
     </LinearLayout>
 

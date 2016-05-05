@@ -224,8 +224,8 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-        ArrayAdapter<String> unitAdapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item,
-                new String[]{"mph", "km/h"});
+        ArrayAdapter<String> unitAdapter = new ArrayAdapter<>(this, R.layout.spinner_item_text, new String[]{"mph", "km/h"});
+        unitAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         mUnitSpinner.setAdapter(unitAdapter);
         mUnitSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -247,8 +247,9 @@ public class SettingsActivity extends AppCompatActivity {
         mUnitSpinner.setSelection(PrefUtils.getUseMetric(this) ? 1 : 0);
         mUnitSpinner.setDropDownVerticalOffset(Utils.convertDpToPx(this, mUnitSpinner.getSelectedItemPosition() * -48));
 
-        ArrayAdapter<String> styleAdapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item,
+        ArrayAdapter<String> styleAdapter = new ArrayAdapter<>(this, R.layout.spinner_item_text,
                 new String[]{getString(R.string.united_states), getString(R.string.international)});
+        styleAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         mStyleSpinner.setAdapter(styleAdapter);
         mStyleSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -276,12 +277,6 @@ public class SettingsActivity extends AppCompatActivity {
                 new ToleranceDialogFragment().show(getFragmentManager(), "dialog_tolerance");
             }
         });
-
-        String constant = getString(PrefUtils.getUseMetric(this) ? R.string.kmph : R.string.mph, String.valueOf(PrefUtils.getSpeedingConstant(this)));
-        String percent = getString(R.string.percent, String.valueOf(PrefUtils.getSpeedingPercent(this)));
-        String mode = getString(PrefUtils.getToleranceMode(this) ? R.string.and : R.string.or);
-        String overview = getString(R.string.tolerance_desc, constant, mode, percent);
-        toleranceOverview.setText(overview);
 
         mShowSpeedometerSwitch.setChecked(PrefUtils.getShowSpeedometer(this));
         ((View) mShowSpeedometerSwitch.getParent()).setOnClickListener(new View.OnClickListener() {
@@ -409,6 +404,13 @@ public class SettingsActivity extends AppCompatActivity {
         boolean serviceEnabled = Utils.isAccessibilityServiceEnabled(this, AppDetectionService.class);
         mEnabledServiceImage.setVisibility(serviceEnabled ? View.VISIBLE : View.GONE);
         mEnableServiceButton.setVisibility(serviceEnabled ? View.GONE : View.VISIBLE);
+
+        String constant = getString(PrefUtils.getUseMetric(this) ? R.string.kmph : R.string.mph,
+                String.valueOf(PrefUtils.getSpeedingConstant(this)));
+        String percent = getString(R.string.percent, String.valueOf(PrefUtils.getSpeedingPercent(this)));
+        String mode = PrefUtils.getToleranceMode(this) ? "+" : getString(R.string.or);
+        String overview = getString(R.string.tolerance_desc, percent, mode, constant);
+        toleranceOverview.setText(overview);
 
         updateAutoDisplaySwitchEnabled(PrefUtils.isAutoDisplayEnabled(this));
 
