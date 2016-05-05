@@ -13,6 +13,7 @@ import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 
 import com.pluscubed.velociraptor.BuildConfig;
+import com.pluscubed.velociraptor.R;
 
 public abstract class Utils {
 
@@ -61,5 +62,9 @@ public abstract class Utils {
     public static void playBeep() {
         ToneGenerator toneGen1 = new ToneGenerator(AudioManager.STREAM_MUSIC, 100);
         toneGen1.startTone(ToneGenerator.TONE_PROP_BEEP2, 500);
+    }
+
+    public static String getUnitText(Context context) {
+        return PrefUtils.getUseMetric(context) ? context.getString(R.string.kmph, "") : context.getString(R.string.mph, "").trim();
     }
 }

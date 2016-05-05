@@ -12,7 +12,9 @@ public abstract class PrefUtils {
 
     public static final String PREF_FLOATING_LOCATION = "pref_floating_location";
     public static final String PREF_METRIC = "pref_metric";
-    public static final String PREF_OVERSPEED = "pref_overspeed";
+    public static final String PREF_TOLERANCE_PERCENT = "pref_overspeed";
+    public static final String PREF_TOLERANCE_CONSTANT = "pref_tolerance_constant";
+    public static final String PREF_TOLERANCE_MODE = "pref_tolerance_mode";
     public static final String PREF_SIGN_STYLE = "pref_international";
     public static final String PREF_SPEEDOMETER = "pref_speedometer";
     public static final String PREF_AUTO_DISPLAY = "pref_auto_display";
@@ -75,12 +77,28 @@ public abstract class PrefUtils {
         edit(context).putInt(PREF_SIGN_STYLE, style).apply();
     }
 
-    public static int getOverspeedPercent(Context context) {
-        return getSharedPreferences(context).getInt(PREF_OVERSPEED, 0);
+    public static int getSpeedingPercent(Context context) {
+        return getSharedPreferences(context).getInt(PREF_TOLERANCE_PERCENT, 0);
     }
 
-    public static void setOverspeedPercent(Context context, int amount) {
-        edit(context).putInt(PREF_OVERSPEED, amount).apply();
+    public static void setSpeedingPercent(Context context, int amount) {
+        edit(context).putInt(PREF_TOLERANCE_PERCENT, amount).apply();
+    }
+
+    public static int getSpeedingConstant(Context context) {
+        return getSharedPreferences(context).getInt(PREF_TOLERANCE_CONSTANT, 0);
+    }
+
+    public static void setSpeedingConstant(Context context, int amount) {
+        edit(context).putInt(PREF_TOLERANCE_CONSTANT, amount).apply();
+    }
+
+    public static boolean getToleranceMode(Context context) {
+        return getSharedPreferences(context).getBoolean(PREF_TOLERANCE_MODE, true);
+    }
+
+    public static void setToleranceMode(Context context, boolean and) {
+        edit(context).putBoolean(PREF_TOLERANCE_MODE, and).apply();
     }
 
     public static boolean getShowSpeedometer(Context context) {

@@ -394,7 +394,7 @@ public class FloatingService extends Service {
             }
 
             int speedingLimitWarning =
-                    (int) (mLastSpeedLimit * (1 + (float) PrefUtils.getOverspeedPercent(FloatingService.this) / 100));
+                    (int) (mLastSpeedLimit * (1 + (float) PrefUtils.getSpeedingPercent(FloatingService.this) / 100));
             if (mLastSpeedLimit != -1 && speed > speedingLimitWarning) {
                 mSpeedometerText.setTextColor(ContextCompat.getColor(FloatingService.this, R.color.red500));
                 mSpeedometerUnits.setTextColor(ContextCompat.getColor(FloatingService.this, R.color.red500));
@@ -443,11 +443,7 @@ public class FloatingService extends Service {
 
     private void updatePrefUnits() {
         if (mSpeedometerUnits != null) {
-            if (PrefUtils.getUseMetric(FloatingService.this)) {
-                mSpeedometerUnits.setText("km/h");
-            } else {
-                mSpeedometerUnits.setText("mph");
-            }
+            mSpeedometerUnits.setText(Utils.getUnitText(this));
         }
     }
 

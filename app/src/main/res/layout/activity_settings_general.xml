@@ -220,16 +220,15 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/linear_tolerance"
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:background="?selectableItemBackground"
             android:baselineAligned="false"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingEnd="12dp"
             android:paddingLeft="16dp"
-            android:paddingRight="12dp"
-            android:paddingStart="16dp"
+            android:paddingRight="16dp"
             tools:ignore="UseCompoundDrawables">
 
             <ImageView
@@ -251,15 +250,14 @@
                 android:textSize="16sp"
                 tools:ignore="RtlSymmetry" />
 
-            <Space
-                android:layout_width="8dp"
-                android:layout_height="match_parent" />
-
-            <Spinner
-                android:id="@+id/spinner_overspeed"
+            <TextView
+                android:id="@+id/text_overview_tolerance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:listitem="@layout/support_simple_spinner_dropdown_item" />
+                android:textSize="16sp"
+                tools:ignore="RtlSymmetry"
+                tools:text="25mph + 5%" />
+
 
         </LinearLayout>
     </LinearLayout>
