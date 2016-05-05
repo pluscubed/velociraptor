@@ -2,13 +2,61 @@
 <resources>
     <string name="app_name">Velociraptor</string>
     <string name="notif_content">Kosketa avataksesi asetukset</string>
-    <string name="notif_title">Velociraptorin valvonta käynnissä</string>
+    <string name="notif_title">Velociraptorin näyttö käynnissä</string>
     <string name="dialog_draw_overlay">Salli käyttöoikeus \"piirrä muihin sovelluksiin\", jotta kelluvat elementit näkyvät Android 6.0+:ssa</string>
     <string name="open_settings">Avaa Asetukset-sivu</string>
     <string name="accessibility_service_description">Helppokäyttöisyyspalvelun tulee olla päällä, jotta etualalla oleva sovellus tunnistetaan ja nopeusrajoitus näytetään.</string>
     <string name="enable_accessibility_service">Kytke helppokäyttöisyyspalvelu päälle</string>
     <string name="enable_accessibility_service_desc">Salli Velociraptorin tunnistaa tämänhetkinen sovellus kytkemällä sen helppokäyttöisyyspalvelu päälle</string>
-    <string name="enable_floating_desc">Salli käyttöoikeus \"piirrä muihin sovelluksiin\", jotta päällys näytetään</string>
+    <string name="enable_floating_desc">Salli käyttöoikeus \"piirrä muihin sovelluksiin\", jotta tiedot näkyvät</string>
     <string name="open_settings_page">Avaa asetussivu</string>
     <string name="grant_permission">Salli käyttöoikeus</string>
+    <string name="enable_location_desc">Salli sijainnin käyttöoikeus, jotta sijaintisi nopeusrajoitus voidaan selvittää</string>
+    <string name="speed_unit">Nopeusyksiköt:</string>
+    <string name="style">Tyyli:</string>
+    <string name="united_states">Yhdysvallat</string>
+    <string name="international">Kansainvälinen</string>
+    <string name="open_settings_failed_overlay">Asetuksia ei saatu avattua. Kytke Velociraptorille \"piirrä muihin sovelluksiin\" asetus päälle käsin.</string>
+    <string name="open_settings_failed_accessibility">Asetuksia ei saatu avattua. Kytke Velociraptorin helppokäyttöisyyspalvelu päälle käsin.</string>
+    <string name="permissions_warning">Velociraptorilla ei ole tarvittavia oikeuksia. Avaa sovellus salliaksesi ne.</string>
+    <string name="location_settings_warning">GPS ei ole päällä. Kytke se päälle, jotta Velociraptorin nopeusrajoitusnäyttö toimii.</string>
+    <string name="network_warning">Verkkoyhteyttä ei ole. Velociraptor tarvitsee verkkoyhteyden nopeusrajoituksen noutamiseksi.</string>
+    <string name="speeding_amount">Ylinopeustoleranssi:</string>
+    <string name="show_speedometer">Näytä nopeusmittari</string>
+    <string name="about_dialog_title">Velociraptor v%s</string>
+    <string name="dismiss">Hylkää</string>
+    <string name="about_body"><![CDATA[
+        <b>Velociraptor</b> on OpenStreetMapin ja HERE Mapsin nopeusrajoitusdataa käyttävä nopeusmittarilla ja varoitusominaisuuksilla varustettu kelluva nopeusrajoitusnäyttö.
+        <br/><br/>
+
+        Kehittänyt <b>Daniel Ciao</b><br/>
+
+        <a href=\'http://pluscubed.com\'>Kotisivu</a>&nbsp;&nbsp;
+        <a href=\'mailto:pluscubed@gmail.com\'>Sähköposti</a>&nbsp;&nbsp;
+        <a href=\'https://twitter.com/plusCubed\'>Twitter</a>&nbsp;&nbsp;
+        <a href=\'https://google.com/+DanielCiao\'>Google+</a>&nbsp;&nbsp;
+        <a href=\'https://github.com/pluscubed\'>GitHub</a>&nbsp;&nbsp;
+        <a href=\'https://www.linkedin.com/in/dciao\'>LinkedIn</a><br/><br/>
+
+        <a href=\'https://play.google.com/store/apps/details?id=com.pluscubed.velociraptor\'>Arvioi Play-kaupassa!</a><br/><br/>
+
+        <a href=\'https://github.com/pluscubed/velociraptor\'>GitHub</a> - lähdekoodi, ongelmat, ominaisuuspyynnöt<br/>
+        <a href=\'http://pluscubed.oneskyapp.com/collaboration/project/64120\'>OneSky</a> - käännä sovellus kielellesi
+    ]]></string>
+    <string name="about">Tietoja</string>
+    <string name="wrong_speed_limit">Väärä tai puuttuva nopeusrajoitus?</string>
+    <string name="wrong_speed_limit_desc">Mene OpenStreetMappiin tietokoneellasi. Kosketa jakaaksesi linkin (https://openstreetmap.org)</string>
+    <string name="configure">Konfiguroi</string>
+    <string name="automatically_show">Näytä/piilota määrätyissä sovelluksissa</string>
+    <string name="select_overlay_usage">Aktivointi</string>
+    <string name="enable">Kytke päälle</string>
+    <string name="show_in_apps">Näytä näissä sovelluksissa:</string>
+    <string name="persistent_notification_controls">Näytä ilmoituskontrollit</string>
+    <string name="done">Tehty</string>
+    <string name="select_apps">Valitse sovellukset</string>
+    <string name="show_map_apps">Näytä karttasovellukset</string>
+    <string name="show">Näytä</string>
+    <string name="hide">Piilota</string>
+    <string name="controls_notif_title">Velociraptorin kontrollit</string>
+    <string name="controls_notif_desc">Näytä tai piilota nopeusrajoitusnäyttö</string>
 </resources>

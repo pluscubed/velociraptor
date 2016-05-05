@@ -47,7 +47,7 @@ Développé par <b>Daniel Ciao</b><br/>
     <string name="automatically_show">Afficher/masquer dans applications spécifiées</string>
     <string name="select_overlay_usage">Activation</string>
     <string name="enable">Activer</string>
-    <string name="show_in_apps">Afficher dans ces applications</string>
+    <string name="show_in_apps">Afficher dans ces applications :</string>
     <string name="persistent_notification_controls">Afficher les contrôles de notification</string>
     <string name="done">OK</string>
     <string name="select_apps">Sélectionner les applications</string>
