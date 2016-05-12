@@ -5,28 +5,21 @@ import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 
-@JsonPropertyOrder({
-        "MapVersion",
-        "ModuleVersion",
-        "InterfaceVersion",
-        "Timestamp"
-})
 public class MetaInfo {
 
-    @JsonProperty("MapVersion")
+    @JsonProperty("mapVersion")
     private String MapVersion;
-    @JsonProperty("ModuleVersion")
+    @JsonProperty("moduleVersion")
     private String ModuleVersion;
-    @JsonProperty("InterfaceVersion")
+    @JsonProperty("interfaceVersion")
     private String InterfaceVersion;
-    @JsonProperty("Timestamp")
+    @JsonProperty("timestamp")
     private String Timestamp;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
@@ -34,7 +27,7 @@ public class MetaInfo {
     /**
      * @return The MapVersion
      */
-    @JsonProperty("MapVersion")
+    @JsonProperty("mapVersion")
     public String getMapVersion() {
         return MapVersion;
     }
@@ -42,7 +35,7 @@ public class MetaInfo {
     /**
      * @param MapVersion The MapVersion
      */
-    @JsonProperty("MapVersion")
+    @JsonProperty("mapVersion")
     public void setMapVersion(String MapVersion) {
         this.MapVersion = MapVersion;
     }
@@ -50,7 +43,7 @@ public class MetaInfo {
     /**
      * @return The ModuleVersion
      */
-    @JsonProperty("ModuleVersion")
+    @JsonProperty("moduleVersion")
     public String getModuleVersion() {
         return ModuleVersion;
     }
@@ -58,7 +51,7 @@ public class MetaInfo {
     /**
      * @param ModuleVersion The ModuleVersion
      */
-    @JsonProperty("ModuleVersion")
+    @JsonProperty("moduleVersion")
     public void setModuleVersion(String ModuleVersion) {
         this.ModuleVersion = ModuleVersion;
     }
@@ -66,7 +59,7 @@ public class MetaInfo {
     /**
      * @return The InterfaceVersion
      */
-    @JsonProperty("InterfaceVersion")
+    @JsonProperty("interfaceVersion")
     public String getInterfaceVersion() {
         return InterfaceVersion;
     }
@@ -74,7 +67,7 @@ public class MetaInfo {
     /**
      * @param InterfaceVersion The InterfaceVersion
      */
-    @JsonProperty("InterfaceVersion")
+    @JsonProperty("interfaceVersion")
     public void setInterfaceVersion(String InterfaceVersion) {
         this.InterfaceVersion = InterfaceVersion;
     }
@@ -82,7 +75,7 @@ public class MetaInfo {
     /**
      * @return The Timestamp
      */
-    @JsonProperty("Timestamp")
+    @JsonProperty("timestamp")
     public String getTimestamp() {
         return Timestamp;
     }
@@ -90,7 +83,7 @@ public class MetaInfo {
     /**
      * @param Timestamp The Timestamp
      */
-    @JsonProperty("Timestamp")
+    @JsonProperty("timestamp")
     public void setTimestamp(String Timestamp) {
         this.Timestamp = Timestamp;
     }

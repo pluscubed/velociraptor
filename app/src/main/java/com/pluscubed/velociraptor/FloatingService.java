@@ -29,7 +29,7 @@ import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v4.view.animation.LinearOutSlowInInterpolator;
 import android.support.v7.app.NotificationCompat;
 import android.support.v7.view.ContextThemeWrapper;
-import android.util.Pair;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -48,8 +48,6 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.pluscubed.velociraptor.osmapi.OsmApiEndpoint;
-import com.pluscubed.velociraptor.osmapi.Tags;
 import com.pluscubed.velociraptor.utils.PrefUtils;
 import com.pluscubed.velociraptor.utils.Utils;
 
@@ -171,7 +169,7 @@ public class FloatingService extends Service {
                     @SuppressWarnings("MissingPermission")
                     public void onConnected(@Nullable Bundle bundle) {
                         LocationRequest locationRequest = new LocationRequest();
-                        locationRequest.setInterval(500);
+                        locationRequest.setInterval(1000);
                         locationRequest.setFastestInterval(0);
                         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
                         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, locationRequest, mLocationListener);
@@ -310,21 +308,17 @@ public class FloatingService extends Service {
             mLastRequestTime = System.currentTimeMillis();
             mLocationSubscription = mSpeedLimitApi.getSpeedLimit(location)
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new SingleSubscriber<Pair<Integer, Tags>>() {
+                    .subscribe(new SingleSubscriber<SpeedLimitApi.ApiResponse>() {
                         @SuppressLint("SetTextI18n")
                         @Override
-                        public void onSuccess(Pair<Integer, Tags> speedLimitAndTags) {
+                        public void onSuccess(SpeedLimitApi.ApiResponse apiResponse) {
                             mLastLimitLocation = location;
 
-                            if (speedLimitAndTags.first != null) {
-                                mLastSpeedLimit = speedLimitAndTags.first;
-                            } else {
-                                mLastSpeedLimit = -1;
-                            }
+                            mLastSpeedLimit = apiResponse.speedLimit;
 
                             updateLimitText(true);
 
-                            updateDebuggingText(location, speedLimitAndTags, null);
+                            updateDebuggingText(location, apiResponse, null);
 
                             mLocationSubscription = null;
                         }
@@ -341,28 +335,23 @@ public class FloatingService extends Service {
         }
     }
 
-    private void updateDebuggingText(Location location, Pair<Integer, Tags> speedLimitAndTags, Throwable error) {
-        mDebuggingText.setText("Location: " + location);
+    private void updateDebuggingText(Location location, SpeedLimitApi.ApiResponse apiResponse, Throwable error) {
+        String text = "Location: " + location +
+                "\nEndpoints:\n" + mSpeedLimitApi.getApiInformation();
 
-        mDebuggingText.append("\nEndpoints:\n");
-        synchronized (mSpeedLimitApi.getOsmOverpassApis()) {
-            for (OsmApiEndpoint endpoint : mSpeedLimitApi.getOsmOverpassApis()) {
-                mDebuggingText.append(endpoint.toString() + "\n");
-            }
-        }
-
-        if (error == null && speedLimitAndTags != null) {
-            if (speedLimitAndTags.second != null) {
-                Tags tags = speedLimitAndTags.second;
-                mDebuggingRequestInfo = ("Name: " + tags.getName() + "\nRef: " + tags.getRef());
+        if (error == null && apiResponse != null) {
+            if (apiResponse.roadNames != null) {
+                mDebuggingRequestInfo = ("Name(s): " + TextUtils.join(", ", apiResponse.roadNames));
             } else {
                 mDebuggingRequestInfo = ("Success, no road data");
             }
+            mDebuggingRequestInfo += "\nHERE Maps: " + apiResponse.useHere;
         } else if (error != null) {
             mDebuggingRequestInfo = ("Last Error: " + error);
         }
 
-        mDebuggingText.append(mDebuggingRequestInfo);
+        text += mDebuggingRequestInfo;
+        mDebuggingText.setText(text);
     }
 
     private void updateLimitText(boolean connected) {
@@ -386,11 +375,11 @@ public class FloatingService extends Service {
             final int speed;
             int percentage;
             if (PrefUtils.getUseMetric(this)) {
-                speed = (int) ((metersPerSeconds * 60 * 60 / 1000) + 0.5f); //km/h
-                percentage = (int) ((float) speed / 200 * 100 + 0.5f);
+                speed = (int) Math.round((double) metersPerSeconds * 60 * 60 / 1000); //km/h
+                percentage = Math.round((float) speed / 200 * 100);
             } else {
-                speed = (int) ((metersPerSeconds * 60 * 60 / 1000 / 1.609344) + 0.5f); //mph
-                percentage = (int) ((float) speed / 120 * 100 + 0.5f);
+                speed = (int) Math.round((double) metersPerSeconds * 60 * 60 / 1000 / 1.609344); //mph
+                percentage = Math.round((float) speed / 120 * 100);
             }
 
             float percentToleranceFactor = 1 + (float) PrefUtils.getSpeedingPercent(this) / 100;
@@ -423,7 +412,7 @@ public class FloatingService extends Service {
                 mSpeedometerText.setText(String.valueOf(speed));
 
                 if (mLastSpeedLimit != -1) {
-                    percentage = (int) ((float) speed / speedingLimitWarning * 100 + 0.5f);
+                    percentage = Math.round((float) speed / speedingLimitWarning * 100);
                 }
 
                 mArcView.getModels().get(0).setProgress(percentage);

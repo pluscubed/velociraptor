@@ -5,19 +5,15 @@ import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 
-@JsonPropertyOrder({
-        "Response"
-})
 public class LinkInfo {
 
-    @JsonProperty("Response")
+    @JsonProperty("response")
     private Response Response;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<>();
@@ -25,7 +21,7 @@ public class LinkInfo {
     /**
      * @return The Response
      */
-    @JsonProperty("Response")
+    @JsonProperty("response")
     public Response getResponse() {
         return Response;
     }
@@ -33,7 +29,7 @@ public class LinkInfo {
     /**
      * @param Response The Response
      */
-    @JsonProperty("Response")
+    @JsonProperty("response")
     public void setResponse(Response Response) {
         this.Response = Response;
     }

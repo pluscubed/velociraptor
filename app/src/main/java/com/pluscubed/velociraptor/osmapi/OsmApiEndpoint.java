@@ -4,9 +4,6 @@ import android.support.annotation.NonNull;
 
 import com.pluscubed.velociraptor.utils.Utils;
 
-import java.text.DateFormat;
-import java.util.Date;
-
 public class OsmApiEndpoint implements Comparable<OsmApiEndpoint> {
     //Wait 1 minute before trying a slow/errored endpoint again.
     public long timeTakenTimestamp;
@@ -37,7 +34,7 @@ public class OsmApiEndpoint implements Comparable<OsmApiEndpoint> {
         }
 
         return title + " - " + time +
-                ", timestamp " + DateFormat.getTimeInstance().format(new Date(timeTakenTimestamp));
+                ", timestamp " + timeTakenTimestamp;
     }
 
     @Override

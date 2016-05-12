@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,15 +13,11 @@ import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 
-@JsonPropertyOrder({
-        "MetaInfo",
-        "Link"
-})
 public class Response {
 
-    @JsonProperty("MetaInfo")
+    @JsonProperty("metaInfo")
     private MetaInfo MetaInfo;
-    @JsonProperty("Link")
+    @JsonProperty("link")
     private List<Link> Link = new ArrayList<>();
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<>();
@@ -30,7 +25,7 @@ public class Response {
     /**
      * @return The MetaInfo
      */
-    @JsonProperty("MetaInfo")
+    @JsonProperty("metaInfo")
     public MetaInfo getMetaInfo() {
         return MetaInfo;
     }
@@ -38,7 +33,7 @@ public class Response {
     /**
      * @param MetaInfo The MetaInfo
      */
-    @JsonProperty("MetaInfo")
+    @JsonProperty("metaInfo")
     public void setMetaInfo(MetaInfo MetaInfo) {
         this.MetaInfo = MetaInfo;
     }
@@ -46,7 +41,7 @@ public class Response {
     /**
      * @return The Link
      */
-    @JsonProperty("Link")
+    @JsonProperty("link")
     public List<Link> getLink() {
         return Link;
     }
@@ -54,7 +49,7 @@ public class Response {
     /**
      * @param Link The Link
      */
-    @JsonProperty("Link")
+    @JsonProperty("link")
     public void setLink(List<Link> Link) {
         this.Link = Link;
     }

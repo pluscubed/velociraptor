@@ -3,7 +3,6 @@ package com.pluscubed.velociraptor;
 import android.content.Context;
 import android.location.Location;
 import android.support.annotation.NonNull;
-import android.util.Pair;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
@@ -32,6 +31,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.jackson.JacksonConverterFactory;
+import rx.Observable;
 import rx.Single;
 import rx.functions.Action0;
 import rx.functions.Action1;
@@ -41,7 +41,7 @@ import rx.schedulers.Schedulers;
 
 public class SpeedLimitApi {
 
-    private static final String HERE_ROUTING_API = "http://route.st.nlp.nokia.com/routing/6.2/";
+    private static final String HERE_ROUTING_API = "https://route.api.here.com/routing/7.2/";
     private static final String[] PUBLIC_OVERPASS_APIS = new String[]{
             "http://api.openstreetmap.fr/oapi/",
             "http://overpass.osm.rambler.ru/cgi/",
@@ -53,7 +53,8 @@ public class SpeedLimitApi {
     private HereService mHereService;
     private OsmApiSelectionInterceptor mOsmApiSelectionInterceptor;
 
-    private Tags mLastTags;
+    private int mHereTimeTaken;
+    private String[] mLastOsmRoadNames;
 
     public SpeedLimitApi(Context context) {
         mContext = context;
@@ -82,7 +83,9 @@ public class SpeedLimitApi {
             builder.addInterceptor(loggingInterceptor);
         }
         OkHttpClient client = builder.build();
-        Retrofit hereRest = buildRetrofit(client, HERE_ROUTING_API);
+
+        OkHttpClient hereClient = client.newBuilder().addInterceptor(new HereTimeTakenInterceptor()).build();
+        Retrofit hereRest = buildRetrofit(hereClient, HERE_ROUTING_API);
         mHereService = hereRest.create(HereService.class);
 
         mOsmApiSelectionInterceptor = new OsmApiSelectionInterceptor();
@@ -93,12 +96,20 @@ public class SpeedLimitApi {
         mOsmService = osmRest.create(OsmService.class);
     }
 
-    public List<OsmApiEndpoint> getOsmOverpassApis() {
-        return mOsmOverpassApis;
+    public String getApiInformation() {
+        String text = "";
+        synchronized (mOsmOverpassApis) {
+            for (OsmApiEndpoint endpoint : mOsmOverpassApis) {
+                text += (endpoint.toString() + "\n");
+            }
+        }
+        text += "HERE - " + mHereTimeTaken + "ms\n";
+        return text;
     }
 
-    public Single<Pair<Integer, Tags>> getSpeedLimit(Location location) {
-        return getOsmSpeedLimit(location);
+    public Single<ApiResponse> getSpeedLimit(Location location) {
+        return getOsmSpeedLimit(location)
+                .switchIfEmpty(getHereSpeedLimit(location).toObservable()).toSingle();
     }
 
     private String getOsmQuery(Location location) {
@@ -120,7 +131,7 @@ public class SpeedLimitApi {
                 .build();
     }
 
-    private Single<Pair<Integer, Tags>> getOsmSpeedLimit(final Location location) {
+    private Observable<ApiResponse> getOsmSpeedLimit(final Location location) {
         final List<OsmApiEndpoint> endpoints = new ArrayList<>(mOsmOverpassApis);
         mOsmApiSelectionInterceptor.setApi(endpoints.get(0));
 
@@ -162,24 +173,31 @@ public class SpeedLimitApi {
                         }
                     }
                 })
-                .flatMap(new Func1<OsmResponse, Single<Pair<Integer, Tags>>>() {
+                .flatMapObservable(new Func1<OsmResponse, Observable<ApiResponse>>() {
                     @Override
-                    public Single<Pair<Integer, Tags>> call(OsmResponse osmApi) {
+                    public Observable<ApiResponse> call(OsmResponse osmApi) {
                         if (osmApi == null) {
-                            return Single.just(new Pair<>((Integer) null, (Tags) null));
+                            return Observable.error(new Exception("OSM null response"));
                         }
+
+                        ApiResponse response = new ApiResponse();
+                        response.useHere = false;
 
                         boolean useMetric = PrefUtils.getUseMetric(mContext);
 
                         List<Element> elements = osmApi.getElements();
                         if (!elements.isEmpty()) {
                             Element element = null;
+                            Element fallback = null;
 
-                            if (mLastTags != null) {
+                            if (mLastOsmRoadNames != null) {
                                 for (Element newElement : elements) {
                                     Tags newTags = newElement.getTags();
-                                    if (mLastTags.getName() != null && mLastTags.getName().equals(newTags.getName()) ||
-                                            mLastTags.getRef() != null && mLastTags.getRef().equals(newTags.getRef())) {
+                                    if (newTags.getMaxspeed() != null) {
+                                        fallback = newElement;
+                                    }
+                                    if (mLastOsmRoadNames[0] != null && mLastOsmRoadNames[0].equals(newTags.getRef()) ||
+                                            mLastOsmRoadNames[1] != null && mLastOsmRoadNames[1].equals(newTags.getName())) {
                                         element = newElement;
                                         break;
                                     }
@@ -187,41 +205,33 @@ public class SpeedLimitApi {
                             }
 
                             if (element == null) {
-                                for (Element newElement : elements) {
-                                    Tags newTags = newElement.getTags();
-                                    if (newTags.getMaxspeed() != null) {
-                                        element = newElement;
-                                    }
-                                }
-                            }
-
-                            if (element == null) {
-                                element = elements.get(0);
+                                element = fallback != null ? fallback : elements.get(0);
                             }
 
                             Tags tags = element.getTags();
-                            mLastTags = tags;
+                            response.roadNames = new String[]{tags.getRef(), tags.getName()};
+                            mLastOsmRoadNames = response.roadNames;
                             String maxspeed = tags.getMaxspeed();
                             if (maxspeed != null) {
                                 if (maxspeed.matches("^-?\\d+$")) {
                                     //is integer -> km/h
-                                    Integer limit = Integer.valueOf(maxspeed);
+                                    response.speedLimit = Integer.valueOf(maxspeed);
                                     if (!useMetric) {
-                                        limit = (int) (limit / 1.609344 + 0.5d);
+                                        response.speedLimit = (int) (response.speedLimit / 1.609344 + 0.5d);
                                     }
-                                    return Single.just(new Pair<>(limit, tags));
                                 } else if (maxspeed.contains("mph")) {
                                     String[] split = maxspeed.split(" ");
-                                    Integer limit = Integer.valueOf(split[0]);
+                                    response.speedLimit = Integer.valueOf(split[0]);
                                     if (useMetric) {
-                                        limit = (int) (limit * 1.609344 + 0.5d);
+                                        response.speedLimit = (int) (response.speedLimit * 1.609344 + 0.5d);
                                     }
-                                    return Single.just(new Pair<>(limit, tags));
+                                }
+                                if (response.speedLimit != -1) {
+                                    return Observable.just(response);
                                 }
                             }
-                            return Single.just(new Pair<>((Integer) null, tags));
                         }
-                        return Single.just(new Pair<>((Integer) null, (Tags) null));
+                        return Observable.empty();
                     }
                 });
     }
@@ -232,31 +242,57 @@ public class SpeedLimitApi {
                     .putCustomAttribute("Server", endpoint.baseUrl));
     }
 
-    private Single<Integer> getHereSpeedLimit(final Location location) {
+    private Single<ApiResponse> getHereSpeedLimit(final Location location) {
         final String query = location.getLatitude() + "," + location.getLongitude();
         return mHereService.getLinkInfo(query, mContext.getString(R.string.here_app_id), mContext.getString(R.string.here_app_code))
                 .subscribeOn(Schedulers.io())
-                .doOnSuccess(new Action1<LinkInfo>() {
+                .doOnSubscribe(new Action0() {
                     @Override
-                    public void call(LinkInfo linkInfo) {
-                        if (linkInfo != null && !BuildConfig.DEBUG)
+                    public void call() {
+                        if (!BuildConfig.DEBUG)
                             Answers.getInstance().logCustom(new CustomEvent("HERE Request"));
                     }
                 })
-                .map(new Func1<LinkInfo, Integer>() {
+                .map(new Func1<LinkInfo, ApiResponse>() {
                     @Override
-                    public Integer call(LinkInfo linkInfo) {
+                    public ApiResponse call(LinkInfo linkInfo) {
+                        ApiResponse response = new ApiResponse();
+                        response.useHere = true;
                         if (linkInfo != null) {
                             Link link = linkInfo.getResponse().getLink().get(0);
-                            Double speedLimit = link.getSpeedLimit();
-                            if (speedLimit != null) {
+                            if (link.getAddress() != null) {
+                                response.roadNames = new String[]{link.getAddress().getLabel(),
+                                        link.getAddress().getStreet()};
+                            }
+                            if (link.getSpeedLimit() != null && link.getSpeedLimit() != 0) {
                                 double factor = PrefUtils.getUseMetric(mContext) ? 3.6 : 2.23;
-                                return (int) (speedLimit * factor + 0.5d);
+                                response.speedLimit = (int) (link.getSpeedLimit() * factor + 0.5d);
                             }
                         }
-                        return null;
+                        return response;
                     }
                 });
+    }
+
+    class ApiResponse {
+        boolean useHere;
+        //-1 if DNE
+        int speedLimit = -1;
+        String[] roadNames;
+    }
+
+    final class HereTimeTakenInterceptor implements Interceptor {
+
+        @Override
+        public Response intercept(Chain chain) throws IOException {
+            Request request = chain.request();
+            long start = System.currentTimeMillis();
+            try {
+                return chain.proceed(request);
+            } finally {
+                mHereTimeTaken = (int) (System.currentTimeMillis() - start);
+            }
+        }
     }
 
     final class OsmApiSelectionInterceptor implements Interceptor {

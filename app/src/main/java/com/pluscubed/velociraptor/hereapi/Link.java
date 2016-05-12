@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,23 +13,15 @@ import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 
-@JsonPropertyOrder({
-        "_type",
-        "LinkId",
-        "Shape",
-        "SpeedLimit",
-        "DynamicSpeedInfo",
-        "Address"
-})
 public class Link {
 
     @JsonProperty("_type")
     private String Type;
-    @JsonProperty("LinkId")
+    @JsonProperty("linkId")
     private String LinkId;
-    @JsonProperty("Shape")
-    private List<String> Shape = new ArrayList<String>();
-    @JsonProperty("SpeedLimit")
+    @JsonProperty("shape")
+    private List<String> Shape = new ArrayList<>();
+    @JsonProperty("speedLimit")
     private Double SpeedLimit;
     @JsonProperty("DynamicSpeedInfo")
     private DynamicSpeedInfo DynamicSpeedInfo;
@@ -58,7 +49,7 @@ public class Link {
     /**
      * @return The LinkId
      */
-    @JsonProperty("LinkId")
+    @JsonProperty("linkId")
     public String getLinkId() {
         return LinkId;
     }
@@ -66,7 +57,7 @@ public class Link {
     /**
      * @param LinkId The LinkId
      */
-    @JsonProperty("LinkId")
+    @JsonProperty("linkId")
     public void setLinkId(String LinkId) {
         this.LinkId = LinkId;
     }
@@ -74,7 +65,7 @@ public class Link {
     /**
      * @return The Shape
      */
-    @JsonProperty("Shape")
+    @JsonProperty("shape")
     public List<String> getShape() {
         return Shape;
     }
@@ -82,7 +73,7 @@ public class Link {
     /**
      * @param Shape The Shape
      */
-    @JsonProperty("Shape")
+    @JsonProperty("shape")
     public void setShape(List<String> Shape) {
         this.Shape = Shape;
     }
@@ -90,7 +81,7 @@ public class Link {
     /**
      * @return The SpeedLimit
      */
-    @JsonProperty("SpeedLimit")
+    @JsonProperty("speedLimit")
     public Double getSpeedLimit() {
         return SpeedLimit;
     }
@@ -98,7 +89,7 @@ public class Link {
     /**
      * @param SpeedLimit The SpeedLimit
      */
-    @JsonProperty("SpeedLimit")
+    @JsonProperty("speedLimit")
     public void setSpeedLimit(Double SpeedLimit) {
         this.SpeedLimit = SpeedLimit;
     }
