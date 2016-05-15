@@ -12,7 +12,7 @@
     <string name="open_settings_page">افتح صفحة الاعدادات</string>
     <string name="grant_permission">منح الإذن</string>
     <string name="enable_location_desc">لتحديد الحد الأقصى للسرعة في موقعك، يرجى منح اذن  تحديد الموقع</string>
-    <string name="speed_unit">وحدات السرعة:</string>
+    <string name="speed_unit">وحدات السرعة</string>
     <string name="style">نمط:</string>
     <string name="united_states">الولايات المتحدة الأمريكية</string>
     <string name="international">دولي</string>
@@ -21,7 +21,7 @@
     <string name="permissions_warning">لا يتملك فيلوسيرابتور الأذونات الكافية. يرجى فتح التطبيق لمنحهم.</string>
     <string name="location_settings_warning">لم يتم تشغيل نظام تحديد المواقع على. يرجى التفعيل ليتمكن  فيلوسيرابتور من رصد الحد الأقصى للسرعة.</string>
     <string name="network_warning">أنت غير متصل بالشبكة. فيلوسيرابتور يتطلب الاتصال بالإنترنت لجلب الحد الأقصى للسرعة.</string>
-    <string name="speeding_amount">سماحية التسارع:</string>
+    <string name="speeding_amount">سماحية التسارع</string>
     <string name="show_speedometer">اظهار مقياس السرعة</string>
     <string name="about_dialog_title">فيلوسيرابتور v%s</string>
     <string name="dismiss">صرف</string>
@@ -63,8 +63,18 @@
     <string name="advanced">متقدم</string>
     <string name="changelog">سجل التحديثات</string>
     <string name="help_edit">ساعد في تعديل بيانات السرعة القصوى</string>
-    <string name="check_coverage_desc">إذا كانت الإجابة بنعم ولا يظهر الحد الأقصى للسرعة، قد يكون هناك خلل. استخدم قم بتفعيل المدقق (debugging stats option) وزر التعليقات بالأعلى</string>
+    <string name="check_coverage_desc">إذا كانت الإجابة بنعم ولا يظهر الحد الأقصى للسرعة، قد يكون هناك خلل. قم بتفعيل المدقق (debugging stats option) وزر التعليقات بالأعلى</string>
     <string name="check_coverage">اضغط لمعرفة ما اذا كان يتم تغطية منطقتك</string>
     <string name="obtaining_gps_location">تحديد الموقع الجغرافي ....</string>
     <string name="debugging_stats">إحصاءات مفصلة / تدقيق الأخطاء</string>
+    <string name="test">اختبار</string>
+    <string name="sound_alert">صوت الإنذار</string>
+    <string name="open_coverage_map_failed">تعذر فتح الرابط , برجاء الدخول يدويا الى  http://product.itoworld.com/map/124.</string>
+    <string name="tolerance_dialog_text">تحذير عند الزيادة عن حد السرعة بـ :</string>
+    <string name="plus">زيادة</string>
+    <string name="or">أو</string>
+    <string name="kmph">%s km/h</string>
+    <string name="mph">%s mph</string>
+    <string name="percent">%s%%</string>
+    <string name="tolerance_desc">%1$s %2$s %3$s</string>
 </resources>

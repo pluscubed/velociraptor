@@ -12,8 +12,8 @@
     <string name="open_settings_page">Ouvrir les paramètres</string>
     <string name="grant_permission">Accorder l\'autorisation</string>
     <string name="enable_location_desc">Afin de déterminer la vitesse limite de votre position, veuillez accorder l\'autorisation de localisation</string>
-    <string name="speed_unit">Unités de vitesse :</string>
-    <string name="style">Style :</string>
+    <string name="speed_unit">Unités de vitesse</string>
+    <string name="style">Style</string>
     <string name="united_states">États-Unis</string>
     <string name="international">International</string>
     <string name="open_settings_failed_overlay">Impossible d\'accéder aux paramètres. Veuillez activer le paramètre \"Se superposer aux autres applications\" pour Velociraptor.</string>
@@ -21,7 +21,7 @@
     <string name="permissions_warning">Velociraptor n\'a pas les autorisations requises. Veuillez ouvrir l\'application pour les accorder.</string>
     <string name="location_settings_warning">GPS désactivé. Veuillez l\'activer pour que Velociraptor fonctionne.</string>
     <string name="network_warning">Réseau non connecté. Velociraptor requiert une connexion Internet pour récupérer la vitesse limite.</string>
-    <string name="speeding_amount">Tolérance de vitesse :</string>
+    <string name="speeding_amount">Tolérance de vitesse</string>
     <string name="show_speedometer">Afficher le compteur de vitesse</string>
     <string name="about_dialog_title">Velociraptor v%s</string>
     <string name="dismiss">Annuler</string>
@@ -64,4 +64,14 @@ Développé par <b>Daniel Ciao</b><br/>
     <string name="check_coverage">Appuyer pour vérifier si votre zone est couverte</string>
     <string name="obtaining_gps_location">Acquisition de la position GPS…</string>
     <string name="debugging_stats">Stats pour nerds/débogage</string>
+    <string name="test">Essayer</string>
+    <string name="sound_alert">Alerte sonore</string>
+    <string name="open_coverage_map_failed">Impossible d\'ouvrir le lien. Veuillez aller manuellement sur http://product.itoworld.com/map/124.</string>
+    <string name="tolerance_dialog_text">Avertir quand la limite de vitesse est dépassée de :</string>
+    <string name="plus">plus</string>
+    <string name="or">ou</string>
+    <string name="kmph">%s km/h</string>
+    <string name="mph">%s mph</string>
+    <string name="percent">%s%%</string>
+    <string name="tolerance_desc">%1$s %2$s %3$s</string>
 </resources>
