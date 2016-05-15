@@ -60,8 +60,12 @@ public abstract class Utils {
     }
 
     public static void playBeep() {
-        ToneGenerator toneGen1 = new ToneGenerator(AudioManager.STREAM_MUSIC, 100);
-        toneGen1.startTone(ToneGenerator.TONE_PROP_BEEP2, 500);
+        try {
+            ToneGenerator toneGen1 = new ToneGenerator(AudioManager.STREAM_NOTIFICATION, 100);
+            toneGen1.startTone(ToneGenerator.TONE_PROP_BEEP2, 500);
+        } catch (RuntimeException ignored) {
+            //TODO: Investigate RuntimeException
+        }
     }
 
     public static String getUnitText(Context context) {

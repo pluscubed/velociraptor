@@ -689,8 +689,11 @@ public class SettingsActivity extends AppCompatActivity {
                     .onPositive(new MaterialDialog.SingleButtonCallback() {
                         @Override
                         public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                            PrefUtils.setSpeedingConstant(getActivity(), Integer.parseInt(constantEditText.getText().toString()));
-                            PrefUtils.setSpeedingPercent(getActivity(), Integer.parseInt(percentEditText.getText().toString()));
+                            try {
+                                PrefUtils.setSpeedingConstant(getActivity(), Integer.parseInt(constantEditText.getText().toString()));
+                                PrefUtils.setSpeedingPercent(getActivity(), Integer.parseInt(percentEditText.getText().toString()));
+                            } catch (NumberFormatException ignored) {
+                            }
                             PrefUtils.setToleranceMode(getActivity(), andButton.isChecked());
                         }
                     }).build();
