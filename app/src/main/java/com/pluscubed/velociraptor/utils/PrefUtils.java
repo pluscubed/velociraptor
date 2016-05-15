@@ -20,6 +20,7 @@ public abstract class PrefUtils {
     public static final String PREF_AUTO_DISPLAY = "pref_auto_display";
     public static final String PREF_BEEP = "pref_beep";
     public static final String PREF_DEBUGGING = "pref_debugging";
+    public static final String PREF_SUPPORTED = "pref_supported";
 
     public static final String PREF_FIRSTRUN = "pref_first";
     public static final String PREF_VERSION_CODE = "pref_version_code";
@@ -131,6 +132,14 @@ public abstract class PrefUtils {
 
     public static void setBeepAlertEnabled(Context context, boolean beep) {
         edit(context).putBoolean(PREF_BEEP, beep).apply();
+    }
+
+    public static boolean hasSupported(Context context) {
+        return getSharedPreferences(context).getBoolean(PREF_SUPPORTED, false);
+    }
+
+    public static void setSupported(Context context, boolean beep) {
+        edit(context).putBoolean(PREF_SUPPORTED, beep).apply();
     }
 
     @IntDef({STYLE_US, STYLE_INTERNATIONAL})

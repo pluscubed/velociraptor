@@ -83,4 +83,10 @@
     <string name="mph">%s mph</string>
     <string name="percent">%s%%</string>
     <string name="tolerance_desc">%1$s %2$s %3$s</string>
+    <string name="support_development">Support development</string>
+    <string name="in_app_unavailable">In-app billing not available</string>
+    <string name="support_dev_dialog">Used for server and API costs; suggested amount is $1 per month. A badge will be shown here as my sincere gratitude.</string>
+    <string name="support_dev_dialog_badge">🎉 Thank you for your support!🎉 </string>
+    <string name="per_month">%s per month</string>
+    <string name="one_time">%s one-time</string>
 </resources>

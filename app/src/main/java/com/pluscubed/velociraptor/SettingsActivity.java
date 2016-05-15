@@ -44,9 +44,18 @@ import android.widget.ToggleButton;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.anjlab.android.iab.v3.BillingProcessor;
+import com.anjlab.android.iab.v3.SkuDetails;
+import com.anjlab.android.iab.v3.TransactionDetails;
 import com.pluscubed.velociraptor.appselection.AppSelectionActivity;
 import com.pluscubed.velociraptor.utils.PrefUtils;
 import com.pluscubed.velociraptor.utils.Utils;
+
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Currency;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -101,8 +110,17 @@ public class SettingsActivity extends AppCompatActivity {
     @BindView(R.id.button_test_beep)
     Button testBeepButton;
 
-    private NotificationManager mNotificationManager;
+    private NotificationManager notificationManager;
+    private BillingProcessor billingProcessor;
 
+
+    @Override
+    protected void onDestroy() {
+        if (billingProcessor != null) {
+            billingProcessor.release();
+        }
+        super.onDestroy();
+    }
 
     @SuppressWarnings("ConstantConditions")
     @Override
@@ -142,7 +160,7 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-        mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         View notifControls = findViewById(R.id.switch_notif_controls);
         notifControls.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -171,7 +189,7 @@ public class SettingsActivity extends AppCompatActivity {
                                 .setDeleteIntent(pendingClose)
                                 .setContentIntent(settingsIntent);
                 Notification notification = builder.build();
-                mNotificationManager.notify(NOTIFICATION_CONTROLS, notification);
+                notificationManager.notify(NOTIFICATION_CONTROLS, notification);
             }
         });
 
@@ -322,6 +340,81 @@ public class SettingsActivity extends AppCompatActivity {
         if (BuildConfig.VERSION_CODE > PrefUtils.getVersionCode(this)) {
             showChangelog();
         }
+
+        billingProcessor = new BillingProcessor(this, getString(R.string.play_license_key), new BillingProcessor.IBillingHandler() {
+            @Override
+            public void onProductPurchased(String productId, TransactionDetails details) {
+                PrefUtils.setSupported(SettingsActivity.this, true);
+            }
+
+            @Override
+            public void onPurchaseHistoryRestored() {
+
+            }
+
+            @Override
+            public void onBillingError(int errorCode, Throwable error) {
+
+            }
+
+            @Override
+            public void onBillingInitialized() {
+                billingProcessor.loadOwnedPurchasesFromGoogle();
+            }
+        });
+    }
+
+    private void showSupportDialog() {
+        if (!billingProcessor.isInitialized()) {
+            Snackbar.make(findViewById(android.R.id.content), R.string.in_app_unavailable, Snackbar.LENGTH_SHORT);
+            return;
+        }
+
+        String[] subscriptions = new String[]{"sub_1", "sub_2"};
+        String[] purchases = new String[]{"badge_1", "badge_2", "badge_3", "badge_4", "badge_5"};
+        final List<SkuDetails> purchaseListingDetails = billingProcessor.getPurchaseListingDetails(new ArrayList<>(Arrays.asList(purchases)));
+        final List<SkuDetails> subscriptionListingDetails = billingProcessor.getSubscriptionListingDetails(new ArrayList<>(Arrays.asList(subscriptions)));
+
+        purchaseListingDetails.addAll(0, subscriptionListingDetails);
+
+        List<String> purchaseDisplay = new ArrayList<>();
+        for (SkuDetails details : purchaseListingDetails) {
+            NumberFormat format = NumberFormat.getCurrencyInstance();
+            format.setCurrency(Currency.getInstance(details.currency));
+            String amount = format.format(details.priceValue);
+            if (details.isSubscription)
+                amount = String.format(getString(R.string.per_month), amount);
+            else {
+                amount = String.format(getString(R.string.one_time), amount);
+            }
+            purchaseDisplay.add(amount);
+        }
+        String content = getString(R.string.support_dev_dialog);
+        if (PrefUtils.hasSupported(this) || !billingProcessor.listOwnedSubscriptions().isEmpty()) {
+            content += "\n\n" + getString(R.string.support_dev_dialog_badge);
+        }
+        new MaterialDialog.Builder(this)
+                .icon(Utils.getVectorDrawableCompat(this, R.drawable.ic_favorite_black_24dp))
+                .title(R.string.support_development)
+                .content(content)
+                .items(purchaseDisplay)
+                .itemsCallback(new MaterialDialog.ListCallback() {
+                    @Override
+                    public void onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
+                        SkuDetails skuDetails = purchaseListingDetails.get(which);
+                        if (skuDetails.isSubscription) {
+                            billingProcessor.subscribe(SettingsActivity.this, skuDetails.productId);
+                        } else {
+                            billingProcessor.consumePurchase(skuDetails.productId);
+                        }
+                    }
+                }).show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (!billingProcessor.handleActivityResult(requestCode, resultCode, data))
+            super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void updateFloatingServicePrefs() {
@@ -353,6 +446,9 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.menu_settings_support:
+                showSupportDialog();
+                return true;
             case R.id.menu_settings_about:
                 showAboutDialog();
                 return true;
