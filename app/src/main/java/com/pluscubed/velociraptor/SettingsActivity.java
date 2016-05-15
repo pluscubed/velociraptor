@@ -65,8 +65,9 @@ public class SettingsActivity extends AppCompatActivity {
     public static final int PENDING_SERVICE_CLOSE = 3;
     public static final int PENDING_SETTINGS = 2;
     public static final int NOTIFICATION_CONTROLS = 42;
+    public static final String[] SUBSCRIPTIONS = new String[]{"sub_1", "sub_2"};
+    public static final String[] PURCHASES = new String[]{"badge_1", "badge_2", "badge_3", "badge_4", "badge_5"};
     private static final int REQUEST_LOCATION = 105;
-
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.button_enable_service)
@@ -81,7 +82,6 @@ public class SettingsActivity extends AppCompatActivity {
     Button enableLocationButton;
     @BindView(R.id.image_location_enabled)
     ImageView enabledLocationImage;
-
     @BindView(R.id.open_openstreetmap)
     LinearLayout openStreetMapView;
     @BindView(R.id.check_coverage)
@@ -90,7 +90,6 @@ public class SettingsActivity extends AppCompatActivity {
     LinearLayout toleranceView;
     @BindView(R.id.text_overview_tolerance)
     TextView toleranceOverview;
-
     @BindView(R.id.spinner_unit)
     Spinner unitSpinner;
     @BindView(R.id.spinner_style)
@@ -109,10 +108,8 @@ public class SettingsActivity extends AppCompatActivity {
     SwitchCompat beepSwitch;
     @BindView(R.id.button_test_beep)
     Button testBeepButton;
-
     private NotificationManager notificationManager;
     private BillingProcessor billingProcessor;
-
 
     @Override
     protected void onDestroy() {
@@ -346,6 +343,8 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onProductPurchased(String productId, TransactionDetails details) {
                 PrefUtils.setSupported(SettingsActivity.this, true);
+                if (Arrays.asList(PURCHASES).contains(productId))
+                    billingProcessor.consumePurchase(productId);
             }
 
             @Override
@@ -355,7 +354,10 @@ public class SettingsActivity extends AppCompatActivity {
 
             @Override
             public void onBillingError(int errorCode, Throwable error) {
-
+                if (errorCode != 110) {
+                    Snackbar.make(findViewById(android.R.id.content), "Billing error: code = " + errorCode + ", error: " +
+                            (error != null ? error.getMessage() : "?"), Snackbar.LENGTH_LONG).show();
+                }
             }
 
             @Override
@@ -374,17 +376,15 @@ public class SettingsActivity extends AppCompatActivity {
             return;
         }
 
-        String[] subscriptions = new String[]{"sub_1", "sub_2"};
-        String[] purchases = new String[]{"badge_1", "badge_2", "badge_3", "badge_4", "badge_5"};
-        final List<SkuDetails> purchaseListingDetails = billingProcessor.getPurchaseListingDetails(new ArrayList<>(Arrays.asList(purchases)));
-        final List<SkuDetails> subscriptionListingDetails = billingProcessor.getSubscriptionListingDetails(new ArrayList<>(Arrays.asList(subscriptions)));
+        final List<SkuDetails> purchaseListingDetails = billingProcessor.getPurchaseListingDetails(new ArrayList<>(Arrays.asList(PURCHASES)));
+        final List<SkuDetails> subscriptionListingDetails = billingProcessor.getSubscriptionListingDetails(new ArrayList<>(Arrays.asList(SUBSCRIPTIONS)));
 
-        purchaseListingDetails.addAll(0, subscriptionListingDetails);
-
-        if (purchaseListingDetails.isEmpty()) {
+        if (purchaseListingDetails == null || purchaseListingDetails.isEmpty()) {
             Snackbar.make(findViewById(android.R.id.content), R.string.in_app_unavailable, Snackbar.LENGTH_SHORT).show();
             return;
         }
+
+        purchaseListingDetails.addAll(0, subscriptionListingDetails);
 
         List<String> purchaseDisplay = new ArrayList<>();
         for (SkuDetails details : purchaseListingDetails) {
@@ -414,7 +414,7 @@ public class SettingsActivity extends AppCompatActivity {
                         if (skuDetails.isSubscription) {
                             billingProcessor.subscribe(SettingsActivity.this, skuDetails.productId);
                         } else {
-                            billingProcessor.consumePurchase(skuDetails.productId);
+                            billingProcessor.purchase(SettingsActivity.this, skuDetails.productId);
                         }
                     }
                 }).show();
