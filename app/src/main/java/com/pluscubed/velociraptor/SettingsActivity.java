@@ -377,6 +377,11 @@ public class SettingsActivity extends AppCompatActivity {
 
         purchaseListingDetails.addAll(0, subscriptionListingDetails);
 
+        if (purchaseListingDetails.isEmpty()) {
+            Snackbar.make(findViewById(android.R.id.content), R.string.in_app_unavailable, Snackbar.LENGTH_SHORT);
+            return;
+        }
+
         List<String> purchaseDisplay = new ArrayList<>();
         for (SkuDetails details : purchaseListingDetails) {
             NumberFormat format = NumberFormat.getCurrencyInstance();
