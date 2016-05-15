@@ -337,7 +337,8 @@ public class SettingsActivity extends AppCompatActivity {
 
         invalidateStates();
 
-        if (BuildConfig.VERSION_CODE > PrefUtils.getVersionCode(this)) {
+        if (BuildConfig.VERSION_CODE > PrefUtils.getVersionCode(this) &&
+                !PrefUtils.isFirstRun(this)) {
             showChangelog();
         }
 
@@ -362,11 +363,14 @@ public class SettingsActivity extends AppCompatActivity {
                 billingProcessor.loadOwnedPurchasesFromGoogle();
             }
         });
+
+        PrefUtils.setFirstRun(this, false);
+        PrefUtils.setVersionCode(this, BuildConfig.VERSION_CODE);
     }
 
     private void showSupportDialog() {
         if (!billingProcessor.isInitialized()) {
-            Snackbar.make(findViewById(android.R.id.content), R.string.in_app_unavailable, Snackbar.LENGTH_SHORT);
+            Snackbar.make(findViewById(android.R.id.content), R.string.in_app_unavailable, Snackbar.LENGTH_SHORT).show();
             return;
         }
 
@@ -378,7 +382,7 @@ public class SettingsActivity extends AppCompatActivity {
         purchaseListingDetails.addAll(0, subscriptionListingDetails);
 
         if (purchaseListingDetails.isEmpty()) {
-            Snackbar.make(findViewById(android.R.id.content), R.string.in_app_unavailable, Snackbar.LENGTH_SHORT);
+            Snackbar.make(findViewById(android.R.id.content), R.string.in_app_unavailable, Snackbar.LENGTH_SHORT).show();
             return;
         }
 
@@ -475,7 +479,6 @@ public class SettingsActivity extends AppCompatActivity {
 
     private void showChangelog() {
         ChangelogDialog.newInstance().show(getFragmentManager(), "CHANGELOG_DIALOG");
-        PrefUtils.setVersionCode(this, BuildConfig.VERSION_CODE);
     }
 
     @Override

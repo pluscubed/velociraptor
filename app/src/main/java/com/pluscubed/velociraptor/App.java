@@ -65,7 +65,7 @@ public class App extends Application {
                     .map(new Func1<AppInfoEntity, AppInfoEntity>() {
                         @Override
                         public AppInfoEntity call(AppInfoEntity appInfoEntity) {
-                            return getData(App.this).upsert(appInfoEntity);
+                            return getData(App.this).insert(appInfoEntity);
                         }
                     })
                     .toList().toSingle()
@@ -83,8 +83,6 @@ public class App extends Application {
                         }
                     });
         }
-
-        PrefUtils.setFirstRun(this, false);
     }
 
     /**
