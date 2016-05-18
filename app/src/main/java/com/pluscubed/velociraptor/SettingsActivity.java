@@ -11,11 +11,13 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
@@ -47,6 +49,8 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.anjlab.android.iab.v3.BillingProcessor;
 import com.anjlab.android.iab.v3.SkuDetails;
 import com.anjlab.android.iab.v3.TransactionDetails;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.pluscubed.velociraptor.appselection.AppSelectionActivity;
 import com.pluscubed.velociraptor.utils.PrefUtils;
 import com.pluscubed.velociraptor.utils.Utils;
@@ -110,6 +114,7 @@ public class SettingsActivity extends AppCompatActivity {
     Button testBeepButton;
     private NotificationManager notificationManager;
     private BillingProcessor billingProcessor;
+    private GoogleApiClient mGoogleApiClient;
 
     @Override
     protected void onDestroy() {
@@ -146,14 +151,38 @@ public class SettingsActivity extends AppCompatActivity {
         checkCoverageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setData(Uri.parse("http://product.itoworld.com/map/124"));
-                intent.setAction(Intent.ACTION_VIEW);
-                try {
-                    startActivity(intent);
-                } catch (ActivityNotFoundException e) {
-                    Snackbar.make(enableFloatingButton, R.string.open_coverage_map_failed, Snackbar.LENGTH_LONG).show();
-                }
+                mGoogleApiClient = new GoogleApiClient.Builder(SettingsActivity.this)
+                        .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
+                            @Override
+                            @SuppressWarnings("MissingPermission")
+                            public void onConnected(@Nullable Bundle bundle) {
+                                String uriString = "http://product.itoworld.com/map/124";
+                                if (isLocationPermissionGranted()) {
+                                    Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+                                    if (lastLocation != null) {
+                                        uriString += "?lon=" + lastLocation.getLongitude() + "&lat=" + lastLocation.getLatitude() + "&zoom=12";
+                                    }
+                                }
+                                Intent intent = new Intent();
+                                intent.setData(Uri.parse(uriString));
+                                intent.setAction(Intent.ACTION_VIEW);
+                                try {
+                                    startActivity(intent);
+                                } catch (ActivityNotFoundException e) {
+                                    Snackbar.make(enableFloatingButton, R.string.open_coverage_map_failed, Snackbar.LENGTH_LONG).show();
+                                }
+
+                                mGoogleApiClient.disconnect();
+                            }
+
+                            @Override
+                            public void onConnectionSuspended(int i) {
+                            }
+                        })
+                        .addApi(LocationServices.API)
+                        .build();
+
+                mGoogleApiClient.connect();
             }
         });
 
@@ -495,9 +524,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void invalidateStates() {
-        boolean permissionGranted =
-                ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                        == PackageManager.PERMISSION_GRANTED;
+        boolean permissionGranted = isLocationPermissionGranted();
         enabledLocationImage.setImageResource(permissionGranted ? R.drawable.ic_done_green_40dp : R.drawable.ic_cross_red_40dp);
         enableLocationButton.setEnabled(!permissionGranted);
 
@@ -543,10 +570,14 @@ public class SettingsActivity extends AppCompatActivity {
 
     private boolean isServiceReady() {
         boolean permissionGranted =
-                ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                        == PackageManager.PERMISSION_GRANTED;
+                isLocationPermissionGranted();
         @SuppressLint({"NewApi", "LocalSuppress"}) boolean overlayEnabled = Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(this);
         return permissionGranted && overlayEnabled;
+    }
+
+    private boolean isLocationPermissionGranted() {
+        return ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED;
     }
 
     void openSettings(String settingsAction, String packageName) {
