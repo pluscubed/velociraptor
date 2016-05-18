@@ -42,17 +42,8 @@
     public *;
 }
 
-#Requery
--dontwarn net.sqlcipher.**
--dontwarn javax.**
--dontwarn org.w3c.**
--dontwarn io.requery.**
--dontwarn java.util.**
--dontwarn java.time.**
--dontwarn java.sql.**
--dontwarn java.lang.**
-
 #Jackson
+-dontwarn org.w3c.**
 -dontwarn java.beans.**
 -keep class com.fasterxml.jackson.databind.ObjectMapper {
     public <methods>;
