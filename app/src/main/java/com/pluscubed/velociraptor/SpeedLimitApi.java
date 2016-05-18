@@ -41,7 +41,7 @@ import rx.schedulers.Schedulers;
 
 public class SpeedLimitApi {
 
-    private static final String HERE_ROUTING_API = "https://route.api.here.com/routing/7.2/";
+    private static final String HERE_ROUTING_API = "https://route.st.nlp.nokia.com/routing/7.2/";
     private static final String[] PUBLIC_OVERPASS_APIS = new String[]{
             "http://api.openstreetmap.fr/oapi/",
             "http://overpass.osm.rambler.ru/cgi/",
@@ -149,7 +149,8 @@ public class SpeedLimitApi {
                         if (!BuildConfig.DEBUG) {
                             if (throwable instanceof IOException) {
                                 Answers.getInstance().logCustom(new CustomEvent("Network Error")
-                                        .putCustomAttribute("Server", mOsmApiSelectionInterceptor.api.baseUrl));
+                                        .putCustomAttribute("Server", mOsmApiSelectionInterceptor.api.baseUrl)
+                                        .putCustomAttribute("Message", throwable.getMessage()));
                             } else {
                                 Crashlytics.logException(throwable);
                             }

@@ -7,6 +7,8 @@ import android.support.annotation.IntDef;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.util.HashSet;
+import java.util.Set;
 
 public abstract class PrefUtils {
 
@@ -21,8 +23,9 @@ public abstract class PrefUtils {
     public static final String PREF_BEEP = "pref_beep";
     public static final String PREF_DEBUGGING = "pref_debugging";
     public static final String PREF_SUPPORTED = "pref_supported";
+    public static final String PREF_APPS = "pref_apps";
 
-    public static final String PREF_FIRSTRUN = "pref_first";
+    public static final String PREF_FIRSTRUN = "pref_initial";
     public static final String PREF_VERSION_CODE = "pref_version_code";
 
     public static final int STYLE_US = 0;
@@ -140,6 +143,14 @@ public abstract class PrefUtils {
 
     public static void setSupported(Context context, boolean beep) {
         edit(context).putBoolean(PREF_SUPPORTED, beep).apply();
+    }
+
+    public static Set<String> getApps(Context context) {
+        return new HashSet<>(getSharedPreferences(context).getStringSet(PREF_APPS, new HashSet<String>()));
+    }
+
+    public static void setApps(Context context, Set<String> packageNames) {
+        edit(context).putStringSet(PREF_APPS, packageNames).apply();
     }
 
     @IntDef({STYLE_US, STYLE_INTERNATIONAL})

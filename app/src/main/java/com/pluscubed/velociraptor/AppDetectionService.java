@@ -4,19 +4,15 @@ import android.accessibilityservice.AccessibilityService;
 import android.content.Intent;
 import android.view.accessibility.AccessibilityEvent;
 
-import com.crashlytics.android.Crashlytics;
-import com.pluscubed.velociraptor.appselection.AppInfo;
-import com.pluscubed.velociraptor.appselection.AppInfoEntity;
-import com.pluscubed.velociraptor.appselection.SelectedAppDatabase;
 import com.pluscubed.velociraptor.utils.PrefUtils;
 
-import java.util.List;
+import java.util.Set;
 
 public class AppDetectionService extends AccessibilityService {
 
     private static AppDetectionService sInstance;
 
-    private List<AppInfoEntity> mEnabledApps;
+    private Set<String> mEnabledApps;
 
     public static AppDetectionService get() {
         return sInstance;
@@ -35,13 +31,7 @@ public class AppDetectionService extends AccessibilityService {
     }
 
     public void updateSelectedApps() {
-        try {
-            mEnabledApps = SelectedAppDatabase.getSelectedApps(this).toBlocking().value();
-        } catch (Exception e) {
-            e.printStackTrace();
-            if (!BuildConfig.DEBUG)
-                Crashlytics.logException(e);
-        }
+        mEnabledApps = PrefUtils.getApps(this);
     }
 
     @Override
@@ -64,8 +54,8 @@ public class AppDetectionService extends AccessibilityService {
                     Intent intent = new Intent(this, FloatingService.class);
 
                     boolean isSelectedApp = false;
-                    for (AppInfo info : mEnabledApps) {
-                        if (info.packageName.equals(appPackage)) {
+                    for (String packageName : mEnabledApps) {
+                        if (packageName.equals(appPackage)) {
                             isSelectedApp = true;
                             break;
                         }

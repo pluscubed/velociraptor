@@ -7,9 +7,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Build;
-import android.support.annotation.NonNull;
 
-import com.pluscubed.velociraptor.App;
 import com.pluscubed.velociraptor.BuildConfig;
 
 import java.util.ArrayList;
@@ -25,44 +23,19 @@ import rx.schedulers.Schedulers;
 public class SelectedAppDatabase {
 
     /**
-     * Returns list of selected apps (packageName, id, enabled)
-     */
-    @NonNull
-    public static Single<List<AppInfoEntity>> getSelectedApps(final Context context) {
-        return App.getData(context).select(AppInfoEntity.class)
-                .get().toObservable()
-                .subscribeOn(Schedulers.io())
-                .toList().toSingle();
-    }
-
-    /**
      * Returns list of map apps (packageName, id, name, enabled)
      */
-    public static Single<List<AppInfoEntity>> getMapApps(final Context context) {
-        return Single.fromCallable(new Callable<List<AppInfoEntity>>() {
+    public static Single<List<AppInfo>> getMapApps(final Context context) {
+        return Single.fromCallable(new Callable<List<AppInfo>>() {
             @Override
-            public List<AppInfoEntity> call() throws Exception {
+            public List<AppInfo> call() throws Exception {
                 return getMapAppsSync(context);
             }
         }).subscribeOn(Schedulers.io())
-                .flatMapObservable(new Func1<List<AppInfoEntity>, Observable<AppInfoEntity>>() {
+                .flatMapObservable(new Func1<List<AppInfo>, Observable<AppInfo>>() {
                     @Override
-                    public Observable<AppInfoEntity> call(List<AppInfoEntity> mapApps) {
-                        try {
-                            List<AppInfoEntity> enabledApps = getSelectedApps(context).toBlocking().value();
-
-                            for (AppInfo info : mapApps) {
-                                for (AppInfo enabledApp : enabledApps) {
-                                    if (info.packageName.equals(enabledApp.packageName)) {
-                                        info.enabled = true;
-                                        break;
-                                    }
-                                }
-                            }
-                            return Observable.from(mapApps);
-                        } catch (Exception e) {
-                            return Observable.error(e);
-                        }
+                    public Observable<AppInfo> call(List<AppInfo> appInfos) {
+                        return Observable.from(appInfos);
                     }
                 }).toSortedList().toSingle();
     }
@@ -70,8 +43,8 @@ public class SelectedAppDatabase {
     /**
      * Returns list of map apps (packageName, name)
      */
-    private static List<AppInfoEntity> getMapAppsSync(Context context) {
-        List<AppInfoEntity> appInfos = new ArrayList<>();
+    private static List<AppInfo> getMapAppsSync(Context context) {
+        List<AppInfo> appInfos = new ArrayList<>();
         Uri gmmIntentUri = Uri.parse("geo:37.421999,-122.084056");
         Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
         PackageManager manager = context.getPackageManager();
@@ -83,7 +56,7 @@ public class SelectedAppDatabase {
         }
 
         for (ResolveInfo info : mapApps) {
-            AppInfoEntity appInfo = new AppInfoEntity();
+            AppInfo appInfo = new AppInfo();
             appInfo.packageName = info.activityInfo.packageName;
             appInfo.name = info.loadLabel(context.getPackageManager()).toString();
             appInfos.add(appInfo);
@@ -94,7 +67,7 @@ public class SelectedAppDatabase {
     /**
      * Returns sorted list of AppInfos (packageName, name, id, enabled)
      */
-    public static Single<List<AppInfoEntity>> getInstalledApps(final Context context) {
+    public static Single<List<AppInfo>> getInstalledApps(final Context context) {
         return Single.create(new Single.OnSubscribe<List<ApplicationInfo>>() {
             @Override
             public void call(SingleSubscriber<? super List<ApplicationInfo>> singleSubscriber) {
@@ -107,38 +80,18 @@ public class SelectedAppDatabase {
                         return Observable.from(appInfos);
                     }
                 })
-                .map(new Func1<ApplicationInfo, AppInfoEntity>() {
+                .map(new Func1<ApplicationInfo, AppInfo>() {
                     @Override
-                    public AppInfoEntity call(ApplicationInfo applicationInfo) {
-                        AppInfoEntity appInfo = new AppInfoEntity();
+                    public AppInfo call(ApplicationInfo applicationInfo) {
+                        AppInfo appInfo = new AppInfo();
                         appInfo.packageName = applicationInfo.packageName;
                         appInfo.name = applicationInfo.loadLabel(context.getPackageManager()).toString();
                         return appInfo;
                     }
                 })
-                .toList().toSingle()
-                .flatMapObservable(new Func1<List<AppInfoEntity>, Observable<AppInfoEntity>>() {
+                .filter(new Func1<AppInfo, Boolean>() {
                     @Override
-                    public Observable<AppInfoEntity> call(List<AppInfoEntity> appInfos) {
-                        try {
-                            List<AppInfoEntity> enabledApps = getSelectedApps(context).toBlocking().value();
-                            for (AppInfo enabledApp : enabledApps) {
-                                for (AppInfo info : appInfos) {
-                                    if (info.packageName.equals(enabledApp.packageName)) {
-                                        info.enabled = true;
-                                    }
-                                }
-                            }
-
-                            return Observable.from(appInfos);
-                        } catch (Exception e) {
-                            return Observable.error(e);
-                        }
-                    }
-                })
-                .filter(new Func1<AppInfoEntity, Boolean>() {
-                    @Override
-                    public Boolean call(AppInfoEntity appInfoEntity) {
+                    public Boolean call(AppInfo appInfoEntity) {
                         return !appInfoEntity.packageName.equals(BuildConfig.APPLICATION_ID);
                     }
                 })

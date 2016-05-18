@@ -32,8 +32,8 @@ android {
         applicationId "com.pluscubed.velociraptor"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 19
-        versionName "1.2.2"
+        versionCode 20
+        versionName "1.2.3"
         vectorDrawables.useSupportLibrary = true
         manifestPlaceholders = [appName: "@string/app_name"]
     }
@@ -103,10 +103,6 @@ dependencies {
     compile 'com.github.pluscubed:recycler-fast-scroll:0.3.1'
 
     compile 'com.github.bumptech.glide:glide:3.7.0'
-
-    compile 'io.requery:requery:1.0.0-beta18'
-    compile 'io.requery:requery-android:1.0.0-beta18'
-    apt 'io.requery:requery-processor:1.0.0-beta18'
 
     compile 'com.jakewharton:butterknife:8.0.1'
     apt 'com.jakewharton:butterknife-compiler:8.0.1'

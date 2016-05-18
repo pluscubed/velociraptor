@@ -21,25 +21,25 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.crashlytics.android.Crashlytics;
 import com.pluscubed.recyclerfastscroll.RecyclerFastScroller;
-import com.pluscubed.velociraptor.App;
 import com.pluscubed.velociraptor.AppDetectionService;
 import com.pluscubed.velociraptor.BuildConfig;
 import com.pluscubed.velociraptor.R;
+import com.pluscubed.velociraptor.utils.PrefUtils;
 import com.pluscubed.velociraptor.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import java.util.concurrent.Callable;
+import java.util.Set;
 
-import rx.Single;
 import rx.SingleSubscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 public class AppSelectionActivity extends AppCompatActivity {
 
+    public static final String STATE_SELECTED_APPS = "state_selected_apps";
     public static final String STATE_APPS = "state_apps";
     public static final String STATE_MAP_APPS = "state_map_apps";
     public static final String STATE_MAPS_ONLY = "state_maps_only";
@@ -48,8 +48,10 @@ public class AppSelectionActivity extends AppCompatActivity {
     private RecyclerFastScroller mScroller;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
-    private List<AppInfoEntity> mAppList;
-    private List<AppInfoEntity> mMapApps;
+    private Set<String> mSelectedApps;
+    private List<AppInfo> mAppList;
+    private List<AppInfo> mMapApps;
+
     private boolean mMapsOnly;
 
     private CompositeSubscription mLoadAppsSubscription;
@@ -81,7 +83,7 @@ public class AppSelectionActivity extends AppCompatActivity {
                 } else {
                     reloadInstalledApps();
                 }
-                mAdapter.setAppInfos(new ArrayList<AppInfoEntity>());
+                mAdapter.setAppInfos(new ArrayList<AppInfo>());
             }
         });
         mSwipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(this, R.color.colorAccent));
@@ -93,6 +95,7 @@ public class AppSelectionActivity extends AppCompatActivity {
             mAppList = savedInstanceState.getParcelableArrayList(STATE_APPS);
             mMapApps = savedInstanceState.getParcelableArrayList(STATE_MAP_APPS);
             mMapsOnly = savedInstanceState.getBoolean(STATE_MAPS_ONLY);
+            mSelectedApps = new HashSet<>(savedInstanceState.getStringArrayList(STATE_SELECTED_APPS));
         }
 
         if (mMapApps == null) {
@@ -121,11 +124,12 @@ public class AppSelectionActivity extends AppCompatActivity {
     private void reloadInstalledApps() {
         mLoadingAppList = true;
         mSwipeRefreshLayout.setRefreshing(true);
+        mSelectedApps = new HashSet<>(PrefUtils.getApps(this));
         Subscription subscription = SelectedAppDatabase.getInstalledApps(this)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new SingleSubscriber<List<AppInfoEntity>>() {
+                .subscribe(new SingleSubscriber<List<AppInfo>>() {
                     @Override
-                    public void onSuccess(List<AppInfoEntity> installedApps) {
+                    public void onSuccess(List<AppInfo> installedApps) {
                         if (!mMapsOnly) {
                             mAdapter.setAppInfos(installedApps);
                             mSwipeRefreshLayout.setRefreshing(false);
@@ -149,11 +153,12 @@ public class AppSelectionActivity extends AppCompatActivity {
     private void reloadMapApps() {
         mLoadingMapApps = true;
         mSwipeRefreshLayout.setRefreshing(true);
+        mSelectedApps = PrefUtils.getApps(this);
         Subscription subscription = SelectedAppDatabase.getMapApps(this)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new SingleSubscriber<List<AppInfoEntity>>() {
+                .subscribe(new SingleSubscriber<List<AppInfo>>() {
                     @Override
-                    public void onSuccess(List<AppInfoEntity> mapApps) {
+                    public void onSuccess(List<AppInfo> mapApps) {
                         if (mMapsOnly) {
                             mAdapter.setAppInfos(mapApps);
                             mSwipeRefreshLayout.setRefreshing(false);
@@ -209,16 +214,18 @@ public class AppSelectionActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void onItemClick(final AppInfoEntity appInfo, final boolean checked) {
-        appInfo.enabled = checked;
-
+    private void onItemClick(final AppInfo appInfo, final boolean checked) {
         if (appInfo.packageName != null && !appInfo.packageName.isEmpty()) {
+            if (checked) {
+                mSelectedApps.add(appInfo.packageName);
+            } else {
+                mSelectedApps.remove(appInfo.packageName);
+            }
+
             SingleSubscriber<Object> subscriber = new SingleSubscriber<Object>() {
                 @Override
                 public void onSuccess(Object value) {
-                    if (AppDetectionService.get() != null) {
-                        AppDetectionService.get().updateSelectedApps();
-                    }
+
                 }
 
                 @Override
@@ -228,29 +235,24 @@ public class AppSelectionActivity extends AppCompatActivity {
                         Crashlytics.logException(error);
                 }
             };
-            Single.fromCallable(new Callable<Object>() {
-                @Override
-                public Object call() throws Exception {
-                    if (checked) {
-                        return App.getData(AppSelectionActivity.this).upsert(appInfo);
-                    } else {
-                        return App.getData(AppSelectionActivity.this).delete(appInfo);
-                    }
-                }
-            }).subscribeOn(Schedulers.io()).subscribe(subscriber);
+            PrefUtils.setApps(this, mSelectedApps);
+            if (AppDetectionService.get() != null) {
+                AppDetectionService.get().updateSelectedApps();
+            }
         }
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putParcelableArrayList(STATE_APPS, (ArrayList<AppInfoEntity>) mAppList);
-        outState.putParcelableArrayList(STATE_MAP_APPS, (ArrayList<AppInfoEntity>) mMapApps);
+        outState.putParcelableArrayList(STATE_APPS, (ArrayList<AppInfo>) mAppList);
+        outState.putParcelableArrayList(STATE_MAP_APPS, (ArrayList<AppInfo>) mMapApps);
         outState.putBoolean(STATE_MAPS_ONLY, mMapsOnly);
+        outState.putStringArrayList(STATE_SELECTED_APPS, new ArrayList<>(mSelectedApps));
         super.onSaveInstanceState(outState);
     }
 
     private class AppAdapter extends RecyclerView.Adapter<AppAdapter.ViewHolder> {
-        private List<AppInfoEntity> mAppInfos;
+        private List<AppInfo> mAppInfos;
 
         public AppAdapter() {
             super();
@@ -258,7 +260,7 @@ public class AppSelectionActivity extends AppCompatActivity {
             mAppInfos = new ArrayList<>();
         }
 
-        public void setAppInfos(List<AppInfoEntity> list) {
+        public void setAppInfos(List<AppInfo> list) {
             if (list == null) {
                 mAppInfos = new ArrayList<>();
             } else {
@@ -285,7 +287,7 @@ public class AppSelectionActivity extends AppCompatActivity {
 
             holder.title.setText(app.name);
             holder.desc.setText(app.packageName);
-            holder.checkbox.setChecked(app.enabled);
+            holder.checkbox.setChecked(mSelectedApps.contains(app.packageName));
 
         }
 
