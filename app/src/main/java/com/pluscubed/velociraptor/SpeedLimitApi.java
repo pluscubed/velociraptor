@@ -56,7 +56,7 @@ public class SpeedLimitApi {
     private int mHereTimeTaken;
     private String[] mLastOsmRoadNames;
 
-    public SpeedLimitApi(Context context) {
+    SpeedLimitApi(Context context) {
         mContext = context;
 
         mOsmOverpassApis = Collections.synchronizedList(new ArrayList<OsmApiEndpoint>());
@@ -96,7 +96,7 @@ public class SpeedLimitApi {
         mOsmService = osmRest.create(OsmService.class);
     }
 
-    public String getApiInformation() {
+    String getApiInformation() {
         String text = "";
         synchronized (mOsmOverpassApis) {
             for (OsmApiEndpoint endpoint : mOsmOverpassApis) {
@@ -107,7 +107,7 @@ public class SpeedLimitApi {
         return text;
     }
 
-    public Single<ApiResponse> getSpeedLimit(Location location) {
+    Single<ApiResponse> getSpeedLimit(Location location) {
         return getOsmSpeedLimit(location)
                 .switchIfEmpty(getHereSpeedLimit(location).toObservable()).toSingle();
     }
@@ -282,7 +282,7 @@ public class SpeedLimitApi {
         String[] roadNames;
     }
 
-    final class HereTimeTakenInterceptor implements Interceptor {
+    private final class HereTimeTakenInterceptor implements Interceptor {
 
         @Override
         public Response intercept(Chain chain) throws IOException {
@@ -296,7 +296,7 @@ public class SpeedLimitApi {
         }
     }
 
-    final class OsmApiSelectionInterceptor implements Interceptor {
+    private final class OsmApiSelectionInterceptor implements Interceptor {
         private volatile OsmApiEndpoint api;
 
         public void setApi(OsmApiEndpoint api) {
