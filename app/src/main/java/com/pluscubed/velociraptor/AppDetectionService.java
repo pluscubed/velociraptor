@@ -61,6 +61,11 @@ public class AppDetectionService extends AccessibilityService {
                         }
                     }
 
+                    if (className.equals("com.google.android.gms.car.CarHomeActivity")) {
+                        isSelectedApp = true;
+                        intent.putExtra(FloatingService.EXTRA_AUTO, true);
+                    }
+
                     if (!isSelectedApp && !appPackage.equals(BuildConfig.APPLICATION_ID)) {
                         intent.putExtra(FloatingService.EXTRA_CLOSE, true);
                     }

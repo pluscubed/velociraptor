@@ -24,6 +24,8 @@ import android.os.Looper;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.app.RemoteInput;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v4.view.animation.LinearOutSlowInInterpolator;
@@ -62,8 +64,10 @@ public class FloatingService extends Service {
     public static final String EXTRA_NOTIF_START = "com.pluscubed.velociraptor.EXTRA_NOTIF_START";
     public static final String EXTRA_NOTIF_CLOSE = "com.pluscubed.velociraptor.EXTRA_NOTIF_CLOSE";
     public static final String EXTRA_CLOSE = "com.pluscubed.velociraptor.EXTRA_CLOSE";
+    public static final String EXTRA_AUTO = "com.pluscubed.velociraptor.EXTRA_AUTO";
     public static final String EXTRA_PREF_CHANGE = "com.pluscubed.velociraptor.EXTRA_PREF_CHANGE";
-
+    public static final int NOTIFICATION_AUTO = 42;
+    public static final String NOTIFICATION_AUTO_TAG = "auto_tag";
     private static final int NOTIFICATION_FLOATING_WINDOW = 303;
     private WindowManager mWindowManager;
 
@@ -93,6 +97,9 @@ public class FloatingService extends Service {
 
     private boolean mInitialized;
     private boolean mNotifStart;
+    private boolean mAndroidAuto;
+    private long mAutoTimestamp;
+    private NotificationManagerCompat mNotificationManager;
 
     @Nullable
     @Override
@@ -122,6 +129,10 @@ public class FloatingService extends Service {
                 updateLimitText(false);
                 updateSpeedometer(mLastSpeedLocation);
             }
+
+            if (intent.getBooleanExtra(EXTRA_AUTO, false)) {
+                mAndroidAuto = true;
+            }
         }
 
 
@@ -130,6 +141,7 @@ public class FloatingService extends Service {
 
         startNotification();
 
+        mNotificationManager = NotificationManagerCompat.from(this);
         mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
 
         inflateMonitor();
@@ -356,15 +368,40 @@ public class FloatingService extends Service {
 
     private void updateLimitText(boolean connected) {
         if (mLimitText != null) {
+            String text = "--";
             if (mLastSpeedLimit != -1) {
-                if (connected) {
-                    mLimitText.setText(String.valueOf(mLastSpeedLimit));
-                } else {
-                    mLimitText.setText(String.format("(%s)", String.valueOf(mLastSpeedLimit)));
+                text = String.valueOf(mLastSpeedLimit);
+                if (!connected) {
+                    text = String.format("(%s)", text);
                 }
-            } else {
-                mLimitText.setText("--");
             }
+
+            if (mAndroidAuto) {
+                String notificationMessage = getString(R.string.notif_android_auto_limit, Utils.getUnitText(this, text));
+
+                if (mAutoTimestamp == 0) {
+                    mAutoTimestamp = System.currentTimeMillis();
+                }
+
+                RemoteInput input = new RemoteInput.Builder("key").build();
+                PendingIntent emptyPendingIntent = PendingIntent.getActivity(this, 42, new Intent(), PendingIntent.FLAG_CANCEL_CURRENT);
+                NotificationCompat.CarExtender.UnreadConversation conv =
+                        new NotificationCompat.CarExtender.UnreadConversation.Builder(notificationMessage)
+                                .setLatestTimestamp(mAutoTimestamp)
+                                .setReadPendingIntent(emptyPendingIntent)
+                                .setReplyAction(emptyPendingIntent, input)
+                                .addMessage(notificationMessage)
+                                .build();
+                Notification notification = new NotificationCompat.Builder(this)
+                        .extend(new NotificationCompat.CarExtender().setUnreadConversation(conv))
+                        .setContentTitle(getString(R.string.notif_android_auto_title))
+                        .setContentText(notificationMessage)
+                        .setSmallIcon(R.drawable.ic_speedometer)
+                        .build();
+                mNotificationManager.notify(NOTIFICATION_AUTO_TAG, NOTIFICATION_AUTO, notification);
+            }
+
+            mLimitText.setText(text);
         }
     }
 
@@ -500,6 +537,10 @@ public class FloatingService extends Service {
 
         if (mLocationSubscription != null) {
             mLocationSubscription.unsubscribe();
+        }
+
+        if (mNotificationManager != null) {
+            mNotificationManager.cancel(NOTIFICATION_AUTO_TAG, NOTIFICATION_AUTO);
         }
     }
 

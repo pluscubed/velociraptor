@@ -69,6 +69,10 @@ public abstract class Utils {
     }
 
     public static String getUnitText(Context context) {
-        return PrefUtils.getUseMetric(context) ? context.getString(R.string.kmph, "") : context.getString(R.string.mph, "").trim();
+        return getUnitText(context, "");
+    }
+
+    public static String getUnitText(Context context, String amount) {
+        return PrefUtils.getUseMetric(context) ? context.getString(R.string.kmph, amount) : context.getString(R.string.mph, amount).trim();
     }
 }

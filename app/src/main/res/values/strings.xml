@@ -89,4 +89,6 @@
     <string name="support_dev_dialog_badge">🎉 Thank you for your support!🎉 </string>
     <string name="per_month">%s per month</string>
     <string name="one_time">%s one-time</string>
+    <string name="notif_android_auto_title">Velociraptor for Android Auto</string>
+    <string name="notif_android_auto_limit">Speed Limit: %s</string>
 </resources>
