@@ -429,7 +429,7 @@ public class SettingsActivity extends AppCompatActivity {
         }
         String content = getString(R.string.support_dev_dialog);
         if (PrefUtils.hasSupported(this) || !billingProcessor.listOwnedSubscriptions().isEmpty()) {
-            content += "\n\n" + getString(R.string.support_dev_dialog_badge);
+            content += "\n\n\uD83C\uDF89 " + getString(R.string.support_dev_dialog_badge) + " \uD83C\uDF89";
         }
         new MaterialDialog.Builder(this)
                 .icon(Utils.getVectorDrawableCompat(this, R.drawable.ic_favorite_black_24dp))
