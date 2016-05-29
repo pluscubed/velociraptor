@@ -10,6 +10,7 @@ import java.util.Set;
 
 public class AppDetectionService extends AccessibilityService {
 
+    private static final String ANDROID_AUTO_PACKAGE = "com.google.android.gms.car.CarHomeActivity";
     private static AppDetectionService sInstance;
 
     private Set<String> mEnabledApps;
@@ -61,7 +62,7 @@ public class AppDetectionService extends AccessibilityService {
                         }
                     }
 
-                    if (className.equals("com.google.android.gms.car.CarHomeActivity")) {
+                    if (PrefUtils.isAutoIntegrationEnabled(this) && className.equals(ANDROID_AUTO_PACKAGE)) {
                         isSelectedApp = true;
                         intent.putExtra(FloatingService.EXTRA_AUTO, true);
                     }

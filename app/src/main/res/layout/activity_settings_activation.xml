@@ -92,11 +92,10 @@
             <LinearLayout
                 android:id="@+id/linear_app_selection"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
                 android:layout_marginTop="4dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingBottom="4dp"
                 tools:ignore="UseCompoundDrawables">
 
                 <TextView
@@ -118,6 +117,20 @@
 
             </LinearLayout>
         </LinearLayout>
+
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/switch_android_auto"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@null"
+            android:foreground="?selectableItemBackground"
+            android:paddingEnd="12dp"
+            android:paddingLeft="32dp"
+            android:paddingRight="12dp"
+            android:paddingStart="32dp"
+            android:text="@string/android_auto_integration_switch"
+            android:textSize="14sp"
+            tools:ignore="RtlSymmetry" />
 
         <LinearLayout
             android:id="@+id/switch_notif_controls"

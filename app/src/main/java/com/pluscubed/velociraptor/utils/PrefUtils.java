@@ -12,24 +12,23 @@ import java.util.Set;
 
 public abstract class PrefUtils {
 
-    public static final String PREF_FLOATING_LOCATION = "pref_floating_location";
-    public static final String PREF_METRIC = "pref_metric";
-    public static final String PREF_TOLERANCE_PERCENT = "pref_overspeed";
-    public static final String PREF_TOLERANCE_CONSTANT = "pref_tolerance_constant";
-    public static final String PREF_TOLERANCE_MODE = "pref_tolerance_mode";
-    public static final String PREF_SIGN_STYLE = "pref_international";
-    public static final String PREF_SPEEDOMETER = "pref_speedometer";
-    public static final String PREF_AUTO_DISPLAY = "pref_auto_display";
-    public static final String PREF_BEEP = "pref_beep";
-    public static final String PREF_DEBUGGING = "pref_debugging";
-    public static final String PREF_SUPPORTED = "pref_supported";
-    public static final String PREF_APPS = "pref_apps";
-
-    public static final String PREF_FIRSTRUN = "pref_initial";
-    public static final String PREF_VERSION_CODE = "pref_version_code";
-
     public static final int STYLE_US = 0;
     public static final int STYLE_INTERNATIONAL = 1;
+    private static final String PREF_FLOATING_LOCATION = "pref_floating_location";
+    private static final String PREF_METRIC = "pref_metric";
+    private static final String PREF_TOLERANCE_PERCENT = "pref_overspeed";
+    private static final String PREF_TOLERANCE_CONSTANT = "pref_tolerance_constant";
+    private static final String PREF_TOLERANCE_MODE = "pref_tolerance_mode";
+    private static final String PREF_SIGN_STYLE = "pref_international";
+    private static final String PREF_SPEEDOMETER = "pref_speedometer";
+    private static final String PREF_AUTO_DISPLAY = "pref_auto_display";
+    private static final String PREF_BEEP = "pref_beep";
+    private static final String PREF_DEBUGGING = "pref_debugging";
+    private static final String PREF_SUPPORTED = "pref_supported";
+    private static final String PREF_APPS = "pref_apps";
+    private static final String PREF_ANDROID_AUTO = "pref_android_auto";
+    private static final String PREF_FIRSTRUN = "pref_initial";
+    private static final String PREF_VERSION_CODE = "pref_version_code";
 
     private static SharedPreferences.Editor edit(Context context) {
         return getSharedPreferences(context).edit();
@@ -143,6 +142,14 @@ public abstract class PrefUtils {
 
     public static void setSupported(Context context, boolean beep) {
         edit(context).putBoolean(PREF_SUPPORTED, beep).apply();
+    }
+
+    public static boolean isAutoIntegrationEnabled(Context context) {
+        return getSharedPreferences(context).getBoolean(PREF_ANDROID_AUTO, false);
+    }
+
+    public static void setAutoIntegrationEnabled(Context context, boolean enabled) {
+        edit(context).putBoolean(PREF_ANDROID_AUTO, enabled).apply();
     }
 
     public static Set<String> getApps(Context context) {

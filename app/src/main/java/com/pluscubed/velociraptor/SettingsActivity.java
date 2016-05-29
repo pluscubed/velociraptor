@@ -112,6 +112,8 @@ public class SettingsActivity extends AppCompatActivity {
     SwitchCompat beepSwitch;
     @BindView(R.id.button_test_beep)
     Button testBeepButton;
+    @BindView(R.id.switch_android_auto)
+    SwitchCompat androidAutoSwitch;
     private NotificationManager notificationManager;
     private BillingProcessor billingProcessor;
     private GoogleApiClient mGoogleApiClient;
@@ -360,6 +362,13 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
+        androidAutoSwitch.setChecked(PrefUtils.isAutoDisplayEnabled(this));
+        androidAutoSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PrefUtils.setAutoIntegrationEnabled(SettingsActivity.this, androidAutoSwitch.isChecked());
+            }
+        });
 
         invalidateStates();
 
@@ -535,6 +544,7 @@ public class SettingsActivity extends AppCompatActivity {
         boolean serviceEnabled = Utils.isAccessibilityServiceEnabled(this, AppDetectionService.class);
         enabledServiceImage.setVisibility(serviceEnabled ? View.VISIBLE : View.GONE);
         enableServiceButton.setVisibility(serviceEnabled ? View.GONE : View.VISIBLE);
+        androidAutoSwitch.setEnabled(serviceEnabled);
 
         String constant = getString(PrefUtils.getUseMetric(this) ? R.string.kmph : R.string.mph,
                 String.valueOf(PrefUtils.getSpeedingConstant(this)));
