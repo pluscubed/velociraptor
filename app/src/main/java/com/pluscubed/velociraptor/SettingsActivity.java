@@ -72,12 +72,11 @@ public class SettingsActivity extends AppCompatActivity {
     public static final String[] SUBSCRIPTIONS = new String[]{"sub_1", "sub_2"};
     public static final String[] PURCHASES = new String[]{"badge_1", "badge_2", "badge_3", "badge_4", "badge_5"};
     private static final int REQUEST_LOCATION = 105;
+
     @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @BindView(R.id.button_enable_service)
-    Button enableServiceButton;
-    @BindView(R.id.image_service_enabled)
-    ImageView enabledServiceImage;
+
+    //M Permissions
     @BindView(R.id.button_floating_enabled)
     Button enableFloatingButton;
     @BindView(R.id.image_floating_enabled)
@@ -86,37 +85,73 @@ public class SettingsActivity extends AppCompatActivity {
     Button enableLocationButton;
     @BindView(R.id.image_location_enabled)
     ImageView enabledLocationImage;
-    @BindView(R.id.open_openstreetmap)
-    LinearLayout openStreetMapView;
-    @BindView(R.id.check_coverage)
-    LinearLayout checkCoverageView;
-    @BindView(R.id.linear_tolerance)
-    LinearLayout toleranceView;
-    @BindView(R.id.text_overview_tolerance)
-    TextView toleranceOverview;
-    @BindView(R.id.spinner_unit)
-    Spinner unitSpinner;
-    @BindView(R.id.spinner_style)
-    Spinner styleSpinner;
-    @BindView(R.id.switch_speedometer)
-    SwitchCompat showSpeedometerSwitch;
+
+    //Activation
+    @BindView(R.id.linear_auto_display)
+    View appDetectionContainer;
     @BindView(R.id.switch_auto_display)
-    SwitchCompat autoDisplaySwitch;
-    @BindView(R.id.switch_debugging)
-    SwitchCompat debuggingSwitch;
+    SwitchCompat appDetectionSwitch;
+
+
     @BindView(R.id.linear_auto_display_options)
     ViewGroup appDetectionOptionsContainer;
+
+    @BindView(R.id.image_service_enabled)
+    ImageView enabledServiceImage;
+    @BindView(R.id.button_enable_service)
+    Button enableServiceButton;
+
     @BindView(R.id.linear_app_selection)
-    ViewGroup openAppSelectionContainer;
+    ViewGroup appSelectionContainer;
+    @BindView(R.id.image_app_selection)
+    ImageView appSelectionImage;
+    @BindView(R.id.button_app_selection)
+    Button appSelectionButton;
+
+    @BindView(R.id.linear_android_auto)
+    ViewGroup androidAutoContainer;
+    @BindView(R.id.image_android_auto)
+    ImageView androidAutoImage;
+    @BindView(R.id.switch_android_auto)
+    SwitchCompat androidAutoSwitch;
+
+
+    @BindView(R.id.switch_notif_controls)
+    View notifControlsContainer;
+
+    //General
+    @BindView(R.id.switch_speedometer)
+    SwitchCompat showSpeedometerSwitch;
+
     @BindView(R.id.switch_beep)
     SwitchCompat beepSwitch;
     @BindView(R.id.button_test_beep)
     Button testBeepButton;
-    @BindView(R.id.switch_android_auto)
-    SwitchCompat androidAutoSwitch;
+
+    @BindView(R.id.linear_tolerance)
+    LinearLayout toleranceView;
+    @BindView(R.id.text_overview_tolerance)
+    TextView toleranceOverview;
+
+    @BindView(R.id.spinner_unit)
+    Spinner unitSpinner;
+    @BindView(R.id.spinner_style)
+    Spinner styleSpinner;
+
+    //Wrong info
+    @BindView(R.id.open_openstreetmap)
+    LinearLayout openStreetMapView;
+    @BindView(R.id.check_coverage)
+    LinearLayout checkCoverageView;
+
+    //Advanced
+    @BindView(R.id.switch_debugging)
+    SwitchCompat debuggingSwitch;
+
+
     private NotificationManager notificationManager;
     private BillingProcessor billingProcessor;
-    private GoogleApiClient mGoogleApiClient;
+    private GoogleApiClient googleApiClient;
 
     @Override
     protected void onDestroy() {
@@ -153,14 +188,14 @@ public class SettingsActivity extends AppCompatActivity {
         checkCoverageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mGoogleApiClient = new GoogleApiClient.Builder(SettingsActivity.this)
+                googleApiClient = new GoogleApiClient.Builder(SettingsActivity.this)
                         .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
                             @Override
                             @SuppressWarnings("MissingPermission")
                             public void onConnected(@Nullable Bundle bundle) {
                                 String uriString = "http://product.itoworld.com/map/124";
                                 if (isLocationPermissionGranted()) {
-                                    Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+                                    Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
                                     if (lastLocation != null) {
                                         uriString += "?lon=" + lastLocation.getLongitude() + "&lat=" + lastLocation.getLatitude() + "&zoom=12";
                                     }
@@ -174,7 +209,7 @@ public class SettingsActivity extends AppCompatActivity {
                                     Snackbar.make(enableFloatingButton, R.string.open_coverage_map_failed, Snackbar.LENGTH_LONG).show();
                                 }
 
-                                mGoogleApiClient.disconnect();
+                                googleApiClient.disconnect();
                             }
 
                             @Override
@@ -184,13 +219,12 @@ public class SettingsActivity extends AppCompatActivity {
                         .addApi(LocationServices.API)
                         .build();
 
-                mGoogleApiClient.connect();
+                googleApiClient.connect();
             }
         });
 
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        View notifControls = findViewById(R.id.switch_notif_controls);
-        notifControls.setOnClickListener(new View.OnClickListener() {
+        notifControlsContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(SettingsActivity.this, FloatingService.class);
@@ -222,21 +256,21 @@ public class SettingsActivity extends AppCompatActivity {
         });
 
 
-        Button openAppSelection = (Button) findViewById(R.id.button_app_selection);
-        openAppSelection.setOnClickListener(new View.OnClickListener() {
+        appSelectionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(SettingsActivity.this, AppSelectionActivity.class));
             }
         });
 
-        autoDisplaySwitch.setChecked(PrefUtils.isAutoDisplayEnabled(this));
-        autoDisplaySwitch.setOnClickListener(new View.OnClickListener() {
+        appDetectionSwitch.setChecked(PrefUtils.isAutoDisplayEnabled(this));
+        appDetectionContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean autoDisplayEnabled = autoDisplaySwitch.isChecked();
+                appDetectionSwitch.toggle();
+                boolean autoDisplayEnabled = appDetectionSwitch.isChecked();
                 PrefUtils.setAutoDisplay(SettingsActivity.this, autoDisplayEnabled);
-                updateAppDetectionEnabled(autoDisplayEnabled);
+                updateAppDetectionOptionStates();
             }
         });
 
@@ -363,9 +397,10 @@ public class SettingsActivity extends AppCompatActivity {
         });
 
         androidAutoSwitch.setChecked(PrefUtils.isAutoDisplayEnabled(this));
-        androidAutoSwitch.setOnClickListener(new View.OnClickListener() {
+        androidAutoContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                androidAutoSwitch.toggle();
                 boolean checked = androidAutoSwitch.isChecked();
                 if (checked) {
                     new MaterialDialog.Builder(SettingsActivity.this)
@@ -486,13 +521,6 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
-    private void updateAppDetectionEnabled(boolean enabled) {
-        enableDisableAllChildren(enabled, appDetectionOptionsContainer);
-        updateAppSelectionEnabled(Utils.isAccessibilityServiceEnabled(this, AppDetectionService.class), enabled);
-        enabledServiceImage.setAlpha(enabled ? 1f : 0.38f);
-        androidAutoSwitch.setEnabled(enabled);
-    }
-
     @Override
     protected void onPause() {
         super.onPause();
@@ -543,10 +571,6 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
-    private void updateAppSelectionEnabled(boolean accessibilityServiceEnabled, boolean autoDisplayEnabled) {
-        enableDisableAllChildren(accessibilityServiceEnabled && autoDisplayEnabled, openAppSelectionContainer);
-    }
-
     private void invalidateStates() {
         boolean permissionGranted = isLocationPermissionGranted();
         enabledLocationImage.setImageResource(permissionGranted ? R.drawable.ic_done_green_40dp : R.drawable.ic_cross_red_40dp);
@@ -556,9 +580,7 @@ public class SettingsActivity extends AppCompatActivity {
         enabledFloatingImage.setImageResource(overlayEnabled ? R.drawable.ic_done_green_40dp : R.drawable.ic_cross_red_40dp);
         enableFloatingButton.setEnabled(!overlayEnabled);
 
-        boolean serviceEnabled = Utils.isAccessibilityServiceEnabled(this, AppDetectionService.class);
-        enabledServiceImage.setVisibility(serviceEnabled ? View.VISIBLE : View.GONE);
-        enableServiceButton.setVisibility(serviceEnabled ? View.GONE : View.VISIBLE);
+        updateAppDetectionOptionStates();
 
         String constant = getString(PrefUtils.getUseMetric(this) ? R.string.kmph : R.string.mph,
                 String.valueOf(PrefUtils.getSpeedingConstant(this)));
@@ -567,12 +589,22 @@ public class SettingsActivity extends AppCompatActivity {
         String overview = getString(R.string.tolerance_desc, percent, mode, constant);
         toleranceOverview.setText(overview);
 
-        updateAppDetectionEnabled(PrefUtils.isAutoDisplayEnabled(this));
-        androidAutoSwitch.setEnabled(serviceEnabled);
-
         if (permissionGranted && overlayEnabled) {
             enableService(true);
         }
+    }
+
+    private void updateAppDetectionOptionStates() {
+        boolean autoDisplayEnabled = PrefUtils.isAutoDisplayEnabled(this);
+        enableDisableAllChildren(autoDisplayEnabled, appDetectionOptionsContainer);
+
+        boolean serviceEnabled = Utils.isAccessibilityServiceEnabled(this, AppDetectionService.class);
+        enabledServiceImage.setImageResource(serviceEnabled ? R.drawable.ic_done_green_40dp : R.drawable.ic_cross_red_40dp);
+        enabledServiceImage.setAlpha(autoDisplayEnabled ? 1f : 0.7f);
+        enableDisableAllChildren(autoDisplayEnabled && serviceEnabled, appSelectionContainer);
+        appSelectionImage.setAlpha(autoDisplayEnabled && serviceEnabled ? 1f : 0.7f);
+        enableDisableAllChildren(autoDisplayEnabled && serviceEnabled, androidAutoContainer);
+        androidAutoImage.setAlpha(autoDisplayEnabled && serviceEnabled ? 1f : 0.7f);
     }
 
     private void enableDisableAllChildren(boolean enable, ViewGroup viewgroup) {
