@@ -105,7 +105,7 @@ public class SettingsActivity extends AppCompatActivity {
     @BindView(R.id.switch_debugging)
     SwitchCompat debuggingSwitch;
     @BindView(R.id.linear_auto_display_options)
-    ViewGroup autoDisplayOptionsContainer;
+    ViewGroup appDetectionOptionsContainer;
     @BindView(R.id.linear_app_selection)
     ViewGroup openAppSelectionContainer;
     @BindView(R.id.switch_beep)
@@ -236,7 +236,7 @@ public class SettingsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 boolean autoDisplayEnabled = autoDisplaySwitch.isChecked();
                 PrefUtils.setAutoDisplay(SettingsActivity.this, autoDisplayEnabled);
-                updateAutoDisplaySwitchEnabled(autoDisplayEnabled);
+                updateAppDetectionEnabled(autoDisplayEnabled);
             }
         });
 
@@ -366,7 +366,21 @@ public class SettingsActivity extends AppCompatActivity {
         androidAutoSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PrefUtils.setAutoIntegrationEnabled(SettingsActivity.this, androidAutoSwitch.isChecked());
+                boolean checked = androidAutoSwitch.isChecked();
+                if (checked) {
+                    new MaterialDialog.Builder(SettingsActivity.this)
+                            .content(R.string.android_auto_instruction_dialog)
+                            .positiveText(android.R.string.ok)
+                            .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                    PrefUtils.setAutoIntegrationEnabled(SettingsActivity.this, true);
+                                }
+                            })
+                            .show();
+                } else {
+                    PrefUtils.setAutoIntegrationEnabled(SettingsActivity.this, checked);
+                }
             }
         });
 
@@ -472,10 +486,11 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
-    private void updateAutoDisplaySwitchEnabled(boolean enabled) {
-        enableDisableAllChildren(enabled, autoDisplayOptionsContainer);
-        updateOpenAppSelectionEnabled(Utils.isAccessibilityServiceEnabled(this, AppDetectionService.class), enabled);
+    private void updateAppDetectionEnabled(boolean enabled) {
+        enableDisableAllChildren(enabled, appDetectionOptionsContainer);
+        updateAppSelectionEnabled(Utils.isAccessibilityServiceEnabled(this, AppDetectionService.class), enabled);
         enabledServiceImage.setAlpha(enabled ? 1f : 0.38f);
+        androidAutoSwitch.setEnabled(enabled);
     }
 
     @Override
@@ -506,7 +521,7 @@ public class SettingsActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void showAboutDialog() {
+    private void showAboutDialog() {
         new MaterialDialog.Builder(this)
                 .title(getString(R.string.about_dialog_title, BuildConfig.VERSION_NAME))
                 .positiveText(R.string.dismiss)
@@ -528,7 +543,7 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
-    private void updateOpenAppSelectionEnabled(boolean accessibilityServiceEnabled, boolean autoDisplayEnabled) {
+    private void updateAppSelectionEnabled(boolean accessibilityServiceEnabled, boolean autoDisplayEnabled) {
         enableDisableAllChildren(accessibilityServiceEnabled && autoDisplayEnabled, openAppSelectionContainer);
     }
 
@@ -544,7 +559,6 @@ public class SettingsActivity extends AppCompatActivity {
         boolean serviceEnabled = Utils.isAccessibilityServiceEnabled(this, AppDetectionService.class);
         enabledServiceImage.setVisibility(serviceEnabled ? View.VISIBLE : View.GONE);
         enableServiceButton.setVisibility(serviceEnabled ? View.GONE : View.VISIBLE);
-        androidAutoSwitch.setEnabled(serviceEnabled);
 
         String constant = getString(PrefUtils.getUseMetric(this) ? R.string.kmph : R.string.mph,
                 String.valueOf(PrefUtils.getSpeedingConstant(this)));
@@ -553,7 +567,8 @@ public class SettingsActivity extends AppCompatActivity {
         String overview = getString(R.string.tolerance_desc, percent, mode, constant);
         toleranceOverview.setText(overview);
 
-        updateAutoDisplaySwitchEnabled(PrefUtils.isAutoDisplayEnabled(this));
+        updateAppDetectionEnabled(PrefUtils.isAutoDisplayEnabled(this));
+        androidAutoSwitch.setEnabled(serviceEnabled);
 
         if (permissionGranted && overlayEnabled) {
             enableService(true);
@@ -590,7 +605,7 @@ public class SettingsActivity extends AppCompatActivity {
                 == PackageManager.PERMISSION_GRANTED;
     }
 
-    void openSettings(String settingsAction, String packageName) {
+    private void openSettings(String settingsAction, String packageName) {
         Intent intent = new Intent(settingsAction);
         intent.setData(Uri.parse("package:" + packageName));
         startActivity(intent);
