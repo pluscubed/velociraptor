@@ -45,8 +45,8 @@ import com.google.android.gms.location.LocationServices;
 import com.pluscubed.velociraptor.AppDetectionService;
 import com.pluscubed.velociraptor.BuildConfig;
 import com.pluscubed.velociraptor.ChangelogDialog;
-import com.pluscubed.velociraptor.FloatingService;
 import com.pluscubed.velociraptor.R;
+import com.pluscubed.velociraptor.SpeedLimitService;
 import com.pluscubed.velociraptor.settings.appselection.AppSelectionActivity;
 import com.pluscubed.velociraptor.utils.PrefUtils;
 import com.pluscubed.velociraptor.utils.Utils;
@@ -228,13 +228,13 @@ public class SettingsActivity extends AppCompatActivity {
         notifControlsContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(SettingsActivity.this, FloatingService.class);
-                intent.putExtra(FloatingService.EXTRA_NOTIF_START, true);
+                Intent intent = new Intent(SettingsActivity.this, SpeedLimitService.class);
+                intent.putExtra(SpeedLimitService.EXTRA_NOTIF_START, true);
                 PendingIntent pending = PendingIntent.getService(SettingsActivity.this,
                         PENDING_SERVICE, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 
-                Intent intentClose = new Intent(SettingsActivity.this, FloatingService.class);
-                intentClose.putExtra(FloatingService.EXTRA_NOTIF_CLOSE, true);
+                Intent intentClose = new Intent(SettingsActivity.this, SpeedLimitService.class);
+                intentClose.putExtra(SpeedLimitService.EXTRA_NOTIF_CLOSE, true);
                 PendingIntent pendingClose = PendingIntent.getService(SettingsActivity.this,
                         PENDING_SERVICE_CLOSE, intentClose, PendingIntent.FLAG_CANCEL_CURRENT);
 
@@ -620,9 +620,9 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void enableService(boolean start) {
-        Intent intent = new Intent(this, FloatingService.class);
+        Intent intent = new Intent(this, SpeedLimitService.class);
         if (!start) {
-            intent.putExtra(FloatingService.EXTRA_CLOSE, true);
+            intent.putExtra(SpeedLimitService.EXTRA_CLOSE, true);
         }
         startService(intent);
     }

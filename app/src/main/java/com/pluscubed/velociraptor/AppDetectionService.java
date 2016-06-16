@@ -52,7 +52,7 @@ public class AppDetectionService extends AccessibilityService {
             if (event.getClassName() != null) {
                 String className = event.getClassName().toString();
                 if (className.toLowerCase().contains("activity") || className.toLowerCase().contains("launcher")) {
-                    Intent intent = new Intent(this, FloatingService.class);
+                    Intent intent = new Intent(this, SpeedLimitService.class);
 
                     boolean isSelectedApp = false;
                     for (String packageName : mEnabledApps) {
@@ -64,11 +64,11 @@ public class AppDetectionService extends AccessibilityService {
 
                     if (PrefUtils.isAutoIntegrationEnabled(this) && className.equals(ANDROID_AUTO_PACKAGE)) {
                         isSelectedApp = true;
-                        intent.putExtra(FloatingService.EXTRA_AUTO, true);
+                        intent.putExtra(SpeedLimitService.EXTRA_VIEW, SpeedLimitService.VIEW_AUTO);
                     }
 
                     if (!isSelectedApp && !appPackage.equals(BuildConfig.APPLICATION_ID)) {
-                        intent.putExtra(FloatingService.EXTRA_CLOSE, true);
+                        intent.putExtra(SpeedLimitService.EXTRA_CLOSE, true);
                     }
                     startService(intent);
                 }

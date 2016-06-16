@@ -17,8 +17,8 @@ import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 
 import com.pluscubed.velociraptor.BuildConfig;
-import com.pluscubed.velociraptor.FloatingService;
 import com.pluscubed.velociraptor.R;
+import com.pluscubed.velociraptor.SpeedLimitService;
 
 public abstract class Utils {
 
@@ -83,8 +83,8 @@ public abstract class Utils {
 
     public static void updateFloatingServicePrefs(Context context) {
         if (isServiceReady(context)) {
-            Intent intent = new Intent(context, FloatingService.class);
-            intent.putExtra(FloatingService.EXTRA_PREF_CHANGE, true);
+            Intent intent = new Intent(context, SpeedLimitService.class);
+            intent.putExtra(SpeedLimitService.EXTRA_PREF_CHANGE, true);
             context.startService(intent);
         }
     }

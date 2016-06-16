@@ -17,4 +17,8 @@
         <item name="android:textColor">@color/btn_colored_text_material</item>
     </style>
 
+    <style name="Widget.Button.Borderless.Colored" parent="Widget.AppCompat.Button.Borderless.Colored">
+        <item name="android:textColor">@color/btn_colored_borderless_text_material</item>
+    </style>
+
 </resources>
