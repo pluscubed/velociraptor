@@ -18,7 +18,7 @@
         android:theme="@style/Theme.Velociraptor"
         tools:replace="android:label">
         <activity
-            android:name=".SettingsActivity"
+            android:name=".settings.SettingsActivity"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,7 +27,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".appselection.AppSelectionActivity" />
+        <activity android:name=".settings.appselection.AppSelectionActivity" />
 
         <service android:name=".FloatingService" />
 

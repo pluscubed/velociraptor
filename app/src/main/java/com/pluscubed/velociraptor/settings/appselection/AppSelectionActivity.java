@@ -1,4 +1,4 @@
-package com.pluscubed.velociraptor.appselection;
+package com.pluscubed.velociraptor.settings.appselection;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;

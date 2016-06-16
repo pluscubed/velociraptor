@@ -1,16 +1,13 @@
-package com.pluscubed.velociraptor;
+package com.pluscubed.velociraptor.settings;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Dialog;
-import android.app.DialogFragment;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
@@ -22,13 +19,10 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.ShareCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
 import android.text.Html;
-import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,13 +30,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -51,7 +42,12 @@ import com.anjlab.android.iab.v3.SkuDetails;
 import com.anjlab.android.iab.v3.TransactionDetails;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
-import com.pluscubed.velociraptor.appselection.AppSelectionActivity;
+import com.pluscubed.velociraptor.AppDetectionService;
+import com.pluscubed.velociraptor.BuildConfig;
+import com.pluscubed.velociraptor.ChangelogDialog;
+import com.pluscubed.velociraptor.FloatingService;
+import com.pluscubed.velociraptor.R;
+import com.pluscubed.velociraptor.settings.appselection.AppSelectionActivity;
 import com.pluscubed.velociraptor.utils.PrefUtils;
 import com.pluscubed.velociraptor.utils.Utils;
 
@@ -133,6 +129,11 @@ public class SettingsActivity extends AppCompatActivity {
     @BindView(R.id.text_overview_tolerance)
     TextView toleranceOverview;
 
+    @BindView(R.id.linear_opacity)
+    LinearLayout opacityView;
+    @BindView(R.id.text_overview_opacity)
+    TextView opacityOverview;
+
     @BindView(R.id.spinner_unit)
     Spinner unitSpinner;
     @BindView(R.id.spinner_style)
@@ -194,7 +195,7 @@ public class SettingsActivity extends AppCompatActivity {
                             @SuppressWarnings("MissingPermission")
                             public void onConnected(@Nullable Bundle bundle) {
                                 String uriString = "http://product.itoworld.com/map/124";
-                                if (isLocationPermissionGranted()) {
+                                if (Utils.isLocationPermissionGranted(SettingsActivity.this)) {
                                     Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
                                     if (lastLocation != null) {
                                         uriString += "?lon=" + lastLocation.getLongitude() + "&lat=" + lastLocation.getLatitude() + "&zoom=12";
@@ -315,7 +316,7 @@ public class SettingsActivity extends AppCompatActivity {
                     unitSpinner.setDropDownVerticalOffset(
                             Utils.convertDpToPx(SettingsActivity.this, unitSpinner.getSelectedItemPosition() * -48));
 
-                    updateFloatingServicePrefs();
+                    Utils.updateFloatingServicePrefs(SettingsActivity.this);
                 }
             }
 
@@ -339,7 +340,7 @@ public class SettingsActivity extends AppCompatActivity {
                     styleSpinner.setDropDownVerticalOffset(
                             Utils.convertDpToPx(SettingsActivity.this, styleSpinner.getSelectedItemPosition() * -48));
 
-                    updateFloatingServicePrefs();
+                    Utils.updateFloatingServicePrefs(SettingsActivity.this);
                 }
             }
 
@@ -358,6 +359,13 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
+        opacityView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new OpacityDialogFragment().show(getFragmentManager(), "dialog_opacity");
+            }
+        });
+
         showSpeedometerSwitch.setChecked(PrefUtils.getShowSpeedometer(this));
         ((View) showSpeedometerSwitch.getParent()).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -366,7 +374,7 @@ public class SettingsActivity extends AppCompatActivity {
 
                 PrefUtils.setShowSpeedometer(SettingsActivity.this, showSpeedometerSwitch.isChecked());
 
-                updateFloatingServicePrefs();
+                Utils.updateFloatingServicePrefs(SettingsActivity.this);
             }
         });
 
@@ -378,7 +386,7 @@ public class SettingsActivity extends AppCompatActivity {
 
                 PrefUtils.setDebugging(SettingsActivity.this, debuggingSwitch.isChecked());
 
-                updateFloatingServicePrefs();
+                Utils.updateFloatingServicePrefs(SettingsActivity.this);
             }
         });
 
@@ -513,14 +521,6 @@ public class SettingsActivity extends AppCompatActivity {
             super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void updateFloatingServicePrefs() {
-        if (isServiceReady()) {
-            Intent intent = new Intent(SettingsActivity.this, FloatingService.class);
-            intent.putExtra(FloatingService.EXTRA_PREF_CHANGE, true);
-            startService(intent);
-        }
-    }
-
     @Override
     protected void onPause() {
         super.onPause();
@@ -572,7 +572,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void invalidateStates() {
-        boolean permissionGranted = isLocationPermissionGranted();
+        boolean permissionGranted = Utils.isLocationPermissionGranted(this);
         enabledLocationImage.setImageResource(permissionGranted ? R.drawable.ic_done_green_40dp : R.drawable.ic_cross_red_40dp);
         enableLocationButton.setEnabled(!permissionGranted);
 
@@ -588,6 +588,8 @@ public class SettingsActivity extends AppCompatActivity {
         String mode = PrefUtils.getToleranceMode(this) ? "+" : getString(R.string.or);
         String overview = getString(R.string.tolerance_desc, percent, mode, constant);
         toleranceOverview.setText(overview);
+
+        opacityOverview.setText(getString(R.string.percent, String.valueOf(PrefUtils.getOpacity(this))));
 
         if (permissionGranted && overlayEnabled) {
             enableService(true);
@@ -625,167 +627,9 @@ public class SettingsActivity extends AppCompatActivity {
         startService(intent);
     }
 
-    private boolean isServiceReady() {
-        boolean permissionGranted =
-                isLocationPermissionGranted();
-        @SuppressLint({"NewApi", "LocalSuppress"}) boolean overlayEnabled = Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(this);
-        return permissionGranted && overlayEnabled;
-    }
-
-    private boolean isLocationPermissionGranted() {
-        return ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED;
-    }
-
     private void openSettings(String settingsAction, String packageName) {
         Intent intent = new Intent(settingsAction);
         intent.setData(Uri.parse("package:" + packageName));
         startActivity(intent);
-    }
-
-    public static class ToleranceDialogFragment extends DialogFragment {
-
-        @BindView(R.id.text_constant_unit)
-        TextView constantUnitText;
-        @BindView(R.id.edittext_constant)
-        EditText constantEditText;
-        @BindView(R.id.seekbar_constant)
-        SeekBar constantSeekbar;
-
-        @BindView(R.id.text_percent)
-        TextView percentText;
-        @BindView(R.id.edittext_percent)
-        EditText percentEditText;
-        @BindView(R.id.seekbar_percent)
-        SeekBar percentSeekbar;
-
-        @BindView(R.id.button_and)
-        ToggleButton andButton;
-        @BindView(R.id.button_or)
-        ToggleButton orButton;
-
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            @SuppressLint("InflateParams")
-            View dialog = getActivity().getLayoutInflater().inflate(R.layout.dialog_tolerance, null, false);
-            ButterKnife.bind(this, dialog);
-
-            constantUnitText.setText(Utils.getUnitText(getActivity()));
-            constantEditText.setText(String.valueOf(PrefUtils.getSpeedingConstant(getActivity())));
-            constantEditText.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-                    try {
-                        int constant = Integer.parseInt(s.toString());
-                        constantSeekbar.setProgress(constant + 25);
-                    } catch (NumberFormatException e) {
-                        constantSeekbar.setProgress(25);
-                    }
-                }
-            });
-            constantSeekbar.setProgress(PrefUtils.getSpeedingConstant(getActivity()) + 25);
-            constantSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                @Override
-                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                    if (fromUser) {
-                        constantEditText.setText(String.valueOf(progress - 25));
-                    }
-                }
-
-                @Override
-                public void onStartTrackingTouch(SeekBar seekBar) {
-                }
-
-                @Override
-                public void onStopTrackingTouch(SeekBar seekBar) {
-                }
-            });
-
-            percentText.setText(getString(R.string.percent, ""));
-            percentEditText.setText(String.valueOf(PrefUtils.getSpeedingPercent(getActivity())));
-            percentEditText.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-                    try {
-                        int constant = Integer.parseInt(s.toString());
-                        percentSeekbar.setProgress(constant + 25);
-                    } catch (NumberFormatException e) {
-                        percentSeekbar.setProgress(25);
-                    }
-                }
-            });
-            percentSeekbar.setProgress(PrefUtils.getSpeedingPercent(getActivity()) + 25);
-            percentSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                @Override
-                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                    if (fromUser) {
-                        percentEditText.setText(String.valueOf(progress - 25));
-                    }
-                }
-
-                @Override
-                public void onStartTrackingTouch(SeekBar seekBar) {
-                }
-
-                @Override
-                public void onStopTrackingTouch(SeekBar seekBar) {
-                }
-            });
-
-            andButton.setChecked(PrefUtils.getToleranceMode(getActivity()));
-            orButton.setChecked(!PrefUtils.getToleranceMode(getActivity()));
-            andButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    andButton.setChecked(true);
-                    orButton.setChecked(false);
-                }
-            });
-            orButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    orButton.setChecked(true);
-                    andButton.setChecked(false);
-                }
-            });
-
-            return new MaterialDialog.Builder(getActivity())
-                    .customView(dialog, true)
-                    .title(R.string.speeding_amount)
-                    .negativeText(android.R.string.cancel)
-                    .positiveText(android.R.string.ok)
-                    .onPositive(new MaterialDialog.SingleButtonCallback() {
-                        @Override
-                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                            try {
-                                PrefUtils.setSpeedingConstant(getActivity(), Integer.parseInt(constantEditText.getText().toString()));
-                                PrefUtils.setSpeedingPercent(getActivity(), Integer.parseInt(percentEditText.getText().toString()));
-                            } catch (NumberFormatException ignored) {
-                            }
-                            PrefUtils.setToleranceMode(getActivity(), andButton.isChecked());
-                        }
-                    }).build();
-        }
-
     }
 }

@@ -4,9 +4,9 @@ import android.app.Application;
 
 import com.bumptech.glide.Glide;
 import com.crashlytics.android.Crashlytics;
-import com.pluscubed.velociraptor.appselection.AppIconLoader;
-import com.pluscubed.velociraptor.appselection.AppInfo;
-import com.pluscubed.velociraptor.appselection.SelectedAppDatabase;
+import com.pluscubed.velociraptor.settings.appselection.AppIconLoader;
+import com.pluscubed.velociraptor.settings.appselection.AppInfo;
+import com.pluscubed.velociraptor.settings.appselection.SelectedAppDatabase;
 import com.pluscubed.velociraptor.utils.PrefUtils;
 import com.squareup.leakcanary.LeakCanary;
 

@@ -1,4 +1,4 @@
-package com.pluscubed.velociraptor.appselection;
+package com.pluscubed.velociraptor.settings.appselection;
 
 import android.content.Context;
 import android.content.pm.PackageManager;

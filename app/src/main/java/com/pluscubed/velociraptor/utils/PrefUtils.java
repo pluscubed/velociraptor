@@ -19,6 +19,7 @@ public abstract class PrefUtils {
     private static final String PREF_TOLERANCE_PERCENT = "pref_overspeed";
     private static final String PREF_TOLERANCE_CONSTANT = "pref_tolerance_constant";
     private static final String PREF_TOLERANCE_MODE = "pref_tolerance_mode";
+    private static final String PREF_OPACITY = "pref_opacity";
     private static final String PREF_SIGN_STYLE = "pref_international";
     private static final String PREF_SPEEDOMETER = "pref_speedometer";
     private static final String PREF_AUTO_DISPLAY = "pref_auto_display";
@@ -90,6 +91,14 @@ public abstract class PrefUtils {
 
     public static int getSpeedingConstant(Context context) {
         return getSharedPreferences(context).getInt(PREF_TOLERANCE_CONSTANT, 0);
+    }
+
+    public static void setOpacity(Context context, int amount) {
+        edit(context).putInt(PREF_OPACITY, amount).apply();
+    }
+
+    public static int getOpacity(Context context) {
+        return getSharedPreferences(context).getInt(PREF_OPACITY, 100);
     }
 
     public static void setSpeedingConstant(Context context, int amount) {

@@ -1,7 +1,11 @@
 package com.pluscubed.velociraptor.utils;
 
+import android.Manifest;
 import android.accessibilityservice.AccessibilityService;
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
@@ -13,6 +17,7 @@ import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 
 import com.pluscubed.velociraptor.BuildConfig;
+import com.pluscubed.velociraptor.FloatingService;
 import com.pluscubed.velociraptor.R;
 
 public abstract class Utils {
@@ -74,5 +79,25 @@ public abstract class Utils {
 
     public static String getUnitText(Context context, String amount) {
         return PrefUtils.getUseMetric(context) ? context.getString(R.string.kmph, amount) : context.getString(R.string.mph, amount).trim();
+    }
+
+    public static void updateFloatingServicePrefs(Context context) {
+        if (isServiceReady(context)) {
+            Intent intent = new Intent(context, FloatingService.class);
+            intent.putExtra(FloatingService.EXTRA_PREF_CHANGE, true);
+            context.startService(intent);
+        }
+    }
+
+    public static boolean isServiceReady(Context context) {
+        boolean permissionGranted =
+                isLocationPermissionGranted(context);
+        @SuppressLint({"NewApi", "LocalSuppress"}) boolean overlayEnabled = Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(context);
+        return permissionGranted && overlayEnabled;
+    }
+
+    public static boolean isLocationPermissionGranted(Context context) {
+        return ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED;
     }
 }

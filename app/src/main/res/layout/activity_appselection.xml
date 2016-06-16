@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".appselection.AppSelectionActivity">
+    tools:context=".settings.appselection.AppSelectionActivity">
 
 
     <android.support.v7.widget.Toolbar
