@@ -1,5 +1,6 @@
 package com.pluscubed.velociraptor;
 
+import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -264,12 +265,34 @@ public class FloatingView implements SpeedLimitView {
         private long mStartClickTime;
         private boolean mIsClick;
 
+        private AnimatorSet fadeAnimator;
+        private float initialAlpha;
+        private ValueAnimator fadeOut;
+        private ValueAnimator fadeIn;
+
         public FloatingOnTouchListener() {
+            final WindowManager.LayoutParams params = (WindowManager.LayoutParams) mFloatingView.getLayoutParams();
+            fadeOut = ValueAnimator.ofFloat(params.alpha, 0.1F);
+            fadeOut.setInterpolator(new FastOutSlowInInterpolator());
+            fadeOut.setDuration(100);
+            fadeOut.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                    params.alpha = (float) valueAnimator.getAnimatedValue();
+                    try {
+                        mWindowManager.updateViewLayout(mFloatingView, params);
+                    } catch (IllegalArgumentException ignore) {
+                    }
+                }
+            });
+            fadeIn = fadeOut.clone();
+            fadeIn.setFloatValues(0.1F, params.alpha);
+            fadeIn.setStartDelay(5000);
         }
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-            WindowManager.LayoutParams params = (WindowManager.LayoutParams) mFloatingView.getLayoutParams();
+            final WindowManager.LayoutParams params = (WindowManager.LayoutParams) mFloatingView.getLayoutParams();
 
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
@@ -302,9 +325,21 @@ public class FloatingView implements SpeedLimitView {
                     }
                     return true;
                 case MotionEvent.ACTION_UP:
-
                     if (mIsClick && System.currentTimeMillis() - mStartClickTime <= ViewConfiguration.getLongPressTimeout()) {
-                        //TODO: On Click
+                        if (fadeAnimator != null && fadeAnimator.isStarted()) {
+                            fadeAnimator.cancel();
+                            params.alpha = initialAlpha;
+                            try {
+                                mWindowManager.updateViewLayout(mFloatingView, params);
+                            } catch (IllegalArgumentException ignore) {
+                            }
+                        } else {
+                            initialAlpha = params.alpha;
+
+                            fadeAnimator = new AnimatorSet();
+                            fadeAnimator.play(fadeOut).before(fadeIn);
+                            fadeAnimator.start();
+                        }
                     } else {
                         animateViewToSideSlot();
                     }
