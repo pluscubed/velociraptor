@@ -59,7 +59,7 @@ Per favore, apri l\'app per ottenerli.</string>
     <string name="advanced">Avanzate</string>
     <string name="changelog">Changelog</string>
     <string name="help_edit">Help edit the speed limit data</string>
-    <string name="check_coverage_desc">Se sì e il limite di velocità non è visualizzato, potrebbe esserci un bug. Utilizza l'opzione statistiche di debugging e il pulsante di feedback.</string>
+    <string name="check_coverage_desc">Se sì e il limite di velocità non è visualizzato, potrebbe esserci un bug. Utilizza l\'opzione statistiche di debugging e il pulsante di feedback.</string>
     <string name="check_coverage">Tocca per verificare se la tua area è coperta</string>
     <string name="obtaining_gps_location">Ottenendo la posizione GPS…</string>
     <string name="debugging_stats">Statistiche per nerd/debugging</string>
@@ -75,7 +75,7 @@ Per favore, apri l\'app per ottenerli.</string>
     <string name="tolerance_desc">%1$s %2$s %3$s</string>
     <string name="support_development">Supporta lo sviluppo</string>
     <string name="in_app_unavailable">Fatturazione in-app non disponibile</string>
-    <string name="support_dev_dialog">Usato per i costi di server e API; l'importo suggerito è di 1 USD al mese. Un badge sarà visualizzato qui come mia sincera gratitudine.</string>
+    <string name="support_dev_dialog">Usato per i costi di server e API; l\'importo suggerito è di 1 USD al mese. Un badge sarà visualizzato qui come mia sincera gratitudine.</string>
     <string name="support_dev_dialog_badge">Grazie per il tuo supporto!</string>
     <string name="per_month">%s al mese</string>
     <string name="one_time">%s una tantum</string>
