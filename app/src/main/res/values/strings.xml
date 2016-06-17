@@ -7,7 +7,7 @@
 
     <string name="dialog_draw_overlay">To show floating elements on Android 6.0+, grant the \"Draw Over Other Apps\" permission</string>
     <string name="open_settings">Open Settings Page</string>
-    <string name="accessibility_service_description">To detect the foreground app and display the speed limit, the accessibility service must be enabled.</string>
+    <string name="accessibility_service_description">Allow Velociraptor to detect the foreground app and display automatically.\n\nVelociraptor does not use any information other than the foreground app info.</string>
 
 
     <string name="enable_accessibility_service">Enable Accessibility Service</string>
