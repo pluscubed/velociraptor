@@ -356,7 +356,8 @@ public class SpeedLimitService extends Service {
             mGoogleApiClient.disconnect();
         }
 
-        speedLimitView.stop();
+        if (speedLimitView != null)
+            speedLimitView.stop();
 
         if (mLocationSubscription != null) {
             mLocationSubscription.unsubscribe();

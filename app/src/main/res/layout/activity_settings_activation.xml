@@ -102,7 +102,7 @@
 
                 <Button
                     android:id="@+id/button_enable_service"
-                    style="@style/Widget.Button.Borderless.Colored"
+                    style="@style/Widget.Button.Colored"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:minWidth="0dp"
@@ -187,13 +187,6 @@
 
 
         </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
-            android:background="#20000000" />
 
         <LinearLayout
             android:id="@+id/switch_notif_controls"

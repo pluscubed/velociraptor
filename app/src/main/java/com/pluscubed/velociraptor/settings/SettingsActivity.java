@@ -408,6 +408,9 @@ public class SettingsActivity extends AppCompatActivity {
         androidAutoContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!androidAutoSwitch.isEnabled()) {
+                    return;
+                }
                 androidAutoSwitch.toggle();
                 boolean checked = androidAutoSwitch.isChecked();
                 if (checked) {
@@ -607,6 +610,7 @@ public class SettingsActivity extends AppCompatActivity {
         appSelectionImage.setAlpha(autoDisplayEnabled && serviceEnabled ? 1f : 0.7f);
         enableDisableAllChildren(autoDisplayEnabled && serviceEnabled, androidAutoContainer);
         androidAutoImage.setAlpha(autoDisplayEnabled && serviceEnabled ? 1f : 0.7f);
+        enableServiceButton.setEnabled(autoDisplayEnabled && !serviceEnabled);
     }
 
     private void enableDisableAllChildren(boolean enable, ViewGroup viewgroup) {
