@@ -14,7 +14,7 @@
 -->
 
 <!-- Used for the text of a borderless colored button. -->
-<selector xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item android:color="?android:attr/textColorSecondary" android:state_enabled="false" app:alpha="?android:attr/disabledAlpha" />
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:alpha="?android:attr/disabledAlpha" android:color="?android:attr/textColorSecondary" android:state_enabled="false" />
     <item android:color="?attr/colorAccent" />
 </selector>

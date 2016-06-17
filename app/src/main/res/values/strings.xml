@@ -92,6 +92,6 @@
     <string name="notif_android_auto_title">Velociraptor for Android Auto</string>
     <string name="notif_android_auto_limit">Speed Limit: %s</string>
     <string name="android_auto_integration_switch">Android Auto integration</string>
-    <string name="android_auto_instruction_dialog">Velociraptor acts as a messaging app for Android Auto. To stop the notifications sounds, touch the close or reply button.</string>
+    <string name="android_auto_instruction_dialog">Velociraptor acts as a messaging app for Android Auto. To stop the notifications sounds, touch the close or reply button once.</string>
     <string name="transparency">Transparency</string>
 </resources>
