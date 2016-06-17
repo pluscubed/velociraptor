@@ -73,21 +73,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="12dp"
-                android:layout_marginLeft="24dp"
+                android:layout_marginLeft="28dp"
                 android:layout_marginRight="12dp"
-                android:layout_marginStart="24dp"
+                android:layout_marginStart="28dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:paddingBottom="8dp"
-                android:paddingTop="8dp"
+                android:paddingTop="4dp"
                 tools:ignore="UseCompoundDrawables">
 
                 <ImageView
                     android:id="@+id/image_service_enabled"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:layout_marginEnd="32dp"
-                    android:layout_marginRight="32dp"
+                    android:layout_marginEnd="28dp"
+                    android:layout_marginRight="28dp"
                     app:srcCompat="@drawable/ic_done_green_40dp" />
 
                 <TextView
@@ -115,9 +115,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_marginEnd="12dp"
-                android:layout_marginLeft="24dp"
+                android:layout_marginLeft="28dp"
                 android:layout_marginRight="12dp"
-                android:layout_marginStart="24dp"
+                android:layout_marginStart="28dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 tools:ignore="UseCompoundDrawables">
@@ -126,8 +126,8 @@
                     android:id="@+id/image_app_selection"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:layout_marginEnd="32dp"
-                    android:layout_marginRight="32dp"
+                    android:layout_marginEnd="28dp"
+                    android:layout_marginRight="28dp"
                     android:tint="#8a000000"
                     app:srcCompat="@drawable/ic_apps_black_24dp" />
 
@@ -158,17 +158,17 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:paddingEnd="12dp"
-                android:paddingLeft="24dp"
+                android:paddingLeft="28dp"
                 android:paddingRight="12dp"
-                android:paddingStart="24dp"
+                android:paddingStart="28dp"
                 tools:ignore="UseCompoundDrawables">
 
                 <ImageView
                     android:id="@+id/image_android_auto"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:layout_marginEnd="32dp"
-                    android:layout_marginRight="32dp"
+                    android:layout_marginEnd="28dp"
+                    android:layout_marginRight="28dp"
                     android:tint="#8a000000"
                     app:srcCompat="@drawable/ic_directions_car_black_24dp" />
 
@@ -192,6 +192,7 @@
             android:id="@+id/switch_notif_controls"
             android:layout_width="match_parent"
             android:layout_height="56dp"
+            android:layout_marginTop="4dp"
             android:background="?selectableItemBackground"
             android:baselineAligned="false"
             android:gravity="center_vertical"
