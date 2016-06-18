@@ -408,6 +408,10 @@ public class SettingsActivity extends AppCompatActivity {
         androidAutoContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (BuildConfig.FLAVOR.equals("play")) {
+                    Snackbar.make(findViewById(android.R.id.content), R.string.auto_not_available, Snackbar.LENGTH_LONG).show();
+                    return;
+                }
                 if (!androidAutoSwitch.isEnabled()) {
                     return;
                 }
@@ -469,53 +473,62 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void showSupportDialog() {
-        if (!billingProcessor.isInitialized()) {
-            Snackbar.make(findViewById(android.R.id.content), R.string.in_app_unavailable, Snackbar.LENGTH_SHORT).show();
-            return;
-        }
-
-        final List<SkuDetails> purchaseListingDetails = billingProcessor.getPurchaseListingDetails(new ArrayList<>(Arrays.asList(PURCHASES)));
-        final List<SkuDetails> subscriptionListingDetails = billingProcessor.getSubscriptionListingDetails(new ArrayList<>(Arrays.asList(SUBSCRIPTIONS)));
-
-        if (purchaseListingDetails == null || purchaseListingDetails.isEmpty()) {
-            Snackbar.make(findViewById(android.R.id.content), R.string.in_app_unavailable, Snackbar.LENGTH_SHORT).show();
-            return;
-        }
-
-        purchaseListingDetails.addAll(0, subscriptionListingDetails);
-
-        List<String> purchaseDisplay = new ArrayList<>();
-        for (SkuDetails details : purchaseListingDetails) {
-            NumberFormat format = NumberFormat.getCurrencyInstance();
-            format.setCurrency(Currency.getInstance(details.currency));
-            String amount = format.format(details.priceValue);
-            if (details.isSubscription)
-                amount = String.format(getString(R.string.per_month), amount);
-            else {
-                amount = String.format(getString(R.string.one_time), amount);
-            }
-            purchaseDisplay.add(amount);
-        }
-        String content = getString(R.string.support_dev_dialog);
+        String content = getString(BuildConfig.FLAVOR.equals("play") ? R.string.support_dev_dialog : R.string.support_dev_dialog_notplay);
         if (PrefUtils.hasSupported(this) || !billingProcessor.listOwnedSubscriptions().isEmpty()) {
             content += "\n\n\uD83C\uDF89 " + getString(R.string.support_dev_dialog_badge) + " \uD83C\uDF89";
         }
-        new MaterialDialog.Builder(this)
+        MaterialDialog.Builder builder = new MaterialDialog.Builder(this)
                 .icon(Utils.getVectorDrawableCompat(this, R.drawable.ic_favorite_black_24dp))
                 .title(R.string.support_development)
-                .content(content)
-                .items(purchaseDisplay)
-                .itemsCallback(new MaterialDialog.ListCallback() {
-                    @Override
-                    public void onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
-                        SkuDetails skuDetails = purchaseListingDetails.get(which);
-                        if (skuDetails.isSubscription) {
-                            billingProcessor.subscribe(SettingsActivity.this, skuDetails.productId);
-                        } else {
-                            billingProcessor.purchase(SettingsActivity.this, skuDetails.productId);
+                .content(Html.fromHtml(content));
+
+        if (BuildConfig.FLAVOR.equals("play")) {
+            if (!billingProcessor.isInitialized()) {
+                Snackbar.make(findViewById(android.R.id.content), R.string.in_app_unavailable, Snackbar.LENGTH_SHORT).show();
+                return;
+            }
+            final List<SkuDetails> purchaseListingDetails = billingProcessor.getPurchaseListingDetails(new ArrayList<>(Arrays.asList(PURCHASES)));
+            final List<SkuDetails> subscriptionListingDetails = billingProcessor.getSubscriptionListingDetails(new ArrayList<>(Arrays.asList(SUBSCRIPTIONS)));
+
+            if (purchaseListingDetails == null || purchaseListingDetails.isEmpty()) {
+                Snackbar.make(findViewById(android.R.id.content), R.string.in_app_unavailable, Snackbar.LENGTH_SHORT).show();
+                return;
+            }
+
+            purchaseListingDetails.addAll(0, subscriptionListingDetails);
+
+            List<String> purchaseDisplay = new ArrayList<>();
+            for (SkuDetails details : purchaseListingDetails) {
+                NumberFormat format = NumberFormat.getCurrencyInstance();
+                format.setCurrency(Currency.getInstance(details.currency));
+                String amount = format.format(details.priceValue);
+                if (details.isSubscription)
+                    amount = String.format(getString(R.string.per_month), amount);
+                else {
+                    amount = String.format(getString(R.string.one_time), amount);
+                }
+                purchaseDisplay.add(amount);
+            }
+
+            builder.items(purchaseDisplay)
+                    .itemsCallback(new MaterialDialog.ListCallback() {
+                        @Override
+                        public void onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
+                            SkuDetails skuDetails = purchaseListingDetails.get(which);
+                            if (skuDetails.isSubscription) {
+                                billingProcessor.subscribe(SettingsActivity.this, skuDetails.productId);
+                            } else {
+                                billingProcessor.purchase(SettingsActivity.this, skuDetails.productId);
+                            }
                         }
-                    }
-                }).show();
+                    });
+        }
+
+        if (BuildConfig.FLAVOR.equals("full")) {
+            builder.positiveText(R.string.dismiss);
+        }
+
+        builder.show();
     }
 
     @Override
