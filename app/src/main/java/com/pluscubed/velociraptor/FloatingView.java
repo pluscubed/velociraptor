@@ -254,6 +254,15 @@ public class FloatingView implements SpeedLimitView {
         if (mSpeedometerUnitsText != null) {
             mSpeedometerUnitsText.setText(Utils.getUnitText(service));
         }
+
+        if (mFloatingView != null) {
+            WindowManager.LayoutParams layoutParams = (WindowManager.LayoutParams) mFloatingView.getLayoutParams();
+            layoutParams.alpha = PrefUtils.getOpacity(service) / 100F;
+            try {
+                mWindowManager.updateViewLayout(mFloatingView, layoutParams);
+            } catch (IllegalArgumentException ignore) {
+            }
+        }
     }
 
     private class FloatingOnTouchListener implements View.OnTouchListener {

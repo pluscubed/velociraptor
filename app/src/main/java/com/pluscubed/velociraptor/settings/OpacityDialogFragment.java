@@ -3,7 +3,6 @@ package com.pluscubed.velociraptor.settings;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.Editable;
@@ -24,6 +23,7 @@ import butterknife.ButterKnife;
 
 public class OpacityDialogFragment extends DialogFragment {
 
+
     @BindView(R.id.text_percent)
     TextView percentText;
     @BindView(R.id.edittext_percent)
@@ -31,11 +31,15 @@ public class OpacityDialogFragment extends DialogFragment {
     @BindView(R.id.seekbar_percent)
     SeekBar percentSeekbar;
 
+    private int initialTransparency;
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         @SuppressLint("InflateParams")
         View dialog = getActivity().getLayoutInflater().inflate(R.layout.dialog_opacity, null, false);
         ButterKnife.bind(this, dialog);
+
+        initialTransparency = PrefUtils.getOpacity(getActivity());
 
         percentText.setText(getString(R.string.percent, ""));
         percentEditText.setText(String.valueOf(PrefUtils.getOpacity(getActivity())));
@@ -58,6 +62,12 @@ public class OpacityDialogFragment extends DialogFragment {
                 } catch (NumberFormatException e) {
                     percentSeekbar.setProgress(100);
                 }
+
+                try {
+                    PrefUtils.setOpacity(getActivity(), Integer.parseInt(percentEditText.getText().toString()));
+                    Utils.updateFloatingServicePrefs(getActivity());
+                } catch (NumberFormatException ignored) {
+                }
             }
         });
         percentSeekbar.setProgress(PrefUtils.getOpacity(getActivity()));
@@ -66,6 +76,12 @@ public class OpacityDialogFragment extends DialogFragment {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (fromUser) {
                     percentEditText.setText(String.valueOf(progress));
+
+                    try {
+                        PrefUtils.setOpacity(getActivity(), Integer.parseInt(percentEditText.getText().toString()));
+                        Utils.updateFloatingServicePrefs(getActivity());
+                    } catch (NumberFormatException ignored) {
+                    }
                 }
             }
 
@@ -83,22 +99,13 @@ public class OpacityDialogFragment extends DialogFragment {
                 .title(R.string.transparency)
                 .negativeText(android.R.string.cancel)
                 .positiveText(android.R.string.ok)
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        try {
-                            PrefUtils.setOpacity(getActivity(), Integer.parseInt(percentEditText.getText().toString()));
-                        } catch (NumberFormatException ignored) {
-                        }
+                        PrefUtils.setOpacity(getActivity(), initialTransparency);
+                        Utils.updateFloatingServicePrefs(getActivity());
                     }
                 }).build();
-    }
-
-    @Override
-    public void onDismiss(DialogInterface dialog) {
-        super.onDismiss(dialog);
-
-        Utils.updateFloatingServicePrefs(getActivity());
     }
 
 }

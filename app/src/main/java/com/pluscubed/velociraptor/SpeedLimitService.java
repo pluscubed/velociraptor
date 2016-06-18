@@ -87,13 +87,6 @@ public class SpeedLimitService extends Service {
                 onStop();
                 stopSelf();
                 return super.onStartCommand(intent, flags, startId);
-            } else if (intent.getBooleanExtra(EXTRA_NOTIF_START, false)) {
-                mNotifStart = true;
-            } else if (intent.getBooleanExtra(EXTRA_PREF_CHANGE, false)) {
-                speedLimitView.updatePrefs();
-
-                updateLimitText(false);
-                updateSpeedometer(mLastSpeedLocation);
             }
 
             int viewType = intent.getIntExtra(EXTRA_VIEW, VIEW_FLOATING);
@@ -109,10 +102,20 @@ public class SpeedLimitService extends Service {
                         break;
                 }
             }
+
+
+            if (intent.getBooleanExtra(EXTRA_NOTIF_START, false)) {
+                mNotifStart = true;
+            } else if (intent.getBooleanExtra(EXTRA_PREF_CHANGE, false)) {
+                speedLimitView.updatePrefs();
+
+                updateLimitText(false);
+                updateSpeedometer(mLastSpeedLocation);
+            }
         }
 
 
-        if (mInitialized || prequisitesNotMet())
+        if (mInitialized || prequisitesNotMet() || speedLimitView == null)
             return super.onStartCommand(intent, flags, startId);
 
         startNotification();
@@ -366,7 +369,8 @@ public class SpeedLimitService extends Service {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
 
-        speedLimitView.changeConfig();
+        if (speedLimitView != null)
+            speedLimitView.changeConfig();
     }
 
 
