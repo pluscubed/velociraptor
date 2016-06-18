@@ -64,4 +64,25 @@ Desarrollado por <b>Daniel Ciao</b><br/>
     <string name="check_coverage">Pulsa para comprobar si tu área está cubierta</string>
     <string name="obtaining_gps_location">Obteniendo ubicación GPS…</string>
     <string name="debugging_stats">Estadísticas para novatos/depuración</string>
+    <string name="test">Test</string>
+    <string name="sound_alert">Sonido de alerta</string>
+    <string name="open_coverage_map_failed">No se pudo abrir el enlace. Ve manualmente a http://product.itoworld.com/map/124.</string>
+    <string name="tolerance_dialog_text">Avisar al exceder límite por:</string>
+    <string name="plus">más</string>
+    <string name="or">o</string>
+    <string name="kmph">%s km/h</string>
+    <string name="mph">%s mph</string>
+    <string name="percent">%s%%</string>
+    <string name="tolerance_desc">%1$s %2$s %3$s</string>
+    <string name="support_development">Apoyar el desarrollo</string>
+    <string name="in_app_unavailable">Pagos in-app no disponibles</string>
+    <string name="support_dev_dialog">Usado para costes del API y del servidor; la cantidad sugerida es 1 USD al mes. Se mostrará un distintivo aquí con mis más sinceros agradecimientos.</string>
+    <string name="support_dev_dialog_badge">¡Gracias por tu apoyo!</string>
+    <string name="per_month">%s por mes</string>
+    <string name="one_time">%s una vez</string>
+    <string name="notif_android_auto_title">Velociraptor para Android Auto</string>
+    <string name="notif_android_auto_limit">Límite de Velocidad: %s</string>
+    <string name="android_auto_integration_switch">Integración con Android Auto</string>
+    <string name="android_auto_instruction_dialog">Velociraptor actúa como una aplicación de mensajería para Android Auto. Para detener los sonidos de notificaciones, toca una vez el botón cerrar o responder.</string>
+    <string name="transparency">Transparencia</string>
 </resources>

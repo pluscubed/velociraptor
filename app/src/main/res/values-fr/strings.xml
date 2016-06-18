@@ -44,14 +44,14 @@ Développé par <b>Daniel Ciao</b><br/>
     <string name="wrong_speed_limit">Vitesse limite incorrecte ou manquante ?</string>
     <string name="wrong_speed_limit_desc">Accéder à OpenStreetMap sur votre ordinateur. Appuyer pour partager le lien (https://openstreetmap.org)</string>
     <string name="configure">Configurer</string>
-    <string name="automatically_show">Afficher/masquer dans applications spécifiées</string>
+    <string name="automatically_show">Afficher/masquer dans les applications spécifiées</string>
     <string name="select_overlay_usage">Activation</string>
     <string name="enable">Activer</string>
     <string name="show_in_apps">Afficher dans ces applications :</string>
     <string name="persistent_notification_controls">Afficher les contrôles de notification</string>
     <string name="done">OK</string>
     <string name="select_apps">Sélectionner les applications</string>
-    <string name="show_map_apps">Afficher les applications</string>
+    <string name="show_map_apps">Afficher les applications de cartographie</string>
     <string name="show">Afficher</string>
     <string name="hide">Masquer</string>
     <string name="controls_notif_title">Contrôles Velociraptor</string>
@@ -62,8 +62,8 @@ Développé par <b>Daniel Ciao</b><br/>
     <string name="help_edit">Aider à modifier les données de limitation de vitesse</string>
     <string name="check_coverage_desc">Si oui et que la vitesse limite n\'est pas affichée, c\'est peut-être un bug. Utiliser l\'option Stats de débogage et le bouton Commentaire.</string>
     <string name="check_coverage">Appuyer pour vérifier si votre zone est couverte</string>
-    <string name="obtaining_gps_location">Acquisition de la position GPS…</string>
-    <string name="debugging_stats">Stats pour nerds/débogage</string>
+    <string name="obtaining_gps_location">Acquisition de la position GPS …</string>
+    <string name="debugging_stats">Stats pour les curieux ou le débogage</string>
     <string name="test">Essayer</string>
     <string name="sound_alert">Alerte sonore</string>
     <string name="open_coverage_map_failed">Impossible d\'ouvrir le lien. Veuillez aller manuellement sur http://product.itoworld.com/map/124.</string>
@@ -74,4 +74,10 @@ Développé par <b>Daniel Ciao</b><br/>
     <string name="mph">%s mph</string>
     <string name="percent">%s%%</string>
     <string name="tolerance_desc">%1$s %2$s %3$s</string>
+    <string name="support_development">Soutenez le développement</string>
+    <string name="in_app_unavailable">Achats dans l\'application indisponibles</string>
+    <string name="support_dev_dialog">Nécessaires aux coûts liés au serveur et aux API; le montant suggéré est de 1 dollar US par mois. Un badge sera affiché en signe de ma sincère reconnaissance.</string>
+    <string name="support_dev_dialog_badge">Merci pour votre soutien !</string>
+    <string name="per_month">%s par mois</string>
+    <string name="one_time">%s une seule fois</string>
 </resources>

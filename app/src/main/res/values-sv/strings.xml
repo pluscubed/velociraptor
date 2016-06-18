@@ -80,7 +80,7 @@
     <string name="support_development">Stöd utvecklingen</string>
     <string name="in_app_unavailable">Köp i appar är inte tillgängligt.</string>
     <string name="support_dev_dialog">Används för server- och API-kostnader; rekommenderat belopp är 1 USD per månad. Ett emblem kommer att visas här som ett bevis på min tacksamhet.</string>
-    <string name="support_dev_dialog_badge">🎉 Tack för ditt stöd!🎉</string>
+    <string name="support_dev_dialog_badge">Tack för ditt stöd!</string>
     <string name="per_month">%s per månad</string>
     <string name="one_time">%s i engångsavgift</string>
 </resources>
