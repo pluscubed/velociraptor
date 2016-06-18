@@ -404,7 +404,7 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-        androidAutoSwitch.setChecked(PrefUtils.isAutoDisplayEnabled(this));
+        androidAutoSwitch.setChecked(PrefUtils.isAutoIntegrationEnabled(this));
         androidAutoContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

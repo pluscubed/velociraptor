@@ -57,7 +57,7 @@ public class SpeedLimitService extends Service {
     public static final int VIEW_FLOATING = 0;
     public static final int VIEW_AUTO = 1;
     private static final int NOTIFICATION_FOREGROUND = 303;
-    private int speedLimitViewType;
+    private int speedLimitViewType = -1;
     private SpeedLimitView speedLimitView;
     private String mDebuggingRequestInfo;
     private GoogleApiClient mGoogleApiClient;
@@ -96,7 +96,7 @@ public class SpeedLimitService extends Service {
                 updateSpeedometer(mLastSpeedLocation);
             }
 
-            int viewType = intent.getIntExtra(EXTRA_VIEW, speedLimitViewType);
+            int viewType = intent.getIntExtra(EXTRA_VIEW, VIEW_FLOATING);
             if (viewType != speedLimitViewType) {
                 speedLimitViewType = viewType;
 
@@ -116,8 +116,6 @@ public class SpeedLimitService extends Service {
             return super.onStartCommand(intent, flags, startId);
 
         startNotification();
-
-        speedLimitView = new FloatingView(this);
 
         mDebuggingRequestInfo = "";
 
