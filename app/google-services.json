@@ -1,0 +1,135 @@
+{
+  "project_info": {
+    "project_number": "236424558571",
+    "firebase_url": "https://velociraptor-osm.firebaseio.com",
+    "project_id": "velociraptor-osm",
+    "storage_bucket": "velociraptor-osm.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:236424558571:android:ff921720fc403f67",
+        "android_client_info": {
+          "package_name": "com.pluscubed.velociraptor"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "236424558571-4a99777nsadj4ds5hoi7ufknokc41tee.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBJlC-oPXS-Dfz6UuFcP2cy1rS2p0nT58w"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:236424558571:android:37260c14f59bfc3e",
+        "android_client_info": {
+          "package_name": "com.pluscubed.velociraptor.full"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "236424558571-4a99777nsadj4ds5hoi7ufknokc41tee.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBJlC-oPXS-Dfz6UuFcP2cy1rS2p0nT58w"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:236424558571:android:1e8f3c4f0233b424",
+        "android_client_info": {
+          "package_name": "com.pluscubed.velociraptor.debug"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "236424558571-4a99777nsadj4ds5hoi7ufknokc41tee.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBJlC-oPXS-Dfz6UuFcP2cy1rS2p0nT58w"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:236424558571:android:350ec6f378b0510d",
+        "android_client_info": {
+          "package_name": "com.pluscubed.velociraptor.full.debug"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "236424558571-4a99777nsadj4ds5hoi7ufknokc41tee.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBJlC-oPXS-Dfz6UuFcP2cy1rS2p0nT58w"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.bumptech.glide.Glide;
 import com.crashlytics.android.Crashlytics;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.pluscubed.velociraptor.settings.appselection.AppIconLoader;
 import com.pluscubed.velociraptor.settings.appselection.AppInfo;
 import com.pluscubed.velociraptor.settings.appselection.SelectedAppDatabase;
@@ -27,6 +28,7 @@ public class App extends Application {
 
         if (!BuildConfig.DEBUG) {
             Fabric.with(this, new Crashlytics());
+            FirebaseAnalytics analytics = FirebaseAnalytics.getInstance(this);
         }
 
         LeakCanary.install(this);
