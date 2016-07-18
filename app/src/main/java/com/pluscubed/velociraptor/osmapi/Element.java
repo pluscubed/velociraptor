@@ -17,6 +17,7 @@ import java.util.Map;
 @JsonPropertyOrder({
         "type",
         "id",
+        "geometry",
         "nodes",
         "tags"
 })
@@ -26,6 +27,8 @@ public class Element {
     private String type;
     @JsonProperty("id")
     private Integer id;
+    @JsonProperty("geometry")
+    private List<Coord> geometry = new ArrayList<>();
     @JsonProperty("nodes")
     private List<Long> nodes = new ArrayList<>();
     @JsonProperty("tags")
@@ -107,4 +110,13 @@ public class Element {
         this.additionalProperties.put(name, value);
     }
 
+    @JsonProperty("geometry")
+    public List<Coord> getGeometry() {
+        return geometry;
+    }
+
+    @JsonProperty("geometry")
+    public void setGeometry(List<Coord> geometry) {
+        this.geometry = geometry;
+    }
 }

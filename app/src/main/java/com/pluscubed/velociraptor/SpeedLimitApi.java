@@ -7,9 +7,9 @@ import android.support.annotation.NonNull;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
+import com.pluscubed.velociraptor.cache.SpeedLimitCache;
 import com.pluscubed.velociraptor.hereapi.HereService;
-import com.pluscubed.velociraptor.hereapi.Link;
-import com.pluscubed.velociraptor.hereapi.LinkInfo;
+import com.pluscubed.velociraptor.osmapi.Coord;
 import com.pluscubed.velociraptor.osmapi.Element;
 import com.pluscubed.velociraptor.osmapi.OsmApiEndpoint;
 import com.pluscubed.velociraptor.osmapi.OsmResponse;
@@ -18,7 +18,11 @@ import com.pluscubed.velociraptor.osmapi.Tags;
 import com.pluscubed.velociraptor.utils.PrefUtils;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -108,8 +112,17 @@ public class SpeedLimitApi {
     }
 
     Single<ApiResponse> getSpeedLimit(Location location) {
-        return getOsmSpeedLimit(location)
-                .switchIfEmpty(getHereSpeedLimit(location).toObservable()).toSingle();
+        return SpeedLimitCache.getInstance(mContext).get(mLastOsmRoadNames, new Coord(location))
+                .subscribeOn(Schedulers.io())
+                .switchIfEmpty(getOsmSpeedLimit(location))
+                .switchIfEmpty(getHereSpeedLimit(location).toObservable())
+                .doOnNext(new Action1<ApiResponse>() {
+                    @Override
+                    public void call(ApiResponse apiResponse) {
+                        SpeedLimitCache.getInstance(mContext).put(apiResponse);
+                    }
+                })
+                .toSingle();
     }
 
     private String getOsmQuery(Location location) {
@@ -118,7 +131,7 @@ public class SpeedLimitApi {
                 + location.getLatitude() + ","
                 + location.getLongitude() +
                 ")" +
-                "[\"highway\"];out;";
+                "[\"highway\"];out body geom;";
     }
 
     @NonNull
@@ -135,6 +148,50 @@ public class SpeedLimitApi {
         final List<OsmApiEndpoint> endpoints = new ArrayList<>(mOsmOverpassApis);
         mOsmApiSelectionInterceptor.setApi(endpoints.get(0));
 
+        return getOsmResponseWithRetry(location, endpoints)
+                .flatMapObservable(new Func1<OsmResponse, Observable<ApiResponse>>() {
+                    @Override
+                    public Observable<ApiResponse> call(OsmResponse osmApi) {
+                        if (osmApi == null) {
+                            return Observable.error(new Exception("OSM null response"));
+                        }
+
+                        ApiResponse response = new ApiResponse();
+                        response.useHere = false;
+
+                        boolean useMetric = PrefUtils.getUseMetric(mContext);
+
+                        List<Element> elements = osmApi.getElements();
+                        if (!elements.isEmpty()) {
+                            Element element = getBestElement(elements);
+
+                            response.coords = element.getGeometry();
+                            DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+                            try {
+                                response.timestamp = format.parse(osmApi.getOsm3s().getTimestampOsmBase()).getTime();
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+
+
+                            Tags tags = element.getTags();
+                            response.roadNames = new String[]{tags.getRef(), tags.getName()};
+
+                            mLastOsmRoadNames = response.roadNames;
+                            String maxspeed = tags.getMaxspeed();
+                            if (maxspeed != null) {
+                                response.speedLimit = getSpeedLimitFromMaxspeedString(useMetric, maxspeed);
+                                if (response.speedLimit != -1) {
+                                    return Observable.just(response);
+                                }
+                            }
+                        }
+                        return Observable.empty();
+                    }
+                });
+    }
+
+    private Single<OsmResponse> getOsmResponseWithRetry(Location location, final List<OsmApiEndpoint> endpoints) {
         return mOsmService.getOsm(getOsmQuery(location))
                 .subscribeOn(Schedulers.io())
                 .doOnSubscribe(new Action0() {
@@ -173,68 +230,50 @@ public class SpeedLimitApi {
                             return false;
                         }
                     }
-                })
-                .flatMapObservable(new Func1<OsmResponse, Observable<ApiResponse>>() {
-                    @Override
-                    public Observable<ApiResponse> call(OsmResponse osmApi) {
-                        if (osmApi == null) {
-                            return Observable.error(new Exception("OSM null response"));
-                        }
-
-                        ApiResponse response = new ApiResponse();
-                        response.useHere = false;
-
-                        boolean useMetric = PrefUtils.getUseMetric(mContext);
-
-                        List<Element> elements = osmApi.getElements();
-                        if (!elements.isEmpty()) {
-                            Element element = null;
-                            Element fallback = null;
-
-                            if (mLastOsmRoadNames != null) {
-                                for (Element newElement : elements) {
-                                    Tags newTags = newElement.getTags();
-                                    if (newTags.getMaxspeed() != null) {
-                                        fallback = newElement;
-                                    }
-                                    if (mLastOsmRoadNames[0] != null && mLastOsmRoadNames[0].equals(newTags.getRef()) ||
-                                            mLastOsmRoadNames[1] != null && mLastOsmRoadNames[1].equals(newTags.getName())) {
-                                        element = newElement;
-                                        break;
-                                    }
-                                }
-                            }
-
-                            if (element == null) {
-                                element = fallback != null ? fallback : elements.get(0);
-                            }
-
-                            Tags tags = element.getTags();
-                            response.roadNames = new String[]{tags.getRef(), tags.getName()};
-                            mLastOsmRoadNames = response.roadNames;
-                            String maxspeed = tags.getMaxspeed();
-                            if (maxspeed != null) {
-                                if (maxspeed.matches("^-?\\d+$")) {
-                                    //is integer -> km/h
-                                    response.speedLimit = Integer.valueOf(maxspeed);
-                                    if (!useMetric) {
-                                        response.speedLimit = (int) (response.speedLimit / 1.609344 + 0.5d);
-                                    }
-                                } else if (maxspeed.contains("mph")) {
-                                    String[] split = maxspeed.split(" ");
-                                    response.speedLimit = Integer.valueOf(split[0]);
-                                    if (useMetric) {
-                                        response.speedLimit = (int) (response.speedLimit * 1.609344 + 0.5d);
-                                    }
-                                }
-                                if (response.speedLimit != -1) {
-                                    return Observable.just(response);
-                                }
-                            }
-                        }
-                        return Observable.empty();
-                    }
                 });
+    }
+
+    private int getSpeedLimitFromMaxspeedString(boolean useMetric, String maxspeed) {
+        int speedLimit = -1;
+        if (maxspeed.matches("^-?\\d+$")) {
+            //is integer -> km/h
+            speedLimit = Integer.valueOf(maxspeed);
+            if (!useMetric) {
+                speedLimit = (int) (speedLimit / 1.609344 + 0.5d);
+            }
+        } else if (maxspeed.contains("mph")) {
+            String[] split = maxspeed.split(" ");
+            speedLimit = Integer.valueOf(split[0]);
+            if (useMetric) {
+                speedLimit = (int) (speedLimit * 1.609344 + 0.5d);
+            }
+        }
+
+        return speedLimit;
+    }
+
+    private Element getBestElement(List<Element> elements) {
+        Element element = null;
+        Element fallback = null;
+
+        if (mLastOsmRoadNames != null) {
+            for (Element newElement : elements) {
+                Tags newTags = newElement.getTags();
+                if (newTags.getMaxspeed() != null) {
+                    fallback = newElement;
+                }
+                if (mLastOsmRoadNames[0] != null && mLastOsmRoadNames[0].equals(newTags.getRef()) ||
+                        mLastOsmRoadNames[1] != null && mLastOsmRoadNames[1].equals(newTags.getName())) {
+                    element = newElement;
+                    break;
+                }
+            }
+        }
+
+        if (element == null) {
+            element = fallback != null ? fallback : elements.get(0);
+        }
+        return element;
     }
 
     private void logOsmRequest(OsmApiEndpoint endpoint) {
@@ -245,7 +284,7 @@ public class SpeedLimitApi {
 
     private Single<ApiResponse> getHereSpeedLimit(final Location location) {
         final String query = location.getLatitude() + "," + location.getLongitude();
-        return mHereService.getLinkInfo(query, mContext.getString(R.string.here_app_id), mContext.getString(R.string.here_app_code))
+        /*return mHereService.getLinkInfo(query, mContext.getString(R.string.here_app_id), mContext.getString(R.string.here_app_code))
                 .subscribeOn(Schedulers.io())
                 .doOnSubscribe(new Action0() {
                     @Override
@@ -272,14 +311,55 @@ public class SpeedLimitApi {
                         }
                         return response;
                     }
-                });
+                });*/
+        return Single.error(new Throwable("HERE temporarily disabled"));
     }
 
-    class ApiResponse {
-        boolean useHere;
+    public static class ApiResponse {
+        public boolean useHere;
         //-1 if DNE
-        int speedLimit = -1;
-        String[] roadNames;
+        public int speedLimit = -1;
+        public String[] roadNames;
+
+        public List<Coord> coords;
+        public long timestamp;
+
+        @Override
+        public String toString() {
+            return "ApiResponse{" +
+                    "useHere=" + useHere +
+                    ", speedLimit=" + speedLimit +
+                    ", roadNames=" + Arrays.toString(roadNames) +
+                    ", coords=" + coords +
+                    ", timestamp=" + timestamp +
+                    '}';
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            ApiResponse that = (ApiResponse) o;
+
+            if (useHere != that.useHere) return false;
+            if (speedLimit != that.speedLimit) return false;
+            if (timestamp != that.timestamp) return false;
+            // Probably incorrect - comparing Object[] arrays with Arrays.equals
+            if (!Arrays.equals(roadNames, that.roadNames)) return false;
+            return coords != null ? coords.equals(that.coords) : that.coords == null;
+
+        }
+
+        @Override
+        public int hashCode() {
+            int result = (useHere ? 1 : 0);
+            result = 31 * result + speedLimit;
+            result = 31 * result + Arrays.hashCode(roadNames);
+            result = 31 * result + (coords != null ? coords.hashCode() : 0);
+            result = 31 * result + (int) (timestamp ^ (timestamp >>> 32));
+            return result;
+        }
     }
 
     private final class HereTimeTakenInterceptor implements Interceptor {
