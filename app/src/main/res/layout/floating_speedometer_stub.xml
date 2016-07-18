@@ -37,7 +37,6 @@
             android:layout_gravity="center_horizontal"
             android:includeFontPadding="false"
             android:maxLines="1"
-            android:maxWidth="44dp"
             android:text="--"
             android:textColor="?android:textColorPrimary"
             android:textSize="24sp" />
