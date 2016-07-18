@@ -65,7 +65,7 @@ public class SpeedLimitService extends Service {
     private LocationListener mLocationListener;
     private int mLastSpeedLimit = -1;
     private Location mLastSpeedLocation;
-    private Location mLastLimitLocation;
+    private Location mLastLocation;
     private long mLastRequestTime;
     private long mSpeedingStart = -1;
     private SpeedLimitApi mSpeedLimitApi;
@@ -215,9 +215,10 @@ public class SpeedLimitService extends Service {
         updateDebuggingText(location, null, null);
 
         if (mLocationSubscription == null &&
-                (mLastLimitLocation == null || location.distanceTo(mLastLimitLocation) > 100) &&
+                (mLastLocation == null || location.distanceTo(mLastLocation) > 100) &&
                 System.currentTimeMillis() > mLastRequestTime + 5000) {
 
+            mLastLocation = location;
             mLastRequestTime = System.currentTimeMillis();
             mLocationSubscription = mSpeedLimitApi.getSpeedLimit(location)
                     .observeOn(AndroidSchedulers.mainThread())
@@ -225,8 +226,6 @@ public class SpeedLimitService extends Service {
                         @SuppressLint("SetTextI18n")
                         @Override
                         public void onSuccess(SpeedLimitApi.ApiResponse apiResponse) {
-                            mLastLimitLocation = location;
-
                             mLastSpeedLimit = apiResponse.speedLimit;
 
                             updateLimitText(true);
