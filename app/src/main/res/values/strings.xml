@@ -93,7 +93,7 @@
     <string name="notif_android_auto_limit">Speed Limit: %s</string>
     <string name="android_auto_integration_switch">Android Auto integration</string>
     <string name="android_auto_instruction_dialog">Velociraptor acts as a messaging app for Android Auto.\nTo use, the Android Auto app must be the foreground app.\nTo stop the notifications sounds, touch the close or reply button once.</string>
-    <string name="transparency">Transparency</string>
+    <string name="transparency">Opacity</string>
     <string name="auto_not_available">Not available in the Google Play version of Velociraptor</string>
     <string name="support_dev_dialog_notplay"><![CDATA[
     Used for server and API costs; suggested amount is 1 USD per month.
