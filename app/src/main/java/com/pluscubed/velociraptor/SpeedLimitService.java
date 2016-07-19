@@ -218,7 +218,6 @@ public class SpeedLimitService extends Service {
                 (mLastLocation == null || location.distanceTo(mLastLocation) > 100) &&
                 System.currentTimeMillis() > mLastRequestTime + 5000) {
 
-            mLastLocation = location;
             mLastRequestTime = System.currentTimeMillis();
             mLocationSubscription = mSpeedLimitApi.getSpeedLimit(location)
                     .observeOn(AndroidSchedulers.mainThread())
@@ -227,20 +226,17 @@ public class SpeedLimitService extends Service {
                         @Override
                         public void onSuccess(SpeedLimitApi.ApiResponse apiResponse) {
                             mLastSpeedLimit = apiResponse.speedLimit;
+                            mLastLocation = location;
 
                             updateLimitText(true);
-
                             updateDebuggingText(location, apiResponse, null);
-
                             mLocationSubscription = null;
                         }
 
                         @Override
                         public void onError(Throwable error) {
                             updateLimitText(false);
-
                             updateDebuggingText(location, null, error);
-
                             mLocationSubscription = null;
                         }
                     });
@@ -258,6 +254,7 @@ public class SpeedLimitService extends Service {
                 mDebuggingRequestInfo = ("Success, no road data");
             }
             mDebuggingRequestInfo += "\nHERE Maps: " + apiResponse.useHere;
+            mDebuggingRequestInfo += "\nFrom cache: " + apiResponse.fromCache + ", " + apiResponse.timestamp;
         } else if (error != null) {
             mDebuggingRequestInfo = ("Last Error: " + error);
         }

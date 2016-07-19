@@ -22,6 +22,7 @@ import rx.functions.Func0;
 
 public class SpeedLimitCache {
 
+    public static final double VALID_CACHE_MS = 6.048e+8;
     private static SpeedLimitCache instance;
     private final ObjectMapper objectMapper;
     private final File cacheFile;
@@ -90,10 +91,21 @@ public class SpeedLimitCache {
     }
 
     public void put(SpeedLimitApi.ApiResponse response) {
-        responses.add(response);
-        Collections.sort(responses, new PathComparator(true));
+        if (response.coords != null) {
+            responses.add(response);
+            Collections.sort(responses, new PathComparator(true));
 
+            try {
+                cacheFile.createNewFile();
+                objectMapper.writeValue(cacheFile, responses);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
+    private void remove(SpeedLimitApi.ApiResponse response) {
+        responses.remove(response);
         try {
             cacheFile.createNewFile();
             objectMapper.writeValue(cacheFile, responses);
@@ -130,8 +142,9 @@ public class SpeedLimitCache {
                     SpeedLimitApi.ApiResponse response = iterator.next();
 
                     //Make sure cache is less than 1 week old
-                    if (System.currentTimeMillis() - response.timestamp > 6.048e+8) {
+                    if (System.currentTimeMillis() - response.timestamp > VALID_CACHE_MS) {
                         iterator.remove();
+                        remove(response);
                         break;
                     }
 
@@ -151,6 +164,7 @@ public class SpeedLimitCache {
                     return Observable.empty();
                 }
 
+                finalResponse.fromCache = true;
                 return Observable.just(finalResponse);
             }
         });

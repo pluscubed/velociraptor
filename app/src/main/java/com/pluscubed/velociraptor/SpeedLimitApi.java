@@ -7,8 +7,11 @@ import android.support.annotation.NonNull;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pluscubed.velociraptor.cache.SpeedLimitCache;
 import com.pluscubed.velociraptor.hereapi.HereService;
+import com.pluscubed.velociraptor.hereapi.Link;
+import com.pluscubed.velociraptor.hereapi.LinkInfo;
 import com.pluscubed.velociraptor.osmapi.Coord;
 import com.pluscubed.velociraptor.osmapi.Element;
 import com.pluscubed.velociraptor.osmapi.OsmApiEndpoint;
@@ -115,7 +118,8 @@ public class SpeedLimitApi {
         return SpeedLimitCache.getInstance(mContext).get(mLastOsmRoadNames, new Coord(location))
                 .subscribeOn(Schedulers.io())
                 .switchIfEmpty(getOsmSpeedLimit(location))
-                .switchIfEmpty(getHereSpeedLimit(location).toObservable())
+                //.switchIfEmpty(getHereSpeedLimit(location))
+                .defaultIfEmpty(new ApiResponse())
                 .doOnNext(new Action1<ApiResponse>() {
                     @Override
                     public void call(ApiResponse apiResponse) {
@@ -282,9 +286,9 @@ public class SpeedLimitApi {
                     .putCustomAttribute("Server", endpoint.baseUrl));
     }
 
-    private Single<ApiResponse> getHereSpeedLimit(final Location location) {
+    private Observable<ApiResponse> getHereSpeedLimit(final Location location) {
         final String query = location.getLatitude() + "," + location.getLongitude();
-        /*return mHereService.getLinkInfo(query, mContext.getString(R.string.here_app_id), mContext.getString(R.string.here_app_code))
+        return mHereService.getLinkInfo(query, mContext.getString(R.string.here_app_id), mContext.getString(R.string.here_app_code))
                 .subscribeOn(Schedulers.io())
                 .doOnSubscribe(new Action0() {
                     @Override
@@ -311,11 +315,13 @@ public class SpeedLimitApi {
                         }
                         return response;
                     }
-                });*/
-        return Single.error(new Throwable("HERE temporarily disabled"));
+                }).toObservable();
     }
 
     public static class ApiResponse {
+        @JsonIgnore
+        public boolean fromCache;
+
         public boolean useHere;
         //-1 if DNE
         public int speedLimit = -1;
