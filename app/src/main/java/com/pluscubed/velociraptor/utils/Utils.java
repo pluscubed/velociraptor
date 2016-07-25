@@ -10,6 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
 import android.os.Build;
+import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.DrawableRes;
 import android.support.graphics.drawable.VectorDrawableCompat;
@@ -65,12 +66,18 @@ public abstract class Utils {
     }
 
     public static void playBeep() {
-        try {
-            ToneGenerator toneGen1 = new ToneGenerator(AudioManager.STREAM_NOTIFICATION, 100);
-            toneGen1.startTone(ToneGenerator.TONE_PROP_BEEP2, 500);
-        } catch (RuntimeException ignored) {
-            //TODO: Investigate RuntimeException
-        }
+        ToneGenerator toneGen1 = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
+        toneGen1.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 100);
+
+
+        new Handler().postDelayed(
+                new Runnable() {
+                    public void run() {
+                        ToneGenerator toneGen1 = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
+                        toneGen1.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 100);
+                    }
+                },
+                300);
     }
 
     public static String getUnitText(Context context) {
