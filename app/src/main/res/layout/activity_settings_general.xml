@@ -220,6 +220,50 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/linear_size"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="?selectableItemBackground"
+            android:baselineAligned="false"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            tools:ignore="UseCompoundDrawables">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginRight="32dp"
+                android:tint="#8a000000"
+                app:srcCompat="@drawable/ic_text_fields_black_24dp" />
+
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingEnd="8dp"
+                android:paddingRight="8dp"
+                android:text="@string/size"
+                android:textSize="16sp"
+                tools:ignore="RtlSymmetry" />
+
+            <TextView
+                android:id="@+id/text_overview_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:textColor="?android:textColorSecondary"
+                android:textSize="16sp"
+                tools:ignore="RtlSymmetry"
+                tools:text="Speed Limit: 100%\nSpeedometer: 100%" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/linear_opacity"
             android:layout_width="match_parent"
             android:layout_height="56dp"

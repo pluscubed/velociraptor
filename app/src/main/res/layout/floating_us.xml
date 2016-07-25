@@ -1,15 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:theme="@style/Theme.Velociraptor"
-    android:visibility="invisible">
+    android:visibility="invisible"
+    tools:visibility="visible">
 
+    <!--padding + margin = 12dp (sides and top/bottom)-->
+    <!--width/height = card width/height + sum of padding of the sides-->
+    <!--padding of each left/right side = ~2.58578643763-->
+    <!--padding of each top/bottom side = ~3.58578643763-->
+    <!--actual card width = 56dp-->
+    <!--actual card height = 72dp-->
     <android.support.v7.widget.CardView
         android:id="@+id/limit"
-        android:layout_width="61.17dp"
-        android:layout_height="79.17dp"
+        android:layout_width="61.172dp"
+        android:layout_height="79.172dp"
+        android:layout_centerHorizontal="true"
         android:layout_marginBottom="4.415dp"
         android:layout_marginLeft="9.415dp"
         android:layout_marginRight="9.415dp"
@@ -25,6 +34,7 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/limit_label_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -32,11 +42,11 @@
                 android:gravity="center"
                 android:text="SPEED\nLIMIT"
                 android:textColor="?android:textColorPrimary"
-                android:textSize="12sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                tools:textSize="12sp" />
 
             <TextView
-                android:id="@+id/text"
+                android:id="@+id/limit_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -44,7 +54,7 @@
                 android:includeFontPadding="false"
                 android:text="--"
                 android:textColor="?android:textColorPrimary"
-                android:textSize="28sp" />
+                tools:textSize="28sp" />
 
         </LinearLayout>
 

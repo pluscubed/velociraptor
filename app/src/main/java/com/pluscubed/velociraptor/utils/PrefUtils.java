@@ -14,8 +14,8 @@ public abstract class PrefUtils {
 
     public static final int STYLE_US = 0;
     public static final int STYLE_INTERNATIONAL = 1;
-    public static final String PREF_METRIC = "pref_metric";
-    public static final String PREF_SIGN_STYLE = "pref_international";
+    private static final String PREF_METRIC = "pref_metric";
+    private static final String PREF_SIGN_STYLE = "pref_international";
     private static final String PREF_FLOATING_LOCATION = "pref_floating_location";
     private static final String PREF_TOLERANCE_PERCENT = "pref_overspeed";
     private static final String PREF_TOLERANCE_CONSTANT = "pref_tolerance_constant";
@@ -30,6 +30,8 @@ public abstract class PrefUtils {
     private static final String PREF_ANDROID_AUTO = "pref_android_auto";
     private static final String PREF_FIRSTRUN = "pref_initial";
     private static final String PREF_VERSION_CODE = "pref_version_code";
+    private static final String PREF_SPEEDLIMIT_SIZE = "pref_speedlimit_size";
+    private static final String PREF_SPEEDOMETER_SIZE = "pref_speedometer_size";
 
     private static SharedPreferences.Editor edit(Context context) {
         return getSharedPreferences(context).edit();
@@ -167,6 +169,22 @@ public abstract class PrefUtils {
 
     public static void setApps(Context context, Set<String> packageNames) {
         edit(context).putStringSet(PREF_APPS, packageNames).apply();
+    }
+
+    public static float getSpeedometerSize(Context context) {
+        return getSharedPreferences(context).getFloat(PREF_SPEEDOMETER_SIZE, 1f);
+    }
+
+    public static void setSpeedometerSize(Context context, float size) {
+        edit(context).putFloat(PREF_SPEEDOMETER_SIZE, size).apply();
+    }
+
+    public static float getSpeedLimitSize(Context context) {
+        return getSharedPreferences(context).getFloat(PREF_SPEEDLIMIT_SIZE, 1f);
+    }
+
+    public static void setSpeedLimitSize(Context context, float size) {
+        edit(context).putFloat(PREF_SPEEDLIMIT_SIZE, size).apply();
     }
 
     @IntDef({STYLE_US, STYLE_INTERNATIONAL})

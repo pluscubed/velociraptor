@@ -6,15 +6,18 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v4.view.animation.LinearOutSlowInInterpolator;
 import android.support.v7.view.ContextThemeWrapper;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.TextView;
@@ -25,24 +28,34 @@ import com.pluscubed.velociraptor.utils.Utils;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class FloatingView implements SpeedLimitView {
 
-    private SpeedLimitService service;
-
+    @BindView(R.id.limit)
+    View mLimitView;
+    @Nullable
+    @BindView(R.id.limit_label_text)
+    TextView mLimitLabelText;
+    @BindView(R.id.limit_text)
+    TextView mLimitText;
+    @BindView(R.id.speedometer)
+    View mSpeedometerView;
+    @BindView(R.id.arcview)
+    ArcProgressStackView mArcView;
+    @BindView(R.id.speed)
+    TextView mSpeedometerText;
+    @BindView(R.id.speedUnits)
+    TextView mSpeedometerUnitsText;
+    private SpeedLimitService mService;
     private WindowManager mWindowManager;
-
-    private int style;
-
+    private int mStyle;
     private View mFloatingView;
-    private View mSpeedometer;
-    private TextView mLimitText;
-    private TextView mSpeedometerText;
-    private TextView mSpeedometerUnitsText;
     private TextView mDebuggingText;
-    private ArcProgressStackView mArcView;
 
     public FloatingView(SpeedLimitService service) {
-        this.service = service;
+        this.mService = service;
 
         mWindowManager = (WindowManager) service.getSystemService(Context.WINDOW_SERVICE);
         inflateMonitor();
@@ -53,7 +66,7 @@ public class FloatingView implements SpeedLimitView {
 
     @SuppressLint("InflateParams")
     private void inflateDebugging() {
-        mDebuggingText = (TextView) LayoutInflater.from(new ContextThemeWrapper(service, R.style.Theme_Velociraptor))
+        mDebuggingText = (TextView) LayoutInflater.from(new ContextThemeWrapper(mService, R.style.Theme_Velociraptor))
                 .inflate(R.layout.floating_stats, null, false);
         WindowManager.LayoutParams debuggingParams = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.MATCH_PARENT,
@@ -65,13 +78,13 @@ public class FloatingView implements SpeedLimitView {
         try {
             mWindowManager.addView(mDebuggingText, debuggingParams);
         } catch (Exception e) {
-            service.showToast("Velociraptor error: " + e.getMessage());
+            mService.showToast("Velociraptor error: " + e.getMessage());
         }
     }
 
     private void inflateMonitor() {
         int layout;
-        switch (style = PrefUtils.getSignStyle(service)) {
+        switch (mStyle = PrefUtils.getSignStyle(mService)) {
             case PrefUtils.STYLE_US:
                 layout = R.layout.floating_us;
                 break;
@@ -81,14 +94,10 @@ public class FloatingView implements SpeedLimitView {
                 break;
         }
 
-        mFloatingView = LayoutInflater.from(new ContextThemeWrapper(service, R.style.Theme_Velociraptor))
+        mFloatingView = LayoutInflater.from(new ContextThemeWrapper(mService, R.style.Theme_Velociraptor))
                 .inflate(layout, null, false);
 
-        mLimitText = (TextView) mFloatingView.findViewById(R.id.text);
-        mArcView = (ArcProgressStackView) mFloatingView.findViewById(R.id.arcview);
-        mSpeedometerText = (TextView) mFloatingView.findViewById(R.id.speed);
-        mSpeedometerUnitsText = (TextView) mFloatingView.findViewById(R.id.speedUnits);
-        mSpeedometer = mFloatingView.findViewById(R.id.speedometer);
+        ButterKnife.bind(this, mFloatingView);
 
         WindowManager.LayoutParams params = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
@@ -97,24 +106,24 @@ public class FloatingView implements SpeedLimitView {
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
         params.gravity = Gravity.TOP | Gravity.START;
-        params.alpha = PrefUtils.getOpacity(service) / 100.0F;
+        params.alpha = PrefUtils.getOpacity(mService) / 100.0F;
         if (mWindowManager != null)
             try {
                 mWindowManager.addView(mFloatingView, params);
             } catch (Exception e) {
-                service.showToast("Velociraptor error: " + e);
+                mService.showToast("Velociraptor error: " + e);
             }
         mFloatingView.setOnTouchListener(new FloatingOnTouchListener());
 
         initMonitorPosition();
 
         final ArrayList<ArcProgressStackView.Model> models = new ArrayList<>();
-        models.add(new ArcProgressStackView.Model("", 0, ContextCompat.getColor(service, R.color.colorPrimary800),
-                new int[]{ContextCompat.getColor(service, R.color.colorPrimaryA200),
-                        ContextCompat.getColor(service, R.color.colorPrimaryA200),
-                        ContextCompat.getColor(service, R.color.red500),
-                        ContextCompat.getColor(service, R.color.red500)}));
-        mArcView.setTextColor(ContextCompat.getColor(service, android.R.color.transparent));
+        models.add(new ArcProgressStackView.Model("", 0, ContextCompat.getColor(mService, R.color.colorPrimary800),
+                new int[]{ContextCompat.getColor(mService, R.color.colorPrimaryA200),
+                        ContextCompat.getColor(mService, R.color.colorPrimaryA200),
+                        ContextCompat.getColor(mService, R.color.red500),
+                        ContextCompat.getColor(mService, R.color.red500)}));
+        mArcView.setTextColor(ContextCompat.getColor(mService, android.R.color.transparent));
         mArcView.setInterpolator(new FastOutSlowInInterpolator());
         mArcView.setModels(models);
     }
@@ -129,7 +138,7 @@ public class FloatingView implements SpeedLimitView {
             public void onGlobalLayout() {
                 WindowManager.LayoutParams params = (WindowManager.LayoutParams) mFloatingView.getLayoutParams();
 
-                String[] split = PrefUtils.getFloatingLocation(service).split(",");
+                String[] split = PrefUtils.getFloatingLocation(mService).split(",");
                 boolean left = Boolean.parseBoolean(split[0]);
                 float yRatio = Float.parseFloat(split[1]);
 
@@ -181,7 +190,7 @@ public class FloatingView implements SpeedLimitView {
             endX = 0;
         }
 
-        PrefUtils.setFloatingLocation(service, (float) params.y / screenSize.y, endX == 0);
+        PrefUtils.setFloatingLocation(mService, (float) params.y / screenSize.y, endX == 0);
 
         ValueAnimator valueAnimator = ValueAnimator.ofInt(params.x, endX)
                 .setDuration(300);
@@ -203,7 +212,7 @@ public class FloatingView implements SpeedLimitView {
 
     @Override
     public void setSpeed(int speed, int percentOfWarning) {
-        if (PrefUtils.getShowSpeedometer(service) && mSpeedometerText != null) {
+        if (PrefUtils.getShowSpeedometer(mService) && mSpeedometerText != null) {
             mSpeedometerText.setText(Integer.toString(speed));
             mArcView.getModels().get(0).setProgress(percentOfWarning);
             mArcView.animateProgress();
@@ -213,7 +222,7 @@ public class FloatingView implements SpeedLimitView {
     @Override
     public void setSpeeding(boolean speeding) {
         int colorRes = speeding ? R.color.red500 : R.color.primary_text_default_material_light;
-        int color = ContextCompat.getColor(service, colorRes);
+        int color = ContextCompat.getColor(mService, colorRes);
         mSpeedometerText.setTextColor(color);
         mSpeedometerUnitsText.setTextColor(color);
     }
@@ -234,34 +243,94 @@ public class FloatingView implements SpeedLimitView {
 
     @Override
     public void updatePrefs() {
-        int prefStyle = PrefUtils.getSignStyle(service);
-        if (prefStyle != style) {
+        int prefStyle = PrefUtils.getSignStyle(mService);
+        if (prefStyle != mStyle) {
             removeWindowView(mFloatingView);
             inflateMonitor();
         }
-        style = prefStyle;
+        mStyle = prefStyle;
 
-        boolean debuggingEnabled = PrefUtils.isDebuggingEnabled(service);
+        boolean debuggingEnabled = PrefUtils.isDebuggingEnabled(mService);
         if (mDebuggingText != null) {
             mDebuggingText.setVisibility(debuggingEnabled ? View.VISIBLE : View.GONE);
         }
 
-        boolean speedometerShown = PrefUtils.getShowSpeedometer(service);
-        if (mSpeedometer != null) {
-            mSpeedometer.setVisibility(speedometerShown ? View.VISIBLE : View.GONE);
+        boolean speedometerShown = PrefUtils.getShowSpeedometer(mService);
+        if (mSpeedometerView != null) {
+            mSpeedometerView.setVisibility(speedometerShown ? View.VISIBLE : View.GONE);
         }
 
         if (mSpeedometerUnitsText != null) {
-            mSpeedometerUnitsText.setText(Utils.getUnitText(service));
+            mSpeedometerUnitsText.setText(Utils.getUnitText(mService));
         }
 
         if (mFloatingView != null) {
             WindowManager.LayoutParams layoutParams = (WindowManager.LayoutParams) mFloatingView.getLayoutParams();
-            layoutParams.alpha = PrefUtils.getOpacity(service) / 100F;
+            layoutParams.alpha = PrefUtils.getOpacity(mService) / 100F;
             try {
                 mWindowManager.updateViewLayout(mFloatingView, layoutParams);
             } catch (IllegalArgumentException ignore) {
             }
+        }
+
+        if (mLimitView != null && mLimitText != null) {
+            float speedLimitSize = PrefUtils.getSpeedLimitSize(mService);
+            float textSize = 0;
+            float height = 0;
+            float width = 0;
+
+            switch (mStyle) {
+                case PrefUtils.STYLE_US:
+                    float cardSidePadding = (float) (2 + (1 - Math.cos(Math.toRadians(45))) * 2);
+                    float cardTopBottomPadding = (float) (2 * 1.5 + (1 - Math.cos(Math.toRadians(45))) * 2);
+
+                    width = speedLimitSize * 56;
+                    height = speedLimitSize * 72;
+
+                    width += cardSidePadding * 2;
+                    height += cardTopBottomPadding * 2;
+
+                    textSize = 28;
+
+                    break;
+                case PrefUtils.STYLE_INTERNATIONAL:
+                    height = speedLimitSize * 64;
+                    width = speedLimitSize * 64;
+
+                    textSize = 24;
+                    break;
+            }
+
+            ViewGroup.LayoutParams layoutParams = mLimitView.getLayoutParams();
+            layoutParams.width = Utils.convertDpToPx(mService, width);
+            layoutParams.height = Utils.convertDpToPx(mService, height);
+            mLimitView.setLayoutParams(layoutParams);
+
+            textSize *= speedLimitSize;
+            mLimitText.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
+
+            float labelTextSize = 12 * speedLimitSize;
+            if (mLimitLabelText != null) {
+                mLimitLabelText.setTextSize(TypedValue.COMPLEX_UNIT_SP, labelTextSize);
+            }
+        }
+
+        if (mSpeedometerView != null && mSpeedometerText != null && mSpeedometerUnitsText != null) {
+            float speedometerSize = PrefUtils.getSpeedometerSize(mService);
+
+            float width = 64 * speedometerSize;
+            float height = 64 * speedometerSize;
+
+            float textSize = 24 * speedometerSize;
+            mSpeedometerText.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
+
+            float labelTextSize = 12 * speedometerSize;
+            mSpeedometerUnitsText.setTextSize(TypedValue.COMPLEX_UNIT_SP, labelTextSize);
+
+            ViewGroup.LayoutParams layoutParams = mSpeedometerView.getLayoutParams();
+            layoutParams.width = Utils.convertDpToPx(mService, width);
+            layoutParams.height = Utils.convertDpToPx(mService, height);
+            mSpeedometerView.setLayoutParams(layoutParams);
         }
     }
 

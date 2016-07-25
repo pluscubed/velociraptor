@@ -129,6 +129,11 @@ public class SettingsActivity extends AppCompatActivity {
     @BindView(R.id.text_overview_tolerance)
     TextView toleranceOverview;
 
+    @BindView(R.id.linear_size)
+    LinearLayout sizeView;
+    @BindView(R.id.text_overview_size)
+    TextView sizeOverview;
+
     @BindView(R.id.linear_opacity)
     LinearLayout opacityView;
     @BindView(R.id.text_overview_opacity)
@@ -356,6 +361,13 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 new ToleranceDialogFragment().show(getFragmentManager(), "dialog_tolerance");
+            }
+        });
+
+        sizeView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new SizeDialogFragment().show(getFragmentManager(), "dialog_size");
             }
         });
 
@@ -604,6 +616,12 @@ public class SettingsActivity extends AppCompatActivity {
         String mode = PrefUtils.getToleranceMode(this) ? "+" : getString(R.string.or);
         String overview = getString(R.string.tolerance_desc, percent, mode, constant);
         toleranceOverview.setText(overview);
+
+        String limitSizePercent = getString(R.string.percent, String.valueOf((int) (PrefUtils.getSpeedLimitSize(this) * 100)));
+        String speedLimitSize = getString(R.string.size_limit_overview, limitSizePercent);
+        String speedometerSizePercent = getString(R.string.percent, String.valueOf((int) (PrefUtils.getSpeedometerSize(this) * 100)));
+        String speedometerSize = getString(R.string.size_speedometer_overview, speedometerSizePercent);
+        sizeOverview.setText(speedLimitSize + "\n" + speedometerSize);
 
         opacityOverview.setText(getString(R.string.percent, String.valueOf(PrefUtils.getOpacity(this))));
 
