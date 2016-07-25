@@ -62,7 +62,7 @@ Développé par <b>Daniel Ciao</b><br/>
     <string name="help_edit">Aider à modifier les données de limitation de vitesse</string>
     <string name="check_coverage_desc">Si oui et que la vitesse limite n\'est pas affichée, c\'est peut-être un bug. Utiliser l\'option Stats de débogage et le bouton Commentaire.</string>
     <string name="check_coverage">Appuyer pour vérifier si votre zone est couverte</string>
-    <string name="obtaining_gps_location">Acquisition de la position GPS …</string>
+    <string name="obtaining_gps_location">Acquisition de la position GPS…</string>
     <string name="debugging_stats">Stats pour les curieux ou le débogage</string>
     <string name="test">Essayer</string>
     <string name="sound_alert">Alerte sonore</string>
@@ -74,10 +74,15 @@ Développé par <b>Daniel Ciao</b><br/>
     <string name="mph">%s mph</string>
     <string name="percent">%s%%</string>
     <string name="tolerance_desc">%1$s %2$s %3$s</string>
-    <string name="support_development">Soutenez le développement</string>
-    <string name="in_app_unavailable">Achats dans l\'application indisponibles</string>
-    <string name="support_dev_dialog">Nécessaires aux coûts liés au serveur et aux API; le montant suggéré est de 1 dollar US par mois. Un badge sera affiché en signe de ma sincère reconnaissance.</string>
+    <string name="support_development">Soutenir le développement</string>
+    <string name="in_app_unavailable">Achats via l\'application indisponibles</string>
+    <string name="support_dev_dialog">Utilisés pour les frais liés au serveur et l\'API, le montant suggéré est de 1 dollar US par mois. Un badge sera affiché en signe de ma sincère reconnaissance.</string>
     <string name="support_dev_dialog_badge">Merci pour votre soutien !</string>
     <string name="per_month">%s par mois</string>
-    <string name="one_time">%s une seule fois</string>
+    <string name="one_time">%s une fois</string>
+    <string name="notif_android_auto_title">Velociraptor pour Android Auto</string>
+    <string name="notif_android_auto_limit">Limitation de vitesse : %s</string>
+    <string name="android_auto_integration_switch">Intégration Android Auto</string>
+    <string name="android_auto_instruction_dialog">Velociraptor agit comme une application de messagerie pour Android Auto. Pour arrêter les notifications sonores, appuyez une fois sur le bouton Fermer ou Répondre.</string>
+    <string name="transparency">Transparence</string>
 </resources>

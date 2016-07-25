@@ -48,6 +48,7 @@
 
         <a href=\'https://github.com/pluscubed/velociraptor\'>GitHub</a> - source, issues, feature requests<br/>
         <a href=\'http://pluscubed.oneskyapp.com/collaboration/project/64120\'>OneSky</a> - translate the app to your language
+        <a href="https://play.google.com/apps/testing/com.pluscubed.velociraptor">Beta testing</a> - try out upcoming releases
     ]]></string>
     <string name="about">About</string>
     <string name="wrong_speed_limit">Wrong or missing speed limit?</string>

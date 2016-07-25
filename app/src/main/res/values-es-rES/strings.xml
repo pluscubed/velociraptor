@@ -5,15 +5,15 @@
     <string name="notif_title">Velociraptor - monitor en ejecución</string>
     <string name="dialog_draw_overlay">Para mostrar elementos flotantes en Android 6.0+, autoriza el permiso \"Escribir sobre otras aplicaciones\"</string>
     <string name="open_settings">Abrir Página de Ajustes</string>
-    <string name="accessibility_service_description">Para detectar la aplicación en primer plano y mostrar el límite de velocidad, el servicio de accesibilidad debe estar habilitado.</string>
+    <string name="accessibility_service_description">Permitir a Velociraptor detectar la aplicación en primer plano automáticamente.\n\nVelociraptor no usan ninguna otra información, sólo la de la aplicación que está en primer plano.</string>
     <string name="enable_accessibility_service">Activar Servicio de Accesibilidad</string>
     <string name="enable_accessibility_service_desc">Permitir a Velociraptor detectar la aplicación actual activando su servicio de accesibilidad</string>
     <string name="enable_floating_desc">Para mostrar la superposición, autoriza el permiso \"Escribir sobre otras aplicaciones\"</string>
     <string name="open_settings_page">Abrir página de ajustes</string>
     <string name="grant_permission">Autorizar permiso</string>
     <string name="enable_location_desc">Para determinar la velocidad límite en tu posición, autoriza el permiso de ubicación</string>
-    <string name="speed_unit">Unidades de velocidad:</string>
-    <string name="style">Estilo:</string>
+    <string name="speed_unit">Unidades de velocidad</string>
+    <string name="style">Estilo</string>
     <string name="united_states">Estados Unidos</string>
     <string name="international">Internacional</string>
     <string name="open_settings_failed_overlay">No se pueden abrir los ajustes. Activa manualmente el ajuste \"Escribir sobre otras aplicaciones\" para Velociraptor.</string>
@@ -21,7 +21,7 @@
     <string name="permissions_warning">Velociraptor no tiene los permisos adecuados. Abre la aplicación para autorizarlos.</string>
     <string name="location_settings_warning">El GPS no está activado. Actívalo para el monitor de velocidad de Velociraptor.</string>
     <string name="network_warning">No está conectado a la red. Velociraptor requiere conectividad a Internet para obtener el límite de velocidad.</string>
-    <string name="speeding_amount">Tolerancia de velocidad:</string>
+    <string name="speeding_amount">Tolerancia de velocidad</string>
     <string name="show_speedometer">Mostrar velocímetro</string>
     <string name="about_dialog_title">Velociraptor v%s</string>
     <string name="dismiss">Cerrar</string>
@@ -42,7 +42,7 @@ Desarrollado por <b>Daniel Ciao</b><br/>
 <a href=\'http://pluscubed.oneskyapp.com/collaboration/project/64120\'>OneSky</a> - traduce la aplicación a tu idioma]]></string>
     <string name="about">Acerca de</string>
     <string name="wrong_speed_limit">¿Falta el límite de velocidad o es erróneo?</string>
-    <string name="wrong_speed_limit_desc">Ve a OpenStreetMap en tu ordenador para modificar los datos. Pulsa para compartir el enlace (https://openstreetmap.org)</string>
+    <string name="wrong_speed_limit_desc">Ve a OpenStreetMap en tu ordenador. Pulsa para compartir el enlace (https://openstreetmap.org)</string>
     <string name="configure">Configurar</string>
     <string name="automatically_show">Mostrar/ocultar en ciertas aplicaciones</string>
     <string name="select_overlay_usage">Activación</string>

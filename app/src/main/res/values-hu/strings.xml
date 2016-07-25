@@ -2,10 +2,10 @@
 <resources>
     <string name="app_name">Velociraptor</string>
     <string name="notif_content">Érintsd meg a beállításokhoz</string>
-    <string name="notif_title">Velociraptor sebességhatár</string>
+    <string name="notif_title">Velociraptor fut</string>
     <string name="dialog_draw_overlay">A lebegő elemek megjelenítéséhez kérlek add meg \"Megjelenítés más alkalmazások felett\" engedélyt</string>
     <string name="open_settings">Beállítások megnyitása</string>
-    <string name="accessibility_service_description">Az aktív alkalmazás felismeréséhez és a sebességhatár megjelenítéséhez a kisegítő lehetőségek szolgáltatást engedélyezni kell</string>
+    <string name="accessibility_service_description">Engedd a Velociraptornak, hogy érzékelje a futó appot és megjelenhessen automatikusan. \n\nA Velociraptor nem használ az app nevén kívül más információt.</string>
     <string name="enable_accessibility_service">Kisegítő lehetőségek szolgáltatás engedélyezése</string>
     <string name="enable_accessibility_service_desc">A sebességhatár automatikus megjelenítéséhez kérlek kapcsold be a kisegítő lehetőségek szolgáltatást</string>
     <string name="enable_floating_desc">Az extra réteg megjelenítéséhez kérlek add meg a \"Megjelenítés más alkalmazások felett\" engedélyt</string>
