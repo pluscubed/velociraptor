@@ -66,18 +66,20 @@ public abstract class Utils {
     }
 
     public static void playBeep() {
-        ToneGenerator toneGen1 = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
-        toneGen1.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 100);
+        try {
+            ToneGenerator toneGen1 = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
+            toneGen1.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 100);
 
-
-        new Handler().postDelayed(
-                new Runnable() {
-                    public void run() {
-                        ToneGenerator toneGen1 = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
-                        toneGen1.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 100);
-                    }
-                },
-                300);
+            new Handler().postDelayed(
+                    new Runnable() {
+                        public void run() {
+                            ToneGenerator toneGen1 = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
+                            toneGen1.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 100);
+                        }
+                    },
+                    300);
+        } catch (RuntimeException ignored) {
+        }
     }
 
     public static String getUnitText(Context context) {
@@ -89,7 +91,7 @@ public abstract class Utils {
     }
 
     public static void updateFloatingServicePrefs(Context context) {
-        if (isServiceReady(context)) {
+        if (context != null && isServiceReady(context)) {
             Intent intent = new Intent(context, SpeedLimitService.class);
             intent.putExtra(SpeedLimitService.EXTRA_PREF_CHANGE, true);
             context.startService(intent);
