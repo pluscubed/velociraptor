@@ -120,12 +120,6 @@ public class SpeedLimitApi {
                 .switchIfEmpty(getOsmSpeedLimit(location))
                 //.switchIfEmpty(getHereSpeedLimit(location))
                 .defaultIfEmpty(new ApiResponse())
-                .doOnNext(new Action1<ApiResponse>() {
-                    @Override
-                    public void call(ApiResponse apiResponse) {
-                        SpeedLimitCache.getInstance(mContext).put(apiResponse);
-                    }
-                })
                 .toSingle();
     }
 
@@ -148,6 +142,11 @@ public class SpeedLimitApi {
                 .build();
     }
 
+
+    /**
+     * Caches each way received. Returns ApiResponse with valid coords and speed limit, or nothing
+     * if none meet criteria.
+     */
     private Observable<ApiResponse> getOsmSpeedLimit(final Location location) {
         final List<OsmApiEndpoint> endpoints = new ArrayList<>(mOsmOverpassApis);
         mOsmApiSelectionInterceptor.setApi(endpoints.get(0));
@@ -160,16 +159,28 @@ public class SpeedLimitApi {
                             return Observable.error(new Exception("OSM null response"));
                         }
 
-                        ApiResponse response = new ApiResponse();
-                        response.useHere = false;
-
                         boolean useMetric = PrefUtils.getUseMetric(mContext);
 
                         List<Element> elements = osmApi.getElements();
-                        if (!elements.isEmpty()) {
-                            Element element = getBestElement(elements);
+
+                        if (elements.isEmpty()) {
+                            return Observable.empty();
+                        }
+
+                        Element bestMatch = getBestElement(elements);
+
+                        for (Element element : elements) {
+                            ApiResponse response = new ApiResponse();
+                            response.useHere = false;
 
                             response.coords = element.getGeometry();
+
+                            //If coords are null, no need to continue for cache
+                            if (element != bestMatch && response.coords == null) {
+                                break;
+                            }
+
+                            //Parse timestamp
                             DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
                             try {
                                 response.timestamp = format.parse(osmApi.getOsm3s().getTimestampOsmBase()).getTime();
@@ -177,14 +188,22 @@ public class SpeedLimitApi {
                                 e.printStackTrace();
                             }
 
-
+                            //Get road names
                             Tags tags = element.getTags();
                             response.roadNames = new String[]{tags.getRef(), tags.getName()};
 
-                            mLastOsmRoadNames = response.roadNames;
+                            //Get speed limit
                             String maxspeed = tags.getMaxspeed();
                             if (maxspeed != null) {
                                 response.speedLimit = getSpeedLimitFromMaxspeedString(useMetric, maxspeed);
+                            }
+
+                            //Cache
+                            SpeedLimitCache.getInstance(mContext).put(response);
+
+                            //Check criteria for best match
+                            if (element == bestMatch) {
+                                mLastOsmRoadNames = response.roadNames;
                                 if (response.speedLimit != -1) {
                                     return Observable.just(response);
                                 }

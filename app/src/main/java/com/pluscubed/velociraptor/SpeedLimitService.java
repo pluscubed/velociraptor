@@ -115,7 +115,7 @@ public class SpeedLimitService extends Service {
         }
 
 
-        if (mInitialized || prequisitesNotMet() || speedLimitView == null)
+        if (mInitialized || !prequisitesMet() || speedLimitView == null)
             return super.onStartCommand(intent, flags, startId);
 
         startNotification();
@@ -184,19 +184,17 @@ public class SpeedLimitService extends Service {
         startForeground(NOTIFICATION_FOREGROUND, notification);
     }
 
-    private boolean prequisitesNotMet() {
+    private boolean prequisitesMet() {
         if (ContextCompat.checkSelfPermission(SpeedLimitService.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this))) {
             showToast(getString(R.string.permissions_warning));
             stopSelf();
-            return true;
+            return false;
         }
 
         LocationManager manager = (LocationManager) getSystemService(LOCATION_SERVICE);
         if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             showToast(getString(R.string.location_settings_warning));
-            stopSelf();
-            return true;
         }
 
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -204,10 +202,8 @@ public class SpeedLimitService extends Service {
         boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
         if (!isConnected) {
             showToast(getString(R.string.network_warning));
-            stopSelf();
-            return true;
         }
-        return false;
+        return true;
     }
 
     private void onLocationChanged(final Location location) {

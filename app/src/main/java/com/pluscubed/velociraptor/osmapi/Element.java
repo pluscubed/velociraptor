@@ -34,7 +34,7 @@ public class Element {
     @JsonProperty("tags")
     private Tags tags;
     @JsonIgnore
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    private Map<String, Object> additionalProperties = new HashMap<>();
 
     /**
      * @return The type
