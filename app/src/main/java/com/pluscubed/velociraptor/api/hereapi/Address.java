@@ -1,4 +1,4 @@
-package com.pluscubed.velociraptor.hereapi;
+package com.pluscubed.velociraptor.api.hereapi;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;

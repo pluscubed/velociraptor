@@ -4,6 +4,7 @@ import android.accessibilityservice.AccessibilityService;
 import android.content.Intent;
 import android.view.accessibility.AccessibilityEvent;
 
+import com.pluscubed.velociraptor.ui.SpeedLimitService;
 import com.pluscubed.velociraptor.utils.PrefUtils;
 
 import java.util.Set;

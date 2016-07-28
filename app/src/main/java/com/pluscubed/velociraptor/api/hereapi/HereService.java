@@ -1,4 +1,4 @@
-package com.pluscubed.velociraptor.hereapi;
+package com.pluscubed.velociraptor.api.hereapi;
 
 import retrofit2.http.GET;
 import retrofit2.http.Query;

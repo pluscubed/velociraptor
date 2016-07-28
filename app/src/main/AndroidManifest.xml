@@ -30,7 +30,7 @@
 
         <activity android:name=".settings.appselection.AppSelectionActivity" />
 
-        <service android:name=".SpeedLimitService" />
+        <service android:name=".ui.SpeedLimitService" />
 
         <service
             android:name=".AppDetectionService"

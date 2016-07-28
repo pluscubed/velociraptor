@@ -1,4 +1,4 @@
-package com.pluscubed.velociraptor;
+package com.pluscubed.velociraptor.ui;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -34,6 +34,9 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.pluscubed.velociraptor.R;
+import com.pluscubed.velociraptor.api.ApiResponse;
+import com.pluscubed.velociraptor.api.SpeedLimitApi;
 import com.pluscubed.velociraptor.settings.SettingsActivity;
 import com.pluscubed.velociraptor.utils.PrefUtils;
 import com.pluscubed.velociraptor.utils.Utils;
@@ -217,10 +220,10 @@ public class SpeedLimitService extends Service {
             mLastRequestTime = System.currentTimeMillis();
             mLocationSubscription = mSpeedLimitApi.getSpeedLimit(location)
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new SingleSubscriber<SpeedLimitApi.ApiResponse>() {
+                    .subscribe(new SingleSubscriber<ApiResponse>() {
                         @SuppressLint("SetTextI18n")
                         @Override
-                        public void onSuccess(SpeedLimitApi.ApiResponse apiResponse) {
+                        public void onSuccess(ApiResponse apiResponse) {
                             mLastSpeedLimit = apiResponse.speedLimit;
                             mLastLocation = location;
 
@@ -239,7 +242,7 @@ public class SpeedLimitService extends Service {
         }
     }
 
-    private void updateDebuggingText(Location location, SpeedLimitApi.ApiResponse apiResponse, Throwable error) {
+    private void updateDebuggingText(Location location, ApiResponse apiResponse, Throwable error) {
         String text = "Location: " + location +
                 "\nEndpoints:\n" + mSpeedLimitApi.getApiInformation();
 

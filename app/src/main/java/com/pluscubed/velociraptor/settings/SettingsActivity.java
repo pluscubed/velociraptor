@@ -44,10 +44,9 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.pluscubed.velociraptor.AppDetectionService;
 import com.pluscubed.velociraptor.BuildConfig;
-import com.pluscubed.velociraptor.ChangelogDialog;
 import com.pluscubed.velociraptor.R;
-import com.pluscubed.velociraptor.SpeedLimitService;
 import com.pluscubed.velociraptor.settings.appselection.AppSelectionActivity;
+import com.pluscubed.velociraptor.ui.SpeedLimitService;
 import com.pluscubed.velociraptor.utils.PrefUtils;
 import com.pluscubed.velociraptor.utils.Utils;
 

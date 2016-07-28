@@ -1,4 +1,4 @@
-package com.pluscubed.velociraptor;
+package com.pluscubed.velociraptor.api;
 
 import android.content.Context;
 import android.location.Location;
@@ -7,17 +7,18 @@ import android.support.annotation.NonNull;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.pluscubed.velociraptor.BuildConfig;
+import com.pluscubed.velociraptor.R;
+import com.pluscubed.velociraptor.api.hereapi.HereService;
+import com.pluscubed.velociraptor.api.hereapi.Link;
+import com.pluscubed.velociraptor.api.hereapi.LinkInfo;
+import com.pluscubed.velociraptor.api.osmapi.Coord;
+import com.pluscubed.velociraptor.api.osmapi.Element;
+import com.pluscubed.velociraptor.api.osmapi.OsmApiEndpoint;
+import com.pluscubed.velociraptor.api.osmapi.OsmResponse;
+import com.pluscubed.velociraptor.api.osmapi.OsmService;
+import com.pluscubed.velociraptor.api.osmapi.Tags;
 import com.pluscubed.velociraptor.cache.SpeedLimitCache;
-import com.pluscubed.velociraptor.hereapi.HereService;
-import com.pluscubed.velociraptor.hereapi.Link;
-import com.pluscubed.velociraptor.hereapi.LinkInfo;
-import com.pluscubed.velociraptor.osmapi.Coord;
-import com.pluscubed.velociraptor.osmapi.Element;
-import com.pluscubed.velociraptor.osmapi.OsmApiEndpoint;
-import com.pluscubed.velociraptor.osmapi.OsmResponse;
-import com.pluscubed.velociraptor.osmapi.OsmService;
-import com.pluscubed.velociraptor.osmapi.Tags;
 import com.pluscubed.velociraptor.utils.PrefUtils;
 
 import java.io.IOException;
@@ -25,7 +26,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -63,7 +63,7 @@ public class SpeedLimitApi {
     private int mHereTimeTaken;
     private String[] mLastOsmRoadNames;
 
-    SpeedLimitApi(Context context) {
+    public SpeedLimitApi(Context context) {
         mContext = context;
 
         mOsmOverpassApis = Collections.synchronizedList(new ArrayList<OsmApiEndpoint>());
@@ -103,7 +103,7 @@ public class SpeedLimitApi {
         mOsmService = osmRest.create(OsmService.class);
     }
 
-    String getApiInformation() {
+    public String getApiInformation() {
         String text = "";
         synchronized (mOsmOverpassApis) {
             for (OsmApiEndpoint endpoint : mOsmOverpassApis) {
@@ -114,18 +114,18 @@ public class SpeedLimitApi {
         return text;
     }
 
-    Single<ApiResponse> getSpeedLimit(Location location) {
+    public Single<ApiResponse> getSpeedLimit(Location location) {
         return SpeedLimitCache.getInstance(mContext).get(mLastOsmRoadNames, new Coord(location))
                 .subscribeOn(Schedulers.io())
-                .switchIfEmpty(getOsmSpeedLimit(location))
-                //.switchIfEmpty(getHereSpeedLimit(location))
-                .defaultIfEmpty(new ApiResponse())
+                .switchIfEmpty(getOsmSpeedLimit(location)
+                        //.switchIfEmpty(getHereSpeedLimit(location))
+                        .defaultIfEmpty(new ApiResponse()))
                 .toSingle();
     }
 
     private String getOsmQuery(Location location) {
         return "[out:json];" +
-                "way(around:25,"
+                "way(around:15,"
                 + location.getLatitude() + ","
                 + location.getLongitude() +
                 ")" +
@@ -144,7 +144,7 @@ public class SpeedLimitApi {
 
 
     /**
-     * Caches each way received. Returns ApiResponse with valid coords and speed limit, or nothing
+     * Caches each way received. Returns ApiResponse with valid coords, or nothing
      * if none meet criteria.
      */
     private Observable<ApiResponse> getOsmSpeedLimit(final Location location) {
@@ -204,9 +204,7 @@ public class SpeedLimitApi {
                             //Check criteria for best match
                             if (element == bestMatch) {
                                 mLastOsmRoadNames = response.roadNames;
-                                if (response.speedLimit != -1) {
-                                    return Observable.just(response);
-                                }
+                                return Observable.just(response);
                             }
                         }
                         return Observable.empty();
@@ -335,56 +333,6 @@ public class SpeedLimitApi {
                         return response;
                     }
                 }).toObservable();
-    }
-
-    public static class ApiResponse {
-        @JsonIgnore
-        public boolean fromCache;
-
-        public boolean useHere;
-        //-1 if DNE
-        public int speedLimit = -1;
-        public String[] roadNames;
-
-        public List<Coord> coords;
-        public long timestamp;
-
-        @Override
-        public String toString() {
-            return "ApiResponse{" +
-                    "useHere=" + useHere +
-                    ", speedLimit=" + speedLimit +
-                    ", roadNames=" + Arrays.toString(roadNames) +
-                    ", coords=" + coords +
-                    ", timestamp=" + timestamp +
-                    '}';
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            ApiResponse that = (ApiResponse) o;
-
-            if (useHere != that.useHere) return false;
-            if (speedLimit != that.speedLimit) return false;
-            if (timestamp != that.timestamp) return false;
-            // Probably incorrect - comparing Object[] arrays with Arrays.equals
-            if (!Arrays.equals(roadNames, that.roadNames)) return false;
-            return coords != null ? coords.equals(that.coords) : that.coords == null;
-
-        }
-
-        @Override
-        public int hashCode() {
-            int result = (useHere ? 1 : 0);
-            result = 31 * result + speedLimit;
-            result = 31 * result + Arrays.hashCode(roadNames);
-            result = 31 * result + (coords != null ? coords.hashCode() : 0);
-            result = 31 * result + (int) (timestamp ^ (timestamp >>> 32));
-            return result;
-        }
     }
 
     private final class HereTimeTakenInterceptor implements Interceptor {

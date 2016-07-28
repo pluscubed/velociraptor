@@ -1,4 +1,4 @@
-package com.pluscubed.velociraptor.osmapi;
+package com.pluscubed.velociraptor.api.osmapi;
 
 import android.location.Location;
 
@@ -22,9 +22,9 @@ import java.util.Map;
 public class Coord {
 
     @JsonProperty("lat")
-    private double lat;
+    public double lat;
     @JsonProperty("lon")
-    private double lon;
+    public double lon;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<>();
 
@@ -42,26 +42,6 @@ public class Coord {
         lon = location.getLongitude();
     }
 
-    @JsonProperty("lat")
-    public Double getLat() {
-        return lat;
-    }
-
-    @JsonProperty("lat")
-    public void setLat(Double lat) {
-        this.lat = lat;
-    }
-
-    @JsonProperty("lon")
-    public Double getLon() {
-        return lon;
-    }
-
-    @JsonProperty("lon")
-    public void setLon(Double lon) {
-        this.lon = lon;
-    }
-
     @JsonAnyGetter
     public Map<String, Object> getAdditionalProperties() {
         return this.additionalProperties;
@@ -72,12 +52,16 @@ public class Coord {
         this.additionalProperties.put(name, value);
     }
 
+    public Location toLocation() {
+        Location loc = new Location("");
+        loc.setLatitude(lat);
+        loc.setLongitude(lon);
+        return loc;
+    }
+
     @Override
     public String toString() {
-        return "Coord{" +
-                "lat=" + lat +
-                ", lon=" + lon +
-                '}';
+        return lat + "," + lon;
     }
 
     @Override

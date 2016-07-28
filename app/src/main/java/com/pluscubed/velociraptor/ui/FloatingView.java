@@ -1,4 +1,4 @@
-package com.pluscubed.velociraptor;
+package com.pluscubed.velociraptor.ui;
 
 import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
@@ -23,6 +23,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.gigamole.library.ArcProgressStackView;
+import com.pluscubed.velociraptor.R;
 import com.pluscubed.velociraptor.utils.PrefUtils;
 import com.pluscubed.velociraptor.utils.Utils;
 

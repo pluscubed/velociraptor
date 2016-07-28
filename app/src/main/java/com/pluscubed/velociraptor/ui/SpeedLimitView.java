@@ -1,4 +1,4 @@
-package com.pluscubed.velociraptor;
+package com.pluscubed.velociraptor.ui;
 
 public interface SpeedLimitView {
 

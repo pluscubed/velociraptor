@@ -1,4 +1,4 @@
-package com.pluscubed.velociraptor;
+package com.pluscubed.velociraptor.settings;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
@@ -10,6 +10,7 @@ import android.view.View;
 import android.webkit.WebView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.pluscubed.velociraptor.R;
 
 import java.io.BufferedReader;
 import java.io.InputStream;

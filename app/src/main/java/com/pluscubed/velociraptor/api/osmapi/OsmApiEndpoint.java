@@ -1,4 +1,4 @@
-package com.pluscubed.velociraptor.osmapi;
+package com.pluscubed.velociraptor.api.osmapi;
 
 import android.support.annotation.NonNull;
 
