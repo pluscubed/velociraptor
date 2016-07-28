@@ -85,4 +85,13 @@ Desarrollado por <b>Daniel Ciao</b><br/>
     <string name="android_auto_integration_switch">Integración con Android Auto</string>
     <string name="android_auto_instruction_dialog">Velociraptor actúa como una aplicación de mensajería para Android Auto. Para detener los sonidos de notificaciones, toca una vez el botón cerrar o responder.</string>
     <string name="transparency">Transparencia</string>
+    <string name="auto_not_available">No disponible en la versión de Velociraptor de Google Play</string>
+    <string name="support_dev_dialog_notplay"><![CDATA[
+    Se usa para los costes del servidor y la API; la cantidad sugerida es 1 EUR al mes.
+    &lt;br/&gt;&lt;br/&gt;
+    Puedes donar usando PayPal <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&amp;business=72HXHU5AXK2ZN&amp;lc=US&amp;item_name=Velociraptor%20Development&amp;item_number=velociraptor&amp;currency_code=USD&amp;bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted">aquí</a>. Compras dentro de la aplicación disponibles si la has bajado de Google Play.
+    ]]></string>
+    <string name="size">Tamaño</string>
+    <string name="size_limit_overview">Límite de Velocidad: %s</string>
+    <string name="size_speedometer_overview">Velocímetro: %s</string>
 </resources>

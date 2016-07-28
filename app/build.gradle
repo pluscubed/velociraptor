@@ -15,7 +15,7 @@ apply plugin: 'com.neenbedankt.android-apt'
 
 android {
     compileSdkVersion 24
-    buildToolsVersion "24.0.0"
+    buildToolsVersion "24.0.1"
 
     if (project.hasProperty("RELEASE_STORE_FILE")) {
         signingConfigs {
@@ -32,8 +32,8 @@ android {
         applicationId "com.pluscubed.velociraptor"
         minSdkVersion 16
         targetSdkVersion 24
-        versionCode 26
-        versionName "1.4.0"
+        versionCode 27
+        versionName "1.4.1"
         vectorDrawables.useSupportLibrary = true
         manifestPlaceholders = [appName: "@string/app_name"]
     }
@@ -100,10 +100,8 @@ dependencies {
 
     compile 'com.anjlab.android.iab.v3:library:1.0.32'
 
-    compile 'com.pushtorefresh.storio:sqlite:1.9.1'
-
     compile 'io.reactivex:rxandroid:1.2.1'
-    compile 'io.reactivex:rxjava:1.1.7'
+    compile 'io.reactivex:rxjava:1.1.8'
 
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
@@ -128,7 +126,7 @@ dependencies {
     testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2'
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2'
 
-    compile('com.crashlytics.sdk.android:crashlytics:2.6.0@aar') {
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.1@aar') {
         transitive = true;
     }
 }
