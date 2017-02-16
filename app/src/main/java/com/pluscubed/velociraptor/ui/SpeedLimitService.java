@@ -24,7 +24,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.NotificationCompat;
-import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -47,6 +46,7 @@ import java.lang.annotation.RetentionPolicy;
 import rx.SingleSubscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class SpeedLimitService extends Service {
     public static final int PENDING_SETTINGS = 5;
@@ -125,12 +125,7 @@ public class SpeedLimitService extends Service {
 
         mDebuggingRequestInfo = "";
 
-        mLocationListener = new LocationListener() {
-            @Override
-            public void onLocationChanged(final Location location) {
-                SpeedLimitService.this.onLocationChanged(location);
-            }
-        };
+        mLocationListener = SpeedLimitService.this::onLocationChanged;
 
         mSpeedLimitApi = new SpeedLimitApi(this);
 
@@ -214,11 +209,11 @@ public class SpeedLimitService extends Service {
         updateDebuggingText(location, null, null);
 
         if (mLocationSubscription == null &&
-                (mLastLocation == null || location.distanceTo(mLastLocation) > 100) &&
-                System.currentTimeMillis() > mLastRequestTime + 5000) {
+                (mLastLocation == null || location.distanceTo(mLastLocation) > 10)) {
 
             mLastRequestTime = System.currentTimeMillis();
             mLocationSubscription = mSpeedLimitApi.getSpeedLimit(location)
+                    .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new SingleSubscriber<ApiResponse>() {
                         @SuppressLint("SetTextI18n")
@@ -234,6 +229,10 @@ public class SpeedLimitService extends Service {
 
                         @Override
                         public void onError(Throwable error) {
+                            error.printStackTrace();
+
+                            mLastLocation = location;
+
                             updateLimitText(false);
                             updateDebuggingText(location, null, error);
                             mLocationSubscription = null;
@@ -247,10 +246,10 @@ public class SpeedLimitService extends Service {
                 "\nEndpoints:\n" + mSpeedLimitApi.getApiInformation();
 
         if (error == null && apiResponse != null) {
-            if (apiResponse.roadNames != null) {
-                mDebuggingRequestInfo = ("Name(s): " + TextUtils.join(", ", apiResponse.roadNames));
+            if (apiResponse.roadName != null) {
+                mDebuggingRequestInfo = ("Name: " + apiResponse.roadName);
             } else {
-                mDebuggingRequestInfo = ("Success, no road data");
+                mDebuggingRequestInfo = ("Success, no road name");
             }
             mDebuggingRequestInfo += "\nHERE Maps: " + apiResponse.useHere;
             mDebuggingRequestInfo += "\nFrom cache: " + apiResponse.fromCache + ", " + apiResponse.timestamp;

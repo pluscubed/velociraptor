@@ -5,17 +5,19 @@ buildscript {
     }
 
     dependencies {
-        classpath 'io.fabric.tools:gradle:1.21.7'
-        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+        classpath 'io.fabric.tools:gradle:1.22.1'
+        classpath 'com.squareup.sqldelight:gradle-plugin:0.5.1'
+        classpath 'me.tatarka:gradle-retrolambda:3.5.0'
     }
 }
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
-apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'com.squareup.sqldelight'
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion "24.0.1"
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
 
     if (project.hasProperty("RELEASE_STORE_FILE")) {
         signingConfigs {
@@ -28,10 +30,16 @@ android {
         }
     }
 
+    packagingOptions {
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE-FIREBASE.txt'
+        exclude 'META-INF/NOTICE'
+    }
+
     defaultConfig {
         applicationId "com.pluscubed.velociraptor"
         minSdkVersion 16
-        targetSdkVersion 24
+        targetSdkVersion 25
         versionCode 27
         versionName "1.4.1"
         vectorDrawables.useSupportLibrary = true
@@ -72,6 +80,11 @@ android {
             manifestPlaceholders = [appName: "Velociraptor Full"]
         }
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 repositories {
@@ -84,49 +97,58 @@ dependencies {
     testCompile 'junit:junit:4.12'
     testCompile "org.mockito:mockito-all:1.10.19"
     testCompile "org.hamcrest:hamcrest-all:1.3"
-    testCompile "org.robolectric:robolectric:3.1.1"
+    testCompile "org.robolectric:robolectric:3.2.2"
 
+    debugCompile 'im.dino:dbinspector:3.4.1@aar'
 
-    compile 'com.android.support:appcompat-v7:24.1.1'
-    compile 'com.android.support:support-v4:24.1.1'
-    compile 'com.android.support:cardview-v7:24.1.1'
-    compile 'com.android.support:design:24.1.1'
+    compile "com.google.auto.value:auto-value:1.3"
+    annotationProcessor "com.google.auto.value:auto-value:1.3"
+    annotationProcessor 'com.ryanharter.auto.value:auto-value-parcel:0.2.5'
 
-    compile 'com.google.firebase:firebase-core:9.2.1'
-    compile 'com.google.firebase:firebase-messaging:9.2.1'
-    compile 'com.google.android.gms:play-services-location:9.2.1'
+    compile 'com.squareup.sqlbrite:sqlbrite:1.1.1'
 
-    compile 'com.afollestad.material-dialogs:core:0.8.6.2'
+    compile 'com.android.support:appcompat-v7:25.1.1'
+    compile 'com.android.support:support-v4:25.1.1'
+    compile 'com.android.support:cardview-v7:25.1.1'
+    compile 'com.android.support:design:25.1.1'
 
-    compile 'com.anjlab.android.iab.v3:library:1.0.32'
+    compile 'com.google.firebase:firebase-core:10.0.1'
+    compile 'com.google.firebase:firebase-messaging:10.0.1'
+    compile 'com.google.android.gms:play-services-location:10.0.1'
+
+    compile 'com.afollestad.material-dialogs:core:0.9.3.0'
+
+    compile 'com.anjlab.android.iab.v3:library:1.0.38'
 
     compile 'io.reactivex:rxandroid:1.2.1'
-    compile 'io.reactivex:rxjava:1.1.8'
+    compile 'io.reactivex:rxjava:1.2.6'
 
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
     compile 'com.squareup.retrofit2:converter-jackson:2.1.0'
-    compile 'com.squareup.okhttp3:logging-interceptor:3.4.1'
-    compile 'com.squareup.okhttp3:okhttp:3.4.1'
-    compile 'com.squareup.okio:okio:1.9.0'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.6.0'
+    compile 'com.squareup.okhttp3:okhttp:3.6.0'
+    compile 'com.squareup.okio:okio:1.11.0'
 
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.8.1'
-    compile 'com.fasterxml.jackson.core:jackson-core:2.8.1'
-    compile 'com.fasterxml.jackson.core:jackson-annotations:2.8.1'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.8.6'
+    compile 'com.fasterxml.jackson.core:jackson-core:2.8.6'
+    compile 'com.fasterxml.jackson.core:jackson-annotations:2.8.6'
 
     compile 'com.github.gigamole.arcprogressstackview:library:1.0.3'
     compile 'com.github.pluscubed:recycler-fast-scroll:0.3.2'
 
     compile 'com.github.bumptech.glide:glide:3.7.0'
 
-    compile 'com.jakewharton:butterknife:8.2.1'
-    apt 'com.jakewharton:butterknife-compiler:8.2.1'
+    compile 'com.jakewharton:butterknife:8.5.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
 
-    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.4-beta2'
-    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2'
-    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2'
+    compile 'com.jakewharton.timber:timber:4.5.1'
 
-    compile('com.crashlytics.sdk.android:crashlytics:2.6.1@aar') {
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
+    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
+    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
+
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.6@aar') {
         transitive = true;
     }
 }

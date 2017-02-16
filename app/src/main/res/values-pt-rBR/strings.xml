@@ -3,7 +3,7 @@
     <string name="app_name">Velociraptor</string>
     <string name="notif_content">Pressione para abrir a página de configurações</string>
     <string name="notif_title">Velociraptor monitorando</string>
-    <string name="dialog_draw_overlay">Para mostrar elementos flutuando no Android a partir da verão 6.0, dê a permissão para aparecer sobre outros aplicativos</string>
+    <string name="dialog_draw_overlay">Para mostrar elementos flutuando no Android a partir da versão 6.0, dê a permissão para aparecer sobre outros aplicativos</string>
     <string name="open_settings">Abra página de configurações</string>
     <string name="accessibility_service_description">Dê a permissão ao Velociraptor para  reconhecer aplicativos e aparecer automaticamente.\n\nO Velociraptor não usa nenhuma outra informação além do aplicativo atual.</string>
     <string name="enable_accessibility_service">Habilite o serviço de acessibilidade</string>
@@ -65,7 +65,7 @@
     <string name="help_edit">Ajude a corrigir a velocidade máxima</string>
     <string name="check_coverage_desc">Em caso afirmativo e se a velocidade máxima não aparece, pode haver um problema.  Use a opção para as estatísticas de atividades e o botão para resposta.</string>
     <string name="check_coverage">Pressione para verificar se sua área está coberta</string>
-    <string name="obtaining_gps_location">Obtendo a localização do GPS…</string>
+    <string name="obtaining_gps_location">Obtendo a localização do GPS...</string>
     <string name="debugging_stats">Estatísticas de atividades</string>
     <string name="test">Teste</string>
     <string name="sound_alert">Alerta sonoro</string>
@@ -88,4 +88,11 @@
     <string name="android_auto_integration_switch">Integração com o Android Auto</string>
     <string name="android_auto_instruction_dialog">Velociraptor age como um aplicativo de mensagens para o Android Auto. Para desativar os alertas sonoros, pressione o botão para fechar ou o para responder uma vez.</string>
     <string name="transparency">Transparência</string>
+    <string name="auto_not_available">Não disponível na versão Google Play do Velociraptor</string>
+    <string name="support_dev_dialog_notplay"><![CDATA[Usado para custos de servidor e API.  Sugere-se US$1 por mês.&lt;br/&gt;&lt;br/&gt;
+Aceitam-se doações através do PayPal <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&amp;business=72HXHU5AXK2ZN&amp;lc=US&amp;item_name=Velociraptor%20Development&amp;item_number=velociraptor&amp;currency_code=USD&amp;bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted">aqui</a>.&lt;br/&gt;&lt;br/&gt;
+Compras no aplicativo disponíveis na versão Google Play do Velociraptor.]]></string>
+    <string name="size">Tamanho</string>
+    <string name="size_limit_overview">Limite de velocidade: %s</string>
+    <string name="size_speedometer_overview">Velocímetro: %s</string>
 </resources>

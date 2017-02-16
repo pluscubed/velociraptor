@@ -11,7 +11,6 @@ import com.pluscubed.velociraptor.BuildConfig;
 import com.pluscubed.velociraptor.R;
 import com.pluscubed.velociraptor.api.hereapi.HereService;
 import com.pluscubed.velociraptor.api.hereapi.Link;
-import com.pluscubed.velociraptor.api.hereapi.LinkInfo;
 import com.pluscubed.velociraptor.api.osmapi.Coord;
 import com.pluscubed.velociraptor.api.osmapi.Element;
 import com.pluscubed.velociraptor.api.osmapi.OsmApiEndpoint;
@@ -22,12 +21,10 @@ import com.pluscubed.velociraptor.cache.SpeedLimitCache;
 import com.pluscubed.velociraptor.utils.PrefUtils;
 
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
@@ -48,7 +45,7 @@ import rx.schedulers.Schedulers;
 
 public class SpeedLimitApi {
 
-    private static final String HERE_ROUTING_API = "https://route.st.nlp.nokia.com/routing/7.2/";
+    private static final String HERE_ROUTING_API = "https://route.cit.api.here.com/routing/7.2/";
     private static final String[] PUBLIC_OVERPASS_APIS = new String[]{
             "http://api.openstreetmap.fr/oapi/",
             "http://overpass.osm.rambler.ru/cgi/",
@@ -61,7 +58,7 @@ public class SpeedLimitApi {
     private OsmApiSelectionInterceptor mOsmApiSelectionInterceptor;
 
     private int mHereTimeTaken;
-    private String[] mLastOsmRoadNames;
+    private ApiResponse mLastResponse;
 
     public SpeedLimitApi(Context context) {
         mContext = context;
@@ -115,11 +112,28 @@ public class SpeedLimitApi {
     }
 
     public Single<ApiResponse> getSpeedLimit(Location location) {
-        return SpeedLimitCache.getInstance(mContext).get(mLastOsmRoadNames, new Coord(location))
-                .subscribeOn(Schedulers.io())
-                .switchIfEmpty(getOsmSpeedLimit(location)
-                        //.switchIfEmpty(getHereSpeedLimit(location))
-                        .defaultIfEmpty(new ApiResponse()))
+        Observable<ApiResponse> query = getOsmSpeedLimit(location);
+
+        //Delay query if the last response was received less than 5 seconds ago
+        if (mLastResponse != null && !mLastResponse.fromCache) {
+            query = query.delaySubscription(
+                    5000 - (System.currentTimeMillis() - mLastResponse.timestamp), TimeUnit.MILLISECONDS);
+        }
+
+        //TODO: Query HERE when there is no speed limit in OSM
+        /*if(BuildConfig.DEBUG)
+            query = query.switchIfEmpty(getHereSpeedLimit(location));*/
+        query = query.defaultIfEmpty(new ApiResponse());
+        String lastRoadName = mLastResponse == null ? null : mLastResponse.roadName;
+        return SpeedLimitCache.getInstance(mContext)
+                .get(lastRoadName, new Coord(location))
+                .switchIfEmpty(query)
+                .doOnNext(apiResponse -> {
+                    mLastResponse = apiResponse;
+                    if (mLastResponse.timestamp == 0) {
+                        mLastResponse.timestamp = System.currentTimeMillis();
+                    }
+                })
                 .toSingle();
     }
 
@@ -168,6 +182,7 @@ public class SpeedLimitApi {
                         }
 
                         Element bestMatch = getBestElement(elements);
+                        ApiResponse bestResponse = null;
 
                         for (Element element : elements) {
                             ApiResponse response = new ApiResponse();
@@ -180,17 +195,11 @@ public class SpeedLimitApi {
                                 break;
                             }
 
-                            //Parse timestamp
-                            DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-                            try {
-                                response.timestamp = format.parse(osmApi.getOsm3s().getTimestampOsmBase()).getTime();
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
+                            response.timestamp = System.currentTimeMillis();
 
                             //Get road names
                             Tags tags = element.getTags();
-                            response.roadNames = new String[]{tags.getRef(), tags.getName()};
+                            response.roadName = tags.getRef() + " - " + tags.getName();
 
                             //Get speed limit
                             String maxspeed = tags.getMaxspeed();
@@ -203,10 +212,14 @@ public class SpeedLimitApi {
 
                             //Check criteria for best match
                             if (element == bestMatch) {
-                                mLastOsmRoadNames = response.roadNames;
-                                return Observable.just(response);
+                                bestResponse = response;
                             }
                         }
+
+                        if (bestResponse != null) {
+                            return Observable.just(bestResponse);
+                        }
+
                         return Observable.empty();
                     }
                 });
@@ -277,14 +290,13 @@ public class SpeedLimitApi {
         Element element = null;
         Element fallback = null;
 
-        if (mLastOsmRoadNames != null) {
+        if (mLastResponse != null) {
             for (Element newElement : elements) {
                 Tags newTags = newElement.getTags();
                 if (newTags.getMaxspeed() != null) {
                     fallback = newElement;
                 }
-                if (mLastOsmRoadNames[0] != null && mLastOsmRoadNames[0].equals(newTags.getRef()) ||
-                        mLastOsmRoadNames[1] != null && mLastOsmRoadNames[1].equals(newTags.getName())) {
+                if (mLastResponse.roadName != null && mLastResponse.roadName.equals(newTags.getName())) {
                     element = newElement;
                     break;
                 }
@@ -314,24 +326,30 @@ public class SpeedLimitApi {
                             Answers.getInstance().logCustom(new CustomEvent("HERE Request"));
                     }
                 })
-                .map(new Func1<LinkInfo, ApiResponse>() {
-                    @Override
-                    public ApiResponse call(LinkInfo linkInfo) {
-                        ApiResponse response = new ApiResponse();
-                        response.useHere = true;
-                        if (linkInfo != null) {
-                            Link link = linkInfo.getResponse().getLink().get(0);
-                            if (link.getAddress() != null) {
-                                response.roadNames = new String[]{link.getAddress().getLabel(),
-                                        link.getAddress().getStreet()};
-                            }
-                            if (link.getSpeedLimit() != null && link.getSpeedLimit() != 0) {
-                                double factor = PrefUtils.getUseMetric(mContext) ? 3.6 : 2.23;
-                                response.speedLimit = (int) (link.getSpeedLimit() * factor + 0.5d);
-                            }
+                .map(linkInfo -> {
+                    ApiResponse response = new ApiResponse();
+                    response.useHere = true;
+                    if (linkInfo != null) {
+                        Link link = linkInfo.getResponse().getLink().get(0);
+                        if (link.getAddress() != null) {
+                            response.roadName = link.getAddress().getLabel() + " - " + link.getAddress().getStreet();
                         }
-                        return response;
+                        if (link.getSpeedLimit() != null && link.getSpeedLimit() != 0) {
+                            double factor = PrefUtils.getUseMetric(mContext) ? 3.6 : 2.23;
+                            response.speedLimit = (int) (link.getSpeedLimit() * factor + 0.5d);
+                        }
+                        if (link.getShape().size() >= 2) {
+                            response.coords = new ArrayList<>();
+                            for (String coords : link.getShape()) {
+                                String[] coordsSplit = coords.split(",");
+                                Coord coord = new Coord(Double.parseDouble(coordsSplit[0]), Double.parseDouble(coordsSplit[1]));
+                                response.coords.add(coord);
+                            }
+
+                            SpeedLimitCache.getInstance(mContext).put(response);
+                        }
                     }
+                    return response;
                 }).toObservable();
     }
 

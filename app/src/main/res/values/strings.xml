@@ -104,4 +104,5 @@
     <string name="size">Size</string>
     <string name="size_limit_overview">Speed Limit: %s</string>
     <string name="size_speedometer_overview">Speedometer: %s</string>
+    <string name="rate_in_play">Rate in Play Store</string>
 </resources>

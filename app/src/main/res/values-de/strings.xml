@@ -2,18 +2,18 @@
 <resources>
     <string name="app_name">Velociraptor</string>
     <string name="notif_content">Antippen, um Einstellungen zu öffnen</string>
-    <string name="notif_title">Velociraptor -  Geschwindigkeitsbeschränkung</string>
+    <string name="notif_title">Velociraptor Anzeige läuft</string>
     <string name="dialog_draw_overlay">Um schwebende Elemente in Android 6.0 oder höher anzuzeigen, ist die Berechtigung \"über andere Apps zeichnen\" nötig.</string>
     <string name="open_settings">Einstellungsseite öffnen</string>
     <string name="accessibility_service_description">Um die Vordergrund-App zu bestimmen und die Geschwindigkeit anzuzeigen, muss der \"Bedienungshilfen\"-Dienst  aktiviert werden.</string>
     <string name="enable_accessibility_service">Dienst aktivieren</string>
-    <string name="enable_accessibility_service_desc">Um Geschwindigkeitsbeschränkungen in Maps automatisch anzuzeigen, muss der \"Bedienungshilfen\"-Dienst aktiviert werden.</string>
+    <string name="enable_accessibility_service_desc">Erlaube Velociraptor durch Aktivieren der Bedienungshilfen, die aktuell laufende App zu erkennen</string>
     <string name="enable_floating_desc">Um das Overlay anzuzeigen, ist die  Berechtigung \"über andere Apps zeichnen\" nötig.</string>
     <string name="open_settings_page">Einstellungsseite öffnen</string>
     <string name="grant_permission">Berechtigung erteilen</string>
     <string name="enable_location_desc">Um die erlaubte Geschwindigkeit zu bestimmen, ist die Berechtigung zur Standortbestimmung nötig.</string>
-    <string name="speed_unit">Einheit der Geschwindigkeit:</string>
-    <string name="style">Stil:</string>
+    <string name="speed_unit">Einheit der Geschwindigkeit</string>
+    <string name="style">Stil</string>
     <string name="united_states">USA</string>
     <string name="international">International</string>
     <string name="open_settings_failed_overlay">Einstellungen können nicht geöffnet werden. Bitte erlauben Sie \"über andere Apps zeichnen\" für Velociraptor von Hand.</string>
@@ -21,7 +21,7 @@
     <string name="permissions_warning">Velociraptor hat nicht die nötigen Berechtigungen. Bitte starten Sie die App, um sie zu vergeben.</string>
     <string name="location_settings_warning">GPS ist ausgeschaltet. Bitte aktivieren Sie es, damit Velociraptor die Geschwindigkeit überwachen kann.</string>
     <string name="network_warning">Kein Netzwerk. Velociraptor braucht eine Internetverbindung um die Geschwindigkeitsbegrenzung zu laden.</string>
-    <string name="speeding_amount">Warnung bei Überschreiten der Höchstgeschwindigkeit:</string>
+    <string name="speeding_amount">Zulässige Überschreitung der Höchstgeschwindigkeit</string>
     <string name="show_speedometer">Geschwindigkeit anzeigen</string>
     <string name="about_dialog_title">Velociraptor v%s</string>
     <string name="dismiss">Schließen</string>
@@ -41,11 +41,11 @@
     ]]></string>
     <string name="about">Über</string>
     <string name="wrong_speed_limit">Falsche oder fehlende Geschwindigkeitsbegrenzung ?</string>
-    <string name="wrong_speed_limit_desc">Gehen Sie auf Ihrem Computer zu OpenStreetMap. Tippen Sie auf den Link zu teilen (https://openstreetmap.org)</string>
+    <string name="wrong_speed_limit_desc">Öffnen Sie OpenStreetMap auf Ihrem Computer. Tippen Sie auf den Link um ihn zu teilen (https://openstreetmap.org)</string>
     <string name="configure">Konfigurieren</string>
     <string name="automatically_show">Anzeigen/Ausblenden in bestimmten Anwendungen</string>
     <string name="select_overlay_usage">Aktivierung</string>
-    <string name="enable">Aktiviert</string>
+    <string name="enable">Aktivieren</string>
     <string name="show_in_apps">Zeige in diesen Apps</string>
     <string name="persistent_notification_controls">Zeige Benachrichtigungkontrollen</string>
     <string name="done">Erledigt</string>
@@ -61,4 +61,15 @@
     <string name="help_edit">Hilf mit, die Geschwindigkeitsbegrenzung Daten zu bearbeiten</string>
     <string name="obtaining_gps_location">Suche GPS-Position …</string>
     <string name="debugging_stats">Statistik für Nerds / Debugging</string>
+    <string name="test">Test</string>
+    <string name="sound_alert">Sound Alarm</string>
+    <string name="open_coverage_map_failed">Link öffnen nicht möglich. Bitte öffne ihn manuell http://product.itoworld.com/map/124</string>
+    <string name="tolerance_dialog_text">Warnt bei Überschreitung von</string>
+    <string name="auto_not_available">In der Google Play Version von Velociraptor nicht verfügbar</string>
+    <string name="support_dev_dialog_notplay"><![CDATA[Genutzt um die API-Kosten zu decken; empfohlener Betrag ist 1 USD pro Monat. 
+&lt;br/&gt;&lt;br/&gt; 
+Sie können per PayPal spenden <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&amp;business=72HXHU5AXK2ZN&amp;lc=US&amp;item_name=Velociraptor%20Development&amp;item_number=velociraptor&amp;currency_code=USD&amp;bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted">here</a>. In-App Bezahlung ist verfügbar wenn Sie die App über Google Play installieren. ]]></string>
+    <string name="size">Größe</string>
+    <string name="size_limit_overview">Geschwindigkeitsbegrenzung: %s</string>
+    <string name="size_speedometer_overview">Geschwindigkeitsanzeige: %s</string>
 </resources>

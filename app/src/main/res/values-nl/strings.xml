@@ -57,12 +57,12 @@
     <string name="show">Weergeven</string>
     <string name="hide">Verbergen</string>
     <string name="controls_notif_title">Velociraptor bediening</string>
-    <string name="controls_notif_desc">Snelheidmonitor weergeven of verbergen</string>
+    <string name="controls_notif_desc">Snelheidsmonitor weergeven of verbergen</string>
     <string name="general">Algemeen</string>
     <string name="advanced">Geavanceerd</string>
     <string name="changelog">Veranderingen</string>
     <string name="help_edit">Help met bewerken van de maximumsnelheid</string>
-    <string name="check_coverage_desc">Zo ja en de maximumsnelheid wordt niet weergegeven, dan kan het een bug te zijn. Gebruik de debugging- optie en feedback-knop.</string>
+    <string name="check_coverage_desc">Zo ja en de maximumsnelheid wordt niet weergegeven, dan kan het een bug te zijn. Gebruik de debugging-optie en de info-knop om feedback te versturen.</string>
     <string name="check_coverage">Tik om te controleren of uw gebied is gedekt</string>
     <string name="obtaining_gps_location">GPS-locatie verkrijgen…</string>
     <string name="debugging_stats">Statistieken voor nerds/debugging</string>
@@ -85,6 +85,15 @@
     <string name="notif_android_auto_title">Velociraptor voor Android Auto</string>
     <string name="notif_android_auto_limit">Snelheidslimiet: %s</string>
     <string name="android_auto_integration_switch">Android Auto-integratie</string>
-    <string name="android_auto_instruction_dialog">Velociraptor fungeert als een berichten-app voor Android Auto. Om de meldingsgeluiden te stoppen, tikt u eenmalig op sluiten of beantwoorden.</string>
+    <string name="android_auto_instruction_dialog">Velociraptor fungeert als een berichten-app voor Android Auto. Android Auto moet op de voorgrond draaien. Om de meldingsgeluiden te stoppen, tikt u eenmalig op sluiten of beantwoorden.</string>
     <string name="transparency">Transparantie</string>
+    <string name="auto_not_available">Niet beschikbaar in de Google Play-versie van Velociraptor</string>
+    <string name="support_dev_dialog_notplay"><![CDATA[
+Wordt gebruikt voor server- en API-kosten; aanbevolen hoeveelheid is 1 USD per maand.
+&lt;br/&gt;&lt;br/&gt; 
+Doneren kan via PayPal <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&amp;business=72HXHU5AXK2ZN&amp;lc=US&amp;item_name=Velociraptor%20Development&amp;item_number=velociraptor&amp;currency_code=USD&amp;bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted">here</a>. In-app aankoop is beschikbaar als de app is gedownload uit Google Play.
+]]></string>
+    <string name="size">Grootte</string>
+    <string name="size_limit_overview">Maximum snelheid: %s</string>
+    <string name="size_speedometer_overview">Snelheidsmeter: %s</string>
 </resources>

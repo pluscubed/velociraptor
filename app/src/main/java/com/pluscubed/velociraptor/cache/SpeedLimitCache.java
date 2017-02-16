@@ -1,55 +1,48 @@
 package com.pluscubed.velociraptor.cache;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pluscubed.velociraptor.api.ApiResponse;
 import com.pluscubed.velociraptor.api.osmapi.Coord;
+import com.squareup.sqlbrite.BriteDatabase;
+import com.squareup.sqlbrite.SqlBrite;
+import com.squareup.sqldelight.SqlDelightStatement;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 import rx.Observable;
+import rx.Scheduler;
 import rx.functions.Func0;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
+import timber.log.Timber;
 
 public class SpeedLimitCache {
 
-    public static final double VALID_CACHE_MS = 6.048e+8;
     private static SpeedLimitCache instance;
-    private final ObjectMapper objectMapper;
-    private final File cacheFile;
-    List<ApiResponse> responses;
 
-    private SpeedLimitCache(File cache) {
-        objectMapper = new ObjectMapper();
-        cacheFile = cache;
+    private final BriteDatabase db;
+    private final wayModel.Put put;
+    private final wayModel.Cleanup cleanup;
+    private final wayModel.Update_way update;
 
-        try {
-            cacheFile.createNewFile();
-            responses = objectMapper.readValue(cacheFile, new TypeReference<List<ApiResponse>>() {
-            });
-        } catch (IOException e) {
-            e.printStackTrace();
-            responses = new ArrayList<>();
-        }
+    SpeedLimitCache(Context context, Scheduler scheduler) {
+        SqlBrite sqlBrite = new SqlBrite.Builder().build();
+        CacheOpenHelper helper = new CacheOpenHelper(context);
+        db = sqlBrite.wrapDatabaseHelper(helper, scheduler);
+        SQLiteDatabase writableDatabase = db.getWritableDatabase();
+
+        put = new Way.Put(writableDatabase);
+        update = new Way.Update_way(writableDatabase);
+        cleanup = new Way.Cleanup(writableDatabase);
     }
+
 
     public static SpeedLimitCache getInstance(Context context) {
-        return getInstance(new File(context.getCacheDir().getPath() + "/cache.json"));
-    }
-
-    public static SpeedLimitCache getInstance(File cache) {
         if (instance == null) {
-            instance = new SpeedLimitCache(cache);
+            instance = new SpeedLimitCache(context, Schedulers.io());
         }
         return instance;
     }
@@ -62,14 +55,15 @@ public class SpeedLimitCache {
         return Math.abs(Math.asin(Math.sin(a.distanceTo(x) / 6371008) * Math.sin(Math.toRadians(a.bearingTo(x) - a.bearingTo(b)))) * 6371008);
     }
 
-    private static boolean isOnSegment(Coord p1, Coord p2, Coord t) {
+    /*private static boolean isOnSegment(Coord p1, Coord p2, Coord t) {
         Location a = p1.toLocation();
         Location b = p2.toLocation();
         Location x = t.toLocation();
 
         double ab = a.distanceTo(b);
+        //If difference between straight line and going through point is than 8 meters
         return Math.abs(ab - a.distanceTo(x) - x.distanceTo(b)) < 8;
-    }
+    }*/
 
     private static Coord getCentroid(ApiResponse response) {
         Coord centroid = new Coord();
@@ -87,128 +81,72 @@ public class SpeedLimitCache {
             return;
         }
 
-        if (responses.contains(response)) {
-            return;
-        }
-
-        responses.add(response);
-        Collections.sort(responses, new CentroidLatitudeComparator());
-
+        BriteDatabase.Transaction transaction = db.newTransaction();
         try {
-            cleanup();
-            cacheFile.createNewFile();
-            objectMapper.writeValue(cacheFile, responses);
-        } catch (IOException e) {
-            e.printStackTrace();
+            List<Way> ways = Way.fromResponse(response);
+            for (Way way : ways) {
+                update.bind(way.clat(), way.clon(), way.maxspeed(), way.timestamp(), way.lat1(), way.lon1(), way.lat2(), way.lon2(), way.road());
+                int rowsAffected = db.executeUpdateDelete(update.table, update.program);
+
+                if (rowsAffected != 1) {
+                    put.bind(way.clat(), way.clon(), way.maxspeed(), way.timestamp(), way.lat1(), way.lon1(), way.lat2(), way.lon2(), way.road());
+                    long rowId = db.executeInsert(put.table, put.program);
+                    Timber.d("Cache put: " + rowId + " - " + way.toString());
+                }
+            }
+
+            transaction.markSuccessful();
+        } finally {
+            transaction.end();
         }
     }
 
-    private void remove(ApiResponse response) {
-        responses.remove(response);
-        try {
-            cacheFile.createNewFile();
-            objectMapper.writeValue(cacheFile, responses);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public Observable<ApiResponse> get(final String[] previousNames, final Coord coord) {
+    public Observable<ApiResponse> get(final String previousName, final Coord coord) {
         return Observable.defer(new Func0<Observable<ApiResponse>>() {
             @Override
             public Observable<ApiResponse> call() {
-                cleanup();
+                SpeedLimitCache.this.cleanup();
 
-                ApiResponse fluffedCoord = new ApiResponse();
-                fluffedCoord.coords = new ArrayList<>();
-                fluffedCoord.coords.add(coord);
-                int latIndex = Collections.binarySearch(responses, fluffedCoord, new CentroidLatitudeComparator());
+                SqlDelightStatement selectStatement = Way.FACTORY.select_by_coord(coord.lat, Math.pow(Math.cos(Math.toRadians(coord.lat)), 2), coord.lon);
 
-                if (latIndex < 0) {
-                    latIndex = -(latIndex + 1);
-                }
+                return db.createQuery(selectStatement.tables, selectStatement.statement, selectStatement.args)
+                        .mapToList(Way.SELECT_BY_COORD::map)
+                        .take(1)
+                        .flatMap(Observable::from)
+                        .filter(way -> {
+                            Coord coord1 = new Coord(way.lat1(), way.lon1());
+                            Coord coord2 = new Coord(way.lat2(), way.lon2());
+                            double crossTrackDist = crossTrackDist(coord1, coord2, coord);
+                            return crossTrackDist < 15 /*&& isOnSegment(coord1, coord2, coord)*/;
+                        })
+                        .toList()
+                        .flatMap(new Func1<List<Way>, Observable<ApiResponse>>() {
+                            @Override
+                            public Observable<ApiResponse> call(List<Way> ways) {
+                                if (ways.isEmpty()) {
+                                    return Observable.empty();
+                                }
 
-                TreeMap<Double, ApiResponse> closeResponses = new TreeMap<>();
-                int max = Math.min(latIndex + 5, responses.size());
-                for (int i = latIndex; i < max; i++) {
-                    addClosePaths(coord, closeResponses, i);
-                }
-                int min = Math.max(latIndex - 6, 0);
-                for (int i = latIndex - 1; i >= min; i--) {
-                    addClosePaths(coord, closeResponses, i);
-                }
+                                ApiResponse response = ways.get(0).toResponse();
+                                for (Way way : ways) {
+                                    if (way.road() != null && way.road().equals(previousName)) {
+                                        response = way.toResponse();
+                                        break;
+                                    }
+                                }
 
-                ApiResponse finalResponse = null;
-                for (ApiResponse response : closeResponses.values()) {
-                    if (response.roadNames != null && previousNames != null &&
-                            (response.roadNames[0] != null && response.roadNames[0].equals(previousNames[0]) ||
-                                    response.roadNames[1] != null && response.roadNames[1].equals(previousNames[1]))) {
-                        finalResponse = response;
-                        break;
-                    }
-
-                    //Closest path
-                    if (finalResponse == null) {
-                        finalResponse = response;
-                    }
-                }
-
-                if (finalResponse == null) {
-                    return Observable.empty();
-                }
-
-                finalResponse.fromCache = true;
-                return Observable.just(finalResponse);
+                                response.fromCache = true;
+                                return Observable.just(response);
+                            }
+                        });
             }
         });
 
     }
 
-    private void addClosePaths(Coord coord, Map<Double, ApiResponse> closeResponses, int responsesIndex) {
-        ApiResponse apiResponse = responses.get(responsesIndex);
-        for (int j = 0; j < apiResponse.coords.size() - 1; j++) {
-            Coord coord1 = apiResponse.coords.get(j);
-            Coord coord2 = apiResponse.coords.get(j + 1);
-
-            if (isOnSegment(coord1, coord2, coord)) {
-                closeResponses.put(crossTrackDist(coord1, coord2, coord), apiResponse);
-                break;
-            }
-        }
-    }
 
     private void cleanup() {
-        List<ApiResponse> responsesCopy = new ArrayList<>(responses);
-        Collections.sort(responsesCopy, new ResponseTimestampComparator());
-
-        for (Iterator<ApiResponse> iterator = responsesCopy.iterator(); iterator.hasNext(); ) {
-            ApiResponse response = iterator.next();
-            //Make sure cache is less than 1 week old
-            if (System.currentTimeMillis() - response.timestamp > VALID_CACHE_MS) {
-                iterator.remove();
-                remove(response);
-            } else {
-                break;
-            }
-        }
-    }
-
-    private class CentroidLatitudeComparator implements Comparator<ApiResponse> {
-
-        @Override
-        public int compare(ApiResponse response1, ApiResponse response2) {
-            Coord centroid1 = getCentroid(response1);
-            Coord centroid2 = getCentroid(response2);
-
-            return Double.compare(centroid1.lat, centroid2.lat);
-        }
-    }
-
-    private class ResponseTimestampComparator implements Comparator<ApiResponse> {
-
-        @Override
-        public int compare(ApiResponse response1, ApiResponse response2) {
-            return Long.valueOf(response1.timestamp).compareTo(response2.timestamp);
-        }
+        cleanup.bind(System.currentTimeMillis());
+        db.executeUpdateDelete(cleanup.table, cleanup.program);
     }
 }

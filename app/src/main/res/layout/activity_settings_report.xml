@@ -67,16 +67,6 @@
                     android:textSize="16sp"
                     tools:ignore="RtlSymmetry" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingEnd="8dp"
-                    android:paddingRight="8dp"
-                    android:text="@string/check_coverage_desc"
-                    android:textColor="?android:textColorSecondary"
-                    android:textSize="14sp"
-                    tools:ignore="RtlSymmetry" />
-
             </LinearLayout>
 
         </LinearLayout>

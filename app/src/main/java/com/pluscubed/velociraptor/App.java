@@ -19,6 +19,7 @@ import io.fabric.sdk.android.Fabric;
 import rx.Observable;
 import rx.SingleSubscriber;
 import rx.functions.Func1;
+import timber.log.Timber;
 
 public class App extends Application {
 
@@ -29,6 +30,10 @@ public class App extends Application {
         if (!BuildConfig.DEBUG) {
             Fabric.with(this, new Crashlytics());
             FirebaseAnalytics analytics = FirebaseAnalytics.getInstance(this);
+        }
+
+        if (BuildConfig.DEBUG) {
+            Timber.plant(new Timber.DebugTree());
         }
 
         LeakCanary.install(this);
