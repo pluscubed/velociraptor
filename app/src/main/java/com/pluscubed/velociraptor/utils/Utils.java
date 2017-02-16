@@ -65,19 +65,20 @@ public abstract class Utils {
         return lhs < rhs ? -1 : (lhs == rhs ? 0 : 1);
     }
 
-    public static void playBeep() {
+    public static void playBeeps() {
+        playTone();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                playTone();
+            }
+        }, 300);
+    }
+
+    private static void playTone() {
         try {
             ToneGenerator toneGen1 = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
             toneGen1.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 100);
-
-            new Handler().postDelayed(
-                    new Runnable() {
-                        public void run() {
-                            ToneGenerator toneGen1 = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
-                            toneGen1.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 100);
-                        }
-                    },
-                    300);
         } catch (RuntimeException ignored) {
         }
     }

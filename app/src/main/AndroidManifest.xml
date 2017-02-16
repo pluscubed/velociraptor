@@ -43,5 +43,9 @@
                 android:resource="@xml/accessibility_service" />
         </service>
 
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_speedometer" />
+
     </application>
 </manifest>

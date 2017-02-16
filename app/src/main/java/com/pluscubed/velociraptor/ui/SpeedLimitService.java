@@ -303,7 +303,7 @@ public class SpeedLimitService extends Service {
                 if (mSpeedingStart == -1) {
                     mSpeedingStart = System.currentTimeMillis();
                 } else if (System.currentTimeMillis() > mSpeedingStart + 2000L && PrefUtils.isBeepAlertEnabled(this)) {
-                    Utils.playBeep();
+                    Utils.playBeeps();
                     mSpeedingStart = Long.MAX_VALUE - 2000L;
                 }
             } else {

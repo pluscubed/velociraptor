@@ -60,6 +60,8 @@
 }
 
 #RxJava
+-keep class rx.** { *; }
+
 -dontwarn sun.misc.**
 
 -keepclassmembers class rx.internal.util.unsafe.*ArrayQueue*Field* {

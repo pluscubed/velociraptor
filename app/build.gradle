@@ -40,8 +40,8 @@ android {
         applicationId "com.pluscubed.velociraptor"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 27
-        versionName "1.4.1"
+        versionCode 29
+        versionName "1.4.2"
         vectorDrawables.useSupportLibrary = true
         manifestPlaceholders = [appName: "@string/app_name"]
     }
@@ -76,8 +76,8 @@ android {
         }
         full {
             applicationIdSuffix ".full"
-            versionName = android.defaultConfig.versionName + "-full"
-            manifestPlaceholders = [appName: "Velociraptor Full"]
+            versionName = android.defaultConfig.versionName + "-aa"
+            manifestPlaceholders = [appName: "Velociraptor AA"]
         }
     }
 

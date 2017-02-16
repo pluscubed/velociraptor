@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.webkit.WebView;
 
-import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.pluscubed.velociraptor.R;
 
@@ -35,15 +34,16 @@ public class ChangelogDialog extends DialogFragment {
                 .title(R.string.changelog)
                 .customView(customView, false)
                 .positiveText(android.R.string.ok)
-                .neutralText(R.string.rate_in_play)
-                .onNeutral(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        Intent intent = new Intent()
-                                .setAction(Intent.ACTION_VIEW)
-                                .setData(Uri.parse("https://play.google.com/store/apps/details?id=com.pluscubed.velociraptor"));
-                        startActivity(intent);
-                    }
+                .neutralText(R.string.rate)
+                .onNeutral((dialog1, which) -> {
+                    Intent intent = new Intent()
+                            .setAction(Intent.ACTION_VIEW)
+                            .setData(Uri.parse("https://play.google.com/store/apps/details?id=com.pluscubed.velociraptor"));
+                    startActivity(intent);
+                })
+                .negativeText(R.string.support)
+                .onNegative((dialog1, which) -> {
+                    ((SettingsActivity) getActivity()).showSupportDialog();
                 })
                 .build();
 

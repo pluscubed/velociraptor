@@ -411,7 +411,7 @@ public class SettingsActivity extends AppCompatActivity {
         testBeepButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Utils.playBeep();
+                Utils.playBeeps();
             }
         });
 
@@ -483,7 +483,7 @@ public class SettingsActivity extends AppCompatActivity {
         PrefUtils.setVersionCode(this, BuildConfig.VERSION_CODE);
     }
 
-    private void showSupportDialog() {
+    public void showSupportDialog() {
         String content = getString(BuildConfig.FLAVOR.equals("play") ? R.string.support_dev_dialog : R.string.support_dev_dialog_notplay);
         if (PrefUtils.hasSupported(this) || !billingProcessor.listOwnedSubscriptions().isEmpty()) {
             content += "\n\n\uD83C\uDF89 " + getString(R.string.support_dev_dialog_badge) + " \uD83C\uDF89";
