@@ -1,36 +1,69 @@
 <resources>
     <string name="app_name">Velociraptor</string>
 
+    <!--Generic-->
+    <string name="configure">Configure</string>
+    <string name="enable">Enable</string>
+    <string name="done">Done</string>
+    <string name="show">Show</string>
+    <string name="hide">Hide</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="kmph">%s km/h</string>
+    <string name="mph">%s mph</string>
+    <string name="percent">%s%%</string>
 
     <string name="notif_content">Touch to open settings</string>
     <string name="notif_title">Velociraptor monitor running</string>
 
+    <!--Permission Settings-->
+    <string name="open_settings_page">Open settings page</string>
+    <string name="enable_floating_desc">To display the overlay, enable the \"Draw Over Other Apps\" permission</string>
     <string name="dialog_draw_overlay">To show floating elements on Android 6.0+, grant the \"Draw Over Other Apps\" permission</string>
-    <string name="open_settings">Open Settings Page</string>
-    <string name="accessibility_service_description">Allow Velociraptor to detect the foreground app and display automatically.\n\nVelociraptor does not use any information other than the foreground app info.</string>
-
+    <string name="open_settings_failed_overlay">Unable to open settings. Please manually enable the \"Draw Over Other Apps\" setting for Velociraptor.</string>
 
     <string name="enable_accessibility_service">Enable Accessibility Service</string>
     <string name="enable_accessibility_service_desc">Allow Velociraptor to detect the current app by turning on its accessibility service</string>
-    <string name="enable_floating_desc">To display the overlay, enable the \"Draw Over Other Apps\" permission</string>
-    <string name="open_settings_page">Open settings page</string>
+    <string name="accessibility_service_description">Allow Velociraptor to detect the foreground app and display automatically.\n\nVelociraptor does not use any information other than the foreground app info.</string>
+    <string name="open_settings_failed_accessibility">Unable to open settings. Please manually enable the Accessibility Service setting for Velociraptor.</string>
+
     <string name="grant_permission">Grant permission</string>
     <string name="enable_location_desc">To determine the speed limit at your location, please grant the location permission</string>
+
+    <string name="permissions_warning">Velociraptor doesn\'t have adequate permissions. Please open the app to grant them.</string>
+    <string name="location_settings_warning">GPS is not turned on. Please enable for Velociraptor\'s speed limit monitor.</string>
+    <string name="network_warning">Network is not connected. Velociraptor requires Internet connectivity to fetch the speed limit.</string>
+
+    <!--General Settings-->
+    <string name="general">General</string>
+
+    <string name="show_speedometer">Show speedometer</string>
+
+    <string name="sound_alert">Sound alert</string>
+    <string name="test">Test</string>
+
     <string name="speed_unit">Speed units</string>
+
     <string name="style">Style</string>
     <string name="united_states">United States</string>
     <string name="international">International</string>
 
-    <string name="open_settings_failed_overlay">Unable to open settings. Please manually enable the \"Draw Over Other Apps\" setting for Velociraptor.</string>
-    <string name="open_settings_failed_accessibility">Unable to open settings. Please manually enable the Accessibility Service setting for Velociraptor.</string>
-    <string name="permissions_warning">Velociraptor doesn\'t have adequate permissions. Please open the app to grant them.</string>
-    <string name="location_settings_warning">GPS is not turned on. Please enable for Velociraptor\'s speed limit monitor.</string>
-    <string name="network_warning">Network is not connected. Velociraptor requires Internet connectivity to fetch the speed limit.</string>
-    <string name="speeding_amount">Speeding tolerance</string>
-    <string name="show_speedometer">Show speedometer</string>
+    <string name="size">Size</string>
+    <string name="size_limit_overview">Speed Limit: %s</string>
+    <string name="size_speedometer_overview">Speedometer: %s</string>
 
+    <string name="transparency">Opacity</string>
+
+    <string name="speeding_amount">Speeding tolerance</string>
+    <string name="tolerance_dialog_text">Warn when speed limit exceeded by:</string>
+    <string name="plus">plus</string>
+    <string name="or">or</string>
+    <string name="tolerance_desc">%1$s %2$s %3$s</string>
+
+    <string name="tip_tap_hide">Tip: Tap the sign to temporarily hide it!</string>
+
+    <!--About Dialog-->
+    <string name="about">About</string>
     <string name="about_dialog_title">Velociraptor v%s</string>
-    <string name="dismiss">Dismiss</string>
     <string name="about_body"><![CDATA[
         <b>Velociraptor</b> is a floating speed limit monitor with speedometer and warning features, using OpenStreetMap and HERE Maps speed limit data.
         <br/><br/>
@@ -50,60 +83,70 @@
         <a href=\'http://pluscubed.oneskyapp.com/collaboration/project/64120\'>OneSky</a> - translate the app to your language
         <a href="https://play.google.com/apps/testing/com.pluscubed.velociraptor">Beta testing</a> - try out upcoming releases
     ]]></string>
-    <string name="about">About</string>
+
+
+    <!--Wrong or missing speed limit-->
     <string name="wrong_speed_limit">Wrong or missing speed limit?</string>
+
+    <string name="check_coverage">Touch to check if your area is covered</string>
+    <string name="open_coverage_map_failed">Unable to open link. Please manually go to http://product.itoworld.com/map/124.</string>
+
+    <string name="help_edit">Help edit the speed limit data</string>
     <string name="wrong_speed_limit_desc">Go to OpenStreetMap on your computer. Touch to share the link (https://openstreetmap.org)</string>
-    <string name="configure">Configure</string>
-    <string name="automatically_show">Show/hide in specified apps</string>
+
+
+    <!--Activation Settings-->
     <string name="select_overlay_usage">Activation</string>
-    <string name="enable">Enable</string>
+
+    <string name="automatically_show">Show/hide in specified apps</string>
     <string name="show_in_apps">Show in these apps:</string>
+
     <string name="persistent_notification_controls">Show notification controls</string>
-    <string name="done">Done</string>
-    <string name="select_apps">Select apps</string>
-    <string name="show_map_apps">Show map apps</string>
-    <string name="show">Show</string>
-    <string name="hide">Hide</string>
     <string name="controls_notif_title">Velociraptor controls</string>
     <string name="controls_notif_desc">Show or hide the speed limit monitor</string>
-    <string name="general">General</string>
+
+    <string name="tip_qs_tile">Tip: Add Velociraptor\'s Quick Settings Tile!</string>
+
+
+    <!--App selection-->
+    <string name="select_apps">Select apps</string>
+    <string name="show_map_apps">Show map apps</string>
+
+
+    <!---Advanced settings-->
     <string name="advanced">Advanced</string>
-    <string name="changelog">Changelog</string>
-    <string name="help_edit">Help edit the speed limit data</string>
-    <string name="check_coverage_desc">If yes and the speed limit is not shown, there may be a bug. Use the debugging stats option and info button to send feedback.</string>
-    <string name="check_coverage">Touch to check if your area is covered</string>
-    <string name="obtaining_gps_location">Obtaining GPS location…</string>
     <string name="debugging_stats">Stats for nerds/debugging</string>
-    <string name="test">Test</string>
-    <string name="sound_alert">Sound alert</string>
-    <string name="open_coverage_map_failed">Unable to open link. Please manually go to http://product.itoworld.com/map/124.</string>
-    <string name="tolerance_dialog_text">Warn when speed limit exceeded by:</string>
-    <string name="plus">plus</string>
-    <string name="or">or</string>
-    <string name="kmph">%s km/h</string>
-    <string name="mph">%s mph</string>
-    <string name="percent">%s%%</string>
-    <string name="tolerance_desc">%1$s %2$s %3$s</string>
+    <string name="obtaining_gps_location">Obtaining GPS location…</string>
+
+
+    <!--Changelog-->
+    <string name="changelog">Changelog</string>
+    <string name="rate">Rate</string>
+    <string name="support">Support</string>
+
+
+    <!--Support development-->
     <string name="support_development">Support development</string>
     <string name="in_app_unavailable">In-app billing not available</string>
     <string name="support_dev_dialog">Used for OpenStreetMap server costs; suggested amount is 1 USD per month.</string>
     <string name="support_dev_dialog_badge">Thank you for your support!</string>
-    <string name="per_month">%s per month</string>
-    <string name="one_time">%s one-time</string>
-    <string name="notif_android_auto_title">Velociraptor for Android Auto</string>
-    <string name="notif_android_auto_limit">Speed Limit: %s</string>
-    <string name="android_auto_integration_switch">Android Auto integration</string>
-    <string name="android_auto_instruction_dialog">Velociraptor acts as a messaging app for Android Auto.\nTo use, the Android Auto app must be the foreground app.\nTo stop the notifications sounds, touch the close or reply button once.</string>
-    <string name="transparency">Opacity</string>
-    <string name="auto_not_available">To use Android Auto integration, download Velociraptor AA from APKMirror</string>
     <string name="support_dev_dialog_notplay"><![CDATA[
     Used for server and API costs; suggested amount is 1 USD per month.
     <br/><br/>
     You may donate using PayPal <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&amp;business=72HXHU5AXK2ZN&amp;lc=US&amp;item_name=Velociraptor%20Development&amp;item_number=velociraptor&amp;currency_code=USD&amp;bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted">here</a>. In-app purchase is available if you download from Google Play.
     ]]></string>
-    <string name="size">Size</string>
-    <string name="size_limit_overview">Speed Limit: %s</string>
-    <string name="size_speedometer_overview">Speedometer: %s</string>
-    <string name="rate">Rate</string>
-    <string name="support">Support</string>
+    <string name="per_month">%s per month</string>
+    <string name="one_time">%s one-time</string>
+
+    <!--Android Auto-->
+    <string name="notif_android_auto_title">Velociraptor for Android Auto</string>
+    <string name="notif_android_auto_limit">Speed Limit: %s</string>
+    <string name="android_auto_integration_switch">Android Auto integration</string>
+    <string name="android_auto_instruction_dialog">Velociraptor acts as a messaging app for Android Auto.\nTo use, the Android Auto app must be the foreground app.\nTo stop the notifications sounds, touch the close or reply button once.</string>
+    <string name="auto_not_available">To use Android Auto integration, download Velociraptor AA from APKMirror</string>
+
+    <!--Tile-->
+    <string name="tile_name">Toggle Velociraptor</string>
+
+
 </resources>

@@ -18,12 +18,12 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 
-public class AppIconLoader implements ModelLoader<AppInfo, InputStream> {
+public class AppInfoIconLoader implements ModelLoader<AppInfo, InputStream> {
 
     final Context mContext;
     boolean mCancelled;
 
-    public AppIconLoader(Context context) {
+    public AppInfoIconLoader(Context context) {
         mContext = context;
     }
 
@@ -83,7 +83,7 @@ public class AppIconLoader implements ModelLoader<AppInfo, InputStream> {
 
         @Override
         public ModelLoader<AppInfo, InputStream> build(Context context, GenericLoaderFactory factories) {
-            return new AppIconLoader(context);
+            return new AppInfoIconLoader(context);
         }
 
         @Override

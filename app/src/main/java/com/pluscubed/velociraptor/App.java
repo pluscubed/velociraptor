@@ -6,8 +6,8 @@ import com.bumptech.glide.Glide;
 import com.crashlytics.android.Crashlytics;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
-import com.pluscubed.velociraptor.settings.appselection.AppIconLoader;
 import com.pluscubed.velociraptor.settings.appselection.AppInfo;
+import com.pluscubed.velociraptor.settings.appselection.AppInfoIconLoader;
 import com.pluscubed.velociraptor.settings.appselection.SelectedAppDatabase;
 import com.pluscubed.velociraptor.utils.PrefUtils;
 import com.squareup.leakcanary.LeakCanary;
@@ -45,7 +45,7 @@ public class App extends Application {
         LeakCanary.install(this);
 
         Glide.get(this)
-                .register(AppInfo.class, InputStream.class, new AppIconLoader.Factory());
+                .register(AppInfo.class, InputStream.class, new AppInfoIconLoader.Factory());
 
         if (PrefUtils.isFirstRun(this)) {
             SelectedAppDatabase.getMapApps(this)

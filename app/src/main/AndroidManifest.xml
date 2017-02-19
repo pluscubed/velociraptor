@@ -26,11 +26,25 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE_PREFERENCES" />
+            </intent-filter>
         </activity>
 
         <activity android:name=".settings.appselection.AppSelectionActivity" />
 
         <service android:name=".ui.SpeedLimitService" />
+
+        <service
+            android:name=".SpeedLimitTileService"
+            android:icon="@drawable/ic_speedometer"
+            android:label="@string/tile_name"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
 
         <service
             android:name=".AppDetectionService"

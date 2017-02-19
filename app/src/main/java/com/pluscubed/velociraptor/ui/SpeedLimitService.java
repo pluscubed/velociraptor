@@ -5,8 +5,10 @@ import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.location.Location;
@@ -22,6 +24,7 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.NotificationCompat;
 import android.widget.Toast;
 
@@ -75,8 +78,9 @@ public class SpeedLimitService extends Service {
     private long speedingStartTimestamp = -1;
     private SpeedLimitApi speedLimitApi;
 
-    private boolean initialized;
-    private boolean startedFromNotification;
+    private boolean isRunning;
+    private boolean isStartedFromNotification;
+    private BroadcastReceiver notifCheckBroadcastReceiver;
 
     @Nullable
     @Override
@@ -88,7 +92,7 @@ public class SpeedLimitService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent != null) {
-            if (!startedFromNotification && intent.getBooleanExtra(EXTRA_CLOSE, false) ||
+            if (!isStartedFromNotification && intent.getBooleanExtra(EXTRA_CLOSE, false) ||
                     intent.getBooleanExtra(EXTRA_NOTIF_CLOSE, false)) {
                 onStop();
                 stopSelf();
@@ -111,7 +115,7 @@ public class SpeedLimitService extends Service {
 
 
             if (intent.getBooleanExtra(EXTRA_NOTIF_START, false)) {
-                startedFromNotification = true;
+                isStartedFromNotification = true;
             } else if (intent.getBooleanExtra(EXTRA_PREF_CHANGE, false)) {
                 speedLimitView.updatePrefs();
 
@@ -121,7 +125,7 @@ public class SpeedLimitService extends Service {
         }
 
 
-        if (initialized || !prequisitesMet() || speedLimitView == null)
+        if (isRunning || !prequisitesMet() || speedLimitView == null)
             return super.onStartCommand(intent, flags, startId);
 
         startNotification();
@@ -163,10 +167,21 @@ public class SpeedLimitService extends Service {
                 })
                 .addApi(LocationServices.API)
                 .build();
-
         googleApiClient.connect();
 
-        initialized = true;
+        isRunning = true;
+        notifCheckBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (isStartedFromNotification) {
+                    LocalBroadcastManager
+                            .getInstance(context)
+                            .sendBroadcastSync(new Intent("pong"));
+                }
+            }
+        };
+        LocalBroadcastManager.getInstance(this)
+                .registerReceiver(notifCheckBroadcastReceiver, new IntentFilter("ping"));
 
         return super.onStartCommand(intent, flags, startId);
     }
@@ -358,6 +373,9 @@ public class SpeedLimitService extends Service {
         if (getSpeedLimitSubscription != null) {
             getSpeedLimitSubscription.unsubscribe();
         }
+
+        LocalBroadcastManager.getInstance(this)
+                .unregisterReceiver(notifCheckBroadcastReceiver);
     }
 
     @Override

@@ -72,6 +72,8 @@ public class SettingsActivity extends AppCompatActivity {
     Toolbar toolbar;
 
     //M Permissions
+    @BindView(R.id.card_m_permissions)
+    View mPermCard;
     @BindView(R.id.button_floating_enabled)
     Button enableFloatingButton;
     @BindView(R.id.image_floating_enabled)
@@ -113,6 +115,9 @@ public class SettingsActivity extends AppCompatActivity {
 
     @BindView(R.id.switch_notif_controls)
     View notifControlsContainer;
+
+    @BindView(R.id.linear_tip_qs)
+    View qsTipView;
 
     //General
     @BindView(R.id.switch_speedometer)
@@ -176,8 +181,10 @@ public class SettingsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            View marshmallowPermissionsCard = findViewById(R.id.card_m_permissions);
-            marshmallowPermissionsCard.setVisibility(View.GONE);
+            mPermCard.setVisibility(View.GONE);
+        }
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+            qsTipView.setVisibility(View.GONE);
         }
 
         openStreetMapView.setOnClickListener(new View.OnClickListener() {
