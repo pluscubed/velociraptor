@@ -5,14 +5,18 @@ import android.support.annotation.NonNull;
 import com.pluscubed.velociraptor.utils.Utils;
 
 public class OsmApiEndpoint implements Comparable<OsmApiEndpoint> {
+    public final String baseUrl;
     //Wait 1 minute before trying a slow/errored endpoint again.
     public long timeTakenTimestamp;
     public int timeTaken;
-    public String baseUrl;
+    //null if public
     public String name;
 
-    public OsmApiEndpoint(String baseUrl) {
+    public boolean enabled;
+
+    public OsmApiEndpoint(String baseUrl, boolean enabled) {
         this.baseUrl = baseUrl;
+        this.enabled = enabled;
     }
 
     @Override
@@ -33,8 +37,7 @@ public class OsmApiEndpoint implements Comparable<OsmApiEndpoint> {
             title = this.baseUrl;
         }
 
-        return title + " - " + time +
-                ", timestamp " + timeTakenTimestamp;
+        return title + " - " + enabled + ", " + time + ", " + timeTakenTimestamp;
     }
 
     @Override
@@ -43,10 +46,10 @@ public class OsmApiEndpoint implements Comparable<OsmApiEndpoint> {
 
         int compare = Utils.compare(timeTaken, another.timeTaken);
 
-        if (compare == 1 && (name != null && timeTaken != Integer.MAX_VALUE ||
+        if (compare == 1 && (name != null && another.name == null && timeTaken != Integer.MAX_VALUE ||
                 currentTime > timeTakenTimestamp + 60000)) {
             return -1;
-        } else if (compare == -1 && (another.name != null && another.timeTaken != Integer.MAX_VALUE ||
+        } else if (compare == -1 && (another.name != null && name == null && another.timeTaken != Integer.MAX_VALUE ||
                 currentTime > another.timeTakenTimestamp + 60000)) {
             return 1;
         }

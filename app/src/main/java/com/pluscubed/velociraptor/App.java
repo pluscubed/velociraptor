@@ -4,7 +4,8 @@ import android.app.Application;
 
 import com.bumptech.glide.Glide;
 import com.crashlytics.android.Crashlytics;
-import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.pluscubed.velociraptor.settings.appselection.AppIconLoader;
 import com.pluscubed.velociraptor.settings.appselection.AppInfo;
 import com.pluscubed.velociraptor.settings.appselection.SelectedAppDatabase;
@@ -29,8 +30,13 @@ public class App extends Application {
 
         if (!BuildConfig.DEBUG) {
             Fabric.with(this, new Crashlytics());
-            FirebaseAnalytics analytics = FirebaseAnalytics.getInstance(this);
         }
+
+        FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
+                .setDeveloperModeEnabled(BuildConfig.DEBUG)
+                .build();
+        FirebaseRemoteConfig.getInstance().setConfigSettings(configSettings);
+
 
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
@@ -49,19 +55,10 @@ public class App extends Application {
                             return Observable.from(mapInfos);
                         }
                     })
-                    .filter(new Func1<AppInfo, Boolean>() {
-                        @Override
-                        public Boolean call(AppInfo appInfoEntity) {
-                            return appInfoEntity.packageName != null &&
-                                    !appInfoEntity.packageName.isEmpty();
-                        }
-                    })
-                    .map(new Func1<AppInfo, String>() {
-                        @Override
-                        public String call(AppInfo appInfo) {
-                            return appInfo.packageName;
-                        }
-                    })
+                    .filter(appInfoEntity ->
+                            appInfoEntity.packageName != null &&
+                                    !appInfoEntity.packageName.isEmpty())
+                    .map(appInfo -> appInfo.packageName)
                     .toList().toSingle()
                     .subscribe(new SingleSubscriber<List<String>>() {
                         @Override

@@ -19,7 +19,6 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.provider.Settings;
-import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -40,9 +39,6 @@ import com.pluscubed.velociraptor.settings.SettingsActivity;
 import com.pluscubed.velociraptor.utils.PrefUtils;
 import com.pluscubed.velociraptor.utils.Utils;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-
 import rx.SingleSubscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -59,21 +55,28 @@ public class SpeedLimitService extends Service {
     public static final String EXTRA_VIEW = "com.pluscubed.velociraptor.EXTRA_VIEW";
     public static final int VIEW_FLOATING = 0;
     public static final int VIEW_AUTO = 1;
+
     private static final int NOTIFICATION_FOREGROUND = 303;
+
     private int speedLimitViewType = -1;
     private SpeedLimitView speedLimitView;
-    private String mDebuggingRequestInfo;
-    private GoogleApiClient mGoogleApiClient;
-    private Subscription mLocationSubscription;
-    private LocationListener mLocationListener;
-    private int mLastSpeedLimit = -1;
-    private Location mLastSpeedLocation;
-    private Location mLastLocation;
-    private long mLastRequestTime;
-    private long mSpeedingStart = -1;
-    private SpeedLimitApi mSpeedLimitApi;
-    private boolean mInitialized;
-    private boolean mNotifStart;
+
+    private String debuggingRequestInfo;
+
+    private GoogleApiClient googleApiClient;
+
+    private Subscription getSpeedLimitSubscription;
+    private LocationListener locationListener;
+
+    private int lastSpeedLimit = -1;
+    private Location lastLocationWithSpeed;
+    private Location lastLocationWithFetchAttempt;
+
+    private long speedingStartTimestamp = -1;
+    private SpeedLimitApi speedLimitApi;
+
+    private boolean initialized;
+    private boolean startedFromNotification;
 
     @Nullable
     @Override
@@ -85,7 +88,7 @@ public class SpeedLimitService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent != null) {
-            if (!mNotifStart && intent.getBooleanExtra(EXTRA_CLOSE, false) ||
+            if (!startedFromNotification && intent.getBooleanExtra(EXTRA_CLOSE, false) ||
                     intent.getBooleanExtra(EXTRA_NOTIF_CLOSE, false)) {
                 onStop();
                 stopSelf();
@@ -108,28 +111,28 @@ public class SpeedLimitService extends Service {
 
 
             if (intent.getBooleanExtra(EXTRA_NOTIF_START, false)) {
-                mNotifStart = true;
+                startedFromNotification = true;
             } else if (intent.getBooleanExtra(EXTRA_PREF_CHANGE, false)) {
                 speedLimitView.updatePrefs();
 
                 updateLimitText(false);
-                updateSpeedometer(mLastSpeedLocation);
+                updateSpeedometer(lastLocationWithSpeed);
             }
         }
 
 
-        if (mInitialized || !prequisitesMet() || speedLimitView == null)
+        if (initialized || !prequisitesMet() || speedLimitView == null)
             return super.onStartCommand(intent, flags, startId);
 
         startNotification();
 
-        mDebuggingRequestInfo = "";
+        debuggingRequestInfo = "";
 
-        mLocationListener = SpeedLimitService.this::onLocationChanged;
+        locationListener = SpeedLimitService.this::onLocationChanged;
 
-        mSpeedLimitApi = new SpeedLimitApi(this);
+        speedLimitApi = new SpeedLimitApi(this);
 
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
+        googleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
                     @Override
                     @SuppressWarnings("MissingPermission")
@@ -138,13 +141,13 @@ public class SpeedLimitService extends Service {
                         locationRequest.setInterval(1000);
                         locationRequest.setFastestInterval(0);
                         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-                        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, locationRequest, mLocationListener);
+                        LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, locationListener);
                     }
 
                     @Override
                     public void onConnectionSuspended(int i) {
-                        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
-                            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, mLocationListener).setResultCallback(new ResultCallback<Status>() {
+                        if (googleApiClient != null && googleApiClient.isConnected()) {
+                            LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, locationListener).setResultCallback(new ResultCallback<Status>() {
                                 @Override
                                 public void onResult(@NonNull Status status) {
                                 }
@@ -161,9 +164,9 @@ public class SpeedLimitService extends Service {
                 .addApi(LocationServices.API)
                 .build();
 
-        mGoogleApiClient.connect();
+        googleApiClient.connect();
 
-        mInitialized = true;
+        initialized = true;
 
         return super.onStartCommand(intent, flags, startId);
     }
@@ -208,34 +211,33 @@ public class SpeedLimitService extends Service {
         updateSpeedometer(location);
         updateDebuggingText(location, null, null);
 
-        if (mLocationSubscription == null &&
-                (mLastLocation == null || location.distanceTo(mLastLocation) > 10)) {
+        if (getSpeedLimitSubscription == null &&
+                (lastLocationWithFetchAttempt == null || location.distanceTo(lastLocationWithFetchAttempt) > 10)) {
 
-            mLastRequestTime = System.currentTimeMillis();
-            mLocationSubscription = mSpeedLimitApi.getSpeedLimit(location)
+            getSpeedLimitSubscription = speedLimitApi.getSpeedLimit(location)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new SingleSubscriber<ApiResponse>() {
                         @SuppressLint("SetTextI18n")
                         @Override
                         public void onSuccess(ApiResponse apiResponse) {
-                            mLastSpeedLimit = apiResponse.speedLimit;
-                            mLastLocation = location;
+                            lastSpeedLimit = apiResponse.speedLimit;
+                            lastLocationWithFetchAttempt = location;
 
                             updateLimitText(true);
                             updateDebuggingText(location, apiResponse, null);
-                            mLocationSubscription = null;
+                            getSpeedLimitSubscription = null;
                         }
 
                         @Override
                         public void onError(Throwable error) {
                             error.printStackTrace();
 
-                            mLastLocation = location;
+                            lastLocationWithFetchAttempt = location;
 
                             updateLimitText(false);
                             updateDebuggingText(location, null, error);
-                            mLocationSubscription = null;
+                            getSpeedLimitSubscription = null;
                         }
                     });
         }
@@ -243,28 +245,28 @@ public class SpeedLimitService extends Service {
 
     private void updateDebuggingText(Location location, ApiResponse apiResponse, Throwable error) {
         String text = "Location: " + location +
-                "\nEndpoints:\n" + mSpeedLimitApi.getApiInformation();
+                "\nEndpoints:\n" + speedLimitApi.getApiInformation();
 
         if (error == null && apiResponse != null) {
             if (apiResponse.roadName != null) {
-                mDebuggingRequestInfo = ("Name: " + apiResponse.roadName);
+                debuggingRequestInfo = ("Name: " + apiResponse.roadName);
             } else {
-                mDebuggingRequestInfo = ("Success, no road name");
+                debuggingRequestInfo = ("Query success");
             }
-            mDebuggingRequestInfo += "\nHERE Maps: " + apiResponse.useHere;
-            mDebuggingRequestInfo += "\nFrom cache: " + apiResponse.fromCache + ", " + apiResponse.timestamp;
+            debuggingRequestInfo += "\nHERE Maps: " + apiResponse.useHere;
+            debuggingRequestInfo += "\nFrom cache: " + apiResponse.fromCache + ", " + apiResponse.timestamp;
         } else if (error != null) {
-            mDebuggingRequestInfo = ("Last Error: " + error);
+            debuggingRequestInfo = ("Last Error: " + error);
         }
 
-        text += mDebuggingRequestInfo;
+        text += debuggingRequestInfo;
         speedLimitView.setDebuggingText(text);
     }
 
     private void updateLimitText(boolean success) {
         String text = "--";
-        if (mLastSpeedLimit != -1) {
-            text = String.valueOf(mLastSpeedLimit);
+        if (lastSpeedLimit != -1) {
+            text = String.valueOf(lastSpeedLimit);
             if (!success) {
                 text = String.format("(%s)", text);
             }
@@ -274,60 +276,59 @@ public class SpeedLimitService extends Service {
     }
 
     private void updateSpeedometer(Location location) {
-        if (location != null && location.hasSpeed()) {
-            float metersPerSeconds = location.getSpeed();
-
-            final int speed;
-            int percentage;
-            if (PrefUtils.getUseMetric(this)) {
-                speed = (int) Math.round((double) metersPerSeconds * 60 * 60 / 1000); //km/h
-                percentage = Math.round((float) speed / 200 * 100);
-            } else {
-                speed = (int) Math.round((double) metersPerSeconds * 60 * 60 / 1000 / 1.609344); //mph
-                percentage = Math.round((float) speed / 120 * 100);
-            }
-
-            float percentToleranceFactor = 1 + (float) PrefUtils.getSpeedingPercent(this) / 100;
-            int constantTolerance = PrefUtils.getSpeedingConstant(this);
-
-            int limitAndPercentTolerance = (int) (mLastSpeedLimit * percentToleranceFactor);
-            int speedingLimitWarning;
-            if (PrefUtils.getToleranceMode(this)) {
-                speedingLimitWarning = limitAndPercentTolerance + constantTolerance;
-            } else {
-                speedingLimitWarning = Math.min(limitAndPercentTolerance, mLastSpeedLimit + constantTolerance);
-            }
-
-            if (mLastSpeedLimit != -1 && speed > speedingLimitWarning) {
-                speedLimitView.setSpeeding(true);
-                if (mSpeedingStart == -1) {
-                    mSpeedingStart = System.currentTimeMillis();
-                } else if (System.currentTimeMillis() > mSpeedingStart + 2000L && PrefUtils.isBeepAlertEnabled(this)) {
-                    Utils.playBeeps();
-                    mSpeedingStart = Long.MAX_VALUE - 2000L;
-                }
-            } else {
-                speedLimitView.setSpeeding(false);
-                mSpeedingStart = -1;
-            }
-
-
-            if (mLastSpeedLimit != -1) {
-                percentage = Math.round((float) speed / speedingLimitWarning * 100);
-            }
-            speedLimitView.setSpeed(speed, percentage);
-
-            mLastSpeedLocation = location;
+        if (location == null || !location.hasSpeed()) {
+            return;
         }
+
+        float metersPerSeconds = location.getSpeed();
+
+        final int speed;
+        int percentage;
+        if (PrefUtils.getUseMetric(this)) {
+            speed = (int) Math.round((double) metersPerSeconds * 60 * 60 / 1000); //km/h
+            percentage = Math.round((float) speed / 200 * 100);
+        } else {
+            speed = (int) Math.round((double) metersPerSeconds * 60 * 60 / 1000 / 1.609344); //mph
+            percentage = Math.round((float) speed / 120 * 100);
+        }
+
+        float percentToleranceFactor = 1 + (float) PrefUtils.getSpeedingPercent(this) / 100;
+        int constantTolerance = PrefUtils.getSpeedingConstant(this);
+
+        int limitAndPercentTolerance = (int) (lastSpeedLimit * percentToleranceFactor);
+        int speedingLimitWarning;
+        if (PrefUtils.getToleranceMode(this)) {
+            speedingLimitWarning = limitAndPercentTolerance + constantTolerance;
+        } else {
+            speedingLimitWarning = Math.min(limitAndPercentTolerance, lastSpeedLimit + constantTolerance);
+        }
+
+        if (lastSpeedLimit != -1 && speed > speedingLimitWarning) {
+            speedLimitView.setSpeeding(true);
+            if (speedingStartTimestamp == -1) {
+                speedingStartTimestamp = System.currentTimeMillis();
+            } else if (System.currentTimeMillis() > speedingStartTimestamp + 2000L && PrefUtils.isBeepAlertEnabled(this)) {
+                Utils.playBeeps();
+                speedingStartTimestamp = Long.MAX_VALUE - 2000L;
+            }
+        } else {
+            speedLimitView.setSpeeding(false);
+            speedingStartTimestamp = -1;
+        }
+
+
+        if (lastSpeedLimit != -1) {
+            percentage = Math.round((float) speed / speedingLimitWarning * 100);
+        }
+        speedLimitView.setSpeed(speed, percentage);
+
+        lastLocationWithSpeed = location;
     }
 
     void showToast(final String string) {
         Handler handler = new Handler(Looper.getMainLooper());
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(SpeedLimitService.this.getApplicationContext(), string, Toast.LENGTH_LONG).show();
-            }
+        handler.post(() -> {
+            Toast.makeText(SpeedLimitService.this.getApplicationContext(), string, Toast.LENGTH_LONG).show();
         });
     }
 
@@ -338,24 +339,24 @@ public class SpeedLimitService extends Service {
     }
 
     private void onStop() {
-        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
-            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, mLocationListener).setResultCallback(new ResultCallback<Status>() {
+        if (googleApiClient != null && googleApiClient.isConnected()) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, locationListener).setResultCallback(new ResultCallback<Status>() {
                 @Override
                 public void onResult(@NonNull Status status) {
-                    if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
-                        mGoogleApiClient.disconnect();
+                    if (googleApiClient != null && googleApiClient.isConnected()) {
+                        googleApiClient.disconnect();
                     }
                 }
             });
-        } else if (mGoogleApiClient != null) {
-            mGoogleApiClient.disconnect();
+        } else if (googleApiClient != null) {
+            googleApiClient.disconnect();
         }
 
         if (speedLimitView != null)
             speedLimitView.stop();
 
-        if (mLocationSubscription != null) {
-            mLocationSubscription.unsubscribe();
+        if (getSpeedLimitSubscription != null) {
+            getSpeedLimitSubscription.unsubscribe();
         }
     }
 
@@ -365,15 +366,6 @@ public class SpeedLimitService extends Service {
 
         if (speedLimitView != null)
             speedLimitView.changeConfig();
-    }
-
-
-    @Retention(RetentionPolicy.SOURCE)
-    @IntDef({
-            VIEW_FLOATING,
-            VIEW_AUTO
-    })
-    public @interface SpeedLimitViewType {
     }
 
 }
