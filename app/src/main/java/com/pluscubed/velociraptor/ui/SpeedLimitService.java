@@ -59,6 +59,8 @@ public class SpeedLimitService extends Service {
     public static final int VIEW_FLOATING = 0;
     public static final int VIEW_AUTO = 1;
 
+    public static final String EXTRA_HIDE_LIMIT = "com.pluscubed.velociraptor.HIDE_LIMIT";
+
     private static final int NOTIFICATION_FOREGROUND = 303;
 
     private int speedLimitViewType = -1;
@@ -113,6 +115,10 @@ public class SpeedLimitService extends Service {
                 }
             }
 
+            if (intent.getExtras() != null && intent.getExtras().containsKey(EXTRA_HIDE_LIMIT)) {
+                boolean hideLimit = intent.getBooleanExtra(EXTRA_HIDE_LIMIT, false);
+                speedLimitView.hideLimit(hideLimit);
+            }
 
             if (intent.getBooleanExtra(EXTRA_NOTIF_START, false)) {
                 isStartedFromNotification = true;

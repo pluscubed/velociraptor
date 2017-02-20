@@ -13,11 +13,11 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.app.ShareCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
@@ -35,7 +35,6 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.anjlab.android.iab.v3.BillingProcessor;
 import com.anjlab.android.iab.v3.SkuDetails;
@@ -57,6 +56,7 @@ import java.util.Currency;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.BindViews;
 import butterknife.ButterKnife;
 
 public class SettingsActivity extends AppCompatActivity {
@@ -100,18 +100,21 @@ public class SettingsActivity extends AppCompatActivity {
 
     @BindView(R.id.linear_app_selection)
     ViewGroup appSelectionContainer;
-    @BindView(R.id.image_app_selection)
-    ImageView appSelectionImage;
     @BindView(R.id.button_app_selection)
     Button appSelectionButton;
 
     @BindView(R.id.linear_android_auto)
     ViewGroup androidAutoContainer;
-    @BindView(R.id.image_android_auto)
-    ImageView androidAutoImage;
     @BindView(R.id.switch_android_auto)
     SwitchCompat androidAutoSwitch;
 
+    @BindView(R.id.linear_gmaps_navigation)
+    ViewGroup gmapsOnlyNavigationContainer;
+    @BindView(R.id.switch_gmaps_navigation)
+    SwitchCompat gmapsOnlyNavigationSwitch;
+
+    @BindViews({R.id.image_app_selection, R.id.image_android_auto, R.id.image_gmaps_navigation})
+    List<ImageView> autoDisplayIcons;
 
     @BindView(R.id.switch_notif_controls)
     View notifControlsContainer;
@@ -439,16 +442,40 @@ public class SettingsActivity extends AppCompatActivity {
                     new MaterialDialog.Builder(SettingsActivity.this)
                             .content(R.string.android_auto_instruction_dialog)
                             .positiveText(android.R.string.ok)
-                            .onPositive(new MaterialDialog.SingleButtonCallback() {
-                                @Override
-                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                    PrefUtils.setAutoIntegrationEnabled(SettingsActivity.this, true);
-                                }
-                            })
                             .show();
-                } else {
-                    PrefUtils.setAutoIntegrationEnabled(SettingsActivity.this, checked);
                 }
+
+                PrefUtils.setAutoIntegrationEnabled(SettingsActivity.this, checked);
+            }
+        });
+
+        gmapsOnlyNavigationSwitch.setChecked(isNotificationAccessGranted() && PrefUtils.isGmapsOnlyInNavigation(this));
+        gmapsOnlyNavigationContainer.setOnClickListener(v -> {
+            if (!gmapsOnlyNavigationSwitch.isEnabled()) {
+                return;
+            }
+
+            boolean accessGranted = isNotificationAccessGranted();
+            if (accessGranted) {
+                gmapsOnlyNavigationSwitch.toggle();
+                PrefUtils.setGmapsOnlyInNavigation(SettingsActivity.this, gmapsOnlyNavigationSwitch.isChecked());
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                new MaterialDialog.Builder(SettingsActivity.this)
+                        .content(R.string.gmaps_only_nav_notif_access)
+                        .positiveText(R.string.grant)
+                        .onPositive((dialog, which) -> {
+                            try {
+                                String settingsAction = Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1 ?
+                                        Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS : "android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS";
+                                Intent intent = new Intent(settingsAction);
+                                startActivity(intent);
+                            } catch (ActivityNotFoundException ignored) {
+                                Snackbar.make(enableFloatingButton, R.string.open_settings_failed_notif_access, Snackbar.LENGTH_LONG).show();
+                            }
+                        })
+                        .show();
+            } else {
+                Snackbar.make(findViewById(android.R.id.content), R.string.gmaps_only_nav_jellybean, Snackbar.LENGTH_LONG).show();
             }
         });
 
@@ -488,6 +515,10 @@ public class SettingsActivity extends AppCompatActivity {
 
         PrefUtils.setFirstRun(this, false);
         PrefUtils.setVersionCode(this, BuildConfig.VERSION_CODE);
+    }
+
+    private boolean isNotificationAccessGranted() {
+        return NotificationManagerCompat.getEnabledListenerPackages(SettingsActivity.this).contains(BuildConfig.APPLICATION_ID);
     }
 
     public void showSupportDialog() {
@@ -643,11 +674,12 @@ public class SettingsActivity extends AppCompatActivity {
         boolean serviceEnabled = Utils.isAccessibilityServiceEnabled(this, AppDetectionService.class);
         enabledServiceImage.setImageResource(serviceEnabled ? R.drawable.ic_done_green_40dp : R.drawable.ic_cross_red_40dp);
         enabledServiceImage.setAlpha(autoDisplayEnabled ? 1f : 0.7f);
-        enableDisableAllChildren(autoDisplayEnabled && serviceEnabled, appSelectionContainer);
-        appSelectionImage.setAlpha(autoDisplayEnabled && serviceEnabled ? 1f : 0.7f);
-        enableDisableAllChildren(autoDisplayEnabled && serviceEnabled, androidAutoContainer);
-        androidAutoImage.setAlpha(autoDisplayEnabled && serviceEnabled ? 1f : 0.7f);
         enableServiceButton.setEnabled(autoDisplayEnabled && !serviceEnabled);
+
+        ButterKnife.apply(autoDisplayIcons, View.ALPHA, (autoDisplayEnabled && serviceEnabled ? 1f : 0.7f));
+        enableDisableAllChildren(autoDisplayEnabled && serviceEnabled, appSelectionContainer);
+        enableDisableAllChildren(autoDisplayEnabled && serviceEnabled, androidAutoContainer);
+        enableDisableAllChildren(autoDisplayEnabled && serviceEnabled, gmapsOnlyNavigationContainer);
     }
 
     private void enableDisableAllChildren(boolean enable, ViewGroup viewgroup) {

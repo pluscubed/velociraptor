@@ -11,6 +11,7 @@
     <string name="kmph">%s km/h</string>
     <string name="mph">%s mph</string>
     <string name="percent">%s%%</string>
+    <string name="grant">Grant</string>
 
     <string name="notif_content">Touch to open settings</string>
     <string name="notif_title">Velociraptor monitor running</string>
@@ -104,6 +105,11 @@
     <string name="persistent_notification_controls">Show notification controls</string>
     <string name="controls_notif_title">Velociraptor controls</string>
     <string name="controls_notif_desc">Show or hide the speed limit monitor</string>
+
+    <string name="gmaps_only_nav">Google Maps: Only in navigation</string>
+    <string name="gmaps_only_nav_notif_access">To use this feature, Velociraptor needs Notification Access to check when Google Maps navigation is open</string>
+    <string name="gmaps_only_nav_jellybean">Only available for Android 4.3+</string>
+    <string name="open_settings_failed_notif_access">Unable to open settings. Please manually enable the \"Notification access\" setting for Velociraptor.</string>
 
     <string name="tip_qs_tile">Tip: Add Velociraptor\'s Quick Settings Tile!</string>
 

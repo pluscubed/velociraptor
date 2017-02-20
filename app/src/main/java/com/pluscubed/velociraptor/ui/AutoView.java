@@ -77,6 +77,11 @@ public class AutoView implements SpeedLimitView {
     }
 
     @Override
+    public void hideLimit(boolean hideLimit) {
+
+    }
+
+    @Override
     public void stop() {
         if (notificationManager != null) {
             notificationManager.cancel(NOTIFICATION_AUTO_TAG, NOTIFICATION_AUTO);

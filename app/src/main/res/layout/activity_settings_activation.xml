@@ -151,6 +151,41 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/linear_gmaps_navigation"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="?selectableItemBackground"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingEnd="12dp"
+                android:paddingLeft="28dp"
+                android:paddingRight="12dp"
+                android:paddingStart="28dp"
+                tools:ignore="UseCompoundDrawables">
+
+                <ImageView
+                    android:id="@+id/image_gmaps_navigation"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="28dp"
+                    android:layout_marginRight="28dp"
+                    android:tint="#8a000000"
+                    app:srcCompat="@drawable/ic_map_white_24dp" />
+
+                <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/switch_gmaps_navigation"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:background="@null"
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:text="@string/gmaps_only_nav"
+                    android:textSize="14sp"
+                    tools:ignore="RtlSymmetry" />
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/linear_android_auto"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"

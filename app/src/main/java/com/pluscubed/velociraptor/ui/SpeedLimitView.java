@@ -16,4 +16,6 @@ public interface SpeedLimitView {
     void setLimitText(String text);
 
     void updatePrefs();
+
+    void hideLimit(boolean hideLimit);
 }

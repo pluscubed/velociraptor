@@ -32,6 +32,7 @@ public abstract class PrefUtils {
     private static final String PREF_VERSION_CODE = "pref_version_code";
     private static final String PREF_SPEEDLIMIT_SIZE = "pref_speedlimit_size";
     private static final String PREF_SPEEDOMETER_SIZE = "pref_speedometer_size";
+    private static final String PREF_GMAPS_ONLY_NAVIGATION = "pref_gmaps_only_nav";
 
     private static SharedPreferences.Editor edit(Context context) {
         return getSharedPreferences(context).edit();
@@ -185,6 +186,14 @@ public abstract class PrefUtils {
 
     public static void setSpeedLimitSize(Context context, float size) {
         edit(context).putFloat(PREF_SPEEDLIMIT_SIZE, size).apply();
+    }
+
+    public static boolean isGmapsOnlyInNavigation(Context context) {
+        return getSharedPreferences(context).getBoolean(PREF_GMAPS_ONLY_NAVIGATION, false);
+    }
+
+    public static void setGmapsOnlyInNavigation(Context context, boolean only) {
+        edit(context).putBoolean(PREF_GMAPS_ONLY_NAVIGATION, only).apply();
     }
 
     @IntDef({STYLE_US, STYLE_INTERNATIONAL})

@@ -49,6 +49,7 @@ public class FloatingView implements SpeedLimitView {
     TextView mSpeedometerText;
     @BindView(R.id.speedUnits)
     TextView mSpeedometerUnitsText;
+
     private SpeedLimitService mService;
     private WindowManager mWindowManager;
     private int mStyle;
@@ -333,6 +334,11 @@ public class FloatingView implements SpeedLimitView {
             layoutParams.height = Utils.convertDpToPx(mService, height);
             mSpeedometerView.setLayoutParams(layoutParams);
         }
+    }
+
+    @Override
+    public void hideLimit(boolean hideLimit) {
+        mLimitView.setVisibility(hideLimit ? View.INVISIBLE : View.VISIBLE);
     }
 
     private class FloatingOnTouchListener implements View.OnTouchListener {
