@@ -337,10 +337,6 @@ public class SpeedLimitService extends Service {
             speedingStartTimestamp = -1;
         }
 
-
-        if (lastSpeedLimit != -1) {
-            percentage = Math.round((float) speed / speedingLimitWarning * 100);
-        }
         speedLimitView.setSpeed(speed, percentage);
 
         lastLocationWithSpeed = location;

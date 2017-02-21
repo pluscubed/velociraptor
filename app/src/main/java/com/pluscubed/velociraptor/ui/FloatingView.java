@@ -120,11 +120,9 @@ public class FloatingView implements SpeedLimitView {
         initMonitorPosition();
 
         final ArrayList<ArcProgressStackView.Model> models = new ArrayList<>();
-        models.add(new ArcProgressStackView.Model("", 0, ContextCompat.getColor(mService, R.color.colorPrimary800),
-                new int[]{ContextCompat.getColor(mService, R.color.colorPrimaryA200),
-                        ContextCompat.getColor(mService, R.color.colorPrimaryA200),
-                        ContextCompat.getColor(mService, R.color.red500),
-                        ContextCompat.getColor(mService, R.color.red500)}));
+        models.add(new ArcProgressStackView.Model("", 0,
+                ContextCompat.getColor(mService, R.color.colorPrimary800),
+                ContextCompat.getColor(mService, R.color.colorAccent)));
         mArcView.setTextColor(ContextCompat.getColor(mService, android.R.color.transparent));
         mArcView.setInterpolator(new FastOutSlowInInterpolator());
         mArcView.setModels(models);
