@@ -67,7 +67,7 @@ public class AppDetectionService extends AccessibilityService {
         }
 
         if ((event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED
-                || (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED && System.currentTimeMillis() > lastTimestamp + 1000))
+                || (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED && System.currentTimeMillis() > lastTimestamp + 2000))
                 && event.getPackageName() != null
                 && event.getClassName() != null
                 && enabledApps != null) {
@@ -97,11 +97,12 @@ public class AppDetectionService extends AccessibilityService {
                     if (PrefUtils.isGmapsOnlyInNavigation(this) && !gmapsNavigating) {
                         serviceInfo.eventTypes = AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED;
                         serviceInfo.notificationTimeout = 0;
+                        intent.putExtra(SpeedLimitService.EXTRA_HIDE_LIMIT, false);
 
                         isEnabledApp = false;
                     } else {
                         serviceInfo.eventTypes = AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED | AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED;
-                        serviceInfo.notificationTimeout = 1000;
+                        serviceInfo.notificationTimeout = 2000;
 
                         lastTimestamp = System.currentTimeMillis();
 
@@ -115,6 +116,7 @@ public class AppDetectionService extends AccessibilityService {
                     //Stop listening for content changes when exiting Google Maps
                     serviceInfo.eventTypes = AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED;
                     serviceInfo.notificationTimeout = 0;
+                    intent.putExtra(SpeedLimitService.EXTRA_HIDE_LIMIT, false);
                 }
                 setServiceInfo(serviceInfo);
 
