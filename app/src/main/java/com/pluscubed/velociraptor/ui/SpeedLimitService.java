@@ -175,7 +175,6 @@ public class SpeedLimitService extends Service {
                 .build();
         googleApiClient.connect();
 
-        isRunning = true;
         notifCheckBroadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -189,6 +188,8 @@ public class SpeedLimitService extends Service {
         LocalBroadcastManager.getInstance(this)
                 .registerReceiver(notifCheckBroadcastReceiver, new IntentFilter("ping"));
 
+        isRunning = true;
+
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -200,7 +201,7 @@ public class SpeedLimitService extends Service {
                 .setContentTitle(getString(R.string.notif_title))
                 .setContentText(getString(R.string.notif_content))
                 .setPriority(Notification.PRIORITY_MIN)
-                .setSmallIcon(R.drawable.ic_speedometer)
+                .setSmallIcon(R.drawable.ic_speedometer_notif)
                 .setContentIntent(pendingIntent)
                 .build();
         startForeground(NOTIFICATION_FOREGROUND, notification);

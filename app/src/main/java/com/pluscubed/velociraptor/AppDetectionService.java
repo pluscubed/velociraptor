@@ -10,13 +10,12 @@ import android.os.Build;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
+import com.crashlytics.android.Crashlytics;
 import com.pluscubed.velociraptor.ui.SpeedLimitService;
 import com.pluscubed.velociraptor.utils.PrefUtils;
 
 import java.util.List;
 import java.util.Set;
-
-import timber.log.Timber;
 
 public class AppDetectionService extends AccessibilityService {
 
@@ -55,9 +54,6 @@ public class AppDetectionService extends AccessibilityService {
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
-        Timber.d("onAccessibilityEvent start");
-        long time = System.currentTimeMillis();
-
         if (!PrefUtils.isAutoDisplayEnabled(this)) {
             return;
         }
@@ -66,69 +62,85 @@ public class AppDetectionService extends AccessibilityService {
             updateSelectedApps();
         }
 
-        if ((event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED
-                || (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED && System.currentTimeMillis() > lastTimestamp + 2000))
-                && event.getPackageName() != null
-                && event.getClassName() != null
-                && enabledApps != null) {
-
-            ComponentName componentName = new ComponentName(
-                    event.getPackageName().toString(),
-                    event.getClassName().toString()
-            );
-
-            ActivityInfo activityInfo = tryGetActivity(componentName);
-            boolean isActivity = activityInfo != null;
-
-            if (isActivity || (componentName.getPackageName().equals(GOOGLE_MAPS_PACKAGE))) {
-                Intent intent = new Intent(this, SpeedLimitService.class);
-
-                boolean isEnabledApp = enabledApps.contains(componentName.getPackageName());
-
-                if (PrefUtils.isAutoIntegrationEnabled(this)
-                        && componentName.getClassName().equals(ANDROID_AUTO_ACTIVITY)) {
-                    isEnabledApp = true;
-                    intent.putExtra(SpeedLimitService.EXTRA_VIEW, SpeedLimitService.VIEW_AUTO);
-                }
-
-                AccessibilityServiceInfo serviceInfo = getServiceInfo();
-
-                if (componentName.getPackageName().equals(GOOGLE_MAPS_PACKAGE)) {
-                    if (PrefUtils.isGmapsOnlyInNavigation(this) && !gmapsNavigating) {
-                        serviceInfo.eventTypes = AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED;
-                        serviceInfo.notificationTimeout = 0;
-                        intent.putExtra(SpeedLimitService.EXTRA_HIDE_LIMIT, false);
-
-                        isEnabledApp = false;
-                    } else {
-                        serviceInfo.eventTypes = AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED | AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED;
-                        serviceInfo.notificationTimeout = 2000;
-
-                        lastTimestamp = System.currentTimeMillis();
-
-                        if (searchGmapsSpeedLimitSign(getRootInActiveWindow())) {
-                            intent.putExtra(SpeedLimitService.EXTRA_HIDE_LIMIT, true);
-                        } else {
-                            intent.putExtra(SpeedLimitService.EXTRA_HIDE_LIMIT, false);
-                        }
-                    }
-                } else {
-                    //Stop listening for content changes when exiting Google Maps
-                    serviceInfo.eventTypes = AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED;
-                    serviceInfo.notificationTimeout = 0;
-                    intent.putExtra(SpeedLimitService.EXTRA_HIDE_LIMIT, false);
-                }
-                setServiceInfo(serviceInfo);
-
-                if (!isEnabledApp && !componentName.getPackageName().equals(BuildConfig.APPLICATION_ID)) {
-                    intent.putExtra(SpeedLimitService.EXTRA_CLOSE, true);
-                }
-
-                startService(intent);
-            }
+        if ((event.getEventType() != AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED
+                && (event.getEventType() != AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED || System.currentTimeMillis() <= lastTimestamp + 2000))
+                || event.getPackageName() == null
+                || event.getClassName() == null
+                || enabledApps == null) {
+            return;
         }
 
-        Timber.d("onAccessibilityEvent end: " + (System.currentTimeMillis() - time));
+        ComponentName componentName = new ComponentName(
+                event.getPackageName().toString(),
+                event.getClassName().toString()
+        );
+
+        ActivityInfo activityInfo = tryGetActivity(componentName);
+        boolean isActivity = activityInfo != null;
+
+        if (!isActivity && (!componentName.getPackageName().equals(GOOGLE_MAPS_PACKAGE))) {
+            return;
+        }
+
+        Intent intent = new Intent(this, SpeedLimitService.class);
+
+        boolean shouldStartService = enabledApps.contains(componentName.getPackageName());
+
+        if (PrefUtils.isAutoDisplayEnabled(this)
+                && componentName.getClassName().equals(ANDROID_AUTO_ACTIVITY)) {
+            shouldStartService = true;
+            intent.putExtra(SpeedLimitService.EXTRA_VIEW, SpeedLimitService.VIEW_AUTO);
+        }
+
+        if (componentName.getPackageName().equals(GOOGLE_MAPS_PACKAGE)) {
+            if (PrefUtils.isGmapsOnlyInNavigation(this) && !gmapsNavigating) {
+                enableGoogleMapsMonitoring(false);
+                intent.putExtra(SpeedLimitService.EXTRA_HIDE_LIMIT, false);
+
+                shouldStartService = false;
+            } else {
+                enableGoogleMapsMonitoring(true);
+
+                lastTimestamp = System.currentTimeMillis();
+
+                if (searchGmapsSpeedLimitSign(getRootInActiveWindow())) {
+                    intent.putExtra(SpeedLimitService.EXTRA_HIDE_LIMIT, true);
+                } else {
+                    intent.putExtra(SpeedLimitService.EXTRA_HIDE_LIMIT, false);
+                }
+            }
+        } else {
+            enableGoogleMapsMonitoring(false);
+            intent.putExtra(SpeedLimitService.EXTRA_HIDE_LIMIT, false);
+        }
+
+
+        if (!shouldStartService && !componentName.getPackageName().equals(BuildConfig.APPLICATION_ID)) {
+            intent.putExtra(SpeedLimitService.EXTRA_CLOSE, true);
+        }
+
+        startService(intent);
+    }
+
+    private void enableGoogleMapsMonitoring(boolean enable) {
+        try {
+            AccessibilityServiceInfo serviceInfo = getServiceInfo();
+            if (serviceInfo != null) {
+                if (enable) {
+                    serviceInfo.eventTypes = AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED |
+                            AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED;
+                    serviceInfo.notificationTimeout = 2000;
+                } else {
+                    serviceInfo.eventTypes = AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED;
+                    serviceInfo.notificationTimeout = 0;
+                }
+                setServiceInfo(serviceInfo);
+            }
+        } catch (Exception e) {
+            if (!BuildConfig.DEBUG) {
+                Crashlytics.logException(e);
+            }
+        }
     }
 
     private boolean searchGmapsSpeedLimitSign(AccessibilityNodeInfo source) throws SecurityException {
@@ -151,7 +163,7 @@ public class AppDetectionService extends AccessibilityService {
     }
 
     private boolean searchSpeedLimitText(AccessibilityNodeInfo source, int depth) throws SecurityException {
-        if (depth > 10) {
+        if (depth > 10 || source == null) {
             return false;
         }
 

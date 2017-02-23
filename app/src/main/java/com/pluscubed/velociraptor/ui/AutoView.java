@@ -66,7 +66,7 @@ public class AutoView implements SpeedLimitView {
                 .extend(new NotificationCompat.CarExtender().setUnreadConversation(conv))
                 .setContentTitle(service.getString(R.string.notif_android_auto_title))
                 .setContentText(notificationMessage)
-                .setSmallIcon(R.drawable.ic_speedometer)
+                .setSmallIcon(R.drawable.ic_speedometer_notif)
                 .build();
         notificationManager.notify(NOTIFICATION_AUTO_TAG, NOTIFICATION_AUTO, notification);
     }

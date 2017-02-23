@@ -258,7 +258,7 @@ public class SettingsActivity extends AppCompatActivity {
 
                 NotificationCompat.Builder builder =
                         new NotificationCompat.Builder(SettingsActivity.this)
-                                .setSmallIcon(R.drawable.ic_speedometer)
+                                .setSmallIcon(R.drawable.ic_speedometer_notif)
                                 .setContentTitle(getString(R.string.controls_notif_title))
                                 .setContentText(getString(R.string.controls_notif_desc))
                                 .addAction(0, getString(R.string.show), pending)

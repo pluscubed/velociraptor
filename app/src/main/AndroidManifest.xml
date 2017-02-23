@@ -67,7 +67,7 @@
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@drawable/ic_speedometer" />
+            android:resource="@drawable/ic_speedometer_notif" />
 
     </application>
 </manifest>
