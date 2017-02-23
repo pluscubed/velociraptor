@@ -19,7 +19,8 @@ public class GmapsNavNotificationListener extends NotificationListenerService {
         final String packageName = sbn.getPackageName();
         if (!TextUtils.isEmpty(packageName) && packageName.equals(AppDetectionService.GOOGLE_MAPS_PACKAGE)
                 && sbn.getNotification().priority == Notification.PRIORITY_MAX
-                && AppDetectionService.get() != null && PrefUtils.isGmapsOnlyInNavigation(this)) {
+                && AppDetectionService.get() != null && PrefUtils.isGmapsOnlyInNavigation(this)
+                && PrefUtils.isAutoDisplayEnabled(this)) {
             AppDetectionService.get().setGmapsNavigating(true);
 
             Intent intent = new Intent(this, SpeedLimitService.class);
@@ -33,7 +34,8 @@ public class GmapsNavNotificationListener extends NotificationListenerService {
         final String packageName = sbn.getPackageName();
         if (!TextUtils.isEmpty(packageName) && packageName.equals(AppDetectionService.GOOGLE_MAPS_PACKAGE)
                 && sbn.getNotification().priority == Notification.PRIORITY_MAX
-                && AppDetectionService.get() != null && PrefUtils.isGmapsOnlyInNavigation(this)) {
+                && AppDetectionService.get() != null && PrefUtils.isGmapsOnlyInNavigation(this)
+                && PrefUtils.isAutoDisplayEnabled(this)) {
             AppDetectionService.get().setGmapsNavigating(false);
 
             Intent intent = new Intent(this, SpeedLimitService.class);
