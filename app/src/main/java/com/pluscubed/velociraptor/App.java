@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.bumptech.glide.Glide;
 import com.crashlytics.android.Crashlytics;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.pluscubed.velociraptor.settings.appselection.AppInfo;
@@ -32,6 +33,7 @@ public class App extends Application {
             Fabric.with(this, new Crashlytics());
         }
 
+        FirebaseApp.initializeApp(this);
         FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
                 .setDeveloperModeEnabled(BuildConfig.DEBUG)
                 .build();

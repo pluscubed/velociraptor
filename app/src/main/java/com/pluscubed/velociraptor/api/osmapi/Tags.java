@@ -1,24 +1,12 @@
 package com.pluscubed.velociraptor.api.osmapi;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 
-@JsonPropertyOrder({
-        "hgv",
-        "hgv:national_network",
-        "highway",
-        "lanes",
-        "maxspeed",
-        "name",
-        "old_ref",
-        "oneway",
-        "ref",
-        "source:hgv:national_network",
-        "source:maxspeed"
-})
 public class Tags {
 
     @JsonProperty("highway")

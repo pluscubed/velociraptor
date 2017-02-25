@@ -119,7 +119,13 @@ public class AppDetectionService extends AccessibilityService {
             intent.putExtra(LimitService.EXTRA_CLOSE, true);
         }
 
-        startService(intent);
+        try {
+            startService(intent);
+        } catch (Exception e) {
+            if (!BuildConfig.DEBUG) {
+                Crashlytics.logException(e);
+            }
+        }
     }
 
     private void enableGoogleMapsMonitoring(boolean enable) {

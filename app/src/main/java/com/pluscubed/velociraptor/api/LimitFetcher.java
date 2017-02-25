@@ -375,10 +375,11 @@ public class LimitFetcher {
         if (!BuildConfig.DEBUG) {
             Answers.getInstance().logCustom(new CustomEvent("OSM Request")
                     .putCustomAttribute("Server", endpoint.baseUrl));
-
-            Bundle bundle = new Bundle();
-            FirebaseAnalytics.getInstance(context).logEvent("osm_request-" + endpoint.baseUrl, bundle);
         }
+
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, endpoint.baseUrl);
+        FirebaseAnalytics.getInstance(context).logEvent("osm_request", bundle);
     }
 
     private Observable<LimitResponse> getHereSpeedLimit(final Location location) {
