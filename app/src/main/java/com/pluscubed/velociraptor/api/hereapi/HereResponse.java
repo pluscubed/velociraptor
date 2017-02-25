@@ -13,7 +13,7 @@ import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 
-public class Response {
+public class HereResponse {
 
     @JsonProperty("metaInfo")
     private MetaInfo MetaInfo;

@@ -8,7 +8,7 @@ import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.text.TextUtils;
 
-import com.pluscubed.velociraptor.ui.SpeedLimitService;
+import com.pluscubed.velociraptor.ui.LimitService;
 import com.pluscubed.velociraptor.utils.PrefUtils;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
@@ -32,8 +32,8 @@ public class GmapsNavNotificationListener extends NotificationListenerService {
 
         AppDetectionService.get().setGmapsNavigating(true);
 
-        Intent intent = new Intent(this, SpeedLimitService.class);
-        intent.putExtra(SpeedLimitService.EXTRA_NOTIF_START, true);
+        Intent intent = new Intent(this, LimitService.class);
+        intent.putExtra(LimitService.EXTRA_NOTIF_START, true);
         startService(intent);
     }
 
@@ -55,8 +55,8 @@ public class GmapsNavNotificationListener extends NotificationListenerService {
 
         AppDetectionService.get().setGmapsNavigating(false);
 
-        Intent intent = new Intent(this, SpeedLimitService.class);
-        intent.putExtra(SpeedLimitService.EXTRA_NOTIF_CLOSE, true);
+        Intent intent = new Intent(this, LimitService.class);
+        intent.putExtra(LimitService.EXTRA_NOTIF_CLOSE, true);
         startService(intent);
     }
 

@@ -1,6 +1,6 @@
 package com.pluscubed.velociraptor.ui;
 
-public interface SpeedLimitView {
+public interface LimitView {
 
 
     void stop();

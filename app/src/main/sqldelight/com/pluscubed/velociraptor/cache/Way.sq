@@ -9,7 +9,6 @@ CREATE TABLE way (
     lon2 REAL NOT NULL,
     road TEXT,
     PRIMARY KEY (clat, clon)
-
 );
 
 put:

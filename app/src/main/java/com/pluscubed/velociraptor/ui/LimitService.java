@@ -36,8 +36,8 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.pluscubed.velociraptor.R;
-import com.pluscubed.velociraptor.api.ApiResponse;
-import com.pluscubed.velociraptor.api.SpeedLimitApi;
+import com.pluscubed.velociraptor.api.LimitFetcher;
+import com.pluscubed.velociraptor.api.LimitResponse;
 import com.pluscubed.velociraptor.settings.SettingsActivity;
 import com.pluscubed.velociraptor.utils.PrefUtils;
 import com.pluscubed.velociraptor.utils.Utils;
@@ -46,8 +46,9 @@ import rx.SingleSubscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import timber.log.Timber;
 
-public class SpeedLimitService extends Service {
+public class LimitService extends Service {
     public static final int PENDING_SETTINGS = 5;
 
     public static final String EXTRA_NOTIF_START = "com.pluscubed.velociraptor.EXTRA_NOTIF_START";
@@ -64,7 +65,7 @@ public class SpeedLimitService extends Service {
     private static final int NOTIFICATION_FOREGROUND = 303;
 
     private int speedLimitViewType = -1;
-    private SpeedLimitView speedLimitView;
+    private LimitView speedLimitView;
 
     private String debuggingRequestInfo;
 
@@ -78,7 +79,7 @@ public class SpeedLimitService extends Service {
     private Location lastLocationWithFetchAttempt;
 
     private long speedingStartTimestamp = -1;
-    private SpeedLimitApi speedLimitApi;
+    private LimitFetcher limitFetcher;
 
     private boolean isRunning;
     private boolean isStartedFromNotification;
@@ -138,9 +139,9 @@ public class SpeedLimitService extends Service {
 
         debuggingRequestInfo = "";
 
-        locationListener = SpeedLimitService.this::onLocationChanged;
+        locationListener = LimitService.this::onLocationChanged;
 
-        speedLimitApi = new SpeedLimitApi(this);
+        limitFetcher = new LimitFetcher(this);
 
         googleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
@@ -208,7 +209,7 @@ public class SpeedLimitService extends Service {
     }
 
     private boolean prequisitesMet() {
-        if (ContextCompat.checkSelfPermission(SpeedLimitService.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+        if (ContextCompat.checkSelfPermission(LimitService.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this))) {
             showToast(getString(R.string.permissions_warning));
             stopSelf();
@@ -236,24 +237,24 @@ public class SpeedLimitService extends Service {
         if (getSpeedLimitSubscription == null &&
                 (lastLocationWithFetchAttempt == null || location.distanceTo(lastLocationWithFetchAttempt) > 10)) {
 
-            getSpeedLimitSubscription = speedLimitApi.getSpeedLimit(location)
+            getSpeedLimitSubscription = limitFetcher.getSpeedLimit(location)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new SingleSubscriber<ApiResponse>() {
+                    .subscribe(new SingleSubscriber<LimitResponse>() {
                         @SuppressLint("SetTextI18n")
                         @Override
-                        public void onSuccess(ApiResponse apiResponse) {
-                            lastSpeedLimit = apiResponse.speedLimit;
+                        public void onSuccess(LimitResponse limitResponse) {
+                            lastSpeedLimit = limitResponse.speedLimit();
                             lastLocationWithFetchAttempt = location;
 
                             updateLimitText(true);
-                            updateDebuggingText(location, apiResponse, null);
+                            updateDebuggingText(location, limitResponse, null);
                             getSpeedLimitSubscription = null;
                         }
 
                         @Override
                         public void onError(Throwable error) {
-                            error.printStackTrace();
+                            Timber.d(error);
 
                             lastLocationWithFetchAttempt = location;
 
@@ -265,20 +266,16 @@ public class SpeedLimitService extends Service {
         }
     }
 
-    private void updateDebuggingText(Location location, ApiResponse apiResponse, Throwable error) {
+    private void updateDebuggingText(Location location, LimitResponse limitResponse, Throwable error) {
         String text = "Location: " + location +
-                "\nEndpoints:\n" + speedLimitApi.getApiInformation();
+                "\nEndpoints:\n" + limitFetcher.getApiInformation();
 
-        if (error == null && apiResponse != null) {
-            if (apiResponse.roadName != null) {
-                debuggingRequestInfo = ("Name: " + apiResponse.roadName);
-            } else {
-                debuggingRequestInfo = ("Query success");
-            }
-            debuggingRequestInfo += "\nHERE Maps: " + apiResponse.useHere;
-            debuggingRequestInfo += "\nFrom cache: " + apiResponse.fromCache + ", " + apiResponse.timestamp;
+        if (error == null && limitResponse != null) {
+            debuggingRequestInfo = ("Road name: " + limitResponse.roadName());
+            debuggingRequestInfo += "\nHERE Maps: " + limitResponse.fromHere();
+            debuggingRequestInfo += "\nFrom cache: " + limitResponse.fromCache();
         } else if (error != null) {
-            debuggingRequestInfo = ("Last Error: " + error);
+            debuggingRequestInfo = ("Last error: " + error);
         }
 
         text += debuggingRequestInfo;
@@ -346,7 +343,7 @@ public class SpeedLimitService extends Service {
     void showToast(final String string) {
         Handler handler = new Handler(Looper.getMainLooper());
         handler.post(() -> {
-            Toast.makeText(SpeedLimitService.this.getApplicationContext(), string, Toast.LENGTH_LONG).show();
+            Toast.makeText(LimitService.this.getApplicationContext(), string, Toast.LENGTH_LONG).show();
         });
     }
 

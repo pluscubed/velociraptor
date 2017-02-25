@@ -1,16 +1,11 @@
 package com.pluscubed.velociraptor.api.osmapi;
 
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import com.fasterxml.jackson.annotation.JsonAnySetter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 
@@ -23,8 +18,6 @@ import java.util.Map;
 })
 public class Element {
 
-    @JsonProperty("type")
-    private String type;
     @JsonProperty("id")
     private Integer id;
     @JsonProperty("geometry")
@@ -33,24 +26,6 @@ public class Element {
     private List<Long> nodes = new ArrayList<>();
     @JsonProperty("tags")
     private Tags tags;
-    @JsonIgnore
-    private Map<String, Object> additionalProperties = new HashMap<>();
-
-    /**
-     * @return The type
-     */
-    @JsonProperty("type")
-    public String getType() {
-        return type;
-    }
-
-    /**
-     * @param type The type
-     */
-    @JsonProperty("type")
-    public void setType(String type) {
-        this.type = type;
-    }
 
     /**
      * @return The id
@@ -98,16 +73,6 @@ public class Element {
     @JsonProperty("nodes")
     public void setNodes(List<Long> nodes) {
         this.nodes = nodes;
-    }
-
-    @JsonAnyGetter
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
-    }
-
-    @JsonAnySetter
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
     }
 
     @JsonProperty("geometry")

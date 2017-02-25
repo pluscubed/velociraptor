@@ -14,7 +14,7 @@ import java.util.Map;
 public class LinkInfo {
 
     @JsonProperty("response")
-    private Response Response;
+    private HereResponse Response;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<>();
 
@@ -22,7 +22,7 @@ public class LinkInfo {
      * @return The Response
      */
     @JsonProperty("response")
-    public Response getResponse() {
+    public HereResponse getResponse() {
         return Response;
     }
 
@@ -30,7 +30,7 @@ public class LinkInfo {
      * @param Response The Response
      */
     @JsonProperty("response")
-    public void setResponse(Response Response) {
+    public void setResponse(HereResponse Response) {
         this.Response = Response;
     }
 

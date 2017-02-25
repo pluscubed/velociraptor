@@ -11,7 +11,7 @@ import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
 import com.crashlytics.android.Crashlytics;
-import com.pluscubed.velociraptor.ui.SpeedLimitService;
+import com.pluscubed.velociraptor.ui.LimitService;
 import com.pluscubed.velociraptor.utils.PrefUtils;
 
 import java.util.List;
@@ -82,20 +82,20 @@ public class AppDetectionService extends AccessibilityService {
             return;
         }
 
-        Intent intent = new Intent(this, SpeedLimitService.class);
+        Intent intent = new Intent(this, LimitService.class);
 
         boolean shouldStartService = enabledApps.contains(componentName.getPackageName());
 
         if (PrefUtils.isAutoDisplayEnabled(this)
                 && componentName.getClassName().equals(ANDROID_AUTO_ACTIVITY)) {
             shouldStartService = true;
-            intent.putExtra(SpeedLimitService.EXTRA_VIEW, SpeedLimitService.VIEW_AUTO);
+            intent.putExtra(LimitService.EXTRA_VIEW, LimitService.VIEW_AUTO);
         }
 
         if (componentName.getPackageName().equals(GOOGLE_MAPS_PACKAGE)) {
             if (PrefUtils.isGmapsOnlyInNavigation(this) && !gmapsNavigating) {
                 enableGoogleMapsMonitoring(false);
-                intent.putExtra(SpeedLimitService.EXTRA_HIDE_LIMIT, false);
+                intent.putExtra(LimitService.EXTRA_HIDE_LIMIT, false);
 
                 shouldStartService = false;
             } else {
@@ -104,19 +104,19 @@ public class AppDetectionService extends AccessibilityService {
                 lastTimestamp = System.currentTimeMillis();
 
                 if (searchGmapsSpeedLimitSign(getRootInActiveWindow())) {
-                    intent.putExtra(SpeedLimitService.EXTRA_HIDE_LIMIT, true);
+                    intent.putExtra(LimitService.EXTRA_HIDE_LIMIT, true);
                 } else {
-                    intent.putExtra(SpeedLimitService.EXTRA_HIDE_LIMIT, false);
+                    intent.putExtra(LimitService.EXTRA_HIDE_LIMIT, false);
                 }
             }
         } else {
             enableGoogleMapsMonitoring(false);
-            intent.putExtra(SpeedLimitService.EXTRA_HIDE_LIMIT, false);
+            intent.putExtra(LimitService.EXTRA_HIDE_LIMIT, false);
         }
 
 
         if (!shouldStartService && !componentName.getPackageName().equals(BuildConfig.APPLICATION_ID)) {
-            intent.putExtra(SpeedLimitService.EXTRA_CLOSE, true);
+            intent.putExtra(LimitService.EXTRA_CLOSE, true);
         }
 
         startService(intent);

@@ -4,7 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 
-import com.pluscubed.velociraptor.api.ApiResponse;
+import com.pluscubed.velociraptor.api.LimitResponse;
 import com.pluscubed.velociraptor.api.osmapi.Coord;
 import com.squareup.sqlbrite.BriteDatabase;
 import com.squareup.sqlbrite.SqlBrite;
@@ -19,30 +19,30 @@ import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
-public class SpeedLimitCache {
+public class LimitCache {
 
-    private static SpeedLimitCache instance;
+    private static LimitCache instance;
 
     private final BriteDatabase db;
-    private final wayModel.Put put;
-    private final wayModel.Cleanup cleanup;
-    private final wayModel.Update_way update;
+    private final LimitCacheWay.Put put;
+    private final LimitCacheWay.Cleanup cleanup;
+    private final LimitCacheWay.Update_way update;
 
-    SpeedLimitCache(Context context, Scheduler scheduler) {
+    LimitCache(Context context, Scheduler scheduler) {
         SqlBrite sqlBrite = new SqlBrite.Builder().build();
-        CacheOpenHelper helper = new CacheOpenHelper(context);
+        LimitCacheSqlHelper helper = new LimitCacheSqlHelper(context);
         db = sqlBrite.wrapDatabaseHelper(helper, scheduler);
         SQLiteDatabase writableDatabase = db.getWritableDatabase();
 
-        put = new Way.Put(writableDatabase);
-        update = new Way.Update_way(writableDatabase);
-        cleanup = new Way.Cleanup(writableDatabase);
+        put = new LimitCacheWay.Put(writableDatabase);
+        update = new LimitCacheWay.Update_way(writableDatabase);
+        cleanup = new LimitCacheWay.Cleanup(writableDatabase);
     }
 
 
-    public static SpeedLimitCache getInstance(Context context) {
+    public static LimitCache getInstance(Context context) {
         if (instance == null) {
-            instance = new SpeedLimitCache(context, Schedulers.io());
+            instance = new LimitCache(context, Schedulers.io());
         }
         return instance;
     }
@@ -65,26 +65,26 @@ public class SpeedLimitCache {
         return Math.abs(ab - a.distanceTo(x) - x.distanceTo(b)) < 8;
     }*/
 
-    private static Coord getCentroid(ApiResponse response) {
+    private static Coord getCentroid(LimitResponse response) {
         Coord centroid = new Coord();
-        for (Coord coord : response.coords) {
+        for (Coord coord : response.coords()) {
             centroid.lat += coord.lat;
             centroid.lon += coord.lon;
         }
-        centroid.lat /= response.coords.size();
+        centroid.lat /= response.coords().size();
 
         return centroid;
     }
 
-    public void put(ApiResponse response) {
-        if (response.coords == null) {
+    public void put(LimitResponse response) {
+        if (response.coords().isEmpty()) {
             return;
         }
 
         BriteDatabase.Transaction transaction = db.newTransaction();
         try {
-            List<Way> ways = Way.fromResponse(response);
-            for (Way way : ways) {
+            List<LimitCacheWay> ways = LimitCacheWay.fromResponse(response);
+            for (LimitCacheWay way : ways) {
                 update.bind(way.clat(), way.clon(), way.maxspeed(), way.timestamp(), way.lat1(), way.lon1(), way.lat2(), way.lon2(), way.road());
                 int rowsAffected = db.executeUpdateDelete(update.table, update.program);
 
@@ -101,16 +101,16 @@ public class SpeedLimitCache {
         }
     }
 
-    public Observable<ApiResponse> get(final String previousName, final Coord coord) {
-        return Observable.defer(new Func0<Observable<ApiResponse>>() {
+    public Observable<LimitResponse> get(final String previousName, final Coord coord) {
+        return Observable.defer(new Func0<Observable<LimitResponse>>() {
             @Override
-            public Observable<ApiResponse> call() {
-                SpeedLimitCache.this.cleanup();
+            public Observable<LimitResponse> call() {
+                LimitCache.this.cleanup();
 
-                SqlDelightStatement selectStatement = Way.FACTORY.select_by_coord(coord.lat, Math.pow(Math.cos(Math.toRadians(coord.lat)), 2), coord.lon);
+                SqlDelightStatement selectStatement = LimitCacheWay.FACTORY.select_by_coord(coord.lat, Math.pow(Math.cos(Math.toRadians(coord.lat)), 2), coord.lon);
 
                 return db.createQuery(selectStatement.tables, selectStatement.statement, selectStatement.args)
-                        .mapToList(Way.SELECT_BY_COORD::map)
+                        .mapToList(LimitCacheWay.SELECT_BY_COORD::map)
                         .take(1)
                         .flatMap(Observable::from)
                         .filter(way -> {
@@ -120,23 +120,23 @@ public class SpeedLimitCache {
                             return crossTrackDist < 15 /*&& isOnSegment(coord1, coord2, coord)*/;
                         })
                         .toList()
-                        .flatMap(new Func1<List<Way>, Observable<ApiResponse>>() {
+                        .flatMap(new Func1<List<LimitCacheWay>, Observable<LimitResponse>>() {
                             @Override
-                            public Observable<ApiResponse> call(List<Way> ways) {
+                            public Observable<LimitResponse> call(List<LimitCacheWay> ways) {
                                 if (ways.isEmpty()) {
                                     return Observable.empty();
                                 }
 
-                                ApiResponse response = ways.get(0).toResponse();
-                                for (Way way : ways) {
+                                LimitResponse.Builder response = ways.get(0).toResponse();
+                                for (LimitCacheWay way : ways) {
                                     if (way.road() != null && way.road().equals(previousName)) {
                                         response = way.toResponse();
                                         break;
                                     }
                                 }
 
-                                response.fromCache = true;
-                                return Observable.just(response);
+                                response.setFromCache(true);
+                                return Observable.just(response.build());
                             }
                         });
             }

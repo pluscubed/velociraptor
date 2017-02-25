@@ -34,10 +34,10 @@
 
         <activity android:name=".settings.appselection.AppSelectionActivity" />
 
-        <service android:name=".ui.SpeedLimitService" />
+        <service android:name=".ui.LimitService" />
 
         <service
-            android:name=".SpeedLimitTileService"
+            android:name=".LimitTileService"
             android:icon="@drawable/ic_speedometer"
             android:label="@string/tile_name"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">

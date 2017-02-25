@@ -10,17 +10,17 @@ import android.support.v7.app.NotificationCompat;
 import com.pluscubed.velociraptor.R;
 import com.pluscubed.velociraptor.utils.Utils;
 
-public class AutoView implements SpeedLimitView {
+public class AutoView implements LimitView {
 
     public static final int NOTIFICATION_AUTO = 42;
     public static final String NOTIFICATION_AUTO_TAG = "auto_tag";
 
-    private SpeedLimitService service;
+    private LimitService service;
 
     private long autoTimestamp;
     private NotificationManagerCompat notificationManager;
 
-    public AutoView(SpeedLimitService service) {
+    public AutoView(LimitService service) {
         this.service = service;
         notificationManager = NotificationManagerCompat.from(service);
     }

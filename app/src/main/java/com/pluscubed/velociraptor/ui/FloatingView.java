@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class FloatingView implements SpeedLimitView {
+public class FloatingView implements LimitView {
 
     @BindView(R.id.limit)
     View mLimitView;
@@ -50,13 +50,13 @@ public class FloatingView implements SpeedLimitView {
     @BindView(R.id.speedUnits)
     TextView mSpeedometerUnitsText;
 
-    private SpeedLimitService mService;
+    private LimitService mService;
     private WindowManager mWindowManager;
     private int mStyle;
     private View mFloatingView;
     private TextView mDebuggingText;
 
-    public FloatingView(SpeedLimitService service) {
+    public FloatingView(LimitService service) {
         this.mService = service;
 
         mWindowManager = (WindowManager) service.getSystemService(Context.WINDOW_SERVICE);

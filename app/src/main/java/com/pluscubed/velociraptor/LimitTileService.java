@@ -10,11 +10,11 @@ import android.service.quicksettings.TileService;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.LocalBroadcastManager;
 
-import com.pluscubed.velociraptor.ui.SpeedLimitService;
+import com.pluscubed.velociraptor.ui.LimitService;
 
 
 @RequiresApi(api = Build.VERSION_CODES.N)
-public class SpeedLimitTileService extends TileService {
+public class LimitTileService extends TileService {
 
     @Override
     public void onStartListening() {
@@ -37,8 +37,8 @@ public class SpeedLimitTileService extends TileService {
     }
 
     public void enableService(boolean start) {
-        Intent intent = new Intent(this, SpeedLimitService.class);
-        intent.putExtra(start ? SpeedLimitService.EXTRA_NOTIF_START : SpeedLimitService.EXTRA_NOTIF_CLOSE, true);
+        Intent intent = new Intent(this, LimitService.class);
+        intent.putExtra(start ? LimitService.EXTRA_NOTIF_START : LimitService.EXTRA_NOTIF_CLOSE, true);
         startService(intent);
     }
 
