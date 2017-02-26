@@ -50,6 +50,7 @@ public class AppDetectionService extends AccessibilityService {
 
     public void setGmapsNavigating(boolean gmapsNavigating) {
         this.gmapsNavigating = gmapsNavigating;
+        enableGoogleMapsMonitoring(true);
     }
 
     @Override
