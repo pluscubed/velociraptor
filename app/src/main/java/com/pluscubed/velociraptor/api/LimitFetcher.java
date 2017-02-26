@@ -2,6 +2,7 @@ package com.pluscubed.velociraptor.api;
 
 import android.content.Context;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
@@ -378,8 +379,8 @@ public class LimitFetcher {
         }
 
         Bundle bundle = new Bundle();
-        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, endpoint.baseUrl);
-        FirebaseAnalytics.getInstance(context).logEvent("osm_request", bundle);
+        String key = "osm_request_" + Uri.parse(endpoint.baseUrl).getAuthority().replace(".", "_");
+        FirebaseAnalytics.getInstance(context).logEvent(key, bundle);
     }
 
     private Observable<LimitResponse> getHereSpeedLimit(final Location location) {

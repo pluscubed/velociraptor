@@ -83,6 +83,8 @@ public class LimitService extends Service {
 
     private boolean isRunning;
     private boolean isStartedFromNotification;
+    private boolean isLimitHidden;
+
     private BroadcastReceiver notifCheckBroadcastReceiver;
 
     @Nullable
@@ -117,8 +119,8 @@ public class LimitService extends Service {
             }
 
             if (intent.getExtras() != null && intent.getExtras().containsKey(EXTRA_HIDE_LIMIT)) {
-                boolean hideLimit = intent.getBooleanExtra(EXTRA_HIDE_LIMIT, false);
-                speedLimitView.hideLimit(hideLimit);
+                isLimitHidden = intent.getBooleanExtra(EXTRA_HIDE_LIMIT, false);
+                speedLimitView.hideLimit(isLimitHidden);
             }
 
             if (intent.getBooleanExtra(EXTRA_NOTIF_START, false)) {
@@ -234,7 +236,7 @@ public class LimitService extends Service {
         updateSpeedometer(location);
         updateDebuggingText(location, null, null);
 
-        if (getSpeedLimitSubscription == null &&
+        if (getSpeedLimitSubscription == null && !isLimitHidden &&
                 (lastLocationWithFetchAttempt == null || location.distanceTo(lastLocationWithFetchAttempt) > 10)) {
 
             getSpeedLimitSubscription = limitFetcher.getSpeedLimit(location)

@@ -37,7 +37,7 @@ final class OsmInterceptor implements Interceptor {
         try {
             Response proceed = chain.proceed(request);
             if (!proceed.isSuccessful()) {
-                throw new IOException(proceed.toString());
+                throw new IOException(proceed.code() + ": " + proceed.toString());
             } else {
                 endpoint.timeTaken = (int) (System.currentTimeMillis() - start);
             }
