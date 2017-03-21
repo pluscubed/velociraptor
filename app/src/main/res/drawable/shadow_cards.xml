@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@color/background_material_light" />
+
+    <item
+        android:bottom="3dp"
+        android:drawable="@drawable/shadow_bottom"
+        android:gravity="top" />
+
+    <item
+        android:drawable="@drawable/shadow_top"
+        android:gravity="bottom"
+        android:top="6dp" />
+</layer-list>

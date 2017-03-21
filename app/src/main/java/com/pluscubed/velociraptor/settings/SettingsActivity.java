@@ -18,7 +18,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
-import android.support.v4.app.ShareCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
@@ -151,9 +150,9 @@ public class SettingsActivity extends AppCompatActivity {
     @BindView(R.id.spinner_style)
     Spinner styleSpinner;
 
-    //Wrong info
-    @BindView(R.id.open_openstreetmap)
-    LinearLayout openStreetMapView;
+    //HERE/OpenStreetMap edit
+    @BindView(R.id.linear_here)
+    LinearLayout configureHereView;
     @BindView(R.id.check_coverage)
     LinearLayout checkCoverageView;
 
@@ -190,13 +189,10 @@ public class SettingsActivity extends AppCompatActivity {
             qsTipView.setVisibility(View.GONE);
         }
 
-        openStreetMapView.setOnClickListener(new View.OnClickListener() {
+        configureHereView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ShareCompat.IntentBuilder.from(SettingsActivity.this)
-                        .setText("https://www.openstreetmap.org")
-                        .setType("text/plain")
-                        .startChooser();
+                startActivity(new Intent(SettingsActivity.this, HereConfigurationActivity.class));
             }
         });
 
@@ -624,7 +620,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void showChangelog() {
-        ChangelogDialog.newInstance().show(getFragmentManager(), "CHANGELOG_DIALOG");
+        ChangelogDialogFragment.newInstance().show(getFragmentManager(), "CHANGELOG_DIALOG");
     }
 
     @Override

@@ -1,56 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?actionBarSize"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
         android:background="?colorPrimary"
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:contentInsetStart="16dp" />
+        app:contentInsetStart="16dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintTop_creator="1" />
 
-    <FrameLayout
-        android:layout_width="match_parent"
+    <ScrollView
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_marginBottom="0dp"
+        android:layout_marginTop="0dp"
+        android:scrollbars="none"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:layout_constraintVertical_bias="1.0"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1">
 
-        <ScrollView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbars="none">
+            android:layout_height="wrap_content"
+            android:background="@color/cardview_light_background"
+            android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+            <include layout="@layout/activity_settings_mperm" />
 
-                <include layout="@layout/activity_settings_mperm" />
+            <include layout="@layout/activity_settings_activation" />
 
-                <include layout="@layout/activity_settings_activation" />
+            <include layout="@layout/activity_settings_report" />
 
-                <include layout="@layout/activity_settings_general" />
+            <include layout="@layout/activity_settings_general" />
 
-                <include layout="@layout/activity_settings_report" />
+            <include layout="@layout/activity_settings_advanced" />
 
-                <include layout="@layout/activity_settings_advanced" />
+        </LinearLayout>
+    </ScrollView>
 
-            </LinearLayout>
-
-        </ScrollView>
-
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="5dp"
-            android:background="?toolbarShadow" />
-
-    </FrameLayout>
+    <View
+        android:id="@+id/view"
+        android:layout_width="0dp"
+        android:layout_height="5dp"
+        android:background="?toolbarShadow"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1" />
 
 
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>

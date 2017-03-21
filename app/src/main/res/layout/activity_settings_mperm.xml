@@ -1,105 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card_m_permissions"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginBottom="2dp"
-    android:layout_marginLeft="-4dp"
-    android:layout_marginRight="-4dp"
-    android:layout_marginTop="-6dp"
-    app:cardBackgroundColor="@android:color/white"
-    app:cardCornerRadius="0dp"
-    app:cardElevation="4dp"
-    app:cardUseCompatPadding="true"
-    tools:showIn="@layout/activity_settings">
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:paddingTop="32dp"
+    tools:background="#fff">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:paddingTop="32dp">
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        tools:ignore="UseCompoundDrawables">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            tools:ignore="UseCompoundDrawables">
+        <ImageView
+            android:id="@+id/image_floating_enabled"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:contentDescription="@null"
+            tools:src="@drawable/ic_cross_red_40dp" />
 
-            <ImageView
-                android:id="@+id/image_floating_enabled"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"
-                android:contentDescription="@null"
-                tools:src="@drawable/ic_cross_red_40dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/enable_floating_desc"
-                android:textSize="16sp" />
-
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/button_floating_enabled"
-            style="@style/Widget.Button.Colored"
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="@string/open_settings_page" />
-
-        <Space
-            android:id="@+id/location_enabled_space"
-            android:layout_width="match_parent"
-            android:layout_height="16dp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            tools:ignore="UseCompoundDrawables">
-
-            <ImageView
-                android:id="@+id/image_location_enabled"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"
-                android:contentDescription="@null"
-                tools:src="@drawable/ic_cross_red_40dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/enable_location_desc"
-                android:textSize="16sp" />
-
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/button_location_enabled"
-            style="@style/Widget.Button.Colored"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="@string/grant_permission" />
-
-        <Space
-            android:id="@+id/floating_enabled_space"
-            android:layout_width="match_parent"
-            android:layout_height="24dp" />
+            android:text="@string/enable_floating_desc"
+            android:textSize="16sp" />
 
     </LinearLayout>
 
-</android.support.v7.widget.CardView>
+    <Button
+        android:id="@+id/button_floating_enabled"
+        style="@style/Widget.Button.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/open_settings_page" />
+
+    <Space
+        android:id="@+id/location_enabled_space"
+        android:layout_width="match_parent"
+        android:layout_height="16dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        tools:ignore="UseCompoundDrawables">
+
+        <ImageView
+            android:id="@+id/image_location_enabled"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:contentDescription="@null"
+            tools:src="@drawable/ic_cross_red_40dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/enable_location_desc"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/button_location_enabled"
+        style="@style/Widget.Button.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/grant_permission" />
+
+    <Space
+        android:id="@+id/floating_enabled_space"
+        android:layout_width="match_parent"
+        android:layout_height="24dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        android:background="@drawable/shadow_cards" />
+
+</LinearLayout>

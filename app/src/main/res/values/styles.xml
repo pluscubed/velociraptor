@@ -1,7 +1,7 @@
 <resources>
 
     <style name="Theme.Velociraptor" parent="Base.Theme.Velociraptor">
-        <item name="toolbarShadow">@drawable/shadow</item>
+        <item name="toolbarShadow">@drawable/shadow_toolbar</item>
     </style>
 
     <style name="Base.Theme.Velociraptor" parent="Theme.AppCompat.Light.NoActionBar">

@@ -2,6 +2,7 @@ package com.pluscubed.velociraptor;
 
 import android.accessibilityservice.AccessibilityService;
 import android.accessibilityservice.AccessibilityServiceInfo;
+import android.annotation.TargetApi;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -20,11 +21,13 @@ import java.util.Set;
 public class AppDetectionService extends AccessibilityService {
 
     public static final String GOOGLE_MAPS_PACKAGE = "com.google.android.apps.maps";
+    public static final String GMAPS_BOTTOM_CONTAINER_ID = "com.google.android.apps.maps:id/bottommapoverlay_container";
+    public static final String GMAPS_SPEED_LIMIT_TEXT = "SPEED LIMIT";
     private static final String ANDROID_AUTO_ACTIVITY = "com.google.android.gms.car.CarHomeActivity";
     private static AppDetectionService INSTANCE;
 
     private Set<String> enabledApps;
-    private boolean gmapsNavigating;
+    private boolean isGmapsNavigating;
 
     private long lastTimestamp;
 
@@ -49,7 +52,7 @@ public class AppDetectionService extends AccessibilityService {
     }
 
     public void setGmapsNavigating(boolean gmapsNavigating) {
-        this.gmapsNavigating = gmapsNavigating;
+        this.isGmapsNavigating = gmapsNavigating;
         enableGoogleMapsMonitoring(true);
     }
 
@@ -63,8 +66,8 @@ public class AppDetectionService extends AccessibilityService {
             updateSelectedApps();
         }
 
-        if ((event.getEventType() != AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED
-                && (event.getEventType() != AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED || System.currentTimeMillis() <= lastTimestamp + 2000))
+        if ((event.getEventType() == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED
+                && System.currentTimeMillis() <= lastTimestamp + 2000)
                 || event.getPackageName() == null
                 || event.getClassName() == null
                 || enabledApps == null) {
@@ -94,7 +97,7 @@ public class AppDetectionService extends AccessibilityService {
         }
 
         if (componentName.getPackageName().equals(GOOGLE_MAPS_PACKAGE)) {
-            if (PrefUtils.isGmapsOnlyInNavigation(this) && !gmapsNavigating) {
+            if (PrefUtils.isGmapsOnlyInNavigation(this) && !isGmapsNavigating) {
                 enableGoogleMapsMonitoring(false);
                 intent.putExtra(LimitService.EXTRA_HIDE_LIMIT, false);
 
@@ -150,13 +153,14 @@ public class AppDetectionService extends AccessibilityService {
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     private boolean searchGmapsSpeedLimitSign(AccessibilityNodeInfo source) throws SecurityException {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2 || source == null) {
             return false;
         }
 
         List<AccessibilityNodeInfo> speedLimitNodes =
-                source.findAccessibilityNodeInfosByViewId("com.google.android.apps.maps:id/bottommapoverlay_container");
+                source.findAccessibilityNodeInfosByViewId(GMAPS_BOTTOM_CONTAINER_ID);
 
         source.recycle();
 
@@ -176,7 +180,7 @@ public class AppDetectionService extends AccessibilityService {
 
         if (source.getText() != null) {
             String text = source.getText().toString();
-            if (text.contains("SPEED LIMIT")) {
+            if (text.contains(GMAPS_SPEED_LIMIT_TEXT)) {
                 return true;
             }
         }

@@ -5,7 +5,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.0-rc1'
+        classpath 'com.android.tools.build:gradle:2.4.0-alpha1'
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.14.0'
         classpath 'com.google.gms:google-services:3.0.0'
     }
@@ -18,7 +18,7 @@ allprojects {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '3.4'
+    gradleVersion = '3.4.1'
     distributionType = Wrapper.DistributionType.ALL
 }
 

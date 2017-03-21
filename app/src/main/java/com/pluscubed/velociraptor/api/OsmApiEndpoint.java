@@ -41,18 +41,23 @@ public class OsmApiEndpoint implements Comparable<OsmApiEndpoint> {
     }
 
     @Override
-    public int compareTo(@NonNull OsmApiEndpoint another) {
+    public int compareTo(@NonNull OsmApiEndpoint other) {
         long currentTime = System.currentTimeMillis();
 
-        int compare = Utils.compare(timeTaken, another.timeTaken);
+        int compare = Utils.compare(timeTaken, other.timeTaken);
 
-        if (compare == 1 && (name != null && another.name == null && timeTaken != Integer.MAX_VALUE ||
-                currentTime > timeTakenTimestamp + 60000)) {
+        boolean isThisFaster = compare == 1;
+        boolean isOtherFaster = compare == -1;
+
+        boolean isThisPrivateAndWorking = name != null && other.name == null && timeTaken != Integer.MAX_VALUE;
+        boolean isOtherPrivateAndWorking = other.name != null && name == null && other.timeTaken != Integer.MAX_VALUE;
+
+        if (isThisFaster && (isThisPrivateAndWorking || currentTime > timeTakenTimestamp + 60000)) {
             return -1;
-        } else if (compare == -1 && (another.name != null && name == null && another.timeTaken != Integer.MAX_VALUE ||
-                currentTime > another.timeTakenTimestamp + 60000)) {
+        } else if (isOtherFaster && (isOtherPrivateAndWorking || currentTime > other.timeTakenTimestamp + 60000)) {
             return 1;
+        } else {
+            return compare;
         }
-        return compare;
     }
 }

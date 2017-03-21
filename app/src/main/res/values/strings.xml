@@ -37,6 +37,9 @@
     <!--General Settings-->
     <string name="general">General</string>
 
+    <string name="configure_here_database">Configure HERE database</string>
+    <string name="configure_here_database_desc">Get more accurate speed limits with a free HERE dev account</string>
+
     <string name="show_speedometer">Show speedometer</string>
 
     <string name="sound_alert">Sound alert</string>
@@ -86,14 +89,13 @@
     ]]></string>
 
 
-    <!--Wrong or missing speed limit-->
-    <string name="wrong_speed_limit">Wrong or missing speed limit?</string>
+    <!--Speed limit providers-->
+    <string name="speed_limit_providers">Speed limit providers</string>
 
-    <string name="check_coverage">Touch to check if your area is covered</string>
+    <string name="check_coverage">Check OpenStreetMap coverage</string>
     <string name="open_coverage_map_failed">Unable to open link. Please manually go to http://product.itoworld.com/map/124.</string>
 
-    <string name="help_edit">Help edit the speed limit data</string>
-    <string name="wrong_speed_limit_desc">Go to OpenStreetMap on your computer. Touch to share the link (https://openstreetmap.org)</string>
+    <string name="osm_edit">Go to <b>http://openstreetmap.org</b> on your computer to add/edit speed limits</string>
 
 
     <!--Activation Settings-->
@@ -153,6 +155,11 @@
 
     <!--Tile-->
     <string name="tile_name">Toggle Velociraptor</string>
+
+
+    <string name="here_config_step1">When finished registering, press <b>Start Coding</b></string>
+    <string name="here_config_step2">Press <b>Generate App ID and App Code</b> under the <b>JavaScript/REST</b> section</string>
+    <string name="here_config_title">HERE Database Configuration</string>
 
 
 </resources>

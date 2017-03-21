@@ -18,10 +18,10 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-public class ChangelogDialog extends DialogFragment {
+public class ChangelogDialogFragment extends DialogFragment {
 
-    public static ChangelogDialog newInstance() {
-        ChangelogDialog dialog = new ChangelogDialog();
+    public static ChangelogDialogFragment newInstance() {
+        ChangelogDialogFragment dialog = new ChangelogDialogFragment();
         return dialog;
     }
 

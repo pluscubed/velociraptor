@@ -379,7 +379,7 @@ public class LimitFetcher {
         }
 
         Bundle bundle = new Bundle();
-        String key = "osm_request_" + Uri.parse(endpoint.baseUrl).getAuthority().replace(".", "_");
+        String key = "osm_request_" + Uri.parse(endpoint.baseUrl).getAuthority().replace(".", "_").replace("-", "_");
         FirebaseAnalytics.getInstance(context).logEvent(key, bundle);
     }
 
