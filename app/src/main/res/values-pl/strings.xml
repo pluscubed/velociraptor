@@ -69,7 +69,10 @@ Aplikacja stworzona przez <b>Daniel Ciao</b><br/>
 <a href=\'http://pluscubed.oneskyapp.com/collaboration/project/64120\'>OneSky</a> - przetłumacz aplikację na swój język
 <a href=\'https://play.google.com/apps/testing/com.pluscubed.velociraptor\'>Beta testy</a> - wypróbuj przyszłych wydań]]></string>
     <!--Speed limit providers-->
-    <string name="check_coverage">Dotknij, aby sprawdzić, czy twój obszar jest pokryty</string>
+    <string name="speed_limit_providers">Dostawcy ograniczeń prędkości</string>
+    <string name="configure_here_database">Skonfiguruj bazę danych HERE Maps</string>
+    <string name="check_coverage">Sprawdź pokrycie OpenStreetMap</string>
+    <string name="osm_edit">Przejdź na stronę <b>openstreetmap.org</b>, aby dodać/edytować ograniczenia prędkości</string>
     <string name="open_coverage_map_failed">Nie można otworzyć łącza. Proszę przejść ręcznie do http://product.itoworld.com/map/124.</string>
     <!--Activation Settings-->
     <string name="select_overlay_usage">Aktywacja</string>
@@ -112,6 +115,14 @@ Można przekazać za pomocą PayPal  <a href="https://www.paypal.com/cgi-bin/web
     <string name="android_auto_instruction_dialog">Velociraptor działa jako aplikacja wiadomości dla Androida Auto. Aby go wykorzystać, aplikacja Android Auto musi być na pierwszym planie. Aby wyłączyć dźwięki powiadomień, dotknij przycisk zamknij lub raz przycisk odpowiedzi.</string>
     <string name="auto_not_available">Aby skorzystać z integracji z Android Auto, pobierz Velociraptor AA z APKMirror</string>
     <!--Tile-->
+    <!--HERE Config-->
+    <string name="here_config_step1">Po ukończeniu rejestracji, wciśnij <b>Start Coding</b></string>
+    <string name="here_config_step2">Wybierz <b>Generate App ID and App Code</b> w sekcji <b>JavaScript/REST</b></string>
+    <string name="here_config_title">Konfiguracja bazy danych HERE</string>
+    <string name="view_account">Wyświetl konto</string>
+    <string name="sign_up">Stwórz konto</string>
+    <string name="here_app_code">HERE App Code</string>
+    <string name="here_app_id">"ID aplikacji HERE "</string>
     <string name="open_settings">Otwórz ustawienia</string>
     <!--Wrong or missing speed limit-->
     <string name="wrong_speed_limit">Nieprawidłowe lub brakujące ograniczenie prędkości?</string>

@@ -8,8 +8,8 @@
     <string name="show">Mostra</string>
     <string name="hide">Nascondi</string>
     <string name="dismiss">Annulla</string>
-    <string name="kmph">Km/h</string>
-    <string name="mph">mph (per km +60%)</string>
+    <string name="kmph">%s km/h</string>
+    <string name="mph">%s mph</string>
     <string name="percent">%s%%</string>
     <string name="grant">Concedere</string>
     <string name="notif_content">Tocca per aprire le impostazioni</string>
@@ -24,7 +24,7 @@
     <string name="accessibility_service_description">Per rilevare l\'app in primo piano e mostrare il limite di velocità, il servizio di accessibilità deve essere attivo.</string>
     <string name="open_settings_failed_accessibility">Impossibile aprire le impostazioni. Per favore, attiva manualmente il servizio di accessibilità per Velociraptor</string>
     <string name="grant_permission">Autorizza i permessi</string>
-    <string name="enable_location_desc">Pee determinare il limite di velocità nella tua posizione, per favore consenti l\'accesso alla tua posizione.</string>
+    <string name="enable_location_desc">Per determinare il limite di velocità relativo alla tua posizione, consenti l\'accesso alla tua posizione.</string>
     <string name="permissions_warning">Velociraptor non ha i permessi adeguati.
 Per favore, apri l\'app per ottenerli.</string>
     <string name="location_settings_warning">GPS spento. Abilitalo per permettere a Velociraptor di controllare i limiti di velocità.</string>
@@ -46,12 +46,13 @@ Per favore, apri l\'app per ottenerli.</string>
     <string name="tolerance_dialog_text">Avvisa quando il limite di velocità viene superato di:</string>
     <string name="plus">più</string>
     <string name="or">o</string>
-    <string name="tip_tap_hide">Suggerimento: toccare per nascondere temporaneamente!</string>
+    <string name="tolerance_desc">%1$s %2$s %3$s</string>
+    <string name="tip_tap_hide">Suggerimento: toccare il limite o il tachimetro per nasconderli temporaneamente!</string>
     <!--About Dialog-->
     <string name="about">Informazioni</string>
     <string name="about_dialog_title">Velociraptor v%s</string>
     <string name="about_body"><![CDATA[
-        <b>Velociraptor</b> controlla i limiti di velocità e offre sia tachimetro che avvertimenti, sfruttando i limiti di velocità di HERE Maps.
+        <b>Velociraptor</b> controlla i limiti di velocità e offre sia il tachimetro che avvisi, sfruttando i limiti di velocità di OpenStreetMap o di HERE WeGo.
         <br/><br/>
 
         Sviluppato da <b>Daniel Ciao</b><br/>
@@ -65,7 +66,11 @@ Per favore, apri l\'app per ottenerli.</string>
         <a href=\'https://github.com/pluscubed/velociraptor\'>GitHub</a> - codice sorgente, errori, richiesta feature<br/>
     ]]></string>
     <!--Speed limit providers-->
-    <string name="check_coverage">Tocca per verificare che la tu area sia coperta</string>
+    <string name="speed_limit_providers">Fonti dei limiti di velocità</string>
+    <string name="configure_here_database">HERE: configura il database di HERE</string>
+    <string name="configure_here_database_desc">Ottieni limiti di velocità più precisi grazie ad un account gratuito di sviluppatore HERE. Visita  <b>mapcreator.here.com</b> per aggiungere o modificare i limiti di velocità</string>
+    <string name="check_coverage">Openstreetmap: tocca per verificare che la tua area sia coperta</string>
+    <string name="osm_edit">Accedi a <b> openstreetmap.org </b> da pc per aggiungere o modifcare i limiti di velocità</string>
     <string name="open_coverage_map_failed">Impossibile aprire il link. Per favore vai manualmente su http://product.itoworld.com/map/124.</string>
     <!--Activation Settings-->
     <string name="select_overlay_usage">Attivazione</string>
@@ -74,9 +79,11 @@ Per favore, apri l\'app per ottenerli.</string>
     <string name="persistent_notification_controls">Mostra le impostazioni delle notifiche</string>
     <string name="controls_notif_title">Controlli Velociraptor</string>
     <string name="controls_notif_desc">Mostra o nascondi il monitor del limite di velocità</string>
+    <string name="gmaps_only_nav">Google Maps: solo in navigazione</string>
     <string name="gmaps_only_nav_notif_access">Per utilizzare questa funzione, Velociraptor ha bisogno di accedere alle notifiche, per verificare se Google Maps Navigation è in funzione</string>
     <string name="gmaps_only_nav_jellybean">Disponibile per Android 4.3 e versioni successive</string>
     <string name="open_settings_failed_notif_access">Impossibile aprire le impostazioni. Disabilitare manualmente l\'accesso alle notifiche per Velociraptor.</string>
+    <string name="tip_qs_tile">"Suggerimento: aggiungi Velociraptor nel menù delle impostazioni rapide! "</string>
     <!--App selection-->
     <string name="select_apps">Seleziona app</string>
     <string name="show_map_apps">Mostra le app mappe</string>
@@ -86,12 +93,18 @@ Per favore, apri l\'app per ottenerli.</string>
     <string name="obtaining_gps_location">Ottenendo la posizione GPS…</string>
     <!--Changelog-->
     <string name="changelog">Registro delle modifche</string>
+    <string name="rate">Vota</string>
     <string name="support">Supporto</string>
     <!--Support development-->
     <string name="support_development">Supporta lo sviluppo</string>
     <string name="in_app_unavailable">Fatturazione in-app non disponibile</string>
     <string name="support_dev_dialog">Usato per i costi di server e API; l\'importo suggerito è di 1 USD al mese. Un badge sarà visualizzato qui come mia sincera gratitudine.</string>
     <string name="support_dev_dialog_badge">Grazie per il tuo supporto!</string>
+    <string name="support_dev_dialog_notplay"><![CDATA[Per sostenere i costi del server e delle API; si suggerisce un importo di 1 dollaro al mese.
+
+Per donare puoi usare PayPal
+<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&amp;business=72HXHU5AXK2ZN&amp;lc=US&amp;item_name=Velociraptor%20Development&amp;item_number=velociraptor&amp;currency_code=USD&amp;bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted"> , </a>
+L\'acquisto in-app può essere autorizzato quando si scarica Velociraptor da Google Play.]]></string>
     <string name="per_month">%s al mese</string>
     <string name="one_time">%s una tantum</string>
     <!--Android Auto-->
@@ -99,8 +112,17 @@ Per favore, apri l\'app per ottenerli.</string>
     <string name="notif_android_auto_limit">Limite di Velocità: %s</string>
     <string name="android_auto_integration_switch">Integrazione con Android Auto</string>
     <string name="android_auto_instruction_dialog">Velociraptor agisce come una applicazione di messaggistica per Android Auto. Per fermare i suoni delle notifiche, toccare il pulsante di chiusura o di risposta.</string>
+    <string name="auto_not_available">Per utilizzare l\'integrazione Android Auto, scaricare Velociraptor AA da APKMirror</string>
     <!--Tile-->
     <string name="tile_name">Velociraptor on / off</string>
+    <!--HERE Config-->
+    <string name="here_config_step1">Terminata la registrazione, premi <b>Start Coding</b></string>
+    <string name="here_config_step2">Premi <b>Generate App ID and App Code</b> sotto la sezione <b>JavaScript/REST</b></string>
+    <string name="here_config_title">Configurazione del database HERE</string>
+    <string name="view_account">Mostra l\'account</string>
+    <string name="sign_up">Registrazione</string>
+    <string name="here_app_code">App code di HERE</string>
+    <string name="here_app_id">App ID di HERE</string>
     <string name="open_settings">Apri la pagina delle impostazioni</string>
     <!--Wrong or missing speed limit-->
     <string name="wrong_speed_limit">Limite di velocità sbagliato o mancante?</string>
