@@ -40,10 +40,15 @@ android {
         applicationId "com.pluscubed.velociraptor"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 32
-        versionName "1.5.2"
+        versionCode 33
+        versionName "1.5.3"
         vectorDrawables.useSupportLibrary = true
         manifestPlaceholders = [appName: "@string/app_name"]
+
+        lintOptions {
+            disable 'MissingTranslation'
+            disable 'ExtraTranslation'
+        }
     }
 
     buildTypes {
@@ -57,14 +62,12 @@ android {
             } else {
                 signingConfig signingConfigs.debug
             }
-
-            lintOptions {
-                disable 'MissingTranslation'
-                disable 'ExtraTranslation'
-            }
         }
 
         debug {
+            minifyEnabled true
+            useProguard false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             applicationIdSuffix '.debug'
             versionNameSuffix '-DEBUG'
             testCoverageEnabled false
