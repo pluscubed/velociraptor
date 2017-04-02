@@ -97,3 +97,6 @@
 
 #Retrolambda
 -dontwarn java.lang.invoke.*
+
+#DbInspector
+-dontwarn org.apache.commons.**

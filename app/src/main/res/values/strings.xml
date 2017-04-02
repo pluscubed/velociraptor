@@ -155,9 +155,14 @@
     <string name="tile_name">Toggle Velociraptor</string>
 
 
+    <!--HERE Config-->
     <string name="here_config_step1">When finished registering, press <b>Start Coding</b></string>
     <string name="here_config_step2">Press <b>Generate App ID and App Code</b> under the <b>JavaScript/REST</b> section</string>
     <string name="here_config_title">HERE Database Configuration</string>
+    <string name="view_account">View account</string>
+    <string name="sign_up">Sign up</string>
+    <string name="here_app_code">HERE App Code</string>
+    <string name="here_app_id">HERE App ID</string>
 
 
 </resources>

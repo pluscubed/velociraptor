@@ -81,7 +81,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="monospace"
-            android:hint="HERE App ID"
+            android:hint="@string/here_app_id"
             android:inputType="textNoSuggestions"
             android:textSize="12sp"
             tools:text="xRYnLijS6AGdtlwB5Bul" />
@@ -110,7 +110,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="monospace"
-            android:hint="HERE App Code"
+            android:hint="@string/here_app_code"
             android:inputType="textNoSuggestions"
             android:textSize="12sp"
             tools:text="Sd6qv6TsvLi6Bd9yuR7Ujg" />
@@ -135,9 +135,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:drawableLeft="@drawable/ic_person_add_black_24dp"
         android:drawablePadding="8dp"
-        android:text="Sign up"
+        android:text="@string/sign_up"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:layout_constraintBottom_toTopOf="@+id/view_account"
         app:layout_constraintHorizontal_bias="0.501"
@@ -153,9 +152,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:drawableLeft="@drawable/ic_eye_black_24dp"
         android:drawablePadding="8dp"
-        android:text="View account"
+        android:text="@string/view_account"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:layout_constraintBottom_toBottomOf="@+id/webview"
         app:layout_constraintHorizontal_chainStyle="packed"
@@ -166,7 +164,7 @@
 
     <ProgressBar
         android:id="@+id/progress_bar"
-        style="?android:attr/progressBarStyleHorizontal"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="0dp"

@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -25,6 +26,7 @@ import android.widget.ProgressBar;
 
 import com.pluscubed.velociraptor.R;
 import com.pluscubed.velociraptor.utils.PrefUtils;
+import com.pluscubed.velociraptor.utils.Utils;
 
 import java.util.List;
 
@@ -75,6 +77,16 @@ public class HereConfigurationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_here_configuration);
         ButterKnife.bind(this);
+
+        int dp24 = Utils.convertDpToPx(this, 24);
+
+        VectorDrawableCompat signUp = VectorDrawableCompat.create(getResources(), R.drawable.ic_person_add_black_24dp, getTheme());
+        signUp.setBounds(0, 0, dp24, dp24);
+        signupButton.setCompoundDrawables(signUp, null, null, null);
+
+        VectorDrawableCompat view = VectorDrawableCompat.create(getResources(), R.drawable.ic_eye_black_24dp, getTheme());
+        view.setBounds(0, 0, dp24, dp24);
+        viewAccountButton.setCompoundDrawables(view, null, null, null);
 
         webview.getSettings().setJavaScriptEnabled(true);
 
