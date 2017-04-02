@@ -1,139 +1,82 @@
 package com.pluscubed.velociraptor.api.hereapi;
 
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import com.fasterxml.jackson.annotation.JsonAnySetter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Link {
 
-    @JsonProperty("_type")
-    private String Type;
     @JsonProperty("linkId")
-    private String LinkId;
+    private String linkId;
     @JsonProperty("shape")
-    private List<String> Shape = new ArrayList<>();
+    private List<String> shape = new ArrayList<>();
     @JsonProperty("speedLimit")
-    private Double SpeedLimit;
-    @JsonProperty("DynamicSpeedInfo")
-    private DynamicSpeedInfo DynamicSpeedInfo;
-    @JsonProperty("Address")
-    private Address Address;
-    @JsonIgnore
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    private Double speedLimit;
+    @JsonProperty("roadName")
+    private String roadName;
+
 
     /**
-     * @return The Type
-     */
-    @JsonProperty("_type")
-    public String getType() {
-        return Type;
-    }
-
-    /**
-     * @param Type The _type
-     */
-    @JsonProperty("_type")
-    public void setType(String Type) {
-        this.Type = Type;
-    }
-
-    /**
-     * @return The LinkId
+     * @return The linkId
      */
     @JsonProperty("linkId")
     public String getLinkId() {
-        return LinkId;
+        return linkId;
     }
 
     /**
-     * @param LinkId The LinkId
+     * @param LinkId The linkId
      */
     @JsonProperty("linkId")
     public void setLinkId(String LinkId) {
-        this.LinkId = LinkId;
+        this.linkId = LinkId;
     }
 
     /**
-     * @return The Shape
+     * @return The shape
      */
     @JsonProperty("shape")
     public List<String> getShape() {
-        return Shape;
+        return shape;
     }
 
     /**
-     * @param Shape The Shape
+     * @param Shape The shape
      */
     @JsonProperty("shape")
     public void setShape(List<String> Shape) {
-        this.Shape = Shape;
+        this.shape = Shape;
     }
 
     /**
-     * @return The SpeedLimit
+     * @return The speedLimit
      */
     @JsonProperty("speedLimit")
     public Double getSpeedLimit() {
-        return SpeedLimit;
+        return speedLimit;
     }
 
     /**
-     * @param SpeedLimit The SpeedLimit
+     * @param SpeedLimit The speedLimit
      */
     @JsonProperty("speedLimit")
     public void setSpeedLimit(Double SpeedLimit) {
-        this.SpeedLimit = SpeedLimit;
+        this.speedLimit = SpeedLimit;
     }
 
-    /**
-     * @return The DynamicSpeedInfo
-     */
-    @JsonProperty("DynamicSpeedInfo")
-    public DynamicSpeedInfo getDynamicSpeedInfo() {
-        return DynamicSpeedInfo;
+    @JsonProperty("roadName")
+    public String getRoadName() {
+        return roadName;
     }
 
-    /**
-     * @param DynamicSpeedInfo The DynamicSpeedInfo
-     */
-    @JsonProperty("DynamicSpeedInfo")
-    public void setDynamicSpeedInfo(DynamicSpeedInfo DynamicSpeedInfo) {
-        this.DynamicSpeedInfo = DynamicSpeedInfo;
-    }
-
-    /**
-     * @return The Address
-     */
-    @JsonProperty("Address")
-    public Address getAddress() {
-        return Address;
-    }
-
-    /**
-     * @param Address The Address
-     */
-    @JsonProperty("Address")
-    public void setAddress(Address Address) {
-        this.Address = Address;
-    }
-
-    @JsonAnyGetter
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
-    }
-
-    @JsonAnySetter
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
+    @JsonProperty("roadName")
+    public void setRoadName(String roadName) {
+        this.roadName = roadName;
     }
 
 }

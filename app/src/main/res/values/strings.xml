@@ -37,9 +37,6 @@
     <!--General Settings-->
     <string name="general">General</string>
 
-    <string name="configure_here_database">Configure HERE database</string>
-    <string name="configure_here_database_desc">Get more accurate speed limits with a free HERE dev account</string>
-
     <string name="show_speedometer">Show speedometer</string>
 
     <string name="sound_alert">Sound alert</string>
@@ -92,11 +89,12 @@
     <!--Speed limit providers-->
     <string name="speed_limit_providers">Speed limit providers</string>
 
+    <string name="configure_here_database">Configure HERE Maps database</string>
+    <string name="configure_here_database_desc">Get more accurate speed limits with a free HERE developer account. Visit <b>mapcreator.here.com</b> on your computer to add/edit speed limits</string>
+
     <string name="check_coverage">Check OpenStreetMap coverage</string>
+    <string name="osm_edit">Visit <b>openstreetmap.org</b> on your computer to add/edit speed limits</string>
     <string name="open_coverage_map_failed">Unable to open link. Please manually go to http://product.itoworld.com/map/124.</string>
-
-    <string name="osm_edit">Go to <b>http://openstreetmap.org</b> on your computer to add/edit speed limits</string>
-
 
     <!--Activation Settings-->
     <string name="select_overlay_usage">Activation</string>

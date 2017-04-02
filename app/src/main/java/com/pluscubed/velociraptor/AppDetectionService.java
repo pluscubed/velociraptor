@@ -18,6 +18,8 @@ import com.pluscubed.velociraptor.utils.PrefUtils;
 import java.util.List;
 import java.util.Set;
 
+import timber.log.Timber;
+
 public class AppDetectionService extends AccessibilityService {
 
     public static final String GOOGLE_MAPS_PACKAGE = "com.google.android.apps.maps";
@@ -66,23 +68,24 @@ public class AppDetectionService extends AccessibilityService {
             updateSelectedApps();
         }
 
-        if ((event.getEventType() == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED
-                && System.currentTimeMillis() <= lastTimestamp + 2000)
-                || event.getPackageName() == null
+        if (event.getPackageName() == null
                 || event.getClassName() == null
-                || enabledApps == null) {
+                || (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED && !event.getPackageName().equals(GOOGLE_MAPS_PACKAGE)
+                || enabledApps == null)) {
             return;
         }
+
+        Timber.d(event.toString());
 
         ComponentName componentName = new ComponentName(
                 event.getPackageName().toString(),
                 event.getClassName().toString()
         );
 
-        ActivityInfo activityInfo = tryGetActivity(componentName);
-        boolean isActivity = activityInfo != null;
+        boolean isActivity = componentName.getPackageName().toLowerCase().contains("activity")
+                || tryGetActivity(componentName) != null;
 
-        if (!isActivity && (!componentName.getPackageName().equals(GOOGLE_MAPS_PACKAGE))) {
+        if (!isActivity && !componentName.getPackageName().equals(GOOGLE_MAPS_PACKAGE)) {
             return;
         }
 
@@ -139,7 +142,7 @@ public class AppDetectionService extends AccessibilityService {
                 if (enable) {
                     serviceInfo.eventTypes = AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED |
                             AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED;
-                    serviceInfo.notificationTimeout = 2000;
+                    serviceInfo.notificationTimeout = 500;
                 } else {
                     serviceInfo.eventTypes = AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED;
                     serviceInfo.notificationTimeout = 0;

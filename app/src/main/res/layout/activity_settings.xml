@@ -46,7 +46,7 @@
 
             <include layout="@layout/activity_settings_activation" />
 
-            <include layout="@layout/activity_settings_report" />
+            <include layout="@layout/activity_settings_providers" />
 
             <include layout="@layout/activity_settings_general" />
 

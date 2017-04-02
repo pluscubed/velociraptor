@@ -14,8 +14,6 @@ import java.util.List;
 
 import rx.Observable;
 import rx.Scheduler;
-import rx.functions.Func0;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
@@ -102,44 +100,38 @@ public class LimitCache {
     }
 
     public Observable<LimitResponse> get(final String previousName, final Coord coord) {
-        return Observable.defer(new Func0<Observable<LimitResponse>>() {
-            @Override
-            public Observable<LimitResponse> call() {
-                LimitCache.this.cleanup();
+        return Observable.defer(() -> {
+            LimitCache.this.cleanup();
 
-                SqlDelightStatement selectStatement = LimitCacheWay.FACTORY.select_by_coord(coord.lat, Math.pow(Math.cos(Math.toRadians(coord.lat)), 2), coord.lon);
+            SqlDelightStatement selectStatement = LimitCacheWay.FACTORY.select_by_coord(coord.lat, Math.pow(Math.cos(Math.toRadians(coord.lat)), 2), coord.lon);
 
-                return db.createQuery(selectStatement.tables, selectStatement.statement, selectStatement.args)
-                        .mapToList(LimitCacheWay.SELECT_BY_COORD::map)
-                        .take(1)
-                        .flatMap(Observable::from)
-                        .filter(way -> {
-                            Coord coord1 = new Coord(way.lat1(), way.lon1());
-                            Coord coord2 = new Coord(way.lat2(), way.lon2());
-                            double crossTrackDist = crossTrackDist(coord1, coord2, coord);
-                            return crossTrackDist < 15 /*&& isOnSegment(coord1, coord2, coord)*/;
-                        })
-                        .toList()
-                        .flatMap(new Func1<List<LimitCacheWay>, Observable<LimitResponse>>() {
-                            @Override
-                            public Observable<LimitResponse> call(List<LimitCacheWay> ways) {
-                                if (ways.isEmpty()) {
-                                    return Observable.empty();
-                                }
+            return db.createQuery(selectStatement.tables, selectStatement.statement, selectStatement.args)
+                    .mapToList(LimitCacheWay.SELECT_BY_COORD::map)
+                    .take(1)
+                    .flatMap(Observable::from)
+                    .filter(way -> {
+                        Coord coord1 = new Coord(way.lat1(), way.lon1());
+                        Coord coord2 = new Coord(way.lat2(), way.lon2());
+                        double crossTrackDist = crossTrackDist(coord1, coord2, coord);
+                        return crossTrackDist < 15 /*&& isOnSegment(coord1, coord2, coord)*/;
+                    })
+                    .toList()
+                    .flatMap(ways -> {
+                        if (ways.isEmpty()) {
+                            return Observable.empty();
+                        }
 
-                                LimitResponse.Builder response = ways.get(0).toResponse();
-                                for (LimitCacheWay way : ways) {
-                                    if (way.road() != null && way.road().equals(previousName)) {
-                                        response = way.toResponse();
-                                        break;
-                                    }
-                                }
-
-                                response.setFromCache(true);
-                                return Observable.just(response.build());
+                        LimitResponse.Builder response = ways.get(0).toResponse();
+                        for (LimitCacheWay way : ways) {
+                            if (way.road() != null && way.road().equals(previousName)) {
+                                response = way.toResponse();
+                                break;
                             }
-                        });
-            }
+                        }
+
+                        response.setFromCache(true);
+                        return Observable.just(response.build());
+                    });
         });
 
     }

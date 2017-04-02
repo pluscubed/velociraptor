@@ -127,7 +127,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@+id/webview"
         app:layout_constraintVertical_chainStyle="packed"
-        app:srcCompat="@drawable/ic_database_128dp" />
+        app:srcCompat="@drawable/ic_database" />
 
     <Button
         android:id="@+id/sign_up"
@@ -135,6 +135,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:drawableLeft="@drawable/ic_person_add_black_24dp"
+        android:drawablePadding="8dp"
         android:text="Sign up"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:layout_constraintBottom_toTopOf="@+id/view_account"
@@ -151,6 +153,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:drawableLeft="@drawable/ic_eye_black_24dp"
+        android:drawablePadding="8dp"
         android:text="View account"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:layout_constraintBottom_toBottomOf="@+id/webview"

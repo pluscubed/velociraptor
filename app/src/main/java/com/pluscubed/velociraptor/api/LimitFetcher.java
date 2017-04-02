@@ -40,7 +40,6 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 public class LimitFetcher {
@@ -48,7 +47,7 @@ public class LimitFetcher {
     public static final String FB_CONFIG_OSM_APIS = "osm_apis";
     public static final String FB_CONFIG_OSM_API_ENABLED_PREFIX = "osm_api";
     public static final int OSM_RADIUS = 15;
-    private static final String HERE_ROUTING_API = "https://route.cit.endpoint.here.com/routing/7.2/";
+    private static final String HERE_ROUTING_API = "https://route.api.here.com/routing/7.2/";
     private final List<OsmApiEndpoint> osmOverpassApis;
     private final ObjectMapper objectMapper;
 
@@ -163,7 +162,16 @@ public class LimitFetcher {
     }
 
     public Single<LimitResponse> getSpeedLimit(Location location) {
-        Observable<LimitResponse> query = getOsmSpeedLimit(location);
+        //TODO: Restructure as stream of error/missing/completed responses
+
+        Observable<LimitResponse> query;
+
+        String[] hereCodes = PrefUtils.getHereCodes(context).split(",");
+        if (hereCodes.length == 2) {
+            query = getHereSpeedLimit(location);
+        } else {
+            query = getOsmSpeedLimit(location);
+        }
 
         //Delay query if the last response was received less than 5 seconds ago
         if (lastNetworkResponse != null) {
@@ -171,8 +179,27 @@ public class LimitFetcher {
             query = query.delaySubscription(delay, TimeUnit.MILLISECONDS);
         }
 
-        /*if(BuildConfig.DEBUG)
-            query = query.switchIfEmpty(getHereSpeedLimit(location));*/
+        if (hereCodes.length == 2) {
+            query = query
+                    .onErrorReturn(throwable -> {
+                        if (!BuildConfig.DEBUG) {
+                            if (throwable instanceof IOException) {
+                                Answers.getInstance().logCustom(new CustomEvent("Network Error")
+                                        .putCustomAttribute("Server", "HERE")
+                                        .putCustomAttribute("Message", throwable.getMessage()));
+                            }
+                            Crashlytics.logException(throwable);
+                        }
+                        return LimitResponse.builder().build();
+                    })
+                    .flatMap(limitResponse -> {
+                        if (limitResponse.speedLimit() == -1) {
+                            return getOsmSpeedLimit(location);
+                        } else {
+                            return Observable.just(limitResponse);
+                        }
+                    });
+        }
 
         query = query.defaultIfEmpty(LimitResponse.builder().build());
         String lastRoadName = lastResponse == null ? null : lastResponse.roadName();
@@ -214,8 +241,8 @@ public class LimitFetcher {
 
 
     /**
-     * Caches each way received. Returns ApiResponse with valid coords, or nothing
-     * if none meet criteria.
+     * Returns response (regardless of whether there is speed limit) and caches each way received,
+     * or empty if there is no road information
      */
     private Observable<LimitResponse> getOsmSpeedLimit(final Location location) {
         final List<OsmApiEndpoint> endpoints = new ArrayList<>(osmOverpassApis);
@@ -230,63 +257,61 @@ public class LimitFetcher {
         osmInterceptor.setEndpoint(endpoints.get(0));
 
         return getOsmResponse(location, endpoints)
-                .flatMapObservable(new Func1<OsmResponse, Observable<LimitResponse>>() {
-                    @Override
-                    public Observable<LimitResponse> call(OsmResponse osmApi) {
-                        if (osmApi == null) {
-                            return Observable.error(new Exception("OSM null response"));
-                        }
+                .flatMapObservable(osmApi -> {
+                    if (osmApi == null) {
+                        return Observable.error(new Exception("OSM null response"));
+                    }
 
-                        boolean useMetric = PrefUtils.getUseMetric(context);
+                    boolean useMetric = PrefUtils.getUseMetric(context);
 
-                        List<Element> elements = osmApi.getElements();
+                    List<Element> elements = osmApi.getElements();
 
-                        if (elements.isEmpty()) {
-                            return Observable.empty();
-                        }
-
-                        Element bestMatch = getBestElement(elements);
-                        LimitResponse bestResponse = null;
-
-                        for (Element element : elements) {
-                            LimitResponse.Builder responseBuilder = LimitResponse.builder();
-
-                            if (element.getGeometry() != null && !element.getGeometry().isEmpty()) {
-                                responseBuilder.setCoords(element.getGeometry());
-                            } else if (element != bestMatch) {
-                                /* If coords are empty and element is not the best one,
-                                no need to continue for cache */
-                                break;
-                            }
-
-                            responseBuilder.setTimestamp(System.currentTimeMillis());
-
-                            //Get road names
-                            Tags tags = element.getTags();
-                            responseBuilder.setRoadName(parseOsmRoadName(tags));
-
-                            //Get speed limit
-                            String maxspeed = tags.getMaxspeed();
-                            if (maxspeed != null) {
-                                responseBuilder.setSpeedLimit(parseOsmSpeedLimit(useMetric, maxspeed));
-                            }
-
-                            LimitResponse response = responseBuilder.build();
-
-                            //Cache
-                            LimitCache.getInstance(context).put(response);
-
-                            if (element == bestMatch) {
-                                bestResponse = response;
-                            }
-                        }
-
-                        if (bestResponse != null) {
-                            return Observable.just(bestResponse);
-                        }
-
+                    if (elements.isEmpty()) {
                         return Observable.empty();
                     }
+
+                    Element bestMatch = getBestElement(elements);
+                    LimitResponse bestResponse = null;
+
+                    for (Element element : elements) {
+                        LimitResponse.Builder responseBuilder = LimitResponse.builder();
+
+                        //Get coords
+                        if (element.getGeometry() != null && !element.getGeometry().isEmpty()) {
+                            responseBuilder.setCoords(element.getGeometry());
+                        } else if (element != bestMatch) {
+                            /* If coords are empty and element is not the best one,
+                            no need to continue parsing info for cache. Skip to next element. */
+                            continue;
+                        }
+
+                        responseBuilder.setTimestamp(System.currentTimeMillis());
+
+                        //Get road names
+                        Tags tags = element.getTags();
+                        responseBuilder.setRoadName(parseOsmRoadName(tags));
+
+                        //Get speed limit
+                        String maxspeed = tags.getMaxspeed();
+                        if (maxspeed != null) {
+                            responseBuilder.setSpeedLimit(parseOsmSpeedLimit(useMetric, maxspeed));
+                        }
+
+                        LimitResponse response = responseBuilder.build();
+
+                        //Cache
+                        LimitCache.getInstance(context).put(response);
+
+                        if (element == bestMatch) {
+                            bestResponse = response;
+                        }
+                    }
+
+                    if (bestResponse != null) {
+                        return Observable.just(bestResponse);
+                    }
+
+                    return Observable.empty();
                 });
     }
 
@@ -383,9 +408,16 @@ public class LimitFetcher {
         FirebaseAnalytics.getInstance(context).logEvent(key, bundle);
     }
 
+    /**
+     * Returns and caches response (regardless of whether there is speed limit),
+     * or empty if there is no road information
+     */
     private Observable<LimitResponse> getHereSpeedLimit(final Location location) {
         final String query = location.getLatitude() + "," + location.getLongitude();
-        return hereService.getLinkInfo(query, context.getString(R.string.here_app_id), context.getString(R.string.here_app_code))
+
+        String[] array = PrefUtils.getHereCodes(context).split(",");
+
+        return hereService.getLinkInfo(query, "roadName", array[0], array[1])
                 .subscribeOn(Schedulers.io())
                 .doOnSubscribe(this::logHereRequest)
                 .map(linkInfo -> {
@@ -396,9 +428,13 @@ public class LimitFetcher {
                         return responseBuilder.build();
                     }
 
+                    responseBuilder.setTimestamp(System.currentTimeMillis());
+
                     Link link = linkInfo.getResponse().getLink().get(0);
-                    if (link.getAddress() != null) {
+                    if (link.getRoadName() != null && !link.getRoadName().isEmpty()) {
                         responseBuilder.setRoadName(parseHereRoadName(link));
+                    } else {
+                        responseBuilder.setRoadName("null - null");
                     }
                     if (link.getSpeedLimit() != null && link.getSpeedLimit() != 0) {
                         double factor = PrefUtils.getUseMetric(context) ? 3.6 : 2.23;
@@ -425,12 +461,17 @@ public class LimitFetcher {
 
     @NonNull
     private String parseHereRoadName(Link link) {
-        return link.getAddress().getLabel() + " - " + link.getAddress().getStreet();
+        return "null - " + link.getRoadName();
     }
 
     private void logHereRequest() {
-        if (!BuildConfig.DEBUG)
+        if (!BuildConfig.DEBUG) {
             Answers.getInstance().logCustom(new CustomEvent("HERE Request"));
+        }
+
+        Bundle bundle = new Bundle();
+        String key = "here_request";
+        FirebaseAnalytics.getInstance(context).logEvent(key, bundle);
     }
 
 }

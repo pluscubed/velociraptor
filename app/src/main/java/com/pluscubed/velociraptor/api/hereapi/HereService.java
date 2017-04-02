@@ -6,5 +6,8 @@ import rx.Single;
 
 public interface HereService {
     @GET("getlinkinfo.json")
-    Single<LinkInfo> getLinkInfo(@Query("waypoint") String waypoint, @Query("app_id") String appId, @Query("app_code") String appCode);
+    Single<LinkInfo> getLinkInfo(@Query("waypoint") String waypoint,
+                                 @Query("linkattributes") String linkattributes,
+                                 @Query("app_id") String appId,
+                                 @Query("app_code") String appCode);
 }
