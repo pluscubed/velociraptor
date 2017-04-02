@@ -121,6 +121,9 @@ public class LimitService extends Service {
             if (intent.getExtras() != null && intent.getExtras().containsKey(EXTRA_HIDE_LIMIT)) {
                 isLimitHidden = intent.getBooleanExtra(EXTRA_HIDE_LIMIT, false);
                 speedLimitView.hideLimit(isLimitHidden);
+                if (isLimitHidden) {
+                    lastSpeedLimit = -1;
+                }
             }
 
             if (intent.getBooleanExtra(EXTRA_NOTIF_START, false)) {

@@ -20,7 +20,6 @@ import java.util.List;
 import io.fabric.sdk.android.Fabric;
 import rx.Observable;
 import rx.SingleSubscriber;
-import rx.functions.Func1;
 import timber.log.Timber;
 
 public class App extends Application {
@@ -51,12 +50,7 @@ public class App extends Application {
 
         if (PrefUtils.isFirstRun(this)) {
             SelectedAppDatabase.getMapApps(this)
-                    .flatMapObservable(new Func1<List<AppInfo>, Observable<AppInfo>>() {
-                        @Override
-                        public Observable<AppInfo> call(List<AppInfo> mapInfos) {
-                            return Observable.from(mapInfos);
-                        }
-                    })
+                    .flatMapObservable(Observable::from)
                     .filter(appInfoEntity ->
                             appInfoEntity.packageName != null &&
                                     !appInfoEntity.packageName.isEmpty())

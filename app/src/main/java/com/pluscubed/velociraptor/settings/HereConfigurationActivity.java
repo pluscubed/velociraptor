@@ -155,6 +155,10 @@ public class HereConfigurationActivity extends AppCompatActivity {
     private void showWebView(boolean show) {
         ButterKnife.apply(initialSelectionViews, VISIBILITY, show ? View.GONE : View.VISIBLE);
         webview.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
+        if (!show) {
+            progressBar.setVisibility(View.GONE);
+            showGuideText(0);
+        }
     }
 
     private void showGuideText(int resId) {
@@ -245,7 +249,6 @@ public class HereConfigurationActivity extends AppCompatActivity {
 
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            Timber.e("sadf " + url);
             return false;
         }
 
