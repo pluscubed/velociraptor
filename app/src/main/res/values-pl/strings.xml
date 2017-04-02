@@ -11,6 +11,7 @@
     <string name="kmph">%s km/h</string>
     <string name="mph">%s mph</string>
     <string name="percent">%s%%</string>
+    <string name="grant">Zezwól</string>
     <string name="notif_content">Kliknij, aby otworzyć ustawienia</string>
     <string name="notif_title">Monitor Velociraptora jest uruchomiony</string>
     <!--Permission Settings-->
@@ -45,6 +46,7 @@
     <string name="plus">plus</string>
     <string name="or">lub</string>
     <string name="tolerance_desc">%1$s %2$s %3$s</string>
+    <string name="tip_tap_hide">Wskazówka: Dotknij oznaczenia, aby tymczasowo go ukryć!</string>
     <!--About Dialog-->
     <string name="about">O aplikacji</string>
     <string name="about_dialog_title">Velociraptor v%s</string>
@@ -66,12 +68,9 @@ Aplikacja stworzona przez <b>Daniel Ciao</b><br/>
 <a href=\'https://github.com/pluscubed/velociraptor\'>GitHub</a> - pliki źródłowe, problemy oraz prośby zmian<br/>
 <a href=\'http://pluscubed.oneskyapp.com/collaboration/project/64120\'>OneSky</a> - przetłumacz aplikację na swój język
 <a href=\'https://play.google.com/apps/testing/com.pluscubed.velociraptor\'>Beta testy</a> - wypróbuj przyszłych wydań]]></string>
-    <!--Wrong or missing speed limit-->
-    <string name="wrong_speed_limit">Nieprawidłowe lub brakujące ograniczenie prędkości?</string>
+    <!--Speed limit providers-->
     <string name="check_coverage">Dotknij, aby sprawdzić, czy twój obszar jest pokryty</string>
     <string name="open_coverage_map_failed">Nie można otworzyć łącza. Proszę przejść ręcznie do http://product.itoworld.com/map/124.</string>
-    <string name="help_edit">Pomóż edytować dane o ograniczeniu prędkości</string>
-    <string name="wrong_speed_limit_desc">Otwórz OpenStreetMap na komputerze. Dotknij, aby udostępnić link (https://openstreetmap.org)</string>
     <!--Activation Settings-->
     <string name="select_overlay_usage">Aktywacja</string>
     <string name="automatically_show">Pokaż/ukryj w określonych aplikacjach</string>
@@ -79,6 +78,12 @@ Aplikacja stworzona przez <b>Daniel Ciao</b><br/>
     <string name="persistent_notification_controls">Pokaż kontrolę powiadomień</string>
     <string name="controls_notif_title">Kontrola Velociraptor</string>
     <string name="controls_notif_desc">Pokazywanie lub ukrywanie monitora o ograniczeniu prędkości</string>
+    <string name="gmaps_only_nav">Google Maps: Tylko w nawigacji</string>
+    <string name="gmaps_only_nav_notif_access">Aby korzystać z tej funkcji, Velociraptor potrzebuje dostępu do powiadomień, aby sprawdzać, kiedy nawigacja Google Maps jest otwarta</string>
+    <string name="gmaps_only_nav_jellybean">Funkcja dostępna tylko dla Androida 4.3+</string>
+    <string name="open_settings_failed_notif_access">"Nie można otworzyć ustawienia. Proszę włączyć ręcznie ustawienie \"Dostęp do Powiadomień\" dla Velociraptor.
+"</string>
+    <string name="tip_qs_tile">Porada: Dodaj kafelek szybkich ustawień Velociraptora!</string>
     <!--App selection-->
     <string name="select_apps">Wybierz aplikacje</string>
     <string name="show_map_apps">Pokaż aplikacje map</string>
@@ -108,5 +113,9 @@ Można przekazać za pomocą PayPal  <a href="https://www.paypal.com/cgi-bin/web
     <string name="auto_not_available">Aby skorzystać z integracji z Android Auto, pobierz Velociraptor AA z APKMirror</string>
     <!--Tile-->
     <string name="open_settings">Otwórz ustawienia</string>
+    <!--Wrong or missing speed limit-->
+    <string name="wrong_speed_limit">Nieprawidłowe lub brakujące ograniczenie prędkości?</string>
     <string name="check_coverage_desc">Jeśli tak, a ograniczenie prędkości nie jest widoczne, to może być błąd. Użyj opcji statystyki debugowania i przycisk info, aby wysłać wiadomość.</string>
+    <string name="help_edit">Pomóż edytować dane o ograniczeniu prędkości</string>
+    <string name="wrong_speed_limit_desc">Otwórz OpenStreetMap na komputerze. Dotknij, aby udostępnić link (https://openstreetmap.org)</string>
 </resources>

@@ -11,6 +11,7 @@
     <string name="kmph">%s km/h</string>
     <string name="mph">%s mph</string>
     <string name="percent">%s%%</string>
+    <string name="grant">Verlenen</string>
     <string name="notif_content">Tik om instellingen te openen</string>
     <string name="notif_title">Velociraptor actief</string>
     <!--Permission Settings-->
@@ -45,6 +46,7 @@
     <string name="plus">plus</string>
     <string name="or">of</string>
     <string name="tolerance_desc">%1$s %2$s %3$s</string>
+    <string name="tip_tap_hide">Tip: tik op het bordje om het tijdelijk te verbergen!</string>
     <!--About Dialog-->
     <string name="about">Over</string>
     <string name="about_dialog_title">Velociraptor v%s</string>
@@ -65,12 +67,9 @@
 
         <a href=\'https://github.com/pluscubed/velociraptor\'>GitHub</a> - bron, issues, feature requests<br/>
         <a href=\'http://pluscubed.oneskyapp.com/collaboration/project/64120\'>OneSky</a> - vertaal de app in uw taal]]></string>
-    <!--Wrong or missing speed limit-->
-    <string name="wrong_speed_limit">Verkeerde of missende snelheidslimiet?</string>
+    <!--Speed limit providers-->
     <string name="check_coverage">Tik om te controleren of uw gebied is gedekt</string>
     <string name="open_coverage_map_failed">Kan link niet openen. Ga naar http://product.itoworld.com/map/124</string>
-    <string name="help_edit">Help met bewerken van de maximumsnelheid</string>
-    <string name="wrong_speed_limit_desc">Ga op de computer naar OpenStreetMap. Tik hier om link te delen (https://openstreetmap.org)</string>
     <!--Activation Settings-->
     <string name="select_overlay_usage">Activeren</string>
     <string name="automatically_show">Weergeven/verbergen in bepaalde apps</string>
@@ -78,6 +77,11 @@
     <string name="persistent_notification_controls">Melding met opties weergeven</string>
     <string name="controls_notif_title">Velociraptor bediening</string>
     <string name="controls_notif_desc">Snelheidsmonitor weergeven of verbergen</string>
+    <string name="gmaps_only_nav">Google Maps: alleen tijdens navigeren</string>
+    <string name="gmaps_only_nav_notif_access">Om deze functie te gebruiken heeft Velociraptor toegang tot meldingen nodig om te kunnen controleren of Google Maps aan het navigeren is</string>
+    <string name="gmaps_only_nav_jellybean">Alleen beschikbaar voor Android 4.3+</string>
+    <string name="open_settings_failed_notif_access">Kan instellingen niet openen. Schakel de toegang tot meldingen handmatig in voor Velociraptor.</string>
+    <string name="tip_qs_tile">Tip: Voeg de Velociraptor-tegel toe aan Snelle instellingen!</string>
     <!--App selection-->
     <string name="select_apps">Apps selecteren</string>
     <string name="show_map_apps">Kaart-apps weergeven</string>
@@ -106,6 +110,11 @@
     <string name="android_auto_instruction_dialog">Velociraptor fungeert als een berichten-app voor Android Auto. Android Auto moet op de voorgrond draaien. Om de meldingsgeluiden te stoppen, tikt u eenmalig op sluiten of beantwoorden.</string>
     <string name="auto_not_available">Voor Android Auto-integratie, download Velociraptor AA van APKMirror</string>
     <!--Tile-->
+    <string name="tile_name">Velociraptor aan/uit</string>
     <string name="open_settings">Instellingen openen</string>
+    <!--Wrong or missing speed limit-->
+    <string name="wrong_speed_limit">Verkeerde of missende snelheidslimiet?</string>
     <string name="check_coverage_desc">Zo ja en de maximumsnelheid wordt niet weergegeven, dan kan het een bug te zijn. Gebruik de debugging-optie en de info-knop om feedback te versturen.</string>
+    <string name="help_edit">Help met bewerken van de maximumsnelheid</string>
+    <string name="wrong_speed_limit_desc">Ga op de computer naar OpenStreetMap. Tik hier om link te delen (https://openstreetmap.org)</string>
 </resources>
