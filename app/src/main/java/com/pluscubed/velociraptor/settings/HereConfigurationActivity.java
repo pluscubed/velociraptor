@@ -24,6 +24,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.pluscubed.velociraptor.R;
 import com.pluscubed.velociraptor.utils.PrefUtils;
 import com.pluscubed.velociraptor.utils.Utils;
@@ -125,6 +126,9 @@ public class HereConfigurationActivity extends AppCompatActivity {
         showWebView(false);
 
         signupButton.setOnClickListener(v -> {
+            String key = "here_sign_up_clicked";
+            FirebaseAnalytics.getInstance(HereConfigurationActivity.this).logEvent(key, new Bundle());
+
             showWebView(true);
             String uriString = "https://developer.here.com/plans?create=Public_Free_Plan_Monthly&keepState=true&step=account";
             webview.loadUrl(uriString);
@@ -237,6 +241,9 @@ public class HereConfigurationActivity extends AppCompatActivity {
                 hereIdEditText.setText(hereId);
                 hereCodeEditText.setText(hereCode);
                 showGuideText(0);
+
+                String key = "here_codes_entered";
+                FirebaseAnalytics.getInstance(HereConfigurationActivity.this).logEvent(key, new Bundle());
             });
         } else {
             webview.postDelayed(HereConfigurationActivity.this::checkElementExist, RETRY_DELAY_MILLIS);
