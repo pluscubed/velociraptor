@@ -7,12 +7,10 @@ buildscript {
     dependencies {
         classpath 'io.fabric.tools:gradle:1.22.1'
         classpath 'com.squareup.sqldelight:gradle-plugin:0.6.1'
-        classpath 'me.tatarka:gradle-retrolambda:3.6.0'
     }
 }
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
-apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.squareup.sqldelight'
 
 android {
@@ -127,7 +125,7 @@ dependencies {
 
     compile 'com.afollestad.material-dialogs:core:0.9.4.2'
 
-    compile 'com.anjlab.android.iab.v3:library:1.0.38'
+    compile 'com.anjlab.android.iab.v3:library:1.0.39'
 
     compile 'io.reactivex:rxandroid:1.2.1'
     compile 'io.reactivex:rxjava:1.2.9'

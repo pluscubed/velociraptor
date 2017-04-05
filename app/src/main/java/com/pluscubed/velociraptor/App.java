@@ -21,6 +21,7 @@ import java.util.List;
 import io.fabric.sdk.android.Fabric;
 import rx.Observable;
 import rx.SingleSubscriber;
+import rx.plugins.RxJavaHooks;
 import timber.log.Timber;
 
 public class App extends Application {
@@ -28,6 +29,8 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        RxJavaHooks.enableAssemblyTracking();
 
         Crashlytics crashlyticsKit = new Crashlytics.Builder()
                 .core(new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build())
