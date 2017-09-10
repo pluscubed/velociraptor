@@ -13,7 +13,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
@@ -41,8 +40,6 @@ import com.anjlab.android.iab.v3.TransactionDetails;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.pluscubed.velociraptor.AppDetectionService;
 import com.pluscubed.velociraptor.BuildConfig;
 import com.pluscubed.velociraptor.R;
@@ -68,8 +65,8 @@ public class SettingsActivity extends AppCompatActivity {
     public static final int NOTIFICATION_CONTROLS = 42;
     public static final String[] SUBSCRIPTIONS = new String[]{"sub_1", "sub_2"};
     public static final String[] PURCHASES = new String[]{"badge_1", "badge_2", "badge_3", "badge_4", "badge_5"};
+    public static final String OSM_COVERAGE_URL = "http://product.itoworld.com/map/124";
     private static final int REQUEST_LOCATION = 105;
-
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
@@ -189,36 +186,22 @@ public class SettingsActivity extends AppCompatActivity {
             qsTipView.setVisibility(View.GONE);
         }
 
-        checkCoverageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FusedLocationProviderClient fusedLocationProvider = LocationServices.getFusedLocationProviderClient(SettingsActivity.this);
-                try {
-                    fusedLocationProvider
-                            .getLastLocation()
-                            .addOnCompleteListener(SettingsActivity.this, new OnCompleteListener<Location>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Location> task) {
-                                    String uriString = "http://product.itoworld.com/map/124";
-                                    if (Utils.isLocationPermissionGranted(SettingsActivity.this)) {
-                                        if (task.isSuccessful() && task.getResult() != null) {
-                                            Location lastLocation = task.getResult();
-                                            uriString += "?lon=" + lastLocation.getLongitude() + "&lat=" + lastLocation.getLatitude() + "&zoom=12";
-                                        }
-                                    }
-                                    Intent intent = new Intent();
-                                    intent.setData(Uri.parse(uriString));
-                                    intent.setAction(Intent.ACTION_VIEW);
-                                    try {
-                                        SettingsActivity.this.startActivity(intent);
-                                    } catch (ActivityNotFoundException e) {
-                                        Snackbar.make(enableFloatingButton, R.string.open_coverage_map_failed, Snackbar.LENGTH_LONG).show();
-                                    }
-                                }
-                            });
-                } catch (SecurityException e) {
-                    Snackbar.make(SettingsActivity.this.findViewById(android.R.id.content), "Velociraptor doesn't have location permission", Snackbar.LENGTH_LONG).show();
-                }
+        checkCoverageView.setOnClickListener(v -> {
+            if (Utils.isLocationPermissionGranted(SettingsActivity.this)) {
+                FusedLocationProviderClient fusedLocationProvider =
+                        LocationServices.getFusedLocationProviderClient(SettingsActivity.this);
+                fusedLocationProvider
+                        .getLastLocation()
+                        .addOnCompleteListener(SettingsActivity.this, task -> {
+                            String uriString = OSM_COVERAGE_URL;
+                            if (task.isSuccessful() && task.getResult() != null) {
+                                Location lastLocation = task.getResult();
+                                uriString += "?lon=" + lastLocation.getLongitude() + "&lat=" + lastLocation.getLatitude() + "&zoom=12";
+                            }
+                            openCoverageMap(uriString);
+                        });
+            } else {
+                openCoverageMap(OSM_COVERAGE_URL);
             }
         });
 
@@ -499,6 +482,17 @@ public class SettingsActivity extends AppCompatActivity {
 
         PrefUtils.setFirstRun(this, false);
         PrefUtils.setVersionCode(this, BuildConfig.VERSION_CODE);
+    }
+
+    private void openCoverageMap(String uriString) {
+        Intent intent = new Intent();
+        intent.setData(Uri.parse(uriString));
+        intent.setAction(Intent.ACTION_VIEW);
+        try {
+            SettingsActivity.this.startActivity(intent);
+        } catch (ActivityNotFoundException e) {
+            Snackbar.make(enableFloatingButton, R.string.open_coverage_map_failed, Snackbar.LENGTH_LONG).show();
+        }
     }
 
     private boolean isNotificationAccessGranted() {

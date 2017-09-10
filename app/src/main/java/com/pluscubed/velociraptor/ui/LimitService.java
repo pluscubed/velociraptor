@@ -1,6 +1,5 @@
 package com.pluscubed.velociraptor.ui;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -9,7 +8,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.location.Location;
 import android.location.LocationManager;
@@ -21,7 +19,6 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.NotificationCompat;
 import android.widget.Toast;
@@ -196,7 +193,7 @@ public class LimitService extends Service {
     }
 
     private boolean prequisitesMet() {
-        if (ContextCompat.checkSelfPermission(LimitService.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+        if (!Utils.isLocationPermissionGranted(LimitService.this)
                 || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this))) {
             showToast(getString(R.string.permissions_warning));
             stopSelf();
