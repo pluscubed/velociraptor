@@ -15,8 +15,6 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.pluscubed.velociraptor.BuildConfig;
 import com.pluscubed.velociraptor.R;
-import com.pluscubed.velociraptor.api.hereapi.HereService;
-import com.pluscubed.velociraptor.api.hereapi.Link;
 import com.pluscubed.velociraptor.api.osmapi.Coord;
 import com.pluscubed.velociraptor.api.osmapi.Element;
 import com.pluscubed.velociraptor.api.osmapi.OsmResponse;
@@ -47,13 +45,11 @@ public class LimitFetcher {
     public static final String FB_CONFIG_OSM_APIS = "osm_apis";
     public static final String FB_CONFIG_OSM_API_ENABLED_PREFIX = "osm_api";
     public static final int OSM_RADIUS = 15;
-    private static final String HERE_ROUTING_API = "https://route.api.here.com/routing/7.2/";
     private final List<OsmApiEndpoint> osmOverpassApis;
     private final ObjectMapper objectMapper;
 
     private Context context;
     private OsmService osmService;
-    private HereService hereService;
     private OsmInterceptor osmInterceptor;
 
     private LimitResponse lastResponse;
@@ -87,10 +83,6 @@ public class LimitFetcher {
             builder.addInterceptor(loggingInterceptor);
         }
         OkHttpClient client = builder.build();
-
-        OkHttpClient hereClient = client.newBuilder().build();
-        Retrofit hereRest = buildRetrofit(hereClient, HERE_ROUTING_API);
-        hereService = hereRest.create(HereService.class);
 
         osmInterceptor = new OsmInterceptor();
         OkHttpClient osmClient = client.newBuilder()
@@ -152,53 +144,24 @@ public class LimitFetcher {
     }
 
     public String getApiInformation() {
-        String text = "";
+        StringBuilder text = new StringBuilder();
         synchronized (osmOverpassApis) {
             for (OsmApiEndpoint endpoint : osmOverpassApis) {
-                text += (endpoint.toString() + "\n");
+                text.append(endpoint.toString()).append("\n");
             }
         }
-        return text;
+        return text.toString();
     }
 
     public Single<LimitResponse> getSpeedLimit(Location location) {
         //TODO: Restructure as stream of error/missing/completed responses
 
-        Observable<LimitResponse> query;
-
-        String[] hereCodes = PrefUtils.getHereCodes(context).split(",");
-        if (hereCodes.length == 2) {
-            query = getHereSpeedLimit(location);
-        } else {
-            query = getOsmSpeedLimit(location);
-        }
+        Observable<LimitResponse> query = getOsmSpeedLimit(location);
 
         //Delay query if the last response was received less than 5 seconds ago
         if (lastNetworkResponse != null) {
             long delay = 5000 - (System.currentTimeMillis() - lastNetworkResponse.timestamp());
             query = query.delaySubscription(delay, TimeUnit.MILLISECONDS);
-        }
-
-        if (hereCodes.length == 2) {
-            query = query
-                    .onErrorReturn(throwable -> {
-                        if (!BuildConfig.DEBUG) {
-                            if (throwable instanceof IOException) {
-                                Answers.getInstance().logCustom(new CustomEvent("Network Error")
-                                        .putCustomAttribute("Server", "HERE")
-                                        .putCustomAttribute("Message", throwable.getMessage()));
-                            }
-                            Crashlytics.logException(throwable);
-                        }
-                        return LimitResponse.builder().build();
-                    })
-                    .flatMap(limitResponse -> {
-                        if (limitResponse.speedLimit() == -1) {
-                            return getOsmSpeedLimit(location);
-                        } else {
-                            return Observable.just(limitResponse);
-                        }
-                    });
         }
 
         query = query.defaultIfEmpty(LimitResponse.builder().build());
@@ -405,72 +368,6 @@ public class LimitFetcher {
 
         Bundle bundle = new Bundle();
         String key = "osm_request_" + Uri.parse(endpoint.baseUrl).getAuthority().replace(".", "_").replace("-", "_");
-        FirebaseAnalytics.getInstance(context).logEvent(key, bundle);
-    }
-
-    /**
-     * Returns and caches response (regardless of whether there is speed limit),
-     * or empty if there is no road information
-     */
-    private Observable<LimitResponse> getHereSpeedLimit(final Location location) {
-        final String query = location.getLatitude() + "," + location.getLongitude();
-
-        String[] array = PrefUtils.getHereCodes(context).split(",");
-
-        return hereService.getLinkInfo(query, "roadName", array[0], array[1])
-                .subscribeOn(Schedulers.io())
-                .doOnSubscribe(this::logHereRequest)
-                .map(linkInfo -> {
-                    LimitResponse.Builder responseBuilder = LimitResponse.builder()
-                            .setFromHere(true);
-
-                    if (linkInfo == null) {
-                        return responseBuilder.build();
-                    }
-
-                    responseBuilder.setTimestamp(System.currentTimeMillis());
-
-                    Link link = linkInfo.getResponse().getLink().get(0);
-                    if (link.getRoadName() != null && !link.getRoadName().isEmpty()) {
-                        responseBuilder.setRoadName(parseHereRoadName(link));
-                    } else {
-                        responseBuilder.setRoadName("null - null");
-                    }
-                    if (link.getSpeedLimit() != null && link.getSpeedLimit() != 0) {
-                        double factor = PrefUtils.getUseMetric(context) ? 3.6 : 2.23;
-                        responseBuilder.setSpeedLimit((int) (link.getSpeedLimit() * factor + 0.5d));
-                    }
-                    if (link.getShape().size() >= 2) {
-                        List<Coord> coordsList = new ArrayList<>();
-                        for (String coords : link.getShape()) {
-                            String[] coordsSplit = coords.split(",");
-                            double lat = Double.parseDouble(coordsSplit[0]);
-                            double lon = Double.parseDouble(coordsSplit[1]);
-                            Coord coord = new Coord(lat, lon);
-                            coordsList.add(coord);
-                        }
-                        responseBuilder.setCoords(coordsList);
-                    }
-
-                    LimitResponse response = responseBuilder.build();
-                    LimitCache.getInstance(context).put(response);
-
-                    return response;
-                }).toObservable();
-    }
-
-    @NonNull
-    private String parseHereRoadName(Link link) {
-        return "null - " + link.getRoadName();
-    }
-
-    private void logHereRequest() {
-        if (!BuildConfig.DEBUG) {
-            Answers.getInstance().logCustom(new CustomEvent("HERE Request"));
-        }
-
-        Bundle bundle = new Bundle();
-        String key = "here_request";
         FirebaseAnalytics.getInstance(context).logEvent(key, bundle);
     }
 

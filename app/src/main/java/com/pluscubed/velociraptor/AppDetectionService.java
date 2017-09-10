@@ -31,8 +31,6 @@ public class AppDetectionService extends AccessibilityService {
     private Set<String> enabledApps;
     private boolean isGmapsNavigating;
 
-    private long lastTimestamp;
-
     public static AppDetectionService get() {
         return INSTANCE;
     }
@@ -107,8 +105,6 @@ public class AppDetectionService extends AccessibilityService {
                 shouldStartService = false;
             } else {
                 enableGoogleMapsMonitoring(true);
-
-                lastTimestamp = System.currentTimeMillis();
 
                 if (searchGmapsSpeedLimitSign(getRootInActiveWindow())) {
                     intent.putExtra(LimitService.EXTRA_HIDE_LIMIT, true);

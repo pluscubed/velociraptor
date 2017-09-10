@@ -13,7 +13,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.annotation.Nullable;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
@@ -38,8 +38,11 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.anjlab.android.iab.v3.BillingProcessor;
 import com.anjlab.android.iab.v3.SkuDetails;
 import com.anjlab.android.iab.v3.TransactionDetails;
-import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.oss.licenses.OssLicensesMenuActivity;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.pluscubed.velociraptor.AppDetectionService;
 import com.pluscubed.velociraptor.BuildConfig;
 import com.pluscubed.velociraptor.R;
@@ -150,9 +153,7 @@ public class SettingsActivity extends AppCompatActivity {
     @BindView(R.id.spinner_style)
     Spinner styleSpinner;
 
-    //HERE/OpenStreetMap edit
-    @BindView(R.id.linear_here)
-    LinearLayout configureHereView;
+    //OpenStreetMap edit
     @BindView(R.id.check_coverage)
     LinearLayout checkCoverageView;
 
@@ -163,7 +164,6 @@ public class SettingsActivity extends AppCompatActivity {
 
     private NotificationManager notificationManager;
     private BillingProcessor billingProcessor;
-    private GoogleApiClient googleApiClient;
 
     @Override
     protected void onDestroy() {
@@ -189,48 +189,36 @@ public class SettingsActivity extends AppCompatActivity {
             qsTipView.setVisibility(View.GONE);
         }
 
-        configureHereView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(SettingsActivity.this, HereConfigurationActivity.class));
-            }
-        });
-
         checkCoverageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                googleApiClient = new GoogleApiClient.Builder(SettingsActivity.this)
-                        .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
-                            @Override
-                            @SuppressWarnings("MissingPermission")
-                            public void onConnected(@Nullable Bundle bundle) {
-                                String uriString = "http://product.itoworld.com/map/124";
-                                if (Utils.isLocationPermissionGranted(SettingsActivity.this)) {
-                                    Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
-                                    if (lastLocation != null) {
-                                        uriString += "?lon=" + lastLocation.getLongitude() + "&lat=" + lastLocation.getLatitude() + "&zoom=12";
+                FusedLocationProviderClient fusedLocationProvider = LocationServices.getFusedLocationProviderClient(SettingsActivity.this);
+                try {
+                    fusedLocationProvider
+                            .getLastLocation()
+                            .addOnCompleteListener(SettingsActivity.this, new OnCompleteListener<Location>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Location> task) {
+                                    String uriString = "http://product.itoworld.com/map/124";
+                                    if (Utils.isLocationPermissionGranted(SettingsActivity.this)) {
+                                        if (task.isSuccessful() && task.getResult() != null) {
+                                            Location lastLocation = task.getResult();
+                                            uriString += "?lon=" + lastLocation.getLongitude() + "&lat=" + lastLocation.getLatitude() + "&zoom=12";
+                                        }
+                                    }
+                                    Intent intent = new Intent();
+                                    intent.setData(Uri.parse(uriString));
+                                    intent.setAction(Intent.ACTION_VIEW);
+                                    try {
+                                        SettingsActivity.this.startActivity(intent);
+                                    } catch (ActivityNotFoundException e) {
+                                        Snackbar.make(enableFloatingButton, R.string.open_coverage_map_failed, Snackbar.LENGTH_LONG).show();
                                     }
                                 }
-                                Intent intent = new Intent();
-                                intent.setData(Uri.parse(uriString));
-                                intent.setAction(Intent.ACTION_VIEW);
-                                try {
-                                    startActivity(intent);
-                                } catch (ActivityNotFoundException e) {
-                                    Snackbar.make(enableFloatingButton, R.string.open_coverage_map_failed, Snackbar.LENGTH_LONG).show();
-                                }
-
-                                googleApiClient.disconnect();
-                            }
-
-                            @Override
-                            public void onConnectionSuspended(int i) {
-                            }
-                        })
-                        .addApi(LocationServices.API)
-                        .build();
-
-                googleApiClient.connect();
+                            });
+                } catch (SecurityException e) {
+                    Snackbar.make(SettingsActivity.this.findViewById(android.R.id.content), "Velociraptor doesn't have location permission", Snackbar.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -615,6 +603,8 @@ public class SettingsActivity extends AppCompatActivity {
                 .title(getString(R.string.about_dialog_title, BuildConfig.VERSION_NAME))
                 .positiveText(R.string.dismiss)
                 .content(Html.fromHtml(getString(R.string.about_body)))
+                .neutralText(R.string.licenses)
+                .onNeutral((dialog, which) -> startActivity(new Intent(SettingsActivity.this, OssLicensesMenuActivity.class)))
                 .iconRes(R.mipmap.ic_launcher)
                 .show();
     }

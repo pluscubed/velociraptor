@@ -53,27 +53,6 @@ public class LimitCache {
         return Math.abs(Math.asin(Math.sin(a.distanceTo(x) / 6371008) * Math.sin(Math.toRadians(a.bearingTo(x) - a.bearingTo(b)))) * 6371008);
     }
 
-    /*private static boolean isOnSegment(Coord p1, Coord p2, Coord t) {
-        Location a = p1.toLocation();
-        Location b = p2.toLocation();
-        Location x = t.toLocation();
-
-        double ab = a.distanceTo(b);
-        //If difference between straight line and going through point is than 8 meters
-        return Math.abs(ab - a.distanceTo(x) - x.distanceTo(b)) < 8;
-    }*/
-
-    private static Coord getCentroid(LimitResponse response) {
-        Coord centroid = new Coord();
-        for (Coord coord : response.coords()) {
-            centroid.lat += coord.lat;
-            centroid.lon += coord.lon;
-        }
-        centroid.lat /= response.coords().size();
-
-        return centroid;
-    }
-
     public void put(LimitResponse response) {
         if (response.coords().isEmpty()) {
             return;

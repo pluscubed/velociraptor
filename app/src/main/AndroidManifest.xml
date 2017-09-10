@@ -34,7 +34,12 @@
 
         <activity android:name=".settings.appselection.AppSelectionActivity" />
 
-        <activity android:name=".settings.HereConfigurationActivity" />
+        <activity
+            android:name="com.google.android.gms.oss.licenses.OssLicensesMenuActivity"
+            android:theme="@style/Theme.AppCompat.Light" />
+        <activity
+            android:name="com.google.android.gms.oss.licenses.OssLicensesActivity"
+            android:theme="@style/Theme.AppCompat.Light" />
 
         <service android:name=".ui.LimitService" />
 

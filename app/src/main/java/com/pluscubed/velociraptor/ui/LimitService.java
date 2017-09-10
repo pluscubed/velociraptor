@@ -16,24 +16,20 @@ import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.NotificationCompat;
 import android.widget.Toast;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.pluscubed.velociraptor.R;
 import com.pluscubed.velociraptor.api.LimitFetcher;
@@ -69,10 +65,10 @@ public class LimitService extends Service {
 
     private String debuggingRequestInfo;
 
-    private GoogleApiClient googleApiClient;
+    private FusedLocationProviderClient fusedLocationClient;
+    private LocationCallback locationCallback;
 
     private Subscription getSpeedLimitSubscription;
-    private LocationListener locationListener;
 
     private int lastSpeedLimit = -1;
     private Location lastLocationWithSpeed;
@@ -93,7 +89,7 @@ public class LimitService extends Service {
         return null;
     }
 
-    @SuppressLint("InflateParams")
+    @SuppressLint({"InflateParams"})
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent != null) {
@@ -144,42 +140,28 @@ public class LimitService extends Service {
 
         debuggingRequestInfo = "";
 
-        locationListener = LimitService.this::onLocationChanged;
-
         limitFetcher = new LimitFetcher(this);
 
-        googleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
-                    @Override
-                    @SuppressWarnings("MissingPermission")
-                    public void onConnected(@Nullable Bundle bundle) {
-                        LocationRequest locationRequest = new LocationRequest();
-                        locationRequest.setInterval(1000);
-                        locationRequest.setFastestInterval(0);
-                        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-                        LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, locationListener);
-                    }
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
-                    @Override
-                    public void onConnectionSuspended(int i) {
-                        if (googleApiClient != null && googleApiClient.isConnected()) {
-                            LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, locationListener).setResultCallback(new ResultCallback<Status>() {
-                                @Override
-                                public void onResult(@NonNull Status status) {
-                                }
-                            });
-                        }
-                    }
-                })
-                .addOnConnectionFailedListener(new GoogleApiClient.OnConnectionFailedListener() {
-                    @Override
-                    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-                        showToast("Velociraptor error: " + connectionResult.getErrorMessage());
-                    }
-                })
-                .addApi(LocationServices.API)
-                .build();
-        googleApiClient.connect();
+        LocationRequest locationRequest = new LocationRequest();
+        locationRequest.setInterval(1000);
+        locationRequest.setFastestInterval(0);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        locationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                super.onLocationResult(locationResult);
+                onLocationChanged(locationResult.getLastLocation());
+            }
+        };
+
+        try {
+            fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
+        } catch (SecurityException unlikely) {
+            showToast("Velociraptor cannot obtain location");
+        }
 
         notifCheckBroadcastReceiver = new BroadcastReceiver() {
             @Override
@@ -277,7 +259,6 @@ public class LimitService extends Service {
 
         if (error == null && limitResponse != null) {
             debuggingRequestInfo = ("Road name: " + limitResponse.roadName());
-            debuggingRequestInfo += "\nHERE Maps: " + limitResponse.fromHere();
             debuggingRequestInfo += "\nFrom cache: " + limitResponse.fromCache();
         } else if (error != null) {
             debuggingRequestInfo = ("Last error: " + error);
@@ -359,18 +340,13 @@ public class LimitService extends Service {
     }
 
     private void onStop() {
-        if (googleApiClient != null && googleApiClient.isConnected()) {
-            LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, locationListener).setResultCallback(new ResultCallback<Status>() {
-                @Override
-                public void onResult(@NonNull Status status) {
-                    if (googleApiClient != null && googleApiClient.isConnected()) {
-                        googleApiClient.disconnect();
-                    }
-                }
-            });
-        } else if (googleApiClient != null) {
-            googleApiClient.disconnect();
+        if (fusedLocationClient != null) {
+            try {
+                fusedLocationClient.removeLocationUpdates(locationCallback);
+            } catch (SecurityException unlikely) {
+            }
         }
+
 
         if (speedLimitView != null)
             speedLimitView.stop();

@@ -66,7 +66,7 @@
     <string name="about">About</string>
     <string name="about_dialog_title">Velociraptor v%s</string>
     <string name="about_body"><![CDATA[
-        <b>Velociraptor</b> is a floating speed limit monitor with speedometer and warning features, using OpenStreetMap and HERE Maps speed limit data.
+        <b>Velociraptor</b> is a floating speed limit monitor with speedometer and warning features, using OpenStreetMap speed limit data.
         <br/><br/>
 
         Developed by <b>Daniel Ciao</b><br/>
@@ -84,13 +84,10 @@
         <a href="http://pluscubed.oneskyapp.com/collaboration/project/64120">OneSky</a> - translate the app to your language
         <a href="https://play.google.com/apps/testing/com.pluscubed.velociraptor">Beta testing</a> - try out upcoming releases
     ]]></string>
-
+    <string name="licenses">Licenses</string>
 
     <!--Speed limit providers-->
-    <string name="speed_limit_providers">Speed limit providers</string>
-
-    <string name="configure_here_database">Configure HERE Maps database</string>
-    <string name="configure_here_database_desc">Get more accurate speed limits with a free HERE developer account. Visit <b>mapcreator.here.com</b> to add/edit speed limits</string>
+    <string name="speed_limit_providers">Speed limit provider</string>
 
     <string name="check_coverage">Check OpenStreetMap coverage</string>
     <string name="osm_edit">Visit <b>openstreetmap.org</b> on your computer to add/edit speed limits</string>
@@ -153,16 +150,6 @@
 
     <!--Tile-->
     <string name="tile_name">Toggle Velociraptor</string>
-
-
-    <!--HERE Config-->
-    <string name="here_config_step1">When finished registering, press <b>Start Coding</b></string>
-    <string name="here_config_step2">Press <b>Generate App ID and App Code</b> under the <b>JavaScript/REST</b> section</string>
-    <string name="here_config_title">HERE Database Configuration</string>
-    <string name="view_account">View account</string>
-    <string name="sign_up">Sign up</string>
-    <string name="here_app_code">HERE App Code</string>
-    <string name="here_app_id">HERE App ID</string>
 
 
 </resources>
