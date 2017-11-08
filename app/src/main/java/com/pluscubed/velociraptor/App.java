@@ -6,8 +6,6 @@ import com.bumptech.glide.Glide;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.firebase.FirebaseApp;
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
-import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.pluscubed.velociraptor.settings.appselection.AppInfo;
 import com.pluscubed.velociraptor.settings.appselection.AppInfoIconLoader;
 import com.pluscubed.velociraptor.settings.appselection.SelectedAppDatabase;
@@ -21,7 +19,6 @@ import java.util.List;
 import io.fabric.sdk.android.Fabric;
 import rx.Observable;
 import rx.SingleSubscriber;
-import rx.plugins.RxJavaHooks;
 import timber.log.Timber;
 
 public class App extends Application {
@@ -30,19 +27,12 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
 
-        RxJavaHooks.enableAssemblyTracking();
-
         Crashlytics crashlyticsKit = new Crashlytics.Builder()
                 .core(new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build())
                 .build();
         Fabric.with(this, crashlyticsKit);
 
         FirebaseApp.initializeApp(this);
-        FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
-                .setDeveloperModeEnabled(BuildConfig.DEBUG)
-                .build();
-        FirebaseRemoteConfig.getInstance().setConfigSettings(configSettings);
-
 
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());

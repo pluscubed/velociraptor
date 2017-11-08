@@ -42,9 +42,7 @@
             android:background="@color/cardview_light_background"
             android:orientation="vertical">
 
-            <include layout="@layout/activity_settings_mperm" />
-
-            <include layout="@layout/activity_settings_activation" />
+            <include layout="@layout/activity_settings_permissions" />
 
             <include layout="@layout/activity_settings_providers" />
 

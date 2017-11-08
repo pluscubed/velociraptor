@@ -5,5 +5,5 @@
     android:background="#80000000"
     android:ellipsize="none"
     android:padding="4dp"
-    android:text="@string/obtaining_gps_location"
+    android:text="Obtaining GPS location…"
     android:textColor="@android:color/white" />

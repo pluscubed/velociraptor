@@ -9,10 +9,7 @@ import android.support.annotation.NonNull;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.pluscubed.velociraptor.BuildConfig;
 import com.pluscubed.velociraptor.R;
 import com.pluscubed.velociraptor.api.osmapi.Coord;
@@ -24,9 +21,6 @@ import com.pluscubed.velociraptor.cache.LimitCache;
 import com.pluscubed.velociraptor.utils.PrefUtils;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -35,22 +29,16 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.jackson.JacksonConverterFactory;
-import rx.Completable;
 import rx.Observable;
 import rx.Single;
-import rx.schedulers.Schedulers;
 
 public class LimitFetcher {
 
-    public static final String FB_CONFIG_OSM_APIS = "osm_apis";
-    public static final String FB_CONFIG_OSM_API_ENABLED_PREFIX = "osm_api";
     public static final int OSM_RADIUS = 15;
-    private final List<OsmApiEndpoint> osmOverpassApis;
-    private final ObjectMapper objectMapper;
+    private final OsmApiEndpoint osmOverpassApi;
 
     private Context context;
     private OsmService osmService;
-    private OsmInterceptor osmInterceptor;
 
     private LimitResponse lastResponse;
     private LimitResponse lastNetworkResponse;
@@ -58,23 +46,8 @@ public class LimitFetcher {
     public LimitFetcher(Context context) {
         this.context = context;
 
-        objectMapper = new ObjectMapper();
-
-        osmOverpassApis = Collections.synchronizedList(new ArrayList<OsmApiEndpoint>());
-
         String privateApiHost = context.getString(R.string.overpass_api);
-        OsmApiEndpoint mainEndpoint = new OsmApiEndpoint(privateApiHost, true);
-        mainEndpoint.name = "velociraptor-server";
-        osmOverpassApis.add(mainEndpoint);
-
-        try {
-            addApis(FB_CONFIG_OSM_APIS);
-        } catch (IOException ignored) {
-        }
-
-        updateEndpoints()
-                .subscribeOn(Schedulers.io())
-                .subscribe();
+        osmOverpassApi = new OsmApiEndpoint(privateApiHost, "velociraptor-server");
 
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         if (BuildConfig.DEBUG) {
@@ -84,73 +57,16 @@ public class LimitFetcher {
         }
         OkHttpClient client = builder.build();
 
-        osmInterceptor = new OsmInterceptor();
+        OsmInterceptor osmInterceptor = new OsmInterceptor(osmOverpassApi);
         OkHttpClient osmClient = client.newBuilder()
                 .addInterceptor(osmInterceptor)
                 .build();
-        Retrofit osmRest = buildRetrofit(osmClient, osmOverpassApis.get(0).baseUrl);
+        Retrofit osmRest = buildRetrofit(osmClient, osmOverpassApi.baseUrl);
         osmService = osmRest.create(OsmService.class);
     }
 
-    private Completable updateEndpoints() {
-        return Completable.fromEmitter(completableEmitter -> {
-            FirebaseRemoteConfig.getInstance().fetch().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    FirebaseRemoteConfig.getInstance().activateFetched();
-                    completableEmitter.onCompleted();
-                } else {
-                    completableEmitter.onError(task.getException());
-                }
-            });
-        }).retry(3).onErrorComplete()
-                .andThen(Completable.create(completableSubscriber -> {
-                    try {
-                        addApis(FB_CONFIG_OSM_APIS);
-                        completableSubscriber.onCompleted();
-                    } catch (IOException e) {
-                        completableSubscriber.onError(e);
-                    }
-                }));
-
-    }
-
-    private void addApis(String configKey) throws IOException {
-        String apisString = FirebaseRemoteConfig.getInstance().getString(configKey);
-
-        if (apisString == null || apisString.isEmpty()) {
-            return;
-        }
-
-        String[] stringArray = objectMapper.readValue(apisString, new TypeReference<String[]>() {
-        });
-
-        synchronized (osmOverpassApis) {
-            for (Iterator<OsmApiEndpoint> iterator = osmOverpassApis.iterator(); iterator.hasNext(); ) {
-                OsmApiEndpoint endpoint = iterator.next();
-                if (endpoint.name == null) {
-                    iterator.remove();
-                }
-            }
-            for (int i = 0; i < stringArray.length; i++) {
-                String apiHost = stringArray[i];
-                boolean publicEnabled = FirebaseRemoteConfig.getInstance()
-                        .getBoolean(FB_CONFIG_OSM_API_ENABLED_PREFIX + i);
-                OsmApiEndpoint endpoint = new OsmApiEndpoint(apiHost, publicEnabled);
-                osmOverpassApis.add(endpoint);
-            }
-            Collections.shuffle(osmOverpassApis);
-            Collections.sort(osmOverpassApis);
-        }
-    }
-
     public String getApiInformation() {
-        StringBuilder text = new StringBuilder();
-        synchronized (osmOverpassApis) {
-            for (OsmApiEndpoint endpoint : osmOverpassApis) {
-                text.append(endpoint.toString()).append("\n");
-            }
-        }
-        return text.toString();
+        return osmOverpassApi.toString();
     }
 
     public Single<LimitResponse> getSpeedLimit(Location location) {
@@ -208,18 +124,7 @@ public class LimitFetcher {
      * or empty if there is no road information
      */
     private Observable<LimitResponse> getOsmSpeedLimit(final Location location) {
-        final List<OsmApiEndpoint> endpoints = new ArrayList<>(osmOverpassApis);
-
-        for (Iterator<OsmApiEndpoint> iterator = endpoints.iterator(); iterator.hasNext(); ) {
-            OsmApiEndpoint endpoint = iterator.next();
-            if (!endpoint.enabled) {
-                iterator.remove();
-            }
-        }
-
-        osmInterceptor.setEndpoint(endpoints.get(0));
-
-        return getOsmResponse(location, endpoints)
+        return getOsmResponse(location)
                 .flatMapObservable(osmApi -> {
                     if (osmApi == null) {
                         return Observable.error(new Exception("OSM null response"));
@@ -278,39 +183,19 @@ public class LimitFetcher {
                 });
     }
 
-    private Single<OsmResponse> getOsmResponse(Location location, final List<OsmApiEndpoint> endpoints) {
+    private Single<OsmResponse> getOsmResponse(Location location) {
         return osmService.getOsm(getOsmQuery(location))
-                .doOnSubscribe(() -> logOsmRequest(osmInterceptor.getEndpoint()))
-                .doOnEach(notification -> {
-                    synchronized (osmOverpassApis) {
-                        Collections.sort(osmOverpassApis);
-                    }
-                })
-                .retry((count, throwable) -> {
+                .doOnSubscribe(() -> logOsmRequest(osmOverpassApi))
+                .doOnError((throwable) -> {
                     if (!BuildConfig.DEBUG) {
                         if (throwable instanceof IOException) {
                             Answers.getInstance().logCustom(new CustomEvent("Network Error")
-                                    .putCustomAttribute("Server", osmInterceptor.getEndpoint().baseUrl)
+                                    .putCustomAttribute("Server", osmOverpassApi.baseUrl)
                                     .putCustomAttribute("Message", throwable.getMessage()));
                         }
 
                         Crashlytics.logException(throwable);
                     }
-
-                    osmInterceptor.getEndpoint().timeTaken = Integer.MAX_VALUE;
-                    synchronized (osmOverpassApis) {
-                        Collections.shuffle(osmOverpassApis);
-                        Collections.sort(osmOverpassApis);
-                    }
-
-                    if (count < endpoints.size()) {
-                        OsmApiEndpoint endpoint = endpoints.get(count);
-
-                        osmInterceptor.setEndpoint(endpoint);
-                        return true;
-                    }
-
-                    return false;
                 });
     }
 

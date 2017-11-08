@@ -4,10 +4,8 @@ import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.location.Location;
 import android.location.LocationManager;
@@ -19,8 +17,7 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.NotificationCompat;
+import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -77,8 +74,6 @@ public class LimitService extends Service {
     private boolean isRunning;
     private boolean isStartedFromNotification;
     private boolean isLimitHidden;
-
-    private BroadcastReceiver notifCheckBroadcastReceiver;
 
     @Nullable
     @Override
@@ -159,19 +154,6 @@ public class LimitService extends Service {
         } catch (SecurityException unlikely) {
             showToast("Velociraptor cannot obtain location");
         }
-
-        notifCheckBroadcastReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                if (isStartedFromNotification) {
-                    LocalBroadcastManager
-                            .getInstance(context)
-                            .sendBroadcastSync(new Intent("pong"));
-                }
-            }
-        };
-        LocalBroadcastManager.getInstance(this)
-                .registerReceiver(notifCheckBroadcastReceiver, new IntentFilter("ping"));
 
         isRunning = true;
 
@@ -284,28 +266,22 @@ public class LimitService extends Service {
 
         float metersPerSeconds = location.getSpeed();
 
-        final int speed;
-        int percentage;
-        if (PrefUtils.getUseMetric(this)) {
-            speed = (int) Math.round((double) metersPerSeconds * 60 * 60 / 1000); //km/h
-            percentage = Math.round((float) speed / 200 * 100);
-        } else {
-            speed = (int) Math.round((double) metersPerSeconds * 60 * 60 / 1000 / 1.609344); //mph
-            percentage = Math.round((float) speed / 120 * 100);
-        }
+        //In km/h
+        final int speed = (int) Math.round((double) metersPerSeconds * 60 * 60 / 1000);
+        int speedometerPercentage = Math.round((float) speed / 200 * 100);
 
         float percentToleranceFactor = 1 + (float) PrefUtils.getSpeedingPercent(this) / 100;
         int constantTolerance = PrefUtils.getSpeedingConstant(this);
 
-        int limitAndPercentTolerance = (int) (lastSpeedLimit * percentToleranceFactor);
-        int speedingLimitWarning;
+        int percentToleratedLimit = (int) (lastSpeedLimit * percentToleranceFactor);
+        int warningLimit;
         if (PrefUtils.getToleranceMode(this)) {
-            speedingLimitWarning = limitAndPercentTolerance + constantTolerance;
+            warningLimit = percentToleratedLimit + constantTolerance;
         } else {
-            speedingLimitWarning = Math.min(limitAndPercentTolerance, lastSpeedLimit + constantTolerance);
+            warningLimit = Math.min(percentToleratedLimit, lastSpeedLimit + constantTolerance);
         }
 
-        if (lastSpeedLimit != -1 && speed > speedingLimitWarning) {
+        if (lastSpeedLimit != -1 && speed > warningLimit) {
             speedLimitView.setSpeeding(true);
             if (speedingStartTimestamp == -1) {
                 speedingStartTimestamp = System.currentTimeMillis();
@@ -318,7 +294,7 @@ public class LimitService extends Service {
             speedingStartTimestamp = -1;
         }
 
-        speedLimitView.setSpeed(speed, percentage);
+        speedLimitView.setSpeed(speed, speedometerPercentage);
 
         lastLocationWithSpeed = location;
     }
@@ -340,7 +316,7 @@ public class LimitService extends Service {
         if (fusedLocationClient != null) {
             try {
                 fusedLocationClient.removeLocationUpdates(locationCallback);
-            } catch (SecurityException unlikely) {
+            } catch (SecurityException ignore) {
             }
         }
 
@@ -351,9 +327,6 @@ public class LimitService extends Service {
         if (getSpeedLimitSubscription != null) {
             getSpeedLimitSubscription.unsubscribe();
         }
-
-        LocalBroadcastManager.getInstance(this)
-                .unregisterReceiver(notifCheckBroadcastReceiver);
     }
 
     @Override

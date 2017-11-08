@@ -22,7 +22,6 @@ public abstract class PrefUtils {
     private static final String PREF_TOLERANCE_MODE = "pref_tolerance_mode";
     private static final String PREF_OPACITY = "pref_opacity";
     private static final String PREF_SPEEDOMETER = "pref_speedometer";
-    private static final String PREF_AUTO_DISPLAY = "pref_auto_display";
     private static final String PREF_BEEP = "pref_beep";
     private static final String PREF_DEBUGGING = "pref_debugging";
     private static final String PREF_SUPPORTED = "pref_supported";
@@ -123,14 +122,6 @@ public abstract class PrefUtils {
 
     public static void setShowSpeedometer(Context context, boolean show) {
         edit(context).putBoolean(PREF_SPEEDOMETER, show).apply();
-    }
-
-    public static boolean isAutoDisplayEnabled(Context context) {
-        return getSharedPreferences(context).getBoolean(PREF_AUTO_DISPLAY, true);
-    }
-
-    public static void setAutoDisplay(Context context, boolean autoDisplay) {
-        edit(context).putBoolean(PREF_AUTO_DISPLAY, autoDisplay).apply();
     }
 
     public static boolean isDebuggingEnabled(Context context) {

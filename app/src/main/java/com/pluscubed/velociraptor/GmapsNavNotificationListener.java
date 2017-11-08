@@ -25,8 +25,7 @@ public class GmapsNavNotificationListener extends NotificationListenerService {
                 || !packageName.equals(AppDetectionService.GOOGLE_MAPS_PACKAGE)
                 || sbn.getNotification().priority != Notification.PRIORITY_MAX
                 || AppDetectionService.get() == null
-                || !PrefUtils.isGmapsOnlyInNavigation(this)
-                || !PrefUtils.isAutoDisplayEnabled(this)) {
+                || !PrefUtils.isGmapsOnlyInNavigation(this)) {
             return;
         }
 
@@ -48,8 +47,7 @@ public class GmapsNavNotificationListener extends NotificationListenerService {
                 || !packageName.equals(AppDetectionService.GOOGLE_MAPS_PACKAGE)
                 || sbn.getNotification().priority != Notification.PRIORITY_MAX
                 || AppDetectionService.get() == null
-                || !PrefUtils.isGmapsOnlyInNavigation(this)
-                || !PrefUtils.isAutoDisplayEnabled(this)) {
+                || !PrefUtils.isGmapsOnlyInNavigation(this)) {
             return;
         }
 

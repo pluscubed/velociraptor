@@ -55,7 +55,6 @@ import java.util.Currency;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.BindViews;
 import butterknife.ButterKnife;
 
 public class SettingsActivity extends AppCompatActivity {
@@ -70,7 +69,7 @@ public class SettingsActivity extends AppCompatActivity {
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
-    //M Permissions
+    //Permissions
     @BindView(R.id.card_m_permissions)
     View mPermCard;
     @BindView(R.id.button_floating_enabled)
@@ -81,45 +80,10 @@ public class SettingsActivity extends AppCompatActivity {
     Button enableLocationButton;
     @BindView(R.id.image_location_enabled)
     ImageView enabledLocationImage;
-
-    //Activation
-    @BindView(R.id.linear_auto_display)
-    View appDetectionContainer;
-    @BindView(R.id.switch_auto_display)
-    SwitchCompat appDetectionSwitch;
-
-
-    @BindView(R.id.linear_auto_display_options)
-    ViewGroup appDetectionOptionsContainer;
-
-    @BindView(R.id.image_service_enabled)
-    ImageView enabledServiceImage;
     @BindView(R.id.button_enable_service)
     Button enableServiceButton;
-
-    @BindView(R.id.linear_app_selection)
-    ViewGroup appSelectionContainer;
-    @BindView(R.id.button_app_selection)
-    Button appSelectionButton;
-
-    @BindView(R.id.linear_android_auto)
-    ViewGroup androidAutoContainer;
-    @BindView(R.id.switch_android_auto)
-    SwitchCompat androidAutoSwitch;
-
-    @BindView(R.id.linear_gmaps_navigation)
-    ViewGroup gmapsOnlyNavigationContainer;
-    @BindView(R.id.switch_gmaps_navigation)
-    SwitchCompat gmapsOnlyNavigationSwitch;
-
-    @BindViews({R.id.image_app_selection, R.id.image_android_auto, R.id.image_gmaps_navigation})
-    List<ImageView> autoDisplayIcons;
-
-    @BindView(R.id.switch_notif_controls)
-    View notifControlsContainer;
-
-    @BindView(R.id.linear_tip_qs)
-    View qsTipView;
+    @BindView(R.id.image_service_enabled)
+    ImageView enabledServiceImage;
 
     //General
     @BindView(R.id.switch_speedometer)
@@ -158,6 +122,19 @@ public class SettingsActivity extends AppCompatActivity {
     @BindView(R.id.switch_debugging)
     SwitchCompat debuggingSwitch;
 
+    @BindView(R.id.linear_app_selection)
+    ViewGroup appSelectionContainer;
+    @BindView(R.id.button_app_selection)
+    Button appSelectionButton;
+
+    @BindView(R.id.linear_gmaps_navigation)
+    ViewGroup gmapsOnlyNavigationContainer;
+    @BindView(R.id.switch_gmaps_navigation)
+    SwitchCompat gmapsOnlyNavigationSwitch;
+
+    @BindView(R.id.switch_notif_controls)
+    View notifControlsContainer;
+
 
     private NotificationManager notificationManager;
     private BillingProcessor billingProcessor;
@@ -181,9 +158,6 @@ public class SettingsActivity extends AppCompatActivity {
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             mPermCard.setVisibility(View.GONE);
-        }
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-            qsTipView.setVisibility(View.GONE);
         }
 
         checkCoverageView.setOnClickListener(v -> {
@@ -242,17 +216,6 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(SettingsActivity.this, AppSelectionActivity.class));
-            }
-        });
-
-        appDetectionSwitch.setChecked(PrefUtils.isAutoDisplayEnabled(this));
-        appDetectionContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                appDetectionSwitch.toggle();
-                boolean autoDisplayEnabled = appDetectionSwitch.isChecked();
-                PrefUtils.setAutoDisplay(SettingsActivity.this, autoDisplayEnabled);
-                updateAppDetectionOptionStates();
             }
         });
 
@@ -389,30 +352,6 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Utils.playBeeps();
-            }
-        });
-
-        androidAutoSwitch.setChecked(PrefUtils.isAutoIntegrationEnabled(this));
-        androidAutoContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (BuildConfig.FLAVOR.equals("play")) {
-                    Snackbar.make(findViewById(android.R.id.content), R.string.auto_not_available, Snackbar.LENGTH_LONG).show();
-                    return;
-                }
-                if (!androidAutoSwitch.isEnabled()) {
-                    return;
-                }
-                androidAutoSwitch.toggle();
-                boolean checked = androidAutoSwitch.isChecked();
-                if (checked) {
-                    new MaterialDialog.Builder(SettingsActivity.this)
-                            .content(R.string.android_auto_instruction_dialog)
-                            .positiveText(android.R.string.ok)
-                            .show();
-                }
-
-                PrefUtils.setAutoIntegrationEnabled(SettingsActivity.this, checked);
             }
         });
 
@@ -567,7 +506,7 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        enableService(false);
+        startLimitService(false);
     }
 
     @Override
@@ -625,7 +564,9 @@ public class SettingsActivity extends AppCompatActivity {
         enabledFloatingImage.setImageResource(overlayEnabled ? R.drawable.ic_done_green_40dp : R.drawable.ic_cross_red_40dp);
         enableFloatingButton.setEnabled(!overlayEnabled);
 
-        updateAppDetectionOptionStates();
+        boolean serviceEnabled = Utils.isAccessibilityServiceEnabled(this, AppDetectionService.class);
+        enabledServiceImage.setImageResource(serviceEnabled ? R.drawable.ic_done_green_40dp : R.drawable.ic_cross_red_40dp);
+        enableServiceButton.setEnabled(!serviceEnabled);
 
         String constant = getString(PrefUtils.getUseMetric(this) ? R.string.kmph : R.string.mph,
                 String.valueOf(PrefUtils.getSpeedingConstant(this)));
@@ -643,36 +584,11 @@ public class SettingsActivity extends AppCompatActivity {
         opacityOverview.setText(getString(R.string.percent, String.valueOf(PrefUtils.getOpacity(this))));
 
         if (permissionGranted && overlayEnabled) {
-            enableService(true);
+            startLimitService(true);
         }
     }
 
-    private void updateAppDetectionOptionStates() {
-        boolean autoDisplayEnabled = PrefUtils.isAutoDisplayEnabled(this);
-        enableDisableAllChildren(autoDisplayEnabled, appDetectionOptionsContainer);
-
-        boolean serviceEnabled = Utils.isAccessibilityServiceEnabled(this, AppDetectionService.class);
-        enabledServiceImage.setImageResource(serviceEnabled ? R.drawable.ic_done_green_40dp : R.drawable.ic_cross_red_40dp);
-        enabledServiceImage.setAlpha(autoDisplayEnabled ? 1f : 0.7f);
-        enableServiceButton.setEnabled(autoDisplayEnabled && !serviceEnabled);
-
-        ButterKnife.apply(autoDisplayIcons, View.ALPHA, (autoDisplayEnabled && serviceEnabled ? 1f : 0.7f));
-        enableDisableAllChildren(autoDisplayEnabled && serviceEnabled, appSelectionContainer);
-        enableDisableAllChildren(autoDisplayEnabled && serviceEnabled, androidAutoContainer);
-        enableDisableAllChildren(autoDisplayEnabled && serviceEnabled, gmapsOnlyNavigationContainer);
-    }
-
-    private void enableDisableAllChildren(boolean enable, ViewGroup viewgroup) {
-        for (int i = 0; i < viewgroup.getChildCount(); i++) {
-            View child = viewgroup.getChildAt(i);
-            child.setEnabled(enable);
-            if (child instanceof ViewGroup) {
-                enableDisableAllChildren(enable, (ViewGroup) child);
-            }
-        }
-    }
-
-    private void enableService(boolean start) {
+    private void startLimitService(boolean start) {
         Intent intent = new Intent(this, LimitService.class);
         if (!start) {
             intent.putExtra(LimitService.EXTRA_CLOSE, true);

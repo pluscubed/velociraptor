@@ -58,10 +58,6 @@ public class AppDetectionService extends AccessibilityService {
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
-        if (!PrefUtils.isAutoDisplayEnabled(this)) {
-            return;
-        }
-
         if (enabledApps == null) {
             updateSelectedApps();
         }
@@ -91,8 +87,7 @@ public class AppDetectionService extends AccessibilityService {
 
         boolean shouldStartService = enabledApps.contains(componentName.getPackageName());
 
-        if (PrefUtils.isAutoDisplayEnabled(this)
-                && componentName.getClassName().equals(ANDROID_AUTO_ACTIVITY)) {
+        if (componentName.getClassName().equals(ANDROID_AUTO_ACTIVITY)) {
             shouldStartService = true;
             intent.putExtra(LimitService.EXTRA_VIEW, LimitService.VIEW_AUTO);
         }
