@@ -195,15 +195,12 @@ public class FloatingView implements LimitView {
         ValueAnimator valueAnimator = ValueAnimator.ofInt(params.x, endX)
                 .setDuration(300);
         valueAnimator.setInterpolator(new LinearOutSlowInInterpolator());
-        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                WindowManager.LayoutParams params = (WindowManager.LayoutParams) mFloatingView.getLayoutParams();
-                params.x = (int) animation.getAnimatedValue();
-                try {
-                    mWindowManager.updateViewLayout(mFloatingView, params);
-                } catch (IllegalArgumentException ignore) {
-                }
+        valueAnimator.addUpdateListener(animation -> {
+            WindowManager.LayoutParams params1 = (WindowManager.LayoutParams) mFloatingView.getLayoutParams();
+            params1.x = (int) animation.getAnimatedValue();
+            try {
+                mWindowManager.updateViewLayout(mFloatingView, params1);
+            } catch (IllegalArgumentException ignore) {
             }
         });
 
@@ -358,14 +355,11 @@ public class FloatingView implements LimitView {
             fadeOut = ValueAnimator.ofFloat(params.alpha, 0.1F);
             fadeOut.setInterpolator(new FastOutSlowInInterpolator());
             fadeOut.setDuration(100);
-            fadeOut.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                    params.alpha = (float) valueAnimator.getAnimatedValue();
-                    try {
-                        mWindowManager.updateViewLayout(mFloatingView, params);
-                    } catch (IllegalArgumentException ignore) {
-                    }
+            fadeOut.addUpdateListener(valueAnimator -> {
+                params.alpha = (float) valueAnimator.getAnimatedValue();
+                try {
+                    mWindowManager.updateViewLayout(mFloatingView, params);
+                } catch (IllegalArgumentException ignore) {
                 }
             });
             fadeIn = fadeOut.clone();

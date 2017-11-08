@@ -75,16 +75,13 @@ public class AppSelectionActivity extends AppCompatActivity {
         mScroller.attachRecyclerView(recyclerView);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                if (mMapsOnly) {
-                    reloadMapApps();
-                } else {
-                    reloadInstalledApps();
-                }
-                mAdapter.setAppInfos(new ArrayList<AppInfo>());
+        mSwipeRefreshLayout.setOnRefreshListener(() -> {
+            if (mMapsOnly) {
+                reloadMapApps();
+            } else {
+                reloadInstalledApps();
             }
+            mAdapter.setAppInfos(new ArrayList<AppInfo>());
         });
         mSwipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(this, R.color.colorAccent));
 
@@ -315,15 +312,12 @@ public class AppSelectionActivity extends AppCompatActivity {
                 desc = (TextView) itemView.findViewById(R.id.text_desc);
                 checkbox = (CheckBox) itemView.findViewById(R.id.checkbox);
 
-                itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        checkbox.toggle();
+                itemView.setOnClickListener(v -> {
+                    checkbox.toggle();
 
-                        int adapterPosition = getAdapterPosition();
-                        if (adapterPosition != RecyclerView.NO_POSITION) {
-                            onItemClick(mAppInfos.get(adapterPosition), checkbox.isChecked());
-                        }
+                    int adapterPosition = getAdapterPosition();
+                    if (adapterPosition != RecyclerView.NO_POSITION) {
+                        onItemClick(mAppInfos.get(adapterPosition), checkbox.isChecked());
                     }
                 });
             }

@@ -42,9 +42,7 @@ public class ChangelogDialogFragment extends DialogFragment {
                     startActivity(intent);
                 })
                 .negativeText(R.string.support)
-                .onNegative((dialog1, which) -> {
-                    ((SettingsActivity) getActivity()).showSupportDialog();
-                })
+                .onNegative((dialog1, which) -> ((SettingsActivity) getActivity()).showSupportDialog())
                 .build();
 
         final WebView webView = (WebView) customView.findViewById(R.id.webview);

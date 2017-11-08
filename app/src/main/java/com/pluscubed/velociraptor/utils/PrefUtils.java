@@ -157,7 +157,7 @@ public abstract class PrefUtils {
     }
 
     public static Set<String> getApps(Context context) {
-        return new HashSet<>(getSharedPreferences(context).getStringSet(PREF_APPS, new HashSet<String>()));
+        return new HashSet<>(getSharedPreferences(context).getStringSet(PREF_APPS, new HashSet<>()));
     }
 
     public static void setApps(Context context, Set<String> packageNames) {

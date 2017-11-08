@@ -180,74 +180,55 @@ public class SettingsActivity extends AppCompatActivity {
         });
 
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notifControlsContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(SettingsActivity.this, LimitService.class);
-                intent.putExtra(LimitService.EXTRA_NOTIF_START, true);
-                PendingIntent pending = PendingIntent.getService(SettingsActivity.this,
-                        PENDING_SERVICE, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        notifControlsContainer.setOnClickListener(v -> {
+            Intent intent = new Intent(SettingsActivity.this, LimitService.class);
+            intent.putExtra(LimitService.EXTRA_NOTIF_START, true);
+            PendingIntent pending = PendingIntent.getService(SettingsActivity.this,
+                    PENDING_SERVICE, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 
-                Intent intentClose = new Intent(SettingsActivity.this, LimitService.class);
-                intentClose.putExtra(LimitService.EXTRA_NOTIF_CLOSE, true);
-                PendingIntent pendingClose = PendingIntent.getService(SettingsActivity.this,
-                        PENDING_SERVICE_CLOSE, intentClose, PendingIntent.FLAG_CANCEL_CURRENT);
+            Intent intentClose = new Intent(SettingsActivity.this, LimitService.class);
+            intentClose.putExtra(LimitService.EXTRA_NOTIF_CLOSE, true);
+            PendingIntent pendingClose = PendingIntent.getService(SettingsActivity.this,
+                    PENDING_SERVICE_CLOSE, intentClose, PendingIntent.FLAG_CANCEL_CURRENT);
 
-                Intent settings = new Intent(SettingsActivity.this, SettingsActivity.class);
-                PendingIntent settingsIntent = PendingIntent.getActivity(SettingsActivity.this,
-                        PENDING_SETTINGS, settings, PendingIntent.FLAG_CANCEL_CURRENT);
+            Intent settings = new Intent(SettingsActivity.this, SettingsActivity.class);
+            PendingIntent settingsIntent = PendingIntent.getActivity(SettingsActivity.this,
+                    PENDING_SETTINGS, settings, PendingIntent.FLAG_CANCEL_CURRENT);
 
-                NotificationCompat.Builder builder =
-                        new NotificationCompat.Builder(SettingsActivity.this)
-                                .setSmallIcon(R.drawable.ic_speedometer_notif)
-                                .setContentTitle(getString(R.string.controls_notif_title))
-                                .setContentText(getString(R.string.controls_notif_desc))
-                                .addAction(0, getString(R.string.show), pending)
-                                .addAction(0, getString(R.string.hide), pendingClose)
-                                .setDeleteIntent(pendingClose)
-                                .setContentIntent(settingsIntent);
-                Notification notification = builder.build();
-                notificationManager.notify(NOTIFICATION_CONTROLS, notification);
-            }
+            NotificationCompat.Builder builder =
+                    new NotificationCompat.Builder(SettingsActivity.this)
+                            .setSmallIcon(R.drawable.ic_speedometer_notif)
+                            .setContentTitle(getString(R.string.controls_notif_title))
+                            .setContentText(getString(R.string.controls_notif_desc))
+                            .addAction(0, getString(R.string.show), pending)
+                            .addAction(0, getString(R.string.hide), pendingClose)
+                            .setDeleteIntent(pendingClose)
+                            .setContentIntent(settingsIntent);
+            Notification notification = builder.build();
+            notificationManager.notify(NOTIFICATION_CONTROLS, notification);
         });
 
 
-        appSelectionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(SettingsActivity.this, AppSelectionActivity.class));
+        appSelectionButton.setOnClickListener(v -> startActivity(new Intent(SettingsActivity.this, AppSelectionActivity.class)));
+
+        enableServiceButton.setOnClickListener(v -> {
+            try {
+                startActivity(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS));
+            } catch (ActivityNotFoundException e) {
+                Snackbar.make(enableServiceButton, R.string.open_settings_failed_accessibility, Snackbar.LENGTH_LONG).show();
             }
         });
 
-        enableServiceButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    startActivity(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS));
-                } catch (ActivityNotFoundException e) {
-                    Snackbar.make(enableServiceButton, R.string.open_settings_failed_accessibility, Snackbar.LENGTH_LONG).show();
-                }
+        enableFloatingButton.setOnClickListener(v -> {
+            try {
+                //Open the current default browswer App Info page
+                openSettings(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, BuildConfig.APPLICATION_ID);
+            } catch (ActivityNotFoundException ignored) {
+                Snackbar.make(enableFloatingButton, R.string.open_settings_failed_overlay, Snackbar.LENGTH_LONG).show();
             }
         });
 
-        enableFloatingButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    //Open the current default browswer App Info page
-                    openSettings(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, BuildConfig.APPLICATION_ID);
-                } catch (ActivityNotFoundException ignored) {
-                    Snackbar.make(enableFloatingButton, R.string.open_settings_failed_overlay, Snackbar.LENGTH_LONG).show();
-                }
-            }
-        });
-
-        enableLocationButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ActivityCompat.requestPermissions(SettingsActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
-            }
-        });
+        enableLocationButton.setOnClickListener(v -> ActivityCompat.requestPermissions(SettingsActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION));
 
         ArrayAdapter<String> unitAdapter = new ArrayAdapter<>(this, R.layout.spinner_item_text, new String[]{"mph", "km/h"});
         unitAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
@@ -296,64 +277,33 @@ public class SettingsActivity extends AppCompatActivity {
         styleSpinner.setSelection(PrefUtils.getSignStyle(this));
         styleSpinner.setDropDownVerticalOffset(Utils.convertDpToPx(this, styleSpinner.getSelectedItemPosition() * -48));
 
-        toleranceView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new ToleranceDialogFragment().show(getFragmentManager(), "dialog_tolerance");
-            }
-        });
+        toleranceView.setOnClickListener(v -> new ToleranceDialogFragment().show(getFragmentManager(), "dialog_tolerance"));
 
-        sizeView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new SizeDialogFragment().show(getFragmentManager(), "dialog_size");
-            }
-        });
+        sizeView.setOnClickListener(v -> new SizeDialogFragment().show(getFragmentManager(), "dialog_size"));
 
-        opacityView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new OpacityDialogFragment().show(getFragmentManager(), "dialog_opacity");
-            }
-        });
+        opacityView.setOnClickListener(v -> new OpacityDialogFragment().show(getFragmentManager(), "dialog_opacity"));
 
         showSpeedometerSwitch.setChecked(PrefUtils.getShowSpeedometer(this));
-        ((View) showSpeedometerSwitch.getParent()).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showSpeedometerSwitch.setChecked(!showSpeedometerSwitch.isChecked());
+        ((View) showSpeedometerSwitch.getParent()).setOnClickListener(v -> {
+            showSpeedometerSwitch.setChecked(!showSpeedometerSwitch.isChecked());
 
-                PrefUtils.setShowSpeedometer(SettingsActivity.this, showSpeedometerSwitch.isChecked());
+            PrefUtils.setShowSpeedometer(SettingsActivity.this, showSpeedometerSwitch.isChecked());
 
-                Utils.updateFloatingServicePrefs(SettingsActivity.this);
-            }
+            Utils.updateFloatingServicePrefs(SettingsActivity.this);
         });
 
         debuggingSwitch.setChecked(PrefUtils.isDebuggingEnabled(this));
-        ((View) debuggingSwitch.getParent()).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                debuggingSwitch.setChecked(!debuggingSwitch.isChecked());
+        ((View) debuggingSwitch.getParent()).setOnClickListener(v -> {
+            debuggingSwitch.setChecked(!debuggingSwitch.isChecked());
 
-                PrefUtils.setDebugging(SettingsActivity.this, debuggingSwitch.isChecked());
+            PrefUtils.setDebugging(SettingsActivity.this, debuggingSwitch.isChecked());
 
-                Utils.updateFloatingServicePrefs(SettingsActivity.this);
-            }
+            Utils.updateFloatingServicePrefs(SettingsActivity.this);
         });
 
         beepSwitch.setChecked(PrefUtils.isBeepAlertEnabled(this));
-        beepSwitch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PrefUtils.setBeepAlertEnabled(SettingsActivity.this, beepSwitch.isChecked());
-            }
-        });
-        testBeepButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Utils.playBeeps();
-            }
-        });
+        beepSwitch.setOnClickListener(v -> PrefUtils.setBeepAlertEnabled(SettingsActivity.this, beepSwitch.isChecked()));
+        testBeepButton.setOnClickListener(v -> Utils.playBeeps());
 
         gmapsOnlyNavigationSwitch.setChecked(isNotificationAccessGranted() && PrefUtils.isGmapsOnlyInNavigation(this));
         gmapsOnlyNavigationContainer.setOnClickListener(v -> {
@@ -477,15 +427,12 @@ public class SettingsActivity extends AppCompatActivity {
             }
 
             builder.items(purchaseDisplay)
-                    .itemsCallback(new MaterialDialog.ListCallback() {
-                        @Override
-                        public void onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
-                            SkuDetails skuDetails = purchaseListingDetails.get(which);
-                            if (skuDetails.isSubscription) {
-                                billingProcessor.subscribe(SettingsActivity.this, skuDetails.productId);
-                            } else {
-                                billingProcessor.purchase(SettingsActivity.this, skuDetails.productId);
-                            }
+                    .itemsCallback((dialog, itemView, which, text) -> {
+                        SkuDetails skuDetails = purchaseListingDetails.get(which);
+                        if (skuDetails.isSubscription) {
+                            billingProcessor.subscribe(SettingsActivity.this, skuDetails.productId);
+                        } else {
+                            billingProcessor.purchase(SettingsActivity.this, skuDetails.productId);
                         }
                     });
         }

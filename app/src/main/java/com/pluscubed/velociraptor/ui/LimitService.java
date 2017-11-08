@@ -301,9 +301,7 @@ public class LimitService extends Service {
 
     void showToast(final String string) {
         Handler handler = new Handler(Looper.getMainLooper());
-        handler.post(() -> {
-            Toast.makeText(LimitService.this.getApplicationContext(), string, Toast.LENGTH_LONG).show();
-        });
+        handler.post(() -> Toast.makeText(LimitService.this.getApplicationContext(), string, Toast.LENGTH_LONG).show());
     }
 
     @Override
