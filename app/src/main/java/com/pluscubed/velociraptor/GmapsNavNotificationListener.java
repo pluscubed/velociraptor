@@ -8,7 +8,7 @@ import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.text.TextUtils;
 
-import com.pluscubed.velociraptor.ui.LimitService;
+import com.pluscubed.velociraptor.limit.LimitService;
 import com.pluscubed.velociraptor.utils.PrefUtils;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)

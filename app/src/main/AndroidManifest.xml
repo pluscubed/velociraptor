@@ -41,7 +41,7 @@
             android:name="com.google.android.gms.oss.licenses.OssLicensesActivity"
             android:theme="@style/Theme.AppCompat.Light" />
 
-        <service android:name=".ui.LimitService" />
+        <service android:name=".limit.LimitService" />
 
         <service
             android:name=".GmapsNavNotificationListener"

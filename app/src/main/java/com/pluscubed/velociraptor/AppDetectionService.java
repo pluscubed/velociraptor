@@ -12,7 +12,7 @@ import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
 import com.crashlytics.android.Crashlytics;
-import com.pluscubed.velociraptor.ui.LimitService;
+import com.pluscubed.velociraptor.limit.LimitService;
 import com.pluscubed.velociraptor.utils.PrefUtils;
 
 import java.util.List;
@@ -25,7 +25,6 @@ public class AppDetectionService extends AccessibilityService {
     public static final String GOOGLE_MAPS_PACKAGE = "com.google.android.apps.maps";
     public static final String GMAPS_BOTTOM_CONTAINER_ID = "com.google.android.apps.maps:id/bottommapoverlay_container";
     public static final String GMAPS_SPEED_LIMIT_TEXT = "SPEED LIMIT";
-    private static final String ANDROID_AUTO_ACTIVITY = "com.google.android.gms.car.CarHomeActivity";
     private static AppDetectionService INSTANCE;
 
     private Set<String> enabledApps;
@@ -86,11 +85,6 @@ public class AppDetectionService extends AccessibilityService {
         Intent intent = new Intent(this, LimitService.class);
 
         boolean shouldStartService = enabledApps.contains(componentName.getPackageName());
-
-        if (componentName.getClassName().equals(ANDROID_AUTO_ACTIVITY)) {
-            shouldStartService = true;
-            intent.putExtra(LimitService.EXTRA_VIEW, LimitService.VIEW_AUTO);
-        }
 
         if (componentName.getPackageName().equals(GOOGLE_MAPS_PACKAGE)) {
             if (PrefUtils.isGmapsOnlyInNavigation(this) && !isGmapsNavigating) {

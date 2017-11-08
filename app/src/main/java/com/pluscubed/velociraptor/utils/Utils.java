@@ -19,7 +19,7 @@ import android.text.TextUtils;
 
 import com.pluscubed.velociraptor.BuildConfig;
 import com.pluscubed.velociraptor.R;
-import com.pluscubed.velociraptor.ui.LimitService;
+import com.pluscubed.velociraptor.limit.LimitService;
 
 public abstract class Utils {
 

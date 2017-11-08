@@ -43,8 +43,8 @@ import com.google.android.gms.oss.licenses.OssLicensesMenuActivity;
 import com.pluscubed.velociraptor.AppDetectionService;
 import com.pluscubed.velociraptor.BuildConfig;
 import com.pluscubed.velociraptor.R;
+import com.pluscubed.velociraptor.limit.LimitService;
 import com.pluscubed.velociraptor.settings.appselection.AppSelectionActivity;
-import com.pluscubed.velociraptor.ui.LimitService;
 import com.pluscubed.velociraptor.utils.PrefUtils;
 import com.pluscubed.velociraptor.utils.Utils;
 

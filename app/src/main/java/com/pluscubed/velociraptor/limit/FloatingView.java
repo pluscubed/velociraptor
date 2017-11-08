@@ -1,4 +1,4 @@
-package com.pluscubed.velociraptor.ui;
+package com.pluscubed.velociraptor.limit;
 
 import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;

@@ -1,4 +1,4 @@
-package com.pluscubed.velociraptor.ui;
+package com.pluscubed.velociraptor.limit;
 
 import android.annotation.SuppressLint;
 import android.app.Notification;
@@ -48,7 +48,6 @@ public class LimitService extends Service {
 
     public static final String EXTRA_VIEW = "com.pluscubed.velociraptor.EXTRA_VIEW";
     public static final int VIEW_FLOATING = 0;
-    public static final int VIEW_AUTO = 1;
 
     public static final String EXTRA_HIDE_LIMIT = "com.pluscubed.velociraptor.HIDE_LIMIT";
 
@@ -99,9 +98,6 @@ public class LimitService extends Service {
                 switch (speedLimitViewType) {
                     case VIEW_FLOATING:
                         speedLimitView = new FloatingView(this);
-                        break;
-                    case VIEW_AUTO:
-                        speedLimitView = new AutoView(this);
                         break;
                 }
             }
