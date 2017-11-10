@@ -67,7 +67,12 @@ public abstract class Utils {
 
     public static void playBeeps() {
         playTone();
-        new Handler().postDelayed(() -> playTone(), 300);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                playTone();
+            }
+        }, 300);
     }
 
     private static void playTone() {

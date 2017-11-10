@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.pluscubed.velociraptor.R;
 import com.pluscubed.velociraptor.utils.PrefUtils;
@@ -55,10 +57,13 @@ public class SizeDialogFragment extends DialogFragment {
                 .title(R.string.size)
                 .negativeText(android.R.string.cancel)
                 .positiveText(android.R.string.ok)
-                .onNegative((dialog1, which) -> {
-                    setSize(true, initialLimitSize);
-                    setSize(false, initialSpeedometerSize);
-                    Utils.updateFloatingServicePrefs(getActivity());
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        setSize(true, initialLimitSize);
+                        setSize(false, initialSpeedometerSize);
+                        Utils.updateFloatingServicePrefs(getActivity());
+                    }
                 }).build();
     }
 
