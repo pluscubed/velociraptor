@@ -6,5 +6,5 @@
     android:accessibilityFlags="flagIncludeNotImportantViews|flagReportViewIds"
     android:canRetrieveWindowContent="true"
     android:description="@string/accessibility_service_description"
-    android:summary="@string/accessibility_service_description"
+    android:summary="@string/accessibility_service_summary"
     tools:ignore="UnusedAttribute" />
