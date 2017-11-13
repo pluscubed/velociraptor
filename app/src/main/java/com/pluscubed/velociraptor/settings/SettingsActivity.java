@@ -36,6 +36,7 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.Purchase;
+import com.android.billingclient.api.SkuDetails;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity;
@@ -50,17 +51,28 @@ import com.pluscubed.velociraptor.utils.PrefUtils;
 import com.pluscubed.velociraptor.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import rx.Emitter;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 public class SettingsActivity extends AppCompatActivity {
     public static final int PENDING_SERVICE = 4;
     public static final int PENDING_SERVICE_CLOSE = 3;
     public static final int PENDING_SETTINGS = 2;
     public static final int NOTIFICATION_CONTROLS = 42;
+
+    public static final String OSM_EDITDATA_URL = "http://openstreetmap.org";
     public static final String OSM_COVERAGE_URL = "http://product.itoworld.com/map/124";
+    public static final String HERE_EDITDATA_URL = "https://mapcreator.here.com/mapcreator";
+    public static final String TOMTOM_EDITDATA_URL = "https://www.tomtom.com/mapshare/tools";
+
     private static final int REQUEST_LOCATION = 105;
 
     @BindView(R.id.toolbar)
@@ -112,8 +124,24 @@ public class SettingsActivity extends AppCompatActivity {
     Spinner styleSpinner;
 
     //Providers
+    @BindView(R.id.here_provider_desc)
+    TextView herePriceDesc;
     @BindView(R.id.here_subscribe)
     Button hereSubscribeButton;
+    @BindView(R.id.here_editdata)
+    Button hereEditDataButton;
+
+    @BindView(R.id.tomtom_provider_desc)
+    TextView tomtomPriceDesc;
+    @BindView(R.id.tomtom_subscribe)
+    Button tomtomSubscribeButton;
+    @BindView(R.id.tomtom_editdata)
+    Button tomtomEditDataButton;
+
+    @BindView(R.id.osm_editdata)
+    Button osmEditDataButton;
+    @BindView(R.id.osm_donate)
+    Button osmDonateButton;
     @BindView(R.id.osm_coverage)
     Button osmCoverageButton;
 
@@ -167,25 +195,6 @@ public class SettingsActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             mPermCard.setVisibility(View.GONE);
         }
-
-        osmCoverageButton.setOnClickListener(v -> {
-            if (Utils.isLocationPermissionGranted(SettingsActivity.this)) {
-                FusedLocationProviderClient fusedLocationProvider =
-                        LocationServices.getFusedLocationProviderClient(SettingsActivity.this);
-                fusedLocationProvider
-                        .getLastLocation()
-                        .addOnCompleteListener(SettingsActivity.this, task -> {
-                            String uriString = OSM_COVERAGE_URL;
-                            if (task.isSuccessful() && task.getResult() != null) {
-                                Location lastLocation = task.getResult();
-                                uriString += "?lon=" + lastLocation.getLongitude() + "&lat=" + lastLocation.getLatitude() + "&zoom=12";
-                            }
-                            openCoverageMap(uriString);
-                        });
-            } else {
-                openCoverageMap(OSM_COVERAGE_URL);
-            }
-        });
 
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notifControlsContainer.setOnClickListener(v -> {
@@ -343,12 +352,67 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-        hereSubscribeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                billingManager.initiatePurchaseFlow(BillingConstants.SKU_HERE, BillingClient.SkuType.SUBS);
+        hereEditDataButton.setOnClickListener(view -> {
+            if (Utils.isLocationPermissionGranted(SettingsActivity.this)) {
+                FusedLocationProviderClient fusedLocationProvider =
+                        LocationServices.getFusedLocationProviderClient(SettingsActivity.this);
+                fusedLocationProvider
+                        .getLastLocation()
+                        .addOnCompleteListener(SettingsActivity.this, task -> {
+                            String uriString = HERE_EDITDATA_URL;
+                            if (task.isSuccessful() && task.getResult() != null) {
+                                Location lastLocation = task.getResult();
+                                uriString += "/" + lastLocation.getLongitude() + "," + lastLocation.getLatitude() + ",12,0,0";
+                            }
+                            openLink(uriString);
+                        });
+            } else {
+                openLink(HERE_EDITDATA_URL);
             }
         });
+
+        hereSubscribeButton.setOnClickListener(view ->
+                billingManager.initiatePurchaseFlow(BillingConstants.SKU_HERE, BillingClient.SkuType.SUBS));
+
+        tomtomSubscribeButton.setOnClickListener(view ->
+                billingManager.initiatePurchaseFlow(BillingConstants.SKU_TOMTOM, BillingClient.SkuType.SUBS));
+
+        tomtomEditDataButton.setOnClickListener(view -> openLink(TOMTOM_EDITDATA_URL));
+
+        osmCoverageButton.setOnClickListener(v -> {
+            if (Utils.isLocationPermissionGranted(SettingsActivity.this)) {
+                FusedLocationProviderClient fusedLocationProvider =
+                        LocationServices.getFusedLocationProviderClient(SettingsActivity.this);
+                fusedLocationProvider
+                        .getLastLocation()
+                        .addOnCompleteListener(SettingsActivity.this, task -> {
+                            String uriString = OSM_COVERAGE_URL;
+                            if (task.isSuccessful() && task.getResult() != null) {
+                                Location lastLocation = task.getResult();
+                                uriString += "?lon=" + lastLocation.getLongitude() + "&lat=" + lastLocation.getLatitude() + "&zoom=12";
+                            }
+                            openLink(uriString);
+                        });
+            } else {
+                openLink(OSM_COVERAGE_URL);
+            }
+        });
+
+        osmEditDataButton.setOnClickListener(
+                view -> new MaterialDialog.Builder(SettingsActivity.this)
+                        .content(R.string.osm_edit)
+                        .positiveText(R.string.share_link)
+                        .onPositive((dialog, which) -> {
+                            Intent shareIntent = new Intent();
+                            shareIntent.setType("text/plain");
+                            shareIntent.putExtra(Intent.EXTRA_TEXT, OSM_EDITDATA_URL);
+                            startActivity(Intent.createChooser(shareIntent, getString(R.string.share_link)));
+                        })
+                        .show()
+        );
+
+        osmDonateButton.setOnClickListener(view -> showSupportDialog());
+
 
         invalidateStates();
 
@@ -361,7 +425,24 @@ public class SettingsActivity extends AppCompatActivity {
         billingManager = new BillingManager(this, new BillingManager.BillingUpdatesListener() {
             @Override
             public void onBillingClientSetupFinished() {
+                billingManager.querySkuDetailsAsync(
+                        BillingClient.SkuType.SUBS,
+                        Arrays.asList(BillingConstants.SKU_HERE, BillingConstants.SKU_TOMTOM),
+                        (responseCode, skuDetailsList) -> {
+                            if (responseCode != BillingClient.BillingResponse.OK) {
+                                return;
+                            }
+                            for (SkuDetails details : skuDetailsList) {
 
+                                if (details.getSku().equals(BillingConstants.SKU_HERE)) {
+                                    herePriceDesc.setText(getString(R.string.here_desc, getString(R.string.per_month, details.getPrice())));
+                                }
+
+                                if (details.getSku().equals(BillingConstants.SKU_TOMTOM)) {
+                                    tomtomPriceDesc.setText(getString(R.string.tomtom_desc, getString(R.string.per_month, details.getPrice())));
+                                }
+                            }
+                        });
             }
 
             @Override
@@ -377,21 +458,8 @@ public class SettingsActivity extends AppCompatActivity {
                     purchased.add(purchase.getSku());
                 }
 
-                if (purchased.contains(BillingConstants.SKU_HERE)) {
-                    hereSubscribeButton.setEnabled(false);
-                    hereSubscribeButton.setText("Subscribed");
-                } else {
-                    hereSubscribeButton.setEnabled(true);
-                    hereSubscribeButton.setText("Subscribe");
-                }
-
-                if (purchased.contains(BillingConstants.SKU_TOMTOM)) {
-                    //hereSubscribeButton.setEnabled(false);
-                    //hereSubscribeButton.setText("Subscribed");
-                } else {
-                    //hereSubscribeButton.setEnabled(true);
-                    //hereSubscribeButton.setText("Subscribe");
-                }
+                setSubscribeButtonState(hereSubscribeButton, purchased.contains(BillingConstants.SKU_HERE));
+                setSubscribeButtonState(tomtomSubscribeButton, purchased.contains(BillingConstants.SKU_TOMTOM));
             }
         });
 
@@ -399,14 +467,25 @@ public class SettingsActivity extends AppCompatActivity {
         PrefUtils.setVersionCode(this, BuildConfig.VERSION_CODE);
     }
 
-    private void openCoverageMap(String uriString) {
+    private void setSubscribeButtonState(Button button, boolean subscribed) {
+        if (subscribed) {
+            button.setEnabled(false);
+            button.setText(R.string.subscribed);
+        } else {
+            button.setEnabled(true);
+            button.setText(R.string.subscribe);
+        }
+    }
+
+
+    private void openLink(String uriString) {
         Intent intent = new Intent();
         intent.setData(Uri.parse(uriString));
         intent.setAction(Intent.ACTION_VIEW);
         try {
             SettingsActivity.this.startActivity(intent);
         } catch (ActivityNotFoundException e) {
-            Snackbar.make(enableFloatingButton, R.string.open_coverage_map_failed, Snackbar.LENGTH_LONG).show();
+            Snackbar.make(enableFloatingButton, getString(R.string.open_link_failed, uriString), Snackbar.LENGTH_LONG).show();
         }
     }
 
@@ -414,24 +493,61 @@ public class SettingsActivity extends AppCompatActivity {
         return NotificationManagerCompat.getEnabledListenerPackages(SettingsActivity.this).contains(BuildConfig.APPLICATION_ID);
     }
 
-    public void showSupportDialog() {
-        String content = getString(R.string.support_dev_dialog);
-
-        MaterialDialog.Builder builder = new MaterialDialog.Builder(this)
-                .icon(Utils.getVectorDrawableCompat(this, R.drawable.ic_favorite_black_24dp))
-                .title(R.string.support_development)
-                .content(Html.fromHtml(content));
-
-        if (BuildConfig.FLAVOR.equals("full")) {
-            builder.positiveText(R.string.dismiss);
-        }
-
-        builder.show();
+    public Observable<SkuDetails> querySkuDetails(BillingManager manager, String itemType, String... skuList) {
+        return Observable.create((Action1<Emitter<List<SkuDetails>>>) listEmitter -> {
+            manager.querySkuDetailsAsync(
+                    itemType,
+                    Arrays.asList(skuList),
+                    (responseCode, skuDetailsList) -> {
+                        if (responseCode != BillingClient.BillingResponse.OK) {
+                            listEmitter.onError(new Throwable("Billing error: " + responseCode));
+                        }
+                        listEmitter.onNext(skuDetailsList);
+                        listEmitter.onCompleted();
+                    });
+        }, Emitter.BackpressureMode.BUFFER)
+                .flatMap(Observable::from);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    public void showSupportDialog() {
+        Observable<SkuDetails> monthlyDonations = querySkuDetails(billingManager, BillingClient.SkuType.SUBS,
+                BillingConstants.SKU_D1_MONTHLY, BillingConstants.SKU_D3_MONTHLY);
+        Observable<SkuDetails> oneTimeDonations = querySkuDetails(billingManager, BillingClient.SkuType.INAPP,
+                BillingConstants.SKU_D1, BillingConstants.SKU_D3, BillingConstants.SKU_D5, BillingConstants.SKU_D10, BillingConstants.SKU_D20);
+
+        monthlyDonations.concatWith(oneTimeDonations)
+                .toList()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(skuDetailsList -> {
+                    String content = getString(R.string.support_dev_dialog);
+
+                    MaterialDialog.Builder builder = new MaterialDialog.Builder(this)
+                            .icon(Utils.getVectorDrawableCompat(this, R.drawable.ic_favorite_black_24dp))
+                            .title(R.string.support_development)
+                            .content(Html.fromHtml(content));
+
+                    List<String> purchaseDisplay = new ArrayList<>();
+                    for (SkuDetails details : skuDetailsList) {
+                        String amount = details.getPrice();
+                        if (details.getType().equals(BillingClient.SkuType.SUBS))
+                            amount = getString(R.string.per_month, amount);
+                        else {
+                            amount = getString(R.string.one_time, amount);
+                        }
+                        purchaseDisplay.add(amount);
+                    }
+
+                    builder.items(purchaseDisplay)
+                            .itemsCallback((dialog, itemView, which, text) -> {
+                                SkuDetails skuDetails = skuDetailsList.get(which);
+                                billingManager.initiatePurchaseFlow(skuDetails.getSku(), skuDetails.getType());
+                            });
+
+                    builder.show();
+                }, error -> {
+                    Snackbar.make(findViewById(android.R.id.content), R.string.in_app_unavailable, Snackbar.LENGTH_SHORT).show();
+                });
     }
 
     @Override
@@ -449,9 +565,6 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_settings_support:
-                showSupportDialog();
-                return true;
             case R.id.menu_settings_about:
                 showAboutDialog();
                 return true;

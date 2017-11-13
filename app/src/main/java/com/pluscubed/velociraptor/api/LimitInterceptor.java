@@ -1,4 +1,4 @@
-package com.pluscubed.velociraptor.api.raptor;
+package com.pluscubed.velociraptor.api;
 
 import com.pluscubed.velociraptor.BuildConfig;
 

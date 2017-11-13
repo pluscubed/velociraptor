@@ -19,7 +19,7 @@
         android:textStyle="bold" />
 
     <LinearLayout
-        android:id="@+id/here_provider"
+        android:id="@+id/osm_provider"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?selectableItemBackground"
@@ -44,7 +44,7 @@
                 android:layout_height="wrap_content"
                 android:paddingEnd="8dp"
                 android:paddingRight="8dp"
-                android:text="HERE Maps"
+                android:text="@string/openstreetmap"
                 android:textSize="16sp"
                 tools:ignore="RtlSymmetry" />
 
@@ -53,10 +53,11 @@
                 android:layout_height="wrap_content"
                 android:paddingEnd="8dp"
                 android:paddingRight="8dp"
-                android:text="Subscribe for 56 per month (7-day free trial)"
+                android:text="@string/openstreetmap_desc"
                 android:textColor="?android:textColorSecondary"
                 android:textSize="14sp"
                 tools:ignore="RtlSymmetry" />
+
 
         </LinearLayout>
 
@@ -71,16 +72,18 @@
         android:paddingRight="12dp">
 
         <Button
+            android:id="@+id/osm_editdata"
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Website" />
+            android:text="@string/edit_data" />
 
         <Button
+            android:id="@+id/osm_coverage"
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Edit Data" />
+            android:text="@string/coverage" />
 
         <Space
             android:layout_width="0dp"
@@ -88,11 +91,11 @@
             android:layout_weight="1" />
 
         <Button
-            android:id="@+id/here_subscribe"
+            android:id="@+id/osm_donate"
             style="@style/Widget.Button.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Subscribe" />
+            android:text="@string/support" />
     </LinearLayout>
 
     <View
@@ -126,16 +129,17 @@
                 android:layout_height="wrap_content"
                 android:paddingEnd="8dp"
                 android:paddingRight="8dp"
-                android:text="TomTom Maps"
+                android:text="@string/tomtom_provider"
                 android:textSize="16sp"
                 tools:ignore="RtlSymmetry" />
 
             <TextView
+                android:id="@+id/tomtom_provider_desc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingEnd="8dp"
                 android:paddingRight="8dp"
-                android:text="Subscribe for 56 per month (7-day free trial)"
+                android:text="@string/subscribe_placeholder"
                 android:textColor="?android:textColorSecondary"
                 android:textSize="14sp"
                 tools:ignore="RtlSymmetry" />
@@ -153,10 +157,11 @@
         android:paddingRight="12dp">
 
         <Button
+            android:id="@+id/tomtom_editdata"
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Website" />
+            android:text="@string/edit_data" />
 
         <Space
             android:layout_width="0dp"
@@ -164,10 +169,11 @@
             android:layout_weight="1" />
 
         <Button
+            android:id="@+id/tomtom_subscribe"
             style="@style/Widget.Button.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Subscribe" />
+            android:text="@string/subscribe" />
     </LinearLayout>
 
     <View
@@ -176,7 +182,7 @@
         android:background="#1f000000" />
 
     <LinearLayout
-        android:id="@+id/osm_provider"
+        android:id="@+id/here_provider"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?selectableItemBackground"
@@ -201,20 +207,20 @@
                 android:layout_height="wrap_content"
                 android:paddingEnd="8dp"
                 android:paddingRight="8dp"
-                android:text="OpenStreetMap"
+                android:text="@string/here_provider"
                 android:textSize="16sp"
                 tools:ignore="RtlSymmetry" />
 
             <TextView
+                android:id="@+id/here_provider_desc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingEnd="8dp"
                 android:paddingRight="8dp"
-                android:text="Free Velociraptor server, supported by your donations"
+                android:text="@string/subscribe_placeholder"
                 android:textColor="?android:textColorSecondary"
                 android:textSize="14sp"
                 tools:ignore="RtlSymmetry" />
-
 
         </LinearLayout>
 
@@ -224,21 +230,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:paddingBottom="0dp"
         android:paddingLeft="12dp"
         android:paddingRight="12dp">
 
         <Button
+            android:id="@+id/here_editdata"
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Edit Data" />
-
-        <Button
-            android:id="@+id/osm_coverage"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Coverage" />
+            android:text="@string/edit_data" />
 
         <Space
             android:layout_width="0dp"
@@ -246,11 +247,13 @@
             android:layout_weight="1" />
 
         <Button
-            style="@style/Widget.Button.Borderless.Colored"
+            android:id="@+id/here_subscribe"
+            style="@style/Widget.Button.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Donate" />
+            android:text="@string/subscribe" />
     </LinearLayout>
+
 
     <Space
         android:layout_width="match_parent"

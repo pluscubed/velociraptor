@@ -66,9 +66,5 @@
 58589:46 auto-value-parcel-adapter
 58637:46 javapoet
 58685:46 dbinspector
-58733:46 leakcanary-android
+58733:46 leakcanary-android-no-op
 58781:46 multidex
-58829:46 leakcanary-analyzer
-58877:46 haha
-58925:46 leakcanary-watcher
-58973:46 leakcanary-android-no-op

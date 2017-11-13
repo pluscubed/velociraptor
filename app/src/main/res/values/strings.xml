@@ -90,9 +90,27 @@
     <!--Speed limit providers-->
     <string name="speed_limit_providers">Speed limit providers</string>
 
-    <string name="check_coverage">Check OpenStreetMap coverage</string>
+    <string name="subscribe_placeholder">Subscribe (7-day free trial)</string>
+
+    <string name="here_provider">HERE Maps</string>
+    <string name="here_desc">Subscribe for %s (7-day free trial)</string>
+
+    <string name="tomtom_provider">TomTom Maps</string>
+    <string name="tomtom_desc">Subscribe for %s (7-day free trial)</string>
+
+    <string name="openstreetmap">OpenStreetMap</string>
+    <string name="share_link">Share Link</string>
+    <string name="openstreetmap_desc">Free - Velociraptor\'s OSM server is supported by you</string>
     <string name="osm_edit">Visit <b>openstreetmap.org</b> on your computer to add/edit speed limits</string>
-    <string name="open_coverage_map_failed">Unable to open link. Please manually go to http://product.itoworld.com/map/124.</string>
+    <string name="open_link_failed">Unable to open link. Please manually go to %s.</string>
+
+    <string name="edit_data">Edit Data</string>
+    <string name="subscribe">Subscribe</string>
+    <string name="subscribed">Subscribed</string>
+    <string name="coverage">Coverage</string>
+
+    <string name="check_coverage">Check OpenStreetMap coverage</string>
+
 
     <!--Activation Settings-->
     <string name="select_overlay_usage">Activation</string>
@@ -129,7 +147,7 @@
     <!--Support development-->
     <string name="support_development">Support development</string>
     <string name="in_app_unavailable">In-app billing not available</string>
-    <string name="support_dev_dialog">Used for OpenStreetMap server costs.</string>
+    <string name="support_dev_dialog">Used for OpenStreetMap server costs; suggested amount is 1 USD per month.</string>
     <string name="support_dev_dialog_badge">Thank you for your support!</string>
     <string name="per_month">%s per month</string>
     <string name="one_time">%s one-time</string>
