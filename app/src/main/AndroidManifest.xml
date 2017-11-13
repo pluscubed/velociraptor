@@ -44,7 +44,7 @@
         <service android:name=".limit.LimitService" />
 
         <service
-            android:name=".GmapsNavNotificationListener"
+            android:name=".detection.GmapsNavNotificationListener"
             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
             <intent-filter>
                 <action android:name="android.service.notification.NotificationListenerService" />
@@ -52,7 +52,7 @@
         </service>
 
         <service
-            android:name=".AppDetectionService"
+            android:name=".detection.AppDetectionService"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
             <intent-filter>
                 <action android:name="android.accessibilityservice.AccessibilityService" />

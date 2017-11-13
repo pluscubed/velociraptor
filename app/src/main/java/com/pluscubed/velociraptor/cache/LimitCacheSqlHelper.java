@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class LimitCacheSqlHelper extends SQLiteOpenHelper {
     public static final String DB_NAME = "cache.db";
-    public static final int DB_VERSION = 4;
+    public static final int DB_VERSION = 5;
 
     public LimitCacheSqlHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);

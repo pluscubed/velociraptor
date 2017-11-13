@@ -1,4 +1,4 @@
-package com.pluscubed.velociraptor;
+package com.pluscubed.velociraptor.detection;
 
 import android.accessibilityservice.AccessibilityService;
 import android.accessibilityservice.AccessibilityServiceInfo;
@@ -12,6 +12,7 @@ import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
 import com.crashlytics.android.Crashlytics;
+import com.pluscubed.velociraptor.BuildConfig;
 import com.pluscubed.velociraptor.limit.LimitService;
 import com.pluscubed.velociraptor.utils.PrefUtils;
 

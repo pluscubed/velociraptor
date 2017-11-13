@@ -20,6 +20,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
+import com.android.billingclient.api.Purchase;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -28,9 +29,12 @@ import com.google.android.gms.location.LocationServices;
 import com.pluscubed.velociraptor.R;
 import com.pluscubed.velociraptor.api.LimitFetcher;
 import com.pluscubed.velociraptor.api.LimitResponse;
+import com.pluscubed.velociraptor.billing.BillingManager;
 import com.pluscubed.velociraptor.settings.SettingsActivity;
 import com.pluscubed.velociraptor.utils.PrefUtils;
 import com.pluscubed.velociraptor.utils.Utils;
+
+import java.util.List;
 
 import rx.SingleSubscriber;
 import rx.Subscription;
@@ -73,6 +77,8 @@ public class LimitService extends Service {
     private boolean isRunning;
     private boolean isStartedFromNotification;
     private boolean isLimitHidden;
+
+    private BillingManager billingManager;
 
     @Nullable
     @Override
@@ -150,6 +156,25 @@ public class LimitService extends Service {
         } catch (SecurityException unlikely) {
             showToast("Velociraptor cannot obtain location");
         }
+
+        billingManager = new BillingManager(this, new BillingManager.BillingUpdatesListener() {
+            @Override
+            public void onBillingClientSetupFinished() {
+
+            }
+
+            @Override
+            public void onConsumeFinished(String token, int result) {
+
+            }
+
+            @Override
+            public void onPurchasesUpdated(List<Purchase> purchases) {
+                for (Purchase purchase : purchases) {
+                    limitFetcher.verifyRaptorService(purchase);
+                }
+            }
+        });
 
         isRunning = true;
 
@@ -229,12 +254,27 @@ public class LimitService extends Service {
     }
 
     private void updateDebuggingText(Location location, LimitResponse limitResponse, Throwable error) {
-        String text = "Location: " + location +
-                "\nEndpoints:\n" + limitFetcher.getApiInformation();
+        String text = "Location: " + location + "\n";
 
         if (error == null && limitResponse != null) {
-            debuggingRequestInfo = ("Road name: " + limitResponse.roadName());
-            debuggingRequestInfo += "\nFrom cache: " + limitResponse.fromCache();
+            String origin = String.valueOf(limitResponse.origin());
+            switch (limitResponse.origin()) {
+                case LimitResponse.ORIGIN_HERE:
+                    origin = "HERE";
+                    break;
+                case LimitResponse.ORIGIN_TOMTOM:
+                    origin = "TomTom";
+                    break;
+                case LimitResponse.ORIGIN_OSM:
+                    origin = "OSM";
+                    break;
+            }
+
+            debuggingRequestInfo = "Origin: " + origin +
+                    "\nRoad name: " + limitResponse.roadName() +
+                    "\nFrom cache: " + limitResponse.fromCache() +
+                    "\nTime since: " + (System.currentTimeMillis() - limitResponse.timestamp()) +
+                    "\nCoords: " + limitResponse.coords();
         } else if (error != null) {
             debuggingRequestInfo = ("Last error: " + error);
         }
@@ -318,9 +358,11 @@ public class LimitService extends Service {
         if (speedLimitView != null)
             speedLimitView.stop();
 
-        if (getSpeedLimitSubscription != null) {
+        if (getSpeedLimitSubscription != null)
             getSpeedLimitSubscription.unsubscribe();
-        }
+
+        if (billingManager != null)
+            billingManager.destroy();
     }
 
     @Override

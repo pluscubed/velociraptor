@@ -21,9 +21,9 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.crashlytics.android.Crashlytics;
 import com.pluscubed.recyclerfastscroll.RecyclerFastScroller;
-import com.pluscubed.velociraptor.AppDetectionService;
 import com.pluscubed.velociraptor.BuildConfig;
 import com.pluscubed.velociraptor.R;
+import com.pluscubed.velociraptor.detection.AppDetectionService;
 import com.pluscubed.velociraptor.utils.PrefUtils;
 import com.pluscubed.velociraptor.utils.Utils;
 

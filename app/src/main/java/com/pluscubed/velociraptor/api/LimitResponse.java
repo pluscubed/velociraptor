@@ -1,17 +1,22 @@
 package com.pluscubed.velociraptor.api;
 
 import com.google.auto.value.AutoValue;
-import com.pluscubed.velociraptor.api.osmapi.Coord;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @AutoValue
 public abstract class LimitResponse {
+
+    // Higher origin = higher priority in cache
+    public static final int ORIGIN_HERE = 2;
+    public static final int ORIGIN_TOMTOM = 1;
+    public static final int ORIGIN_OSM = 0;
+
     public static Builder builder() {
         return new AutoValue_LimitResponse.Builder()
                 .setFromCache(false)
-                .setFromHere(false)
+                .setOrigin(-1)
                 .setSpeedLimit(-1)
                 .setRoadName("")
                 .setCoords(new ArrayList<>())
@@ -20,7 +25,7 @@ public abstract class LimitResponse {
 
     public abstract boolean fromCache();
 
-    public abstract boolean fromHere();
+    public abstract int origin();
 
     /**
      * -1 if limit does not exist
@@ -39,7 +44,7 @@ public abstract class LimitResponse {
     public abstract static class Builder {
         public abstract Builder setFromCache(boolean value);
 
-        public abstract Builder setFromHere(boolean value);
+        public abstract Builder setOrigin(int value);
 
         public abstract Builder setSpeedLimit(int value);
 

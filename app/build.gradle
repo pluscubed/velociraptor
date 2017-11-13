@@ -12,6 +12,7 @@ buildscript {
     }
 }
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 apply plugin: 'io.fabric'
 apply plugin: 'com.squareup.sqldelight'
 apply plugin: 'com.google.gms.oss.licenses.plugin'
@@ -45,6 +46,7 @@ android {
         versionName "1.5.6"
         vectorDrawables.useSupportLibrary = true
         manifestPlaceholders = [appName: "@string/app_name"]
+        multiDexEnabled true
 
         lintOptions {
             disable 'MissingTranslation'
@@ -65,28 +67,25 @@ android {
             }
         }
 
+        debugIap {
+            debuggable true
+            minifyEnabled false
+            shrinkResources false
+
+            if (project.hasProperty("RELEASE_STORE_FILE")) {
+                signingConfig signingConfigs.release
+            } else {
+                signingConfig signingConfigs.debug
+            }
+        }
+
         debug {
             minifyEnabled false
             useProguard false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             applicationIdSuffix '.debug'
             versionNameSuffix '-DEBUG'
             testCoverageEnabled false
             manifestPlaceholders = [appName: "Velociraptor DEBUG"]
-        }
-    }
-
-    flavorDimensions "default"
-
-    productFlavors {
-        play {
-            dimension "default"
-        }
-        full {
-            dimension "default"
-            applicationIdSuffix ".full"
-            versionName = android.defaultConfig.versionName + "-aa"
-            manifestPlaceholders = [appName: "Velociraptor AA"]
         }
     }
 
@@ -110,6 +109,7 @@ dependencies {
     testCompile "org.robolectric:robolectric:3.5.1"
 
     debugCompile 'im.dino:dbinspector:3.4.1@aar'
+    debugIapCompile 'im.dino:dbinspector:3.4.1@aar'
 
     compile "com.google.auto.value:auto-value:1.4"
     annotationProcessor "com.google.auto.value:auto-value:1.4"
@@ -133,6 +133,8 @@ dependencies {
 
     compile 'com.google.android.gms:play-services-location:11.6.0'
     compile 'com.google.android.gms:play-services-oss-licenses:11.6.0'
+    compile 'com.google.android.gms:play-services-maps:11.6.0'
+    compile 'com.google.maps.android:android-maps-utils:0.5'
 
     compile 'com.stepstone.stepper:material-stepper:4.3.1'
 
@@ -163,6 +165,7 @@ dependencies {
     compile 'com.jakewharton.timber:timber:4.6.0'
 
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.1'
+    debugIapCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
     testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
 
@@ -170,6 +173,7 @@ dependencies {
         transitive = true;
     }
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }
 
 

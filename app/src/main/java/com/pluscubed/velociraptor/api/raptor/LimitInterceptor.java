@@ -1,4 +1,4 @@
-package com.pluscubed.velociraptor.api;
+package com.pluscubed.velociraptor.api.raptor;
 
 import com.pluscubed.velociraptor.BuildConfig;
 
@@ -8,12 +8,12 @@ import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
 
-final class OsmInterceptor implements Interceptor {
+public class LimitInterceptor implements Interceptor {
 
-    private OsmApiEndpoint endpoint;
+    private Callback callback;
 
-    public OsmInterceptor(OsmApiEndpoint endpoint) {
-        this.endpoint = endpoint;
+    public LimitInterceptor(Callback endpoint) {
+        this.callback = endpoint;
     }
 
     @Override
@@ -29,11 +29,18 @@ final class OsmInterceptor implements Interceptor {
             if (!proceed.isSuccessful()) {
                 throw new IOException(proceed.code() + ": " + proceed.toString());
             } else {
-                endpoint.timeTaken = (int) (System.currentTimeMillis() - start);
+                callback.updateTimeTaken((int) (System.currentTimeMillis() - start));
             }
             return proceed;
         } finally {
-            endpoint.timeTakenTimestamp = System.currentTimeMillis();
+            callback.updateTimestamp(System.currentTimeMillis());
         }
+    }
+
+
+    public interface Callback {
+        void updateTimeTaken(int timeTaken);
+
+        void updateTimestamp(long timeTakenTimestamp);
     }
 }

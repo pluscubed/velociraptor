@@ -1,10 +1,13 @@
-package com.pluscubed.velociraptor.api.osmapi;
+package com.pluscubed.velociraptor.api;
 
 import android.location.Location;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.android.gms.maps.model.LatLng;
+
+import java.util.Locale;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -29,6 +32,11 @@ public class Coord {
         lon = location.getLongitude();
     }
 
+    public Coord(LatLng location) {
+        lat = location.latitude;
+        lon = location.longitude;
+    }
+
     public Location toLocation() {
         Location loc = new Location("");
         loc.setLatitude(lat);
@@ -36,9 +44,17 @@ public class Coord {
         return loc;
     }
 
+    public LatLng toLatLng() {
+        return new LatLng(lat, lon);
+    }
+
     @Override
     public String toString() {
-        return lat + "," + lon;
+        return "(" +
+                String.format(Locale.getDefault(), "%.5f", lat) +
+                "," +
+                String.format(Locale.getDefault(), "%.5f", lon) +
+                ")";
     }
 
     @Override

@@ -1,4 +1,6 @@
-package com.pluscubed.velociraptor.api.osmapi;
+package com.pluscubed.velociraptor.api.osm;
+
+import com.pluscubed.velociraptor.api.osm.data.OsmResponse;
 
 import retrofit2.http.GET;
 import retrofit2.http.Query;

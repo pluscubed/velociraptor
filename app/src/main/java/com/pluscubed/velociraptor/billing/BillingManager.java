@@ -34,7 +34,7 @@ public class BillingManager implements PurchasesUpdatedListener {
 
     private static final String TAG = "BillingManager";
     private final BillingUpdatesListener billingUpdatesListener;
-    private final Activity activity;
+    private final Context context;
     private final List<Purchase> purchases = new ArrayList<>();
     /* BASE_64_ENCODED_PUBLIC_KEY should be YOUR APPLICATION'S PUBLIC KEY
      * (that you got from the Google Play developer console). This is not your
@@ -59,14 +59,14 @@ public class BillingManager implements PurchasesUpdatedListener {
     private Set<String> tokensToBeConsumed;
     private int billingClientResponseCode = BILLING_MANAGER_NOT_INITIALIZED;
 
-    public BillingManager(Activity activity, final BillingUpdatesListener updatesListener) {
+    public BillingManager(Context context, final BillingUpdatesListener updatesListener) {
         Log.d(TAG, "Creating Billing client.");
-        this.activity = activity;
+        this.context = context;
 
-        BASE_64_ENCODED_PUBLIC_KEY = activity.getString(R.string.play_license_key);
+        BASE_64_ENCODED_PUBLIC_KEY = this.context.getString(R.string.play_license_key);
 
         billingUpdatesListener = updatesListener;
-        billingClient = BillingClient.newBuilder(this.activity).setListener(this).build();
+        billingClient = BillingClient.newBuilder(this.context).setListener(this).build();
 
         Log.d(TAG, "Starting setup.");
 
@@ -120,7 +120,7 @@ public class BillingManager implements PurchasesUpdatedListener {
                 Log.d(TAG, "Launching in-app purchase flow. Replace old SKU? " + (oldSkus != null));
                 BillingFlowParams purchaseParams = BillingFlowParams.newBuilder()
                         .setSku(skuId).setType(billingType).setOldSkus(oldSkus).build();
-                billingClient.launchBillingFlow(activity, purchaseParams);
+                billingClient.launchBillingFlow((Activity) context, purchaseParams);
             }
         };
 
@@ -128,7 +128,7 @@ public class BillingManager implements PurchasesUpdatedListener {
     }
 
     public Context getContext() {
-        return activity;
+        return context;
     }
 
     /**

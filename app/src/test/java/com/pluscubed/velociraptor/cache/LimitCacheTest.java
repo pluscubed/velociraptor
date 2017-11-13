@@ -3,8 +3,8 @@ package com.pluscubed.velociraptor.cache;
 import android.os.Build;
 
 import com.pluscubed.velociraptor.BuildConfig;
+import com.pluscubed.velociraptor.api.Coord;
 import com.pluscubed.velociraptor.api.LimitResponse;
-import com.pluscubed.velociraptor.api.osmapi.Coord;
 
 import org.junit.After;
 import org.junit.Before;
@@ -24,8 +24,8 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = Build.VERSION_CODES.N_MR1)
-public class SpeedLimitCacheTest {
+@Config(constants = BuildConfig.class, sdk = Build.VERSION_CODES.O_MR1)
+public class LimitCacheTest {
 
     LimitCache speedLimitCache;
     //private File cache;

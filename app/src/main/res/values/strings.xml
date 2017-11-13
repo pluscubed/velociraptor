@@ -25,7 +25,7 @@
     <string name="enable_accessibility_service">Turn on Accessibility Service</string>
     <string name="enable_accessibility_service_desc">Allow Velociraptor to automatically launch in map apps</string>
     <string name="accessibility_service_summary">Auto-launch in map apps</string>
-    <string name="accessibility_service_description">Allow Velociraptor to detect the foreground app and launch automatically.\n\nVelociraptor does not use any information other than the foreground app info.</string>
+    <string name="accessibility_service_description">Allow Velociraptor to detect the foreground app and launch automatically.\n\nVelociraptor does not use any information other than the foreground app info. This service is mainly intended for users with disabilities.</string>
     <string name="open_settings_failed_accessibility">Unable to open settings. Please manually enable the Accessibility Service setting for Velociraptor.</string>
 
     <string name="grant_permission">Grant permission</string>
@@ -88,7 +88,7 @@
     <string name="licenses">Licenses</string>
 
     <!--Speed limit providers-->
-    <string name="speed_limit_providers">Speed limit provider</string>
+    <string name="speed_limit_providers">Speed limit providers</string>
 
     <string name="check_coverage">Check OpenStreetMap coverage</string>
     <string name="osm_edit">Visit <b>openstreetmap.org</b> on your computer to add/edit speed limits</string>
@@ -98,7 +98,7 @@
     <string name="select_overlay_usage">Activation</string>
 
     <string name="automatically_show">Show/hide in specified apps</string>
-    <string name="show_in_apps">Apps to show Velociraptor</string>
+    <string name="show_in_apps">Auto-launch in these apps</string>
 
     <string name="persistent_notification_controls">Show notification controls</string>
     <string name="controls_notif_title">Velociraptor controls</string>
@@ -129,7 +129,7 @@
     <!--Support development-->
     <string name="support_development">Support development</string>
     <string name="in_app_unavailable">In-app billing not available</string>
-    <string name="support_dev_dialog">Used for OpenStreetMap server costs; suggested amount is 1 USD per month.</string>
+    <string name="support_dev_dialog">Used for OpenStreetMap server costs.</string>
     <string name="support_dev_dialog_badge">Thank you for your support!</string>
     <string name="per_month">%s per month</string>
     <string name="one_time">%s one-time</string>

@@ -1,4 +1,4 @@
-package com.pluscubed.velociraptor;
+package com.pluscubed.velociraptor.detection;
 
 import android.annotation.TargetApi;
 import android.app.Notification;

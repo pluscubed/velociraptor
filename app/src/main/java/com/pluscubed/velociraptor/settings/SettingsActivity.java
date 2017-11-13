@@ -34,24 +34,22 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.anjlab.android.iab.v3.BillingProcessor;
-import com.anjlab.android.iab.v3.SkuDetails;
-import com.anjlab.android.iab.v3.TransactionDetails;
+import com.android.billingclient.api.BillingClient;
+import com.android.billingclient.api.Purchase;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity;
-import com.pluscubed.velociraptor.AppDetectionService;
 import com.pluscubed.velociraptor.BuildConfig;
 import com.pluscubed.velociraptor.R;
+import com.pluscubed.velociraptor.billing.BillingConstants;
+import com.pluscubed.velociraptor.billing.BillingManager;
+import com.pluscubed.velociraptor.detection.AppDetectionService;
 import com.pluscubed.velociraptor.limit.LimitService;
 import com.pluscubed.velociraptor.settings.appselection.AppSelectionActivity;
 import com.pluscubed.velociraptor.utils.PrefUtils;
 import com.pluscubed.velociraptor.utils.Utils;
 
-import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Currency;
 import java.util.List;
 
 import butterknife.BindView;
@@ -62,10 +60,9 @@ public class SettingsActivity extends AppCompatActivity {
     public static final int PENDING_SERVICE_CLOSE = 3;
     public static final int PENDING_SETTINGS = 2;
     public static final int NOTIFICATION_CONTROLS = 42;
-    public static final String[] SUBSCRIPTIONS = new String[]{"sub_1", "sub_2"};
-    public static final String[] PURCHASES = new String[]{"badge_1", "badge_2", "badge_3", "badge_4", "badge_5"};
     public static final String OSM_COVERAGE_URL = "http://product.itoworld.com/map/124";
     private static final int REQUEST_LOCATION = 105;
+
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
@@ -114,9 +111,11 @@ public class SettingsActivity extends AppCompatActivity {
     @BindView(R.id.spinner_style)
     Spinner styleSpinner;
 
-    //OpenStreetMap edit
-    @BindView(R.id.check_coverage)
-    LinearLayout checkCoverageView;
+    //Providers
+    @BindView(R.id.here_subscribe)
+    Button hereSubscribeButton;
+    @BindView(R.id.osm_coverage)
+    Button osmCoverageButton;
 
     //Advanced
     @BindView(R.id.switch_debugging)
@@ -137,14 +136,23 @@ public class SettingsActivity extends AppCompatActivity {
 
 
     private NotificationManager notificationManager;
-    private BillingProcessor billingProcessor;
+    private BillingManager billingManager;
+    private List<String> purchased;
 
     @Override
     protected void onDestroy() {
-        if (billingProcessor != null) {
-            billingProcessor.release();
+        if (billingManager != null) {
+            billingManager.destroy();
         }
         super.onDestroy();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (billingManager != null && billingManager.getBillingClientResponseCode() == BillingClient.BillingResponse.OK) {
+            billingManager.queryPurchases();
+        }
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -160,7 +168,7 @@ public class SettingsActivity extends AppCompatActivity {
             mPermCard.setVisibility(View.GONE);
         }
 
-        checkCoverageView.setOnClickListener(v -> {
+        osmCoverageButton.setOnClickListener(v -> {
             if (Utils.isLocationPermissionGranted(SettingsActivity.this)) {
                 FusedLocationProviderClient fusedLocationProvider =
                         LocationServices.getFusedLocationProviderClient(SettingsActivity.this);
@@ -335,6 +343,13 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
+        hereSubscribeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                billingManager.initiatePurchaseFlow(BillingConstants.SKU_HERE, BillingClient.SkuType.SUBS);
+            }
+        });
+
         invalidateStates();
 
         if (BuildConfig.VERSION_CODE > PrefUtils.getVersionCode(this) &&
@@ -342,30 +357,41 @@ public class SettingsActivity extends AppCompatActivity {
             showChangelog();
         }
 
-        billingProcessor = new BillingProcessor(this, getString(R.string.play_license_key), new BillingProcessor.IBillingHandler() {
+        purchased = new ArrayList<>();
+        billingManager = new BillingManager(this, new BillingManager.BillingUpdatesListener() {
             @Override
-            public void onProductPurchased(String productId, TransactionDetails details) {
-                PrefUtils.setSupported(SettingsActivity.this, true);
-                if (Arrays.asList(PURCHASES).contains(productId))
-                    billingProcessor.consumePurchase(productId);
-            }
-
-            @Override
-            public void onPurchaseHistoryRestored() {
+            public void onBillingClientSetupFinished() {
 
             }
 
             @Override
-            public void onBillingError(int errorCode, Throwable error) {
-                if (errorCode != 110) {
-                    Snackbar.make(findViewById(android.R.id.content), "Billing error: code = " + errorCode + ", error: " +
-                            (error != null ? error.getMessage() : "?"), Snackbar.LENGTH_LONG).show();
+            public void onConsumeFinished(String token, int result) {
+
+            }
+
+            @Override
+            public void onPurchasesUpdated(List<Purchase> purchases) {
+                purchased.clear();
+
+                for (Purchase purchase : purchases) {
+                    purchased.add(purchase.getSku());
                 }
-            }
 
-            @Override
-            public void onBillingInitialized() {
-                billingProcessor.loadOwnedPurchasesFromGoogle();
+                if (purchased.contains(BillingConstants.SKU_HERE)) {
+                    hereSubscribeButton.setEnabled(false);
+                    hereSubscribeButton.setText("Subscribed");
+                } else {
+                    hereSubscribeButton.setEnabled(true);
+                    hereSubscribeButton.setText("Subscribe");
+                }
+
+                if (purchased.contains(BillingConstants.SKU_TOMTOM)) {
+                    //hereSubscribeButton.setEnabled(false);
+                    //hereSubscribeButton.setText("Subscribed");
+                } else {
+                    //hereSubscribeButton.setEnabled(true);
+                    //hereSubscribeButton.setText("Subscribe");
+                }
             }
         });
 
@@ -389,53 +415,12 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public void showSupportDialog() {
-        String content = getString(BuildConfig.FLAVOR.equals("play") ? R.string.support_dev_dialog : R.string.support_dev_dialog_notplay);
-        if (PrefUtils.hasSupported(this) || !billingProcessor.listOwnedSubscriptions().isEmpty()) {
-            content += "\n\n\uD83C\uDF89 " + getString(R.string.support_dev_dialog_badge) + " \uD83C\uDF89";
-        }
+        String content = getString(R.string.support_dev_dialog);
+
         MaterialDialog.Builder builder = new MaterialDialog.Builder(this)
                 .icon(Utils.getVectorDrawableCompat(this, R.drawable.ic_favorite_black_24dp))
                 .title(R.string.support_development)
                 .content(Html.fromHtml(content));
-
-        if (BuildConfig.FLAVOR.equals("play")) {
-            if (!billingProcessor.isInitialized()) {
-                Snackbar.make(findViewById(android.R.id.content), R.string.in_app_unavailable, Snackbar.LENGTH_SHORT).show();
-                return;
-            }
-            final List<SkuDetails> purchaseListingDetails = billingProcessor.getPurchaseListingDetails(new ArrayList<>(Arrays.asList(PURCHASES)));
-            final List<SkuDetails> subscriptionListingDetails = billingProcessor.getSubscriptionListingDetails(new ArrayList<>(Arrays.asList(SUBSCRIPTIONS)));
-
-            if (purchaseListingDetails == null || purchaseListingDetails.isEmpty()) {
-                Snackbar.make(findViewById(android.R.id.content), R.string.in_app_unavailable, Snackbar.LENGTH_SHORT).show();
-                return;
-            }
-
-            purchaseListingDetails.addAll(0, subscriptionListingDetails);
-
-            List<String> purchaseDisplay = new ArrayList<>();
-            for (SkuDetails details : purchaseListingDetails) {
-                NumberFormat format = NumberFormat.getCurrencyInstance();
-                format.setCurrency(Currency.getInstance(details.currency));
-                String amount = format.format(details.priceValue);
-                if (details.isSubscription)
-                    amount = String.format(getString(R.string.per_month), amount);
-                else {
-                    amount = String.format(getString(R.string.one_time), amount);
-                }
-                purchaseDisplay.add(amount);
-            }
-
-            builder.items(purchaseDisplay)
-                    .itemsCallback((dialog, itemView, which, text) -> {
-                        SkuDetails skuDetails = purchaseListingDetails.get(which);
-                        if (skuDetails.isSubscription) {
-                            billingProcessor.subscribe(SettingsActivity.this, skuDetails.productId);
-                        } else {
-                            billingProcessor.purchase(SettingsActivity.this, skuDetails.productId);
-                        }
-                    });
-        }
 
         if (BuildConfig.FLAVOR.equals("full")) {
             builder.positiveText(R.string.dismiss);
@@ -446,8 +431,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (!billingProcessor.handleActivityResult(requestCode, resultCode, data))
-            super.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override

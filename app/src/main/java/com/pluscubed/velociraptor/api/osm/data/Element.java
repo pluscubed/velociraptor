@@ -1,8 +1,9 @@
-package com.pluscubed.velociraptor.api.osmapi;
+package com.pluscubed.velociraptor.api.osm.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.pluscubed.velociraptor.api.Coord;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.pluscubed.velociraptor.api;
+package com.pluscubed.velociraptor.api.osm;
 
 public class OsmApiEndpoint {
     public final String baseUrl;
