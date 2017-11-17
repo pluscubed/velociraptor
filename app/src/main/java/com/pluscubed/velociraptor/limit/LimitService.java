@@ -233,7 +233,7 @@ public class LimitService extends Service {
         updateSpeedometer(location);
         updateDebuggingText(location, null, null);
 
-        if (speedLimitQuerySubscription == null && !isLimitHidden &&
+        if (speedLimitQuerySubscription == null && !isLimitHidden && PrefUtils.getShowLimits(this) &&
                 (lastLocationWithFetchAttempt == null || location.distanceTo(lastLocationWithFetchAttempt) > 10)) {
 
             speedLimitQuerySubscription = limitFetcher.getSpeedLimit(location)

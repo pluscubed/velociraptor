@@ -257,6 +257,11 @@ public class FloatingView implements LimitView {
             mSpeedometerView.setVisibility(speedometerShown ? View.VISIBLE : View.GONE);
         }
 
+        boolean limitShown = PrefUtils.getShowLimits(mService);
+        if (mLimitView != null) {
+            mLimitView.setVisibility(limitShown ? View.VISIBLE : View.GONE);
+        }
+
         if (mSpeedometerUnitsText != null) {
             mSpeedometerUnitsText.setText(Utils.getUnitText(mService));
         }
@@ -335,7 +340,7 @@ public class FloatingView implements LimitView {
 
     @Override
     public void hideLimit(boolean hideLimit) {
-        mLimitView.setVisibility(hideLimit ? View.INVISIBLE : View.VISIBLE);
+        mLimitView.setVisibility(!PrefUtils.getShowLimits(mService) ? View.GONE : (hideLimit ? View.INVISIBLE : View.VISIBLE));
     }
 
     private class FloatingOnTouchListener implements View.OnTouchListener {

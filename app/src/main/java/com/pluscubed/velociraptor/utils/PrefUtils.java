@@ -22,17 +22,15 @@ public abstract class PrefUtils {
     private static final String PREF_TOLERANCE_MODE = "pref_tolerance_mode";
     private static final String PREF_OPACITY = "pref_opacity";
     private static final String PREF_SPEEDOMETER = "pref_speedometer";
+    private static final String PREF_LIMITS = "pref_limits";
     private static final String PREF_BEEP = "pref_beep";
     private static final String PREF_DEBUGGING = "pref_debugging";
-    private static final String PREF_SUPPORTED = "pref_supported";
     private static final String PREF_APPS = "pref_apps";
-    private static final String PREF_ANDROID_AUTO = "pref_android_auto";
     private static final String PREF_FIRSTRUN = "pref_initial";
     private static final String PREF_VERSION_CODE = "pref_version_code";
     private static final String PREF_SPEEDLIMIT_SIZE = "pref_speedlimit_size";
     private static final String PREF_SPEEDOMETER_SIZE = "pref_speedometer_size";
     private static final String PREF_GMAPS_ONLY_NAVIGATION = "pref_gmaps_only_nav";
-    private static final String PREF_HERE_CODES = "pref_here_codes";
 
     private static SharedPreferences.Editor edit(Context context) {
         return getSharedPreferences(context).edit();
@@ -124,6 +122,14 @@ public abstract class PrefUtils {
         edit(context).putBoolean(PREF_SPEEDOMETER, show).apply();
     }
 
+    public static boolean getShowLimits(Context context) {
+        return getSharedPreferences(context).getBoolean(PREF_LIMITS, true);
+    }
+
+    public static void setShowLimits(Context context, boolean show) {
+        edit(context).putBoolean(PREF_LIMITS, show).apply();
+    }
+
     public static boolean isDebuggingEnabled(Context context) {
         return getSharedPreferences(context).getBoolean(PREF_DEBUGGING, false);
     }
@@ -138,22 +144,6 @@ public abstract class PrefUtils {
 
     public static void setBeepAlertEnabled(Context context, boolean beep) {
         edit(context).putBoolean(PREF_BEEP, beep).apply();
-    }
-
-    public static boolean hasSupported(Context context) {
-        return getSharedPreferences(context).getBoolean(PREF_SUPPORTED, false);
-    }
-
-    public static void setSupported(Context context, boolean beep) {
-        edit(context).putBoolean(PREF_SUPPORTED, beep).apply();
-    }
-
-    public static boolean isAutoIntegrationEnabled(Context context) {
-        return getSharedPreferences(context).getBoolean(PREF_ANDROID_AUTO, false);
-    }
-
-    public static void setAutoIntegrationEnabled(Context context, boolean enabled) {
-        edit(context).putBoolean(PREF_ANDROID_AUTO, enabled).apply();
     }
 
     public static Set<String> getApps(Context context) {
@@ -186,14 +176,6 @@ public abstract class PrefUtils {
 
     public static void setGmapsOnlyInNavigation(Context context, boolean only) {
         edit(context).putBoolean(PREF_GMAPS_ONLY_NAVIGATION, only).apply();
-    }
-
-    public static String getHereCodes(Context context) {
-        return getSharedPreferences(context).getString(PREF_HERE_CODES, "");
-    }
-
-    public static void setHereCodes(Context context, String codes) {
-        edit(context).putString(PREF_HERE_CODES, codes).apply();
     }
 
     @IntDef({STYLE_US, STYLE_INTERNATIONAL})

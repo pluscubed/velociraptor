@@ -95,6 +95,9 @@ public class SettingsActivity extends AppCompatActivity {
     ImageView enabledServiceImage;
 
     //General
+    @BindView(R.id.switch_limits)
+    SwitchCompat showSpeedLimitsSwitch;
+
     @BindView(R.id.switch_speedometer)
     SwitchCompat showSpeedometerSwitch;
 
@@ -308,6 +311,16 @@ public class SettingsActivity extends AppCompatActivity {
 
             Utils.updateFloatingServicePrefs(SettingsActivity.this);
         });
+
+        showSpeedLimitsSwitch.setChecked(PrefUtils.getShowLimits(this));
+        ((View) showSpeedLimitsSwitch.getParent()).setOnClickListener(v -> {
+            showSpeedLimitsSwitch.setChecked(!showSpeedLimitsSwitch.isChecked());
+
+            PrefUtils.setShowLimits(SettingsActivity.this, showSpeedLimitsSwitch.isChecked());
+
+            Utils.updateFloatingServicePrefs(SettingsActivity.this);
+        });
+
 
         debuggingSwitch.setChecked(PrefUtils.isDebuggingEnabled(this));
         ((View) debuggingSwitch.getParent()).setOnClickListener(v -> {

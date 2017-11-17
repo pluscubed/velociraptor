@@ -39,7 +39,8 @@
     <!--General Settings-->
     <string name="general">General</string>
 
-    <string name="show_speedometer">Show speedometer</string>
+    <string name="show_limits">Speed limits</string>
+    <string name="show_speedometer">Speedometer</string>
 
     <string name="sound_alert">Sound alert</string>
     <string name="test">Test</string>
