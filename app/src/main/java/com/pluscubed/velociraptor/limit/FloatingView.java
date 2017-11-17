@@ -294,7 +294,7 @@ public class FloatingView implements LimitView {
                     height = speedLimitSize * 64;
                     width = speedLimitSize * 64;
 
-                    textSize = 24;
+                    textSize = 0;
                     break;
             }
 
@@ -303,8 +303,10 @@ public class FloatingView implements LimitView {
             layoutParams.height = Utils.convertDpToPx(mService, height);
             mLimitView.setLayoutParams(layoutParams);
 
-            textSize *= speedLimitSize;
-            mLimitText.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
+            if (textSize != 0) {
+                textSize *= speedLimitSize;
+                mLimitText.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
+            }
 
             float labelTextSize = 12 * speedLimitSize;
             if (mLimitLabelText != null) {

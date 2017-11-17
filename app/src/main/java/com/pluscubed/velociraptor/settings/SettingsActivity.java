@@ -371,11 +371,19 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-        hereSubscribeButton.setOnClickListener(view ->
-                billingManager.initiatePurchaseFlow(BillingConstants.SKU_HERE, BillingClient.SkuType.SUBS));
+        hereSubscribeButton.setOnClickListener(view -> {
+            if (!isBillingManagerReady()) {
+                Snackbar.make(findViewById(android.R.id.content), R.string.in_app_unavailable, Snackbar.LENGTH_SHORT).show();
+            }
+            billingManager.initiatePurchaseFlow(BillingConstants.SKU_HERE, BillingClient.SkuType.SUBS);
+        });
 
-        tomtomSubscribeButton.setOnClickListener(view ->
-                billingManager.initiatePurchaseFlow(BillingConstants.SKU_TOMTOM, BillingClient.SkuType.SUBS));
+        tomtomSubscribeButton.setOnClickListener(view -> {
+            if (!isBillingManagerReady()) {
+                Snackbar.make(findViewById(android.R.id.content), R.string.in_app_unavailable, Snackbar.LENGTH_SHORT).show();
+            }
+            billingManager.initiatePurchaseFlow(BillingConstants.SKU_TOMTOM, BillingClient.SkuType.SUBS);
+        });
 
         tomtomEditDataButton.setOnClickListener(view -> openLink(TOMTOM_EDITDATA_URL));
 
@@ -467,6 +475,11 @@ public class SettingsActivity extends AppCompatActivity {
         PrefUtils.setVersionCode(this, BuildConfig.VERSION_CODE);
     }
 
+    private boolean isBillingManagerReady() {
+        return billingManager != null
+                && billingManager.getBillingClientResponseCode() == BillingClient.BillingResponse.OK;
+    }
+
     private void setSubscribeButtonState(Button button, boolean subscribed) {
         if (subscribed) {
             button.setEnabled(false);
@@ -510,6 +523,10 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public void showSupportDialog() {
+        if (!isBillingManagerReady()) {
+            Snackbar.make(findViewById(android.R.id.content), R.string.in_app_unavailable, Snackbar.LENGTH_SHORT).show();
+        }
+
         Observable<SkuDetails> monthlyDonations = querySkuDetails(billingManager, BillingClient.SkuType.SUBS,
                 BillingConstants.SKU_D1_MONTHLY, BillingConstants.SKU_D3_MONTHLY);
         Observable<SkuDetails> oneTimeDonations = querySkuDetails(billingManager, BillingClient.SkuType.INAPP,

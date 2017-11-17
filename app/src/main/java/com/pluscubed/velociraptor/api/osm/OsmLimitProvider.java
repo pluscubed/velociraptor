@@ -10,7 +10,6 @@ import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.pluscubed.velociraptor.BuildConfig;
-import com.pluscubed.velociraptor.R;
 import com.pluscubed.velociraptor.api.LimitFetcher;
 import com.pluscubed.velociraptor.api.LimitInterceptor;
 import com.pluscubed.velociraptor.api.LimitProvider;
@@ -32,6 +31,7 @@ import rx.Single;
 public class OsmLimitProvider implements LimitProvider {
 
     public static final int OSM_RADIUS = 15;
+    public static final String KUMI_OVERPASS = "https://overpass.kumi.systems/api/";
     private final OsmApiEndpoint osmOverpassApi;
 
     private Context context;
@@ -41,7 +41,13 @@ public class OsmLimitProvider implements LimitProvider {
     public OsmLimitProvider(Context context, OkHttpClient client) {
         this.context = context;
 
-        String privateApiHost = context.getString(R.string.overpass_api);
+        String privateApiHost;
+        int resId = context.getResources().getIdentifier("overpass_api", "string", context.getPackageName());
+        if (resId != 0 && Math.random() < 0.6) {
+            privateApiHost = context.getString(resId);
+        } else {
+            privateApiHost = KUMI_OVERPASS;
+        }
         osmOverpassApi = new OsmApiEndpoint(privateApiHost, "velociraptor-server");
 
         LimitInterceptor osmInterceptor = new LimitInterceptor(new LimitInterceptor.Callback() {

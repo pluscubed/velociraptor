@@ -1,9 +1,11 @@
 package com.pluscubed.velociraptor.api.raptor
 
 
+import android.content.Context
 import android.location.Location
 import com.android.billingclient.api.Purchase
 import com.google.maps.android.PolyUtil
+import com.pluscubed.velociraptor.BuildConfig
 import com.pluscubed.velociraptor.api.*
 import com.pluscubed.velociraptor.billing.BillingConstants
 import com.pluscubed.velociraptor.cache.LimitCache
@@ -14,16 +16,18 @@ import rx.Observable
 import rx.schedulers.Schedulers
 import java.util.*
 
-class RaptorLimitProvider(client: OkHttpClient, limitCache: LimitCache) : LimitProvider {
+class RaptorLimitProvider(context: Context, client: OkHttpClient, limitCache: LimitCache) : LimitProvider {
 
     private val raptorService: RaptorService
     private val limitCache: LimitCache
-    private val id: String
+
+    private var id: String
 
     private var hereToken: String
     private var tomtomToken: String
 
     private val SERVER_URL = "http://overpass.pluscubed.com:4000/"
+    private val DEBUG = BuildConfig.BUILD_TYPE.equals("debug")
 
     init {
         val interceptor = LimitInterceptor(object : LimitInterceptor.Callback {
@@ -42,7 +46,14 @@ class RaptorLimitProvider(client: OkHttpClient, limitCache: LimitCache) : LimitP
         raptorService = raptorRest.create(RaptorService::class.java)
 
         this.limitCache = limitCache;
+
         id = UUID.randomUUID().toString()
+        if (DEBUG) {
+            val resId = context.getResources().getIdentifier("debug_id", "string", context.getPackageName())
+            if (resId != 0) {
+                id = context.getString(resId);
+            }
+        }
         hereToken = ""
         tomtomToken = ""
     }
@@ -53,10 +64,10 @@ class RaptorLimitProvider(client: OkHttpClient, limitCache: LimitCache) : LimitP
                 .subscribeOn(Schedulers.io())
                 .subscribe({ verificationResponse ->
                     val token = verificationResponse.token
-                    if (purchase.sku == BillingConstants.SKU_HERE) {
+                    if (purchase.sku == BillingConstants.SKU_HERE || DEBUG) {
                         hereToken = token
                     }
-                    if (purchase.sku == BillingConstants.SKU_TOMTOM) {
+                    if (purchase.sku == BillingConstants.SKU_TOMTOM || DEBUG) {
                         tomtomToken = token
                     }
                 }, { error ->

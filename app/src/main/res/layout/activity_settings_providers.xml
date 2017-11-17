@@ -161,7 +161,7 @@
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/edit_data" />
+            android:text="@string/view_edit_data" />
 
         <Space
             android:layout_width="0dp"
@@ -239,7 +239,7 @@
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/edit_data" />
+            android:text="@string/view_edit_data" />
 
         <Space
             android:layout_width="0dp"

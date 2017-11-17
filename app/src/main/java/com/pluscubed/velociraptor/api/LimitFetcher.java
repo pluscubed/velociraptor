@@ -35,7 +35,7 @@ public class LimitFetcher {
         OkHttpClient client = buildOkHttpClient();
 
         this.osmLimitProvider = new OsmLimitProvider(context, client);
-        this.raptorLimitProvider = new RaptorLimitProvider(client, LimitCache.getInstance(context));
+        this.raptorLimitProvider = new RaptorLimitProvider(context, client, LimitCache.getInstance(context));
     }
 
     public static Retrofit buildRetrofit(OkHttpClient client, String baseUrl) {

@@ -26,6 +26,7 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.pluscubed.velociraptor.BuildConfig;
 import com.pluscubed.velociraptor.R;
 import com.pluscubed.velociraptor.api.LimitFetcher;
 import com.pluscubed.velociraptor.api.LimitResponse;
@@ -34,9 +35,11 @@ import com.pluscubed.velociraptor.settings.SettingsActivity;
 import com.pluscubed.velociraptor.utils.PrefUtils;
 import com.pluscubed.velociraptor.utils.Utils;
 
+import org.json.JSONException;
+
 import java.util.List;
 
-import rx.SingleSubscriber;
+import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -65,7 +68,7 @@ public class LimitService extends Service {
     private FusedLocationProviderClient fusedLocationClient;
     private LocationCallback locationCallback;
 
-    private Subscription getSpeedLimitSubscription;
+    private Subscription speedLimitQuerySubscription;
 
     private int lastSpeedLimit = -1;
     private Location lastLocationWithSpeed;
@@ -121,7 +124,7 @@ public class LimitService extends Service {
             } else if (intent.getBooleanExtra(EXTRA_PREF_CHANGE, false)) {
                 speedLimitView.updatePrefs();
 
-                updateLimitText(false);
+                updateLimitView(false);
                 updateSpeedometer(lastLocationWithSpeed);
             }
         }
@@ -160,7 +163,16 @@ public class LimitService extends Service {
         billingManager = new BillingManager(this, new BillingManager.BillingUpdatesListener() {
             @Override
             public void onBillingClientSetupFinished() {
-
+                if (BuildConfig.BUILD_TYPE.equals("debug")) {
+                    try {
+                        limitFetcher.verifyRaptorService(new Purchase(
+                                "{\"productId\": \"debug\", \"purchaseToken\": \"debug\"}",
+                                ""
+                        ));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
 
             @Override
@@ -221,33 +233,34 @@ public class LimitService extends Service {
         updateSpeedometer(location);
         updateDebuggingText(location, null, null);
 
-        if (getSpeedLimitSubscription == null && !isLimitHidden &&
+        if (speedLimitQuerySubscription == null && !isLimitHidden &&
                 (lastLocationWithFetchAttempt == null || location.distanceTo(lastLocationWithFetchAttempt) > 10)) {
 
-            getSpeedLimitSubscription = limitFetcher.getSpeedLimit(location)
+            speedLimitQuerySubscription = limitFetcher.getSpeedLimit(location)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new SingleSubscriber<LimitResponse>() {
+                    .subscribe(new Subscriber<LimitResponse>() {
                         @SuppressLint("SetTextI18n")
                         @Override
-                        public void onSuccess(LimitResponse limitResponse) {
+                        public void onNext(LimitResponse limitResponse) {
                             lastSpeedLimit = limitResponse.speedLimit();
-                            lastLocationWithFetchAttempt = location;
 
-                            updateLimitText(true);
+                            updateLimitView(true);
                             updateDebuggingText(location, limitResponse, null);
-                            getSpeedLimitSubscription = null;
                         }
 
                         @Override
                         public void onError(Throwable error) {
                             Timber.d(error);
 
-                            lastLocationWithFetchAttempt = location;
-
-                            updateLimitText(false);
+                            updateLimitView(false);
                             updateDebuggingText(location, null, error);
-                            getSpeedLimitSubscription = null;
+                        }
+
+                        @Override
+                        public void onCompleted() {
+                            lastLocationWithFetchAttempt = location;
+                            speedLimitQuerySubscription = null;
                         }
                     });
         }
@@ -257,18 +270,7 @@ public class LimitService extends Service {
         String text = "Location: " + location + "\n";
 
         if (error == null && limitResponse != null) {
-            String origin = String.valueOf(limitResponse.origin());
-            switch (limitResponse.origin()) {
-                case LimitResponse.ORIGIN_HERE:
-                    origin = "HERE";
-                    break;
-                case LimitResponse.ORIGIN_TOMTOM:
-                    origin = "TomTom";
-                    break;
-                case LimitResponse.ORIGIN_OSM:
-                    origin = "OSM";
-                    break;
-            }
+            String origin = getLimitProviderString(limitResponse.origin());
 
             debuggingRequestInfo = "Origin: " + origin +
                     "\nRoad name: " + limitResponse.roadName() +
@@ -283,12 +285,33 @@ public class LimitService extends Service {
         speedLimitView.setDebuggingText(text);
     }
 
-    private void updateLimitText(boolean success) {
+    private String getLimitProviderString(int origin) {
+        String provider = "";
+        switch (origin) {
+            case LimitResponse.ORIGIN_HERE:
+                provider = getString(R.string.here_provider_short);
+                break;
+            case LimitResponse.ORIGIN_TOMTOM:
+                provider = getString(R.string.tomtom_provider_short);
+                break;
+            case LimitResponse.ORIGIN_OSM:
+                provider = getString(R.string.openstreetmap_short);
+                break;
+            case -1:
+                provider = "";
+                break;
+            default:
+                provider = String.valueOf(origin);
+        }
+        return provider;
+    }
+
+    private void updateLimitView(boolean success) {
         String text = "--";
         if (lastSpeedLimit != -1) {
             text = String.valueOf(lastSpeedLimit);
             if (!success) {
-                text = String.format("(%s)", text);
+                text = "(" + text + ")";
             }
         }
 
@@ -303,7 +326,7 @@ public class LimitService extends Service {
         float metersPerSeconds = location.getSpeed();
 
         //In km/h
-        final int speed = (int) Math.round((double) metersPerSeconds * 60 * 60 / 1000);
+        int speed = (int) Math.round((double) metersPerSeconds * 60 * 60 / 1000);
         int speedometerPercentage = Math.round((float) speed / 200 * 100);
 
         float percentToleranceFactor = 1 + (float) PrefUtils.getSpeedingPercent(this) / 100;
@@ -328,6 +351,10 @@ public class LimitService extends Service {
         } else {
             speedLimitView.setSpeeding(false);
             speedingStartTimestamp = -1;
+        }
+
+        if (!PrefUtils.getUseMetric(this)) {
+            speed = (int) Math.round((double) speed / 1.609344);
         }
 
         speedLimitView.setSpeed(speed, speedometerPercentage);
@@ -358,8 +385,8 @@ public class LimitService extends Service {
         if (speedLimitView != null)
             speedLimitView.stop();
 
-        if (getSpeedLimitSubscription != null)
-            getSpeedLimitSubscription.unsubscribe();
+        if (speedLimitQuerySubscription != null)
+            speedLimitQuerySubscription.unsubscribe();
 
         if (billingManager != null)
             billingManager.destroy();

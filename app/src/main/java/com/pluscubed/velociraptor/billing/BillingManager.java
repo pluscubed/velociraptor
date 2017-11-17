@@ -17,7 +17,6 @@ import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
 import com.android.billingclient.api.SkuDetailsResponseListener;
-import com.pluscubed.velociraptor.R;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -63,7 +62,7 @@ public class BillingManager implements PurchasesUpdatedListener {
         Log.d(TAG, "Creating Billing client.");
         this.context = context;
 
-        BASE_64_ENCODED_PUBLIC_KEY = this.context.getString(R.string.play_license_key);
+        BASE_64_ENCODED_PUBLIC_KEY = "";
 
         billingUpdatesListener = updatesListener;
         billingClient = BillingClient.newBuilder(this.context).setListener(this).build();

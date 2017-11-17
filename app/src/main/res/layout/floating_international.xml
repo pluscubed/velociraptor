@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:theme="@style/Theme.Velociraptor"
-    android:visibility="invisible">
+    android:visibility="invisible"
+    tools:visibility="visible">
 
     <FrameLayout
         android:id="@+id/limit"
@@ -14,15 +16,17 @@
         android:background="@drawable/floating_background_international"
         android:elevation="2dp">
 
-        <TextView
+        <android.support.v7.widget.AppCompatTextView
             android:id="@+id/limit_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
             android:includeFontPadding="false"
+            android:maxLines="1"
+            android:padding="14dp"
             android:text="--"
             android:textColor="?android:textColorPrimary"
-            tools:textSize="24sp" />
+            app:autoSizeTextType="uniform" />
 
     </FrameLayout>
 

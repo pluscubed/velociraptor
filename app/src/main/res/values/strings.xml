@@ -23,7 +23,8 @@
     <string name="open_settings_failed_overlay">Unable to open settings. Please manually enable the \"Draw Over Other Apps\" setting for Velociraptor.</string>
 
     <string name="enable_accessibility_service">Turn on Accessibility Service</string>
-    <string name="enable_accessibility_service_desc">Allow Velociraptor to automatically launch in map apps</string>
+    <string name="enable_accessibility_service_desc">Allow Velociraptor to launch automatically in map apps</string>
+    <string name="enable_accessibility_service_desc2">Mainly intended for users with disabilities</string>
     <string name="accessibility_service_summary">Auto-launch in map apps</string>
     <string name="accessibility_service_description">Allow Velociraptor to detect the foreground app and launch automatically.\n\nVelociraptor does not use any information other than the foreground app info. This service is mainly intended for users with disabilities.</string>
     <string name="open_settings_failed_accessibility">Unable to open settings. Please manually enable the Accessibility Service setting for Velociraptor.</string>
@@ -84,6 +85,9 @@
         <a href="https://github.com/pluscubed/velociraptor">GitHub</a> - source, issues, feature requests<br/>
         <a href="http://pluscubed.oneskyapp.com/collaboration/project/64120">OneSky</a> - translate the app to your language
         <a href="https://play.google.com/apps/testing/com.pluscubed.velociraptor">Beta testing</a> - try out upcoming releases
+
+        <br/><br/>
+        <i>This app uses Accessibility services. These services are intended for users with disabilities. This app is not affiliated or endorsed by OpenStreetMap, HERE, TomTom, or Sygic. The developer does not bear responsibility for the accuracy of any information provided. All trademarks belong to their respective owners.</i>
     ]]></string>
     <string name="licenses">Licenses</string>
 
@@ -92,19 +96,23 @@
 
     <string name="subscribe_placeholder">Subscribe (7-day free trial)</string>
 
-    <string name="here_provider">HERE Maps</string>
+    <string name="here_provider">Additional Provider 2</string>
+    <string name="here_provider_short">Prov. 2</string>
     <string name="here_desc">Subscribe for %s (7-day free trial)</string>
 
-    <string name="tomtom_provider">TomTom Maps</string>
+    <string name="tomtom_provider">Additional Provider 1</string>
+    <string name="tomtom_provider_short">Prov. 1</string>
     <string name="tomtom_desc">Subscribe for %s (7-day free trial)</string>
 
     <string name="openstreetmap">OpenStreetMap</string>
+    <string name="openstreetmap_short">OSM</string>
     <string name="share_link">Share Link</string>
     <string name="openstreetmap_desc">Free - Velociraptor\'s OSM server is supported by you</string>
-    <string name="osm_edit">Visit <b>openstreetmap.org</b> on your computer to add/edit speed limits</string>
+    <string name="osm_edit">Visit <DEBUG>openstreetmap.org</DEBUG> on your computer to add/edit speed limits</string>
     <string name="open_link_failed">Unable to open link. Please manually go to %s.</string>
 
     <string name="edit_data">Edit Data</string>
+    <string name="view_edit_data">View/Edit Data</string>
     <string name="subscribe">Subscribe</string>
     <string name="subscribed">Subscribed</string>
     <string name="coverage">Coverage</string>
