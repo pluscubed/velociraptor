@@ -30,15 +30,7 @@ class RaptorLimitProvider(context: Context, client: OkHttpClient, limitCache: Li
     private val DEBUG = BuildConfig.BUILD_TYPE.equals("debug")
 
     init {
-        val interceptor = LimitInterceptor(object : LimitInterceptor.Callback {
-            override fun updateTimeTaken(timeTaken: Int) {
-
-            }
-
-            override fun updateTimestamp(timeTakenTimestamp: Long) {
-
-            }
-        })
+        val interceptor = LimitInterceptor(LimitInterceptor.Callback())
         val raptorClient = client.newBuilder()
                 .addInterceptor(interceptor)
                 .build()

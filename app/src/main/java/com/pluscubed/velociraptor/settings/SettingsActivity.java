@@ -365,24 +365,7 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-        hereEditDataButton.setOnClickListener(view -> {
-            if (Utils.isLocationPermissionGranted(SettingsActivity.this)) {
-                FusedLocationProviderClient fusedLocationProvider =
-                        LocationServices.getFusedLocationProviderClient(SettingsActivity.this);
-                fusedLocationProvider
-                        .getLastLocation()
-                        .addOnCompleteListener(SettingsActivity.this, task -> {
-                            String uriString = HERE_EDITDATA_URL;
-                            if (task.isSuccessful() && task.getResult() != null) {
-                                Location lastLocation = task.getResult();
-                                uriString += "/" + lastLocation.getLongitude() + "," + lastLocation.getLatitude() + ",12,0,0";
-                            }
-                            openLink(uriString);
-                        });
-            } else {
-                openLink(HERE_EDITDATA_URL);
-            }
-        });
+        hereEditDataButton.setOnClickListener(view -> openLink(HERE_EDITDATA_URL));
 
         hereSubscribeButton.setOnClickListener(view -> {
             if (!isBillingManagerReady()) {

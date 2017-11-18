@@ -22,14 +22,12 @@ public class LimitInterceptor implements Interceptor {
         request = request.newBuilder()
                 .addHeader("User-Agent", "Velociraptor/" + BuildConfig.VERSION_NAME)
                 .build();
-
-        long start = System.currentTimeMillis();
         try {
             Response proceed = chain.proceed(request);
             if (!proceed.isSuccessful()) {
                 throw new IOException(proceed.code() + ": " + proceed.toString());
             } else {
-                callback.updateTimeTaken((int) (System.currentTimeMillis() - start));
+                callback.updateTimeTaken((int) (proceed.sentRequestAtMillis() - proceed.receivedResponseAtMillis()));
             }
             return proceed;
         } finally {
@@ -38,9 +36,11 @@ public class LimitInterceptor implements Interceptor {
     }
 
 
-    public interface Callback {
-        void updateTimeTaken(int timeTaken);
+    public static class Callback {
+        public void updateTimeTaken(int timeTaken) {
+        }
 
-        void updateTimestamp(long timeTakenTimestamp);
+        public void updateTimestamp(long timeTakenTimestamp) {
+        }
     }
 }
