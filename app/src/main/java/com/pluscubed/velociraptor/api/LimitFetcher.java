@@ -16,6 +16,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.jackson.JacksonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 import rx.Observable;
 import rx.Single;
 
@@ -43,6 +44,7 @@ public class LimitFetcher {
                 .baseUrl(baseUrl)
                 .client(client)
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(JacksonConverterFactory.create())
                 .build();
     }

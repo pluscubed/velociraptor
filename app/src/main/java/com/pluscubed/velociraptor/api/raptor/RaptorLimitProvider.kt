@@ -9,9 +9,7 @@ import com.pluscubed.velociraptor.BuildConfig
 import com.pluscubed.velociraptor.api.*
 import com.pluscubed.velociraptor.billing.BillingConstants
 import com.pluscubed.velociraptor.cache.LimitCache
-import okhttp3.MediaType
 import okhttp3.OkHttpClient
-import okhttp3.RequestBody
 import rx.Observable
 import rx.schedulers.Schedulers
 import java.util.*
@@ -55,8 +53,7 @@ class RaptorLimitProvider(context: Context, client: OkHttpClient, limitCache: Li
     }
 
     fun verify(purchase: Purchase) {
-        val requestBody = RequestBody.create(MediaType.parse("application/json"), purchase.originalJson)
-        raptorService.verify(id, requestBody)
+        raptorService.verify(id, purchase.originalJson)
                 .subscribeOn(Schedulers.io())
                 .subscribe({ verificationResponse ->
                     val token = verificationResponse.token

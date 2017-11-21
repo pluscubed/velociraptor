@@ -107,7 +107,7 @@ public class OsmLimitProvider implements LimitProvider {
         }
     }
 
-    private String buildOsmQuery(Location location) {
+    private String buildQueryBody(Location location) {
         return "[out:json];" +
                 "way(around:" + OSM_RADIUS + ","
                 + location.getLatitude() + ","
@@ -125,7 +125,7 @@ public class OsmLimitProvider implements LimitProvider {
             selectedEndpoint = osmOverpassApis.get((int) (Math.random() * osmOverpassApis.size()));
         }
         return selectedEndpoint.getService()
-                .getOsm(buildOsmQuery(location))
+                .getOsm(buildQueryBody(location))
                 .doOnSubscribe(() -> logOsmRequest(selectedEndpoint))
                 .doOnError((throwable) -> logOsmError(selectedEndpoint, throwable));
     }
