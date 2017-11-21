@@ -97,12 +97,12 @@
 
     <string name="subscribe_placeholder">Subscribe (7-day free trial)</string>
 
-    <string name="here_provider">Additional Provider 2</string>
-    <string name="here_provider_short">Prov. 2</string>
+    <string name="here_provider">HERE Maps</string>
+    <string name="here_provider_short">HERE</string>
     <string name="here_desc">Subscribe for %s (7-day free trial)</string>
 
-    <string name="tomtom_provider">Additional Provider 1</string>
-    <string name="tomtom_provider_short">Prov. 1</string>
+    <string name="tomtom_provider">TomTom Maps</string>
+    <string name="tomtom_provider_short">TomTom</string>
     <string name="tomtom_desc">Subscribe for %s (7-day free trial)</string>
 
     <string name="openstreetmap">OpenStreetMap</string>
@@ -113,7 +113,6 @@
     <string name="open_link_failed">Unable to open link. Please manually go to %s.</string>
 
     <string name="edit_data">Edit Data</string>
-    <string name="view_edit_data">View/Edit Data</string>
     <string name="subscribe">Subscribe</string>
     <string name="subscribed">Subscribed</string>
     <string name="coverage">Coverage</string>

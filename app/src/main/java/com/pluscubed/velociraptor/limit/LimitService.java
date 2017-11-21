@@ -26,10 +26,10 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-import com.pluscubed.velociraptor.BuildConfig;
 import com.pluscubed.velociraptor.R;
 import com.pluscubed.velociraptor.api.LimitFetcher;
 import com.pluscubed.velociraptor.api.LimitResponse;
+import com.pluscubed.velociraptor.api.raptor.RaptorLimitProvider;
 import com.pluscubed.velociraptor.billing.BillingManager;
 import com.pluscubed.velociraptor.settings.SettingsActivity;
 import com.pluscubed.velociraptor.utils.PrefUtils;
@@ -163,7 +163,7 @@ public class LimitService extends Service {
         billingManager = new BillingManager(this, new BillingManager.BillingUpdatesListener() {
             @Override
             public void onBillingClientSetupFinished() {
-                if (BuildConfig.BUILD_TYPE.equals("debug")) {
+                if (RaptorLimitProvider.USE_DEBUG_ID) {
                     try {
                         limitFetcher.verifyRaptorService(new Purchase(
                                 "{\"productId\": \"debug\", \"purchaseToken\": \"debug\"}",
@@ -229,11 +229,13 @@ public class LimitService extends Service {
         return true;
     }
 
-    private void onLocationChanged(final Location location) {
+    private synchronized void onLocationChanged(final Location location) {
         updateSpeedometer(location);
         updateDebuggingText(location, null, null);
 
-        if (speedLimitQuerySubscription == null && !isLimitHidden && PrefUtils.getShowLimits(this) &&
+        if (speedLimitQuerySubscription == null &&
+                !isLimitHidden &&
+                PrefUtils.getShowLimits(this) &&
                 (lastLocationWithFetchAttempt == null || location.distanceTo(lastLocationWithFetchAttempt) > 10)) {
 
             speedLimitQuerySubscription = limitFetcher.getSpeedLimit(location)
@@ -269,17 +271,21 @@ public class LimitService extends Service {
     private void updateDebuggingText(Location location, LimitResponse limitResponse, Throwable error) {
         String text = "Location: " + location + "\n";
 
+        if (lastLocationWithFetchAttempt != null) {
+            text += "Time since: " + (System.currentTimeMillis() - lastLocationWithFetchAttempt.getTime()) + "\n";
+        }
+
         if (error == null && limitResponse != null) {
             String origin = getLimitProviderString(limitResponse.origin());
 
             debuggingRequestInfo = "Origin: " + origin +
                     "\nRoad name: " + limitResponse.roadName() +
                     "\nFrom cache: " + limitResponse.fromCache() +
-                    "\nTime since: " + (System.currentTimeMillis() - limitResponse.timestamp()) +
                     "\nCoords: " + limitResponse.coords();
         } else if (error != null) {
             debuggingRequestInfo = ("Last error: " + error);
         }
+
 
         text += debuggingRequestInfo;
         speedLimitView.setDebuggingText(text);

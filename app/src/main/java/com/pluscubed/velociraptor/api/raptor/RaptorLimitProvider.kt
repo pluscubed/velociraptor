@@ -27,7 +27,11 @@ class RaptorLimitProvider(context: Context, client: OkHttpClient, limitCache: Li
     private var tomtomToken: String
 
     private val SERVER_URL = "http://overpass.pluscubed.com:4000/"
-    private val DEBUG = BuildConfig.BUILD_TYPE.equals("debug")
+
+    companion object {
+        @JvmField
+        val USE_DEBUG_ID = BuildConfig.BUILD_TYPE.equals("debug")
+    }
 
     init {
         val interceptor = LimitInterceptor(LimitInterceptor.Callback())
@@ -40,7 +44,7 @@ class RaptorLimitProvider(context: Context, client: OkHttpClient, limitCache: Li
         this.limitCache = limitCache;
 
         id = UUID.randomUUID().toString()
-        if (DEBUG) {
+        if (USE_DEBUG_ID) {
             val resId = context.getResources().getIdentifier("debug_id", "string", context.getPackageName())
             if (resId != 0) {
                 id = context.getString(resId);
@@ -56,10 +60,10 @@ class RaptorLimitProvider(context: Context, client: OkHttpClient, limitCache: Li
                 .subscribeOn(Schedulers.io())
                 .subscribe({ verificationResponse ->
                     val token = verificationResponse.token
-                    if (purchase.sku == BillingConstants.SKU_HERE || DEBUG) {
+                    if (purchase.sku == BillingConstants.SKU_HERE || USE_DEBUG_ID) {
                         hereToken = token
                     }
-                    if (purchase.sku == BillingConstants.SKU_TOMTOM || DEBUG) {
+                    if (purchase.sku == BillingConstants.SKU_TOMTOM || USE_DEBUG_ID) {
                         tomtomToken = token
                     }
                 }, { error ->

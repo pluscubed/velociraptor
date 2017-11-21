@@ -12,6 +12,7 @@ import com.squareup.sqlbrite.SqlBrite;
 import com.squareup.sqldelight.SqlDelightStatement;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import rx.Observable;
@@ -103,6 +104,15 @@ public class LimitCache {
                             return Observable.empty();
                         }
 
+                        Collections.sort(ways, (way1, way2) -> {
+                            if (way1.maxspeed() == -1 && way2.maxspeed() != -1) {
+                                return 1;
+                            } else if (way1.maxspeed() != -1 && way2.maxspeed() == -1) {
+                                return -1;
+                            } else {
+                                return 0;
+                            }
+                        });
                         LimitResponse.Builder response = ways.get(0).toResponse();
                         for (LimitCacheWay way : ways) {
                             if (way.road() != null && way.road().equals(previousName)) {

@@ -24,7 +24,7 @@ WHERE clat = ?1 AND clon = ?2;
 select_by_coord:
 SELECT *
 FROM way
-ORDER BY ((?1-clat)*(?1-clat)* ?2) + ((?3 - clon)*(?3 - clon)) ASC, origin DESC
+ORDER BY ((?1-clat)*(?1-clat)* ?2) + ((?3 - clon)*(?3 - clon)) ASC
 LIMIT 10;
 
 cleanup:

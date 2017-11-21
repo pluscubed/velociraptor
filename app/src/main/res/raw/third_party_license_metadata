@@ -68,12 +68,9 @@
 58685:46 auto-value-parcel-adapter
 58733:46 javapoet
 58781:46 dbinspector
-58829:46 leakcanary-android
+58829:46 leakcanary-android-no-op
 58877:46 multidex
-58925:46 leakcanary-analyzer
-58973:46 haha
-59021:46 leakcanary-watcher
-59069:46 kotlin-annotation-processing-gradle
-59117:46 kotlin-compiler-embeddable
-59165:46 kotlin-reflect
-59213:46 kotlin-script-runtime
+58925:46 kotlin-annotation-processing-gradle
+58973:46 kotlin-compiler-embeddable
+59021:46 kotlin-reflect
+59069:46 kotlin-script-runtime

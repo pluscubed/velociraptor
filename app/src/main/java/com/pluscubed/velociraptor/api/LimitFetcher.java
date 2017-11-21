@@ -83,17 +83,20 @@ public class LimitFetcher {
         Observable<LimitResponse> finalRaptorQuery = raptorQuery;
         return cacheQuery.defaultIfEmpty(null)
                 .switchMap(limitResponse -> {
-                    //Query Raptor if the cache is empty or if the response is empty & comes from OSM
-                    if (limitResponse == null ||
-                            limitResponse.origin() == LimitResponse.ORIGIN_OSM &&
-                                    limitResponse.speedLimit() == -1) {
-                        return finalRaptorQuery;
-                    } else {
-                        return Observable.just(limitResponse);
+                    if (limitResponse == null) {
+                        return finalRaptorQuery
+                                .switchIfEmpty(osmQuery)
+                                .defaultIfEmpty(LimitResponse.builder().build());
                     }
+
+                    if (limitResponse.origin() == LimitResponse.ORIGIN_OSM
+                            && limitResponse.speedLimit() == -1) {
+                        return finalRaptorQuery
+                                .defaultIfEmpty(limitResponse);
+                    }
+
+                    return Observable.just(limitResponse);
                 })
-                .switchIfEmpty(osmQuery)
-                .defaultIfEmpty(LimitResponse.builder().build())
                 .toSingle()
                 .doOnSuccess(limitResponse -> {
                     if (limitResponse.timestamp() == 0) {
