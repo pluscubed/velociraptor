@@ -8,6 +8,7 @@ import android.support.annotation.IntDef;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
 public abstract class PrefUtils {
@@ -65,7 +66,16 @@ public abstract class PrefUtils {
     }
 
     public static boolean getUseMetric(Context context) {
-        return getSharedPreferences(context).getBoolean(PREF_METRIC, false);
+        boolean metricDefault;
+        Locale current = Locale.getDefault();
+        if (current.equals(Locale.US) ||
+                current.equals(Locale.UK) ||
+                current.getISO3Country().equalsIgnoreCase("mmr")) {
+            metricDefault = false;
+        } else {
+            metricDefault = true;
+        }
+        return getSharedPreferences(context).getBoolean(PREF_METRIC, metricDefault);
     }
 
     public static void setUseMetric(Context context, boolean metric) {
@@ -75,7 +85,15 @@ public abstract class PrefUtils {
     @SuppressWarnings("WrongConstant")
     @SignStyle
     public static int getSignStyle(Context context) {
-        return getSharedPreferences(context).getInt(PREF_SIGN_STYLE, STYLE_US);
+        int styleDefault;
+        Locale current = Locale.getDefault();
+        if (current.equals(Locale.US) || current.equals(Locale.CANADA)) {
+            styleDefault = STYLE_US;
+        } else {
+            styleDefault = STYLE_INTERNATIONAL;
+        }
+
+        return getSharedPreferences(context).getInt(PREF_SIGN_STYLE, styleDefault);
     }
 
     public static void setSignStyle(Context context, @SignStyle int style) {
