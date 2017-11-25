@@ -331,9 +331,13 @@ public class LimitService extends Service {
 
         float metersPerSeconds = location.getSpeed();
 
-        //In km/h
-        int speed = (int) Math.round((double) metersPerSeconds * 60 * 60 / 1000);
-        int speedometerPercentage = Math.round((float) speed / 200 * 100);
+        int kmhSpeed = (int) Math.round((double) metersPerSeconds * 60 * 60 / 1000);
+        int speedometerPercentage = Math.round((float) kmhSpeed / 240 * 100);
+
+        int speed = kmhSpeed;
+        if (!PrefUtils.getUseMetric(this)) {
+            speed = (int) Math.round((double) speed / 1.609344);
+        }
 
         float percentToleranceFactor = 1 + (float) PrefUtils.getSpeedingPercent(this) / 100;
         int constantTolerance = PrefUtils.getSpeedingConstant(this);
@@ -357,10 +361,6 @@ public class LimitService extends Service {
         } else {
             speedLimitView.setSpeeding(false);
             speedingStartTimestamp = -1;
-        }
-
-        if (!PrefUtils.getUseMetric(this)) {
-            speed = (int) Math.round((double) speed / 1.609344);
         }
 
         speedLimitView.setSpeed(speed, speedometerPercentage);

@@ -28,6 +28,7 @@ public abstract class LimitResponse {
     public abstract int origin();
 
     /**
+     * In mph or km/h depending on setting
      * -1 if limit does not exist
      */
     public abstract int speedLimit();
