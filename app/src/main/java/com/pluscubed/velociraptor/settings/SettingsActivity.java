@@ -51,7 +51,9 @@ import com.pluscubed.velociraptor.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -167,7 +169,6 @@ public class SettingsActivity extends AppCompatActivity {
 
     private NotificationManager notificationManager;
     private BillingManager billingManager;
-    private List<String> purchased;
 
     @Override
     protected void onDestroy() {
@@ -424,7 +425,6 @@ public class SettingsActivity extends AppCompatActivity {
             showChangelog();
         }
 
-        purchased = new ArrayList<>();
         billingManager = new BillingManager(this, new BillingManager.BillingUpdatesListener() {
             @Override
             public void onBillingClientSetupFinished() {
@@ -455,7 +455,7 @@ public class SettingsActivity extends AppCompatActivity {
 
             @Override
             public void onPurchasesUpdated(List<Purchase> purchases) {
-                purchased.clear();
+                Set<String> purchased = new HashSet<>();
 
                 for (Purchase purchase : purchases) {
                     purchased.add(purchase.getSku());
