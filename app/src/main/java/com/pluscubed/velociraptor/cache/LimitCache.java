@@ -104,21 +104,24 @@ public class LimitCache {
                             return Observable.empty();
                         }
 
-                        Collections.sort(ways, (way1, way2) -> {
-                            if (way1.maxspeed() == -1 && way2.maxspeed() != -1) {
-                                return 1;
-                            } else if (way1.maxspeed() != -1 && way2.maxspeed() == -1) {
-                                return -1;
-                            } else {
-                                return 0;
+                        Collections.sort(ways, (way1, way2) -> Integer.compare((int) way2.origin(), (int) way1.origin()));
+
+                        List<LimitCacheWay> validWays = Observable.from(ways)
+                                .filter(way -> way.maxspeed() != 0)
+                                .toList()
+                                .toBlocking().first();
+
+                        LimitResponse.Builder response;
+                        if (!validWays.isEmpty()) {
+                            response = validWays.get(0).toResponse();
+                            for (LimitCacheWay way : validWays) {
+                                if (way.road() != null && way.road().equals(previousName)) {
+                                    response = way.toResponse();
+                                    break;
+                                }
                             }
-                        });
-                        LimitResponse.Builder response = ways.get(0).toResponse();
-                        for (LimitCacheWay way : ways) {
-                            if (way.road() != null && way.road().equals(previousName)) {
-                                response = way.toResponse();
-                                break;
-                            }
+                        } else {
+                            response = ways.get(0).toResponse();
                         }
 
                         response.setFromCache(true);

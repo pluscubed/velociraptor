@@ -14,10 +14,9 @@ import rx.Observable
 import rx.schedulers.Schedulers
 import java.util.*
 
-class RaptorLimitProvider(context: Context, client: OkHttpClient, limitCache: LimitCache) : LimitProvider {
+class RaptorLimitProvider(context: Context, client: OkHttpClient, val limitCache: LimitCache) : LimitProvider {
 
     private val raptorService: RaptorService
-    private val limitCache: LimitCache
 
     private var id: String
 
@@ -28,7 +27,7 @@ class RaptorLimitProvider(context: Context, client: OkHttpClient, limitCache: Li
 
     companion object {
         @JvmField
-        val USE_DEBUG_ID = BuildConfig.BUILD_TYPE.equals("debug")
+        val USE_DEBUG_ID = BuildConfig.BUILD_TYPE == "debug"
     }
 
     init {
@@ -39,11 +38,9 @@ class RaptorLimitProvider(context: Context, client: OkHttpClient, limitCache: Li
         val raptorRest = LimitFetcher.buildRetrofit(raptorClient, SERVER_URL)
         raptorService = raptorRest.create(RaptorService::class.java)
 
-        this.limitCache = limitCache;
-
         id = UUID.randomUUID().toString()
         if (USE_DEBUG_ID) {
-            val resId = context.getResources().getIdentifier("debug_id", "string", context.getPackageName())
+            val resId = context.resources.getIdentifier("debug_id", "string", context.getPackageName())
             if (resId != 0) {
                 id = context.getString(resId);
             }
@@ -89,9 +86,9 @@ class RaptorLimitProvider(context: Context, client: OkHttpClient, limitCache: Li
 
     private fun queryRaptorApi(here: Boolean, latitude: String, longitude: String, location: Location): Observable<LimitResponse>? {
         val raptorQuery = if (here) {
-            raptorService.getHere("Bearer " + hereToken, id, latitude, longitude, location.bearing.toInt())
+            raptorService.getHere("Bearer " + hereToken, id, latitude, longitude, location.bearing.toInt(), "Metric")
         } else {
-            raptorService.getTomtom("Bearer " + tomtomToken, id, latitude, longitude, location.bearing.toInt())
+            raptorService.getTomtom("Bearer " + tomtomToken, id, latitude, longitude, location.bearing.toInt(), "Metric")
         }
 
         return raptorQuery

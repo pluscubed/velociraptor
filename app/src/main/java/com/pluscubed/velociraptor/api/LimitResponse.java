@@ -8,7 +8,6 @@ import java.util.List;
 @AutoValue
 public abstract class LimitResponse {
 
-    // Higher origin = higher priority in cache
     public static final int ORIGIN_HERE = 2;
     public static final int ORIGIN_TOMTOM = 1;
     public static final int ORIGIN_OSM = 0;
@@ -28,8 +27,7 @@ public abstract class LimitResponse {
     public abstract int origin();
 
     /**
-     * In mph or km/h depending on setting
-     * -1 if limit does not exist
+     * In km/h, -1 if limit does not exist
      */
     public abstract int speedLimit();
 

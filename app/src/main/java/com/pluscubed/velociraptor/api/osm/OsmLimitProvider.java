@@ -19,7 +19,7 @@ import com.pluscubed.velociraptor.api.osm.data.Element;
 import com.pluscubed.velociraptor.api.osm.data.OsmResponse;
 import com.pluscubed.velociraptor.api.osm.data.Tags;
 import com.pluscubed.velociraptor.cache.LimitCache;
-import com.pluscubed.velociraptor.utils.PrefUtils;
+import com.pluscubed.velociraptor.utils.Utils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -39,12 +39,14 @@ public class OsmLimitProvider implements LimitProvider {
     public static final int OSM_RADIUS = 15;
     private Context context;
     private OkHttpClient client;
+    private LimitCache cache;
 
     private List<OsmApiEndpoint> osmOverpassApis;
 
-    public OsmLimitProvider(Context context, OkHttpClient client) {
+    public OsmLimitProvider(Context context, OkHttpClient client, LimitCache osmCache) {
         this.context = context;
         this.client = client;
+        this.cache = osmCache;
 
         osmOverpassApis = new ArrayList<>();
 
@@ -138,8 +140,6 @@ public class OsmLimitProvider implements LimitProvider {
                         return Observable.error(new Exception("OSM null response"));
                     }
 
-                    boolean useMetric = PrefUtils.getUseMetric(context);
-
                     List<Element> elements = osmApi.getElements();
 
                     if (elements.isEmpty()) {
@@ -172,13 +172,13 @@ public class OsmLimitProvider implements LimitProvider {
                         //Get speed limit
                         String maxspeed = tags.getMaxspeed();
                         if (maxspeed != null) {
-                            responseBuilder.setSpeedLimit(parseOsmSpeedLimit(useMetric, maxspeed));
+                            responseBuilder.setSpeedLimit(parseOsmSpeedLimit(maxspeed));
                         }
 
                         LimitResponse response = responseBuilder.build();
 
                         //Cache
-                        LimitCache.getInstance(context).put(response);
+                        cache.put(response);
 
                         if (element == bestMatch) {
                             bestResponse = response;
@@ -197,20 +197,15 @@ public class OsmLimitProvider implements LimitProvider {
         return tags.getRef() + ":" + tags.getName();
     }
 
-    private int parseOsmSpeedLimit(boolean useMetric, String maxspeed) {
+    private int parseOsmSpeedLimit(String maxspeed) {
         int speedLimit = -1;
         if (maxspeed.matches("^-?\\d+$")) {
-            //is integer -> km/h
+            //If it is an integer, it is in km/h
             speedLimit = Integer.valueOf(maxspeed);
-            if (!useMetric) {
-                speedLimit = (int) (speedLimit / 1.609344 + 0.5d);
-            }
         } else if (maxspeed.contains("mph")) {
             String[] split = maxspeed.split(" ");
             speedLimit = Integer.valueOf(split[0]);
-            if (useMetric) {
-                speedLimit = (int) (speedLimit * 1.609344 + 0.5d);
-            }
+            speedLimit = Utils.convertMphToKmh(speedLimit);
         }
 
         return speedLimit;

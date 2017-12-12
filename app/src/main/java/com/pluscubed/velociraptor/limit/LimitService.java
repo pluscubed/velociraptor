@@ -32,6 +32,7 @@ import com.pluscubed.velociraptor.api.LimitResponse;
 import com.pluscubed.velociraptor.api.raptor.RaptorLimitProvider;
 import com.pluscubed.velociraptor.billing.BillingManager;
 import com.pluscubed.velociraptor.settings.SettingsActivity;
+import com.pluscubed.velociraptor.utils.NotificationUtils;
 import com.pluscubed.velociraptor.utils.PrefUtils;
 import com.pluscubed.velociraptor.utils.Utils;
 
@@ -70,7 +71,7 @@ public class LimitService extends Service {
 
     private Subscription speedLimitQuerySubscription;
 
-    private int lastSpeedLimit = -1;
+    private int currentSpeedLimit = -1;
     private Location lastLocationWithSpeed;
     private Location lastLocationWithFetchAttempt;
 
@@ -115,7 +116,7 @@ public class LimitService extends Service {
                 isLimitHidden = intent.getBooleanExtra(EXTRA_HIDE_LIMIT, false);
                 speedLimitView.hideLimit(isLimitHidden);
                 if (isLimitHidden) {
-                    lastSpeedLimit = -1;
+                    currentSpeedLimit = -1;
                 }
             }
 
@@ -197,7 +198,8 @@ public class LimitService extends Service {
         Intent notificationIntent = new Intent(this, SettingsActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, PENDING_SETTINGS, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
-        Notification notification = new NotificationCompat.Builder(this)
+        NotificationUtils.initChannels(this);
+        Notification notification = new NotificationCompat.Builder(this, NotificationUtils.CHANNEL_RUNNING)
                 .setContentTitle(getString(R.string.notif_title))
                 .setContentText(getString(R.string.notif_content))
                 .setPriority(Notification.PRIORITY_MIN)
@@ -245,7 +247,7 @@ public class LimitService extends Service {
                         @SuppressLint("SetTextI18n")
                         @Override
                         public void onNext(LimitResponse limitResponse) {
-                            lastSpeedLimit = limitResponse.speedLimit();
+                            currentSpeedLimit = limitResponse.speedLimit();
 
                             updateLimitView(true);
                             updateDebuggingText(location, limitResponse, null);
@@ -314,8 +316,8 @@ public class LimitService extends Service {
 
     private void updateLimitView(boolean success) {
         String text = "--";
-        if (lastSpeedLimit != -1) {
-            text = String.valueOf(lastSpeedLimit);
+        if (currentSpeedLimit != -1) {
+            text = String.valueOf(convertToUiSpeed(currentSpeedLimit));
             if (!success) {
                 text = "(" + text + ")";
             }
@@ -334,23 +336,18 @@ public class LimitService extends Service {
         int kmhSpeed = (int) Math.round((double) metersPerSeconds * 60 * 60 / 1000);
         int speedometerPercentage = Math.round((float) kmhSpeed / 240 * 100);
 
-        int speed = kmhSpeed;
-        if (!PrefUtils.getUseMetric(this)) {
-            speed = (int) Math.round((double) speed / 1.609344);
-        }
-
         float percentToleranceFactor = 1 + (float) PrefUtils.getSpeedingPercent(this) / 100;
         int constantTolerance = PrefUtils.getSpeedingConstant(this);
 
-        int percentToleratedLimit = (int) (lastSpeedLimit * percentToleranceFactor);
+        int percentToleratedLimit = (int) (currentSpeedLimit * percentToleranceFactor);
         int warningLimit;
         if (PrefUtils.getToleranceMode(this)) {
             warningLimit = percentToleratedLimit + constantTolerance;
         } else {
-            warningLimit = Math.min(percentToleratedLimit, lastSpeedLimit + constantTolerance);
+            warningLimit = Math.min(percentToleratedLimit, currentSpeedLimit + constantTolerance);
         }
 
-        if (lastSpeedLimit != -1 && speed > warningLimit) {
+        if (currentSpeedLimit != -1 && kmhSpeed > warningLimit) {
             speedLimitView.setSpeeding(true);
             if (speedingStartTimestamp == -1) {
                 speedingStartTimestamp = System.currentTimeMillis();
@@ -363,9 +360,19 @@ public class LimitService extends Service {
             speedingStartTimestamp = -1;
         }
 
+        int speed = convertToUiSpeed(kmhSpeed);
+
         speedLimitView.setSpeed(speed, speedometerPercentage);
 
         lastLocationWithSpeed = location;
+    }
+
+    private int convertToUiSpeed(int kmhSpeed) {
+        int speed = kmhSpeed;
+        if (!PrefUtils.getUseMetric(this)) {
+            speed = Utils.convertKmhToMph(speed);
+        }
+        return speed;
     }
 
     void showToast(final String string) {

@@ -21,6 +21,8 @@
     <string name="open_settings_failed_overlay">Einstellungen können nicht geöffnet werden. Bitte erlauben Sie \"über anderen Apps einblenden\" für Velociraptor manuell.</string>
     <string name="enable_accessibility_service">Zugriffsdienst aktivieren</string>
     <string name="enable_accessibility_service_desc">Erlaube Velociraptor durch Aktivieren der Bedienungshilfen, die aktuell laufende App zu erkennen</string>
+    <string name="enable_accessibility_service_desc2">Hauptsächlich beabsichtigt für User mit Behinderung</string>
+    <string name="accessibility_service_summary">Autostart in Kartenapps</string>
     <string name="accessibility_service_description">Um die Vordergrund-App zu bestimmen und die Geschwindigkeit anzuzeigen, muss der \"Bedienungshilfen\"-Dienst  aktiviert werden.</string>
     <string name="open_settings_failed_accessibility">Einstellungen können nicht geöffnet werden. Bitte aktivieren Sie die Bedienungshilfen in den Systemeinstellungen manuell.</string>
     <string name="grant_permission">Berechtigung erteilen</string>
@@ -29,7 +31,8 @@
     <string name="location_settings_warning">GPS ist ausgeschaltet. Bitte aktivieren Sie es, damit Velociraptor die Geschwindigkeit auswerten kann.</string>
     <string name="network_warning">Kein Internet. Velociraptor braucht eine Internetverbindung um die Geschwindigkeitsbegrenzung zu laden.</string>
     <!--General Settings-->
-    <string name="general">General</string>
+    <string name="general">Allgemein</string>
+    <string name="show_limits">Geschwindigkeitsbegrenzungen</string>
     <string name="show_speedometer">Geschwindigkeit anzeigen</string>
     <string name="sound_alert">Alarmton</string>
     <string name="test">Test</string>
@@ -56,21 +59,35 @@
 
         Entwickelt von <b>Daniel Ciao</b><br/>
 
-        <a href='http://pluscubed.com'>Webseite</a>&nbsp;&nbsp;
-        <a href='https://twitter.com/plusCubed'>Twitter</a>&nbsp;&nbsp;
-        <a href='https://google.com/+DanielCiao'>Google+</a>&nbsp;&nbsp;
-        <a href='https://github.com/pluscubed'>GitHub</a>&nbsp;&nbsp;
-        <a href='https://www.linkedin.com/in/dciao'>LinkedIn</a><br/><br/>
+        <a href="http://pluscubed.com">Webseite</a>&nbsp;&nbsp;
+        <a href="https://twitter.com/plusCubed">Twitter</a>&nbsp;&nbsp;
+        <a href="https://google.com/+DanielCiao">Google+</a>&nbsp;&nbsp;
+        <a href="https://github.com/pluscubed">GitHub</a>&nbsp;&nbsp;
+        <a href="https://www.linkedin.com/in/dciao">LinkedIn</a><br/><br/>
 
-        <a href='https://github.com/pluscubed/velociraptor'>GitHub</a> - Quelltext, Probleme, Feature-Wünsche<br/>
+        <a href="https://github.com/pluscubed/velociraptor">GitHub</a> - Quelltext, Probleme, Feature-Wünsche<br/>
     ]]></string>
+    <string name="licenses">Lizenzen</string>
     <!--Speed limit providers-->
     <string name="speed_limit_providers">Geschwindigkeitsbegrenzungsprovider</string>
-    <string name="configure_here_database">HERE Datenbank konfigurieren</string>
-    <string name="configure_here_database_desc">Für genauere Geschwindigkeitsbegrenzungen erstelle einen HERE Entwickleraccount. Auf <b>mapcreator.here.com</b> kannst du Geschwindigkeitsbegrenzungen bearbeiten.</string>
+    <string name="subscribe_placeholder">Abonniere (7 Tage kostenlos testen)</string>
+    <string name="here_provider">HERE Karten</string>
+    <string name="here_provider_short">HERE</string>
+    <string name="here_desc">Abonniere %s (7 Tage kostenlos testen)</string>
+    <string name="tomtom_provider">TomTom Karten</string>
+    <string name="tomtom_provider_short">TomTom</string>
+    <string name="tomtom_desc">Abonniere %s (7 Tage kostenlos testen)</string>
+    <string name="openstreetmap">OpenStreetMap</string>
+    <string name="openstreetmap_short">OSM</string>
+    <string name="share_link">Link teilen</string>
+    <string name="openstreetmap_desc">Kostenlos - Der OSM-Server für Velociraptor wird durch Spenden finanziert</string>
+    <string name="osm_edit">Öffne &lt;DEBUG&gt;openstreetmap.org&lt;/DEBUG&gt; am PC um Geschwindigkeitslimits zu konfigurieren</string>
+    <string name="open_link_failed">Link kann nicht geöffnet werden. Bitte gehe zu %s.</string>
+    <string name="edit_data">Bearbeite Daten</string>
+    <string name="subscribe">Abonniere</string>
+    <string name="subscribed">Abonniert</string>
+    <string name="coverage">Abdeckung</string>
     <string name="check_coverage">Prüft OpenStreetMap Abdeckung</string>
-    <string name="osm_edit">Öffne <b>openstreetmap.org</b> am PC um Geschwindigkeitslimits zu konfigurieren</string>
-    <string name="open_coverage_map_failed">Link öffnen nicht möglich. Bitte öffne ihn manuell http://product.itoworld.com/map/124</string>
     <!--Activation Settings-->
     <string name="select_overlay_usage">Aktivierung</string>
     <string name="automatically_show">Anzeigen/Ausblenden in bestimmten Anwendungen</string>
@@ -80,7 +97,8 @@
     <string name="controls_notif_desc">Zeig oder verstecke die Höchstgeschwindigkeit Anzeige</string>
     <string name="gmaps_only_nav">Google Maps: nur während der Navigation</string>
     <string name="gmaps_only_nav_notif_access">Um dieses Feature zu nutzen benötigt Velociraptor Benachrichtigungszugriff um zu prüfen ob Google Maps läuft</string>
-    <string name="tip_qs_tile">Tip: füge Velociraptor\'s Schnelleinstellungskachel hinzu</string>
+    <string name="gmaps_only_nav_jellybean">Nur für Android 4.3+ verfügbar</string>
+    <string name="open_settings_failed_notif_access">Einstellungen können nicht geöffnet werden. Bitte aktiviere die \"Benachrichtigungseinstellungen\" für Velociraptor manuell.</string>
     <!--App selection-->
     <string name="select_apps">Wähle Apps aus</string>
     <string name="show_map_apps">Zeige Karten Apps</string>
@@ -95,28 +113,34 @@
     <!--Support development-->
     <string name="support_development">Entwicklungsunterstützung</string>
     <string name="in_app_unavailable">In-App Käufe nicht verfügbar</string>
+    <string name="support_dev_dialog">Wird für die Unterhaltung des OSM-Servers verwendet; empfohlen 1 USD pro Monat (Betrag wird in der Auswahl in € umgerechnet).</string>
     <string name="support_dev_dialog_badge">Danke für deine Unterstützung</string>
-    <string name="support_dev_dialog_notplay"><![CDATA[Genutzt um die API-Kosten zu decken; empfohlener Betrag ist 1 USD pro Monat. 
-&lt;br/&gt;&lt;br/&gt; 
-Sie können per PayPal spenden <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&amp;business=72HXHU5AXK2ZN&amp;lc=US&amp;item_name=Velociraptor%20Development&amp;item_number=velociraptor&amp;currency_code=USD&amp;bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted">here</a>. In-App Bezahlung ist verfügbar wenn Sie die App über Google Play installieren. ]]></string>
+    <string name="per_month">%s pro Monat</string>
     <string name="one_time">%s einmalig</string>
+    <!--Tile-->
+    <string name="tile_name">Velociraptor an/aus</string>
+    <string name="configure_here_database">HERE Datenbank konfigurieren</string>
+    <string name="configure_here_database_desc">Für genauere Geschwindigkeitsbegrenzungen erstelle einen HERE Entwickleraccount. Auf <b>mapcreator.here.com</b> kannst du Geschwindigkeitsbegrenzungen bearbeiten.</string>
+    <!--HERE Config-->
+    <string name="here_config_step1">Klicke <b>Starte Programmierung</b> nach der Registrierung</string>
+    <string name="here_config_step2">Klicke <b>Erzeuge App ID und App Code</b> im Bereich <b>JavaScript/REST</b></string>
+    <string name="here_config_title">HERE Datenbank Konfiguration</string>
+    <string name="sign_up">Login</string>
+    <string name="view_account">Account anzeigen</string>
+    <string name="here_app_code">HERE App Code</string>
+    <string name="here_app_id">HERE App ID</string>
+    <string name="open_settings">Einstellungsseite öffnen</string>
+    <!--Wrong or missing speed limit-->
+    <string name="wrong_speed_limit">Falsche oder fehlende Geschwindigkeitsbegrenzung ?</string>
+    <string name="check_coverage_desc">Sofern ja und die Geschwindigkeitsbegrenzung wird nicht angezeigt, so besteht vielleicht ein Bug. Benutze die Debugging-Daten und den Info-Button um eine Rückmeldung an uns zu senden.</string>
+    <string name="open_coverage_map_failed">Link öffnen nicht möglich. Bitte öffne ihn manuell http://product.itoworld.com/map/124</string>
+    <string name="help_edit">Hilf mit, die Geschwindigkeitsbegrenzung Daten zu bearbeiten</string>
+    <string name="wrong_speed_limit_desc">Öffnen Sie OpenStreetMap auf Ihrem Computer. Tippen Sie auf den Link um ihn zu teilen (https://openstreetmap.org)</string>
+    <string name="tip_qs_tile">Tip: füge Velociraptor\'s Schnelleinstellungskachel hinzu</string>
     <!--Android Auto-->
     <string name="notif_android_auto_title">Velociraptor für Android Auto</string>
     <string name="notif_android_auto_limit">Geschwindigkeitsbegrenzung: %s</string>
     <string name="android_auto_integration_switch">Android Auto Integration</string>
     <string name="android_auto_instruction_dialog">Velociraptor verhält sich als Nachrichtenapp für Android Auto.\nDie Android Auto App muss dafür im Vordergrund laufen.\nUm die Benachrichtigungen zu stoppen, tippe auf den Beenden oder Antworten Buton.</string>
     <string name="auto_not_available">Lade Velociraptor von APKMirror herunter um die Android Auto Integration zu nutzen</string>
-    <!--Tile-->
-    <string name="tile_name">Velociraptor an/aus</string>
-    <!--HERE Config-->
-    <string name="here_config_title">HERE Datenbank Konfiguration</string>
-    <string name="view_account">Account anzeigen</string>
-    <string name="sign_up">Login</string>
-    <string name="here_app_code">HERE App Code</string>
-    <string name="here_app_id">HERE App ID</string>
-    <string name="open_settings">Einstellungsseite öffnen</string>
-    <!--Wrong or missing speed limit-->
-    <string name="wrong_speed_limit">Falsche oder fehlende Geschwindigkeitsbegrenzung ?</string>
-    <string name="help_edit">Hilf mit, die Geschwindigkeitsbegrenzung Daten zu bearbeiten</string>
-    <string name="wrong_speed_limit_desc">Öffnen Sie OpenStreetMap auf Ihrem Computer. Tippen Sie auf den Link um ihn zu teilen (https://openstreetmap.org)</string>
 </resources>

@@ -42,21 +42,21 @@
 2071:53 crashlytics
 2126:46 constraint-layout
 2174:46 kotlin-stdlib-jre7
-2222:1732 Protobuf Nano
-3956:3182 PCRE
-7140:11358 safeparcel
-18500:1602 JSR 305
-20104:19442 ICU4C
-39548:243 tz database
-39793:1558 RE2
-41353:1481 darts_clone
-42836:2500 zlib
-45338:731 UTF
-46071:680 STL
-46753:11358 CCTZ
+2222:1481 darts_clone
+3705:2500 zlib
+6207:680 STL
+6889:1732 Protobuf Nano
+8623:731 UTF
+9356:3182 PCRE
+12540:11358 safeparcel
+23900:19442 ICU4C
+43344:1558 RE2
+44904:11358 CCTZ
+56264:1602 JSR 305
+57868:243 tz database
 58113:25 jsoup
-58140:53 beta
-58195:53 crashlytics-core
+58140:53 crashlytics-core
+58195:53 beta
 58250:24 answers
 58276:23 fabric
 58301:46 constraint-layout-solver

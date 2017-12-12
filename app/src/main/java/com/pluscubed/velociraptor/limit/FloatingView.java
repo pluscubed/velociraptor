@@ -6,6 +6,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
+import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
@@ -70,18 +71,26 @@ public class FloatingView implements LimitView {
     private void inflateDebugging() {
         mDebuggingText = (TextView) LayoutInflater.from(new ContextThemeWrapper(mService, R.style.Theme_Velociraptor))
                 .inflate(R.layout.floating_stats, null, false);
+
         WindowManager.LayoutParams debuggingParams = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.MATCH_PARENT,
                 WindowManager.LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.TYPE_PHONE,
+                getWindowType(),
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                 PixelFormat.TRANSLUCENT);
+
         debuggingParams.gravity = Gravity.BOTTOM;
         try {
             mWindowManager.addView(mDebuggingText, debuggingParams);
         } catch (Exception e) {
             mService.showToast("Velociraptor error: " + e.getMessage());
         }
+    }
+
+    private int getWindowType() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ?
+                WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY :
+                WindowManager.LayoutParams.TYPE_PHONE;
     }
 
     private void inflateMonitor() {
@@ -104,7 +113,7 @@ public class FloatingView implements LimitView {
         WindowManager.LayoutParams params = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.TYPE_PHONE,
+                getWindowType(),
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
         params.gravity = Gravity.TOP | Gravity.START;

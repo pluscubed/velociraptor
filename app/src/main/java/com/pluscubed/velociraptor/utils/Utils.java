@@ -61,6 +61,14 @@ public abstract class Utils {
         return (int) (dp * context.getResources().getDisplayMetrics().density + 0.5f);
     }
 
+    public static int convertMphToKmh(int speed) {
+        return (int) (speed * 1.609344 + 0.5d);
+    }
+
+    public static int convertKmhToMph(int speed) {
+        return (int) (speed / 1.609344 + 0.5d);
+    }
+
     public static int compare(int lhs, int rhs) {
         return lhs < rhs ? -1 : (lhs == rhs ? 0 : 1);
     }

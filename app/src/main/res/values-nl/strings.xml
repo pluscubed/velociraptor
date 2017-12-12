@@ -16,21 +16,24 @@
     <string name="notif_title">Velociraptor actief</string>
     <!--Permission Settings-->
     <string name="open_settings_page">Instellingen openen</string>
-    <string name="enable_floating_desc">Schakel \'Over andere apps tekenen\' in om de overlay weer te geven</string>
+    <string name="enable_floating_desc">Toestaan dat Velociraptor zichtbaar is over kaarten-apps.</string>
     <string name="dialog_draw_overlay">Verleen in Android 6.0+ toestemming om elementen op de voorgrond weer te geven</string>
     <string name="open_settings_failed_overlay">Kan instellingen niet openen. Schakel \'Over andere apps tekenen\' handmatig in voor Velociraptor.</string>
     <string name="enable_accessibility_service">Toegankelijkheid inschakelen</string>
-    <string name="enable_accessibility_service_desc">Toestaan dat Velociraptor de huidige app kan detecteren door Toegankelijkheid in te schakelen</string>
-    <string name="accessibility_service_description">Toestaan dat Velociraptor de actieve app kan detecteren om automatisch te verschijnen.\n\nVelociraptor gebruikt geen andere informatie, alleen informatie over de app op de voorgrond.</string>
+    <string name="enable_accessibility_service_desc">Toestaan dat Velociraptor automatisch start in kaarten-apps</string>
+    <string name="enable_accessibility_service_desc2">Hoofdzakelijk bedoeld voor gebruikers met een handicap</string>
+    <string name="accessibility_service_summary">Auto-starten in kaarten-apps</string>
+    <string name="accessibility_service_description">Toestaan dat Velociraptor de actieve app kan detecteren om automatisch te starten.\n\nVelociraptor gebruikt geen andere informatie, alleen informatie over de app op de voorgrond.</string>
     <string name="open_settings_failed_accessibility">Kan instellingen niet openen. Schakel \'Toegankelijk\' handmatig in voor Velociraptor.</string>
     <string name="grant_permission">Toestemming geven</string>
-    <string name="enable_location_desc">Geef toegang tot uw locatie om de maximumsnelheid te bepalen</string>
+    <string name="enable_location_desc">Velociraptor toegang geven tot uw locatie</string>
     <string name="permissions_warning">Velociraptor heeft niet voldoende machtigingen. Open de app om deze te verlenen.</string>
     <string name="location_settings_warning">GPS is uitgeschakeld. Schakel GPS in voor de maximumsnelheid in Velociraptor.</string>
     <string name="network_warning">Netwerk is niet verbonden. Velociraptor heeft een internetverbinding nodig om de snelheidslimieten op te halen.</string>
     <!--General Settings-->
     <string name="general">Algemeen</string>
-    <string name="show_speedometer">Snelheidsmeter weergeven</string>
+    <string name="show_limits">Snelheidslimieten</string>
+    <string name="show_speedometer">Snelheidsmeter</string>
     <string name="sound_alert">Meldingsgeluid</string>
     <string name="test">Testen</string>
     <string name="speed_unit">Snelheidseenheid</string>
@@ -51,29 +54,49 @@
     <string name="about">Over</string>
     <string name="about_dialog_title">Velociraptor v%s</string>
     <string name="about_body"><![CDATA[
-        <b>Velociraptor</b> is een zwevende maximumsnelheidmonitor met snelheidsmeter en waarschuwingen, gebruikmakend van de snelheidslimietgegevens uit HERE Maps.
+        <b>Velociraptor</b> is een zwevende maximumsnelheidmonitor met snelheidsmeter en waarschuwingen, gebruikmakend van de snelheidslimietgegevens uit OpenStreetMap.
         <br/><br/>
 
         Ontwikkeld door <b>Daniel Ciao</b><br/>
 
-        <a href=\'http://pluscubed.com\'>Website</a>&nbsp;&nbsp;
-        <a href=\'mailto:pluscubed@gmail.com\'>E-mail</a>&nbsp;&nbsp; 
-        <a href=\'https://twitter.com/plusCubed\'>Twitter</a>&nbsp;&nbsp;
-        <a href=\'https://google.com/+DanielCiao\'>Google+</a>&nbsp;&nbsp;
-        <a href=\'https://github.com/pluscubed\'>GitHub</a>&nbsp;&nbsp;
-        <a href=\'https://www.linkedin.com/in/dciao\'>LinkedIn</a><br/><br/>
+        <a href="http://pluscubed.com">Website</a>&nbsp;&nbsp;
+        <a href="mailto:pluscubed@gmail.com">E-mail</a>&nbsp;&nbsp; 
+        <a href="https://twitter.com/plusCubed">Twitter</a>&nbsp;&nbsp;
+        <a href="https://google.com/+DanielCiao">Google+</a>&nbsp;&nbsp;
+        <a href="https://github.com/pluscubed">GitHub</a>&nbsp;&nbsp;
+        <a href="https://www.linkedin.com/in/dciao">LinkedIn</a><br/><br/>
 
-<a href=\'https://play.google.com/store/apps/details?id=com.pluscubed.velociraptor\'>Beoordelen in de Play Store!</a><br/><br/>
-
-        <a href=\'https://github.com/pluscubed/velociraptor\'>GitHub</a> - bron, issues, feature requests<br/>
-        <a href=\'http://pluscubed.oneskyapp.com/collaboration/project/64120\'>OneSky</a> - vertaal de app in uw taal]]></string>
+        <a href="https://play.google.com/store/apps/details?id=com.pluscubed.velociraptor">Beoordelen in de Play Store!</a><br/><br/>
+        
+        <a href="https://github.com/pluscubed/velociraptor">GitHub</a> - bron, issues, feature requests<br/>
+        <a href="http://pluscubed.oneskyapp.com/collaboration/project/64120">OneSky</a> - vertaal de app in uw taal
+        <a href="https://play.google.com/apps/testing/com.pluscubed.velociraptor">Beta testing</a> - toekomstige versies uitproberen]]>
+    </string>
+    <string name="licenses">Licenties</string>
     <!--Speed limit providers-->
-    <string name="check_coverage">Tik om te controleren of uw gebied is gedekt</string>
-    <string name="open_coverage_map_failed">Kan link niet openen. Ga naar http://product.itoworld.com/map/124</string>
+    <string name="speed_limit_providers">Aanbieders snelheidslimieten</string>
+    <string name="subscribe_placeholder">Abonneren (gratis proefperiode van 7 dagen)</string>
+    <string name="here_provider">HERE Maps</string>
+    <string name="here_provider_short">HERE</string>
+    <string name="here_desc">Abonneren voor %s (gratis proefperiode van 7 dagen)</string>
+    <string name="tomtom_provider">TomTom Maps</string>
+    <string name="tomtom_provider_short">TomTom</string>
+    <string name="tomtom_desc">Abonneren voor %s (gratis proefperiode van 7 dagen)</string>
+    <string name="openstreetmap">OpenStreetMap</string>
+    <string name="openstreetmap_short">OSM</string>
+    <string name="share_link">Link delen</string>
+    <string name="openstreetmap_desc">Gratis - Velociraptor\'s OSM-server wordt door jou ondersteund</string>
+    <string name="osm_edit">Ga naar &lt;DEBUG&gt;openstreetmap.org&lt;/DEBUG&gt; op een computer om snelheidslimieten aan te passen</string>
+    <string name="open_link_failed">Kan link niet openen. Ga zelf naar %s.</string>
+    <string name="edit_data">Gegevens bewerken</string>
+    <string name="subscribe">Abonneren</string>
+    <string name="subscribed">Geabonneerd</string>
+    <string name="coverage">Dekking</string>
+    <string name="check_coverage">Dekking van OpenStreetMap controleren</string>
     <!--Activation Settings-->
     <string name="select_overlay_usage">Activeren</string>
     <string name="automatically_show">Weergeven/verbergen in bepaalde apps</string>
-    <string name="show_in_apps">Weergeven in deze apps:</string>
+    <string name="show_in_apps">Auto-start in deze apps</string>
     <string name="persistent_notification_controls">Melding met opties weergeven</string>
     <string name="controls_notif_title">Velociraptor bediening</string>
     <string name="controls_notif_desc">Snelheidsmonitor weergeven of verbergen</string>
@@ -81,7 +104,6 @@
     <string name="gmaps_only_nav_notif_access">Om deze functie te gebruiken heeft Velociraptor toegang tot meldingen nodig om te kunnen controleren of Google Maps aan het navigeren is</string>
     <string name="gmaps_only_nav_jellybean">Alleen beschikbaar voor Android 4.3+</string>
     <string name="open_settings_failed_notif_access">Kan instellingen niet openen. Schakel de toegang tot meldingen handmatig in voor Velociraptor.</string>
-    <string name="tip_qs_tile">Tip: Voeg de Velociraptor-tegel toe aan Snelle instellingen!</string>
     <!--App selection-->
     <string name="select_apps">Apps selecteren</string>
     <string name="show_map_apps">Kaart-apps weergeven</string>
@@ -98,23 +120,32 @@
     <string name="in_app_unavailable">In-app-facturering niet beschikbaar</string>
     <string name="support_dev_dialog">Wordt gebruikt voor de kosten van OpenStreetMap-server; aanbevolen hoeveelheid is 1 USD per maand.</string>
     <string name="support_dev_dialog_badge">Bedankt voor de ondersteuning!</string>
-    <string name="support_dev_dialog_notplay"><![CDATA[Wordt gebruikt voor server- en API-kosten; aanbevolen hoeveelheid is 1 USD per maand.
-    <br/><br/>
-    Je kan <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&amp;business=72HXHU5AXK2ZN&amp;lc=US&amp;item_name=Velociraptor%20Development&amp;item_number=velociraptor&amp;currency_code=USD&amp;bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted">hier</a> doneren via PayPal. In-app-aankoop is beschikbaar als de app is gedownload van Google Play.]]></string>
     <string name="per_month">%s per maand</string>
     <string name="one_time">%s eenmalig</string>
+    <!--Tile-->
+    <string name="tile_name">Velociraptor aan/uit</string>
+    <string name="configure_here_database">HERE Maps database instellen</string>
+    <string name="configure_here_database_desc">Krijg nauwkeurigere snelheidslimieten met een gratis HERE-ontwikkelaarsaccount. Ga naar <b>mapcreator.here.com</b> om snelheidslimieten te bewerken</string>
+    <!--HERE Config-->
+    <string name="here_config_step1">Na het registreren drukt u op <b>Coderen starten</b></string>
+    <string name="here_config_step2">Druk op <b>App-ID en App-code genereren</b> in het gedeelte <b>JavaScript/REST</b></string>
+    <string name="here_config_title">HERE databaseconfiguratie</string>
+    <string name="sign_up">Aanmelden</string>
+    <string name="view_account">Account bekijken</string>
+    <string name="here_app_code">HERE App-code</string>
+    <string name="here_app_id">HERE App-ID</string>
+    <string name="open_settings">Instellingen openen</string>
+    <!--Wrong or missing speed limit-->
+    <string name="wrong_speed_limit">Verkeerde of missende snelheidslimiet?</string>
+    <string name="check_coverage_desc">Zo ja en de maximumsnelheid wordt niet weergegeven, dan kan het een bug te zijn. Gebruik de debugging-optie en de info-knop om feedback te versturen.</string>
+    <string name="open_coverage_map_failed">Kan link niet openen. Ga naar http://product.itoworld.com/map/124</string>
+    <string name="help_edit">Help met bewerken van de maximumsnelheid</string>
+    <string name="wrong_speed_limit_desc">Ga op de computer naar OpenStreetMap. Tik hier om link te delen (https://openstreetmap.org)</string>
+    <string name="tip_qs_tile">Tip: Voeg de Velociraptor-tegel toe aan Snelle instellingen!</string>
     <!--Android Auto-->
     <string name="notif_android_auto_title">Velociraptor voor Android Auto</string>
     <string name="notif_android_auto_limit">Snelheidslimiet: %s</string>
     <string name="android_auto_integration_switch">Android Auto-integratie</string>
     <string name="android_auto_instruction_dialog">Velociraptor fungeert als een berichten-app voor Android Auto. Android Auto moet op de voorgrond draaien. Om de meldingsgeluiden te stoppen, tikt u eenmalig op sluiten of beantwoorden.</string>
     <string name="auto_not_available">Voor Android Auto-integratie, download Velociraptor AA van APKMirror</string>
-    <!--Tile-->
-    <string name="tile_name">Velociraptor aan/uit</string>
-    <string name="open_settings">Instellingen openen</string>
-    <!--Wrong or missing speed limit-->
-    <string name="wrong_speed_limit">Verkeerde of missende snelheidslimiet?</string>
-    <string name="check_coverage_desc">Zo ja en de maximumsnelheid wordt niet weergegeven, dan kan het een bug te zijn. Gebruik de debugging-optie en de info-knop om feedback te versturen.</string>
-    <string name="help_edit">Help met bewerken van de maximumsnelheid</string>
-    <string name="wrong_speed_limit_desc">Ga op de computer naar OpenStreetMap. Tik hier om link te delen (https://openstreetmap.org)</string>
 </resources>

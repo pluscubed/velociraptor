@@ -46,6 +46,7 @@ import com.pluscubed.velociraptor.billing.BillingManager;
 import com.pluscubed.velociraptor.detection.AppDetectionService;
 import com.pluscubed.velociraptor.limit.LimitService;
 import com.pluscubed.velociraptor.settings.appselection.AppSelectionActivity;
+import com.pluscubed.velociraptor.utils.NotificationUtils;
 import com.pluscubed.velociraptor.utils.PrefUtils;
 import com.pluscubed.velociraptor.utils.Utils;
 
@@ -215,8 +216,9 @@ public class SettingsActivity extends AppCompatActivity {
             PendingIntent settingsIntent = PendingIntent.getActivity(SettingsActivity.this,
                     PENDING_SETTINGS, settings, PendingIntent.FLAG_CANCEL_CURRENT);
 
+            NotificationUtils.initChannels(this);
             NotificationCompat.Builder builder =
-                    new NotificationCompat.Builder(SettingsActivity.this)
+                    new NotificationCompat.Builder(SettingsActivity.this, NotificationUtils.CHANNEL_TOGGLES)
                             .setSmallIcon(R.drawable.ic_speedometer_notif)
                             .setContentTitle(getString(R.string.controls_notif_title))
                             .setContentText(getString(R.string.controls_notif_desc))

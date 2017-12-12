@@ -125,17 +125,6 @@
 
     </LinearLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:layout_marginEnd="16dp"
-        android:layout_marginLeft="72dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginStart="72dp"
-        android:text="@string/enable_accessibility_service_desc2"
-        android:textSize="10sp" />
-
     <Button
         android:id="@+id/button_enable_service"
         style="@style/Widget.Button.Colored"

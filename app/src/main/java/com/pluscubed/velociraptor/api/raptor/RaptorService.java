@@ -16,9 +16,9 @@ public interface RaptorService {
 
     @GET("tomtom")
     Single<RaptorResponse> getTomtom(@Header("Authorization") String authorization, @Query("id") String id,
-                                     @Query("lat") String lat, @Query("lng") String lng, @Query("vehicle_heading") int heading);
+                                     @Query("lat") String lat, @Query("lng") String lng, @Query("vehicle_heading") int heading, @Query("units") String units);
 
     @GET("here")
     Single<RaptorResponse> getHere(@Header("Authorization") String authorization, @Query("id") String id,
-                                   @Query("lat") String lat, @Query("lng") String lng, @Query("vehicle_heading") int heading);
+                                   @Query("lat") String lat, @Query("lng") String lng, @Query("vehicle_heading") int heading, @Query("units") String units);
 }

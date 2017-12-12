@@ -160,8 +160,8 @@
     <string name="per_month">%s per month</string>
     <string name="one_time">%s one-time</string>
 
-    <!--Tile-->
-    <string name="tile_name">Toggle Velociraptor</string>
+    <!--Notification Channels-->
+    <string name="channel_toggles">Show/hide toggles</string>
 
 
 </resources>

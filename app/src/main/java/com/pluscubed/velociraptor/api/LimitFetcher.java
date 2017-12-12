@@ -35,8 +35,9 @@ public class LimitFetcher {
 
         OkHttpClient client = buildOkHttpClient();
 
-        this.osmLimitProvider = new OsmLimitProvider(context, client);
-        this.raptorLimitProvider = new RaptorLimitProvider(context, client, LimitCache.getInstance(context));
+        LimitCache cache = LimitCache.getInstance(context);
+        this.osmLimitProvider = new OsmLimitProvider(context, client, cache);
+        this.raptorLimitProvider = new RaptorLimitProvider(context, client, cache);
     }
 
     public static Retrofit buildRetrofit(OkHttpClient client, String baseUrl) {
@@ -64,8 +65,6 @@ public class LimitFetcher {
     }
 
     public Single<LimitResponse> getSpeedLimit(Location location) {
-        //TODO: Restructure as stream of error/missing/completed responses
-
         String lastRoadName = lastResponse == null ? null : lastResponse.roadName();
         Observable<LimitResponse> cacheQuery = LimitCache.getInstance(context)
                 .get(lastRoadName, new Coord(location));
@@ -91,6 +90,7 @@ public class LimitFetcher {
                                 .defaultIfEmpty(LimitResponse.builder().build());
                     }
 
+                    //If it's from OSM & there's no valid speed limit
                     if (limitResponse.origin() == LimitResponse.ORIGIN_OSM
                             && limitResponse.speedLimit() == -1) {
                         return finalRaptorQuery
