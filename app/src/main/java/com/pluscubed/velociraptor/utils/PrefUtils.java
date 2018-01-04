@@ -69,7 +69,7 @@ public abstract class PrefUtils {
         boolean metricDefault;
         Locale current = Locale.getDefault();
         if (current.equals(Locale.US) ||
-                current.equals(Locale.UK) ||
+                current.equals(Locale.GB) ||
                 current.getISO3Country().equalsIgnoreCase("mmr")) {
             metricDefault = false;
         } else {
