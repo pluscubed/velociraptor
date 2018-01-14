@@ -39,6 +39,7 @@ import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.SkuDetails;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.oss.licenses.OssLicensesMenuActivity;
 import com.pluscubed.velociraptor.BuildConfig;
 import com.pluscubed.velociraptor.R;
 import com.pluscubed.velociraptor.billing.BillingConstants;
@@ -422,9 +423,13 @@ public class SettingsActivity extends AppCompatActivity {
 
         invalidateStates();
 
-        if (BuildConfig.VERSION_CODE > PrefUtils.getVersionCode(this) &&
-                !PrefUtils.isFirstRun(this)) {
+        if (BuildConfig.VERSION_CODE > PrefUtils.getVersionCode(this)
+                && !PrefUtils.isFirstRun(this)) {
             showChangelog();
+        }
+
+        if (PrefUtils.getVersionCode(this) <= 39 || !PrefUtils.isTermsAccepted(this)) {
+            showTermsDialog();
         }
 
         billingManager = new BillingManager(this, new BillingManager.BillingUpdatesListener() {
@@ -594,9 +599,21 @@ public class SettingsActivity extends AppCompatActivity {
                 .title(getString(R.string.about_dialog_title, BuildConfig.VERSION_NAME))
                 .positiveText(R.string.dismiss)
                 .content(Html.fromHtml(getString(R.string.about_body)))
-                /*.neutralText(R.string.licenses)
-                .onNeutral((dialog, which) -> startActivity(new Intent(SettingsActivity.this, OssLicensesMenuActivity.class)))*/
+                .neutralText(R.string.licenses)
+                .onNeutral((dialog, which) -> startActivity(new Intent(SettingsActivity.this, OssLicensesMenuActivity.class)))
                 .iconRes(R.mipmap.ic_launcher)
+                .show();
+    }
+
+    private void showTermsDialog() {
+        new MaterialDialog.Builder(this)
+                .positiveText(R.string.accept)
+                .content(Html.fromHtml(getString(R.string.terms_body)))
+                .onPositive((dialog, which) -> {
+                    PrefUtils.setTermsAccepted(SettingsActivity.this, true);
+                })
+                .iconRes(R.mipmap.ic_launcher)
+                .canceledOnTouchOutside(false)
                 .show();
     }
 

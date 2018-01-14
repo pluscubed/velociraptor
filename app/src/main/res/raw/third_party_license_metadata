@@ -22,7 +22,7 @@
 1065:46 cardview-v7
 1113:46 customtabs
 1161:46 butterknife
-58445:46 runtime
+69789:46 runtime
 1257:46 butterknife-annotations
 1305:46 support-fragment
 1353:46 support-core-utils
@@ -42,39 +42,39 @@
 2071:53 crashlytics
 2126:46 constraint-layout
 2174:46 kotlin-stdlib-jre7
-2222:1481 darts_clone
-3705:2500 zlib
-6207:680 STL
-6889:1732 Protobuf Nano
-8623:731 UTF
-9356:3182 PCRE
-12540:11358 safeparcel
-23900:19442 ICU4C
-43344:1558 RE2
-44904:11358 CCTZ
-56264:1602 JSR 305
-57868:243 tz database
-58113:25 jsoup
-58140:53 crashlytics-core
-58195:53 beta
-58250:24 answers
-58276:23 fabric
-58301:46 constraint-layout-solver
-58349:46 kotlin-stdlib
-58397:46 annotations
-58541:46 common
-58589:46 auto-value-parcel
-58637:46 butterknife-compiler
-58685:46 auto-value-parcel-adapter
-58733:46 javapoet
-58781:46 dbinspector
-58829:46 leakcanary-android
-58877:46 multidex
-58925:46 leakcanary-analyzer
-58973:46 haha
-59021:46 leakcanary-watcher
-59069:46 leakcanary-android-no-op
-59117:46 kotlin-annotation-processing-gradle
-59165:46 kotlin-compiler-embeddable
-59213:46 kotlin-reflect
-59261:46 kotlin-script-runtime
+2222:1732 Protobuf Nano
+3956:11358 CCTZ
+15316:2500 zlib
+17818:731 UTF
+18551:1481 darts_clone
+20034:243 tz database
+20279:11342 flatbuffers
+31623:680 STL
+32305:3182 PCRE
+35489:1602 JSR 305
+37093:19442 ICU4C
+56537:1558 RE2
+58097:11358 safeparcel
+69457:25 jsoup
+69484:53 crashlytics-core
+69539:53 beta
+69594:24 answers
+69620:23 fabric
+69645:46 constraint-layout-solver
+69693:46 kotlin-stdlib
+69741:46 annotations
+69885:46 common
+69933:46 auto-value-parcel
+69981:46 butterknife-compiler
+70029:46 auto-value-parcel-adapter
+70077:46 javapoet
+70125:46 dbinspector
+70173:46 leakcanary-android
+70221:46 multidex
+70269:46 leakcanary-analyzer
+70317:46 haha
+70365:46 leakcanary-watcher
+70413:46 kotlin-annotation-processing-gradle
+70461:46 kotlin-compiler-embeddable
+70509:46 kotlin-reflect
+70557:46 kotlin-script-runtime

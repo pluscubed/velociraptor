@@ -210,6 +210,12 @@ public class LimitService extends Service {
     }
 
     private boolean prequisitesMet() {
+        if (!PrefUtils.isTermsAccepted(this)) {
+            showToast(getString(R.string.terms_warning));
+            stopSelf();
+            return false;
+        }
+
         if (!Utils.isLocationPermissionGranted(LimitService.this)
                 || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this))) {
             showToast(getString(R.string.permissions_warning));
@@ -360,9 +366,7 @@ public class LimitService extends Service {
             speedingStartTimestamp = -1;
         }
 
-        int speed = convertToUiSpeed(kmhSpeed);
-
-        speedLimitView.setSpeed(speed, speedometerPercentage);
+        speedLimitView.setSpeed(convertToUiSpeed(kmhSpeed), speedometerPercentage);
 
         lastLocationWithSpeed = location;
     }
