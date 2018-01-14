@@ -1,4 +1,5 @@
-![Icon](./app/src/main/res/mipmap-mdpi/ic_launcher.png) Velociraptor
+![Icon](./app/src/main/res/mipmap-mdpi/ic_launcher.png) [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FplusCubed%2Fvelociraptor.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FplusCubed%2Fvelociraptor?ref=badge_shield)
+Velociraptor
 =========
 Floating speed limit monitor for Android, using OpenStreetMap and HERE Maps APIs.
 
@@ -18,3 +19,6 @@ Floating speed limit monitor for Android, using OpenStreetMap and HERE Maps APIs
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
+
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FplusCubed%2Fvelociraptor.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FplusCubed%2Fvelociraptor?ref=badge_large)
