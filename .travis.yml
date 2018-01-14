@@ -5,8 +5,10 @@ android:
     - tools
     - platform-tools
     - tools
+
     - build-tools-27.0.3
     - android-27
+
     - extra-android-support
     - extra-android-m2repository
     - extra-google-m2repository
@@ -21,3 +23,6 @@ android:
 
   licenses:
     - '.+'
+
+before_install:
+  - yes | sdkmanager "platforms;android-27"
