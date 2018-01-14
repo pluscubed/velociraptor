@@ -26,6 +26,7 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.pluscubed.velociraptor.BuildConfig;
 import com.pluscubed.velociraptor.R;
 import com.pluscubed.velociraptor.api.LimitFetcher;
 import com.pluscubed.velociraptor.api.LimitResponse;
@@ -211,7 +212,9 @@ public class LimitService extends Service {
 
     private boolean prequisitesMet() {
         if (!PrefUtils.isTermsAccepted(this)) {
-            showToast(getString(R.string.terms_warning));
+            if (BuildConfig.VERSION_CODE > PrefUtils.getVersionCode(this)) {
+                showToast(getString(R.string.terms_warning));
+            }
             stopSelf();
             return false;
         }
