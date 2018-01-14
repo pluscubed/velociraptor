@@ -69,7 +69,7 @@
     <string name="about">About</string>
     <string name="about_dialog_title">Velociraptor v%s</string>
     <string name="about_body"><![CDATA[
-        <b>Velociraptor</b> is a floating speed limit monitor with speedometer and warning features, using OpenStreetMap speed limit data.
+        <b>Velociraptor</b> is a floating speed limit monitor with speedometer and warning features.
         <br/><br/>
 
         Developed by <b>Daniel Ciao</b><br/>
@@ -88,9 +88,29 @@
         <a href="https://play.google.com/apps/testing/com.pluscubed.velociraptor">Beta testing</a> - try out upcoming releases
 
         <br/><br/>
-        <i>This app uses Accessibility services. These services are intended for users with disabilities. This app is not affiliated or endorsed by OpenStreetMap, HERE, TomTom, or Sygic. The developer does not bear responsibility for the accuracy of any information provided. All trademarks belong to their respective owners.</i>
+        <i>
+        This app uses Accessibility services. These services are intended for users with disabilities.<br/><br/>
+
+        By using Velociraptor, you absolve the developer, speed limit providers, and all other parties of any responsibility
+        for accidents, legal consequences, and all other outcomes. The data presented by Velociraptor, including speed limits and current speed,
+        is not guaranteed to be accurate. This app is not affiliated or endorsed by OpenStreetMap, HERE, TomTom, or Sygic. All trademarks
+        belong to their respective owners.<br/><br/>
+
+        Please pay attention to the road and use with care.
+       </i>
     ]]></string>
     <string name="licenses">Licenses</string>
+
+    <string name="terms_body"><![CDATA[
+       By using Velociraptor, you absolve the developer, speed limit providers, and all other parties of any responsibility
+       for accidents, legal consequences, and all other outcomes. The data presented by Velociraptor, including speed limits and current speed,
+       is not guaranteed to be accurate. All trademarks belong to their respective owners.<br/><br/>
+
+       Please pay attention to the road and use with care.
+     ]]></string>
+
+    <string name="accept">Accept</string>
+    <string name="terms_warning">Open Velociraptor to accept the terms of use</string>
 
     <!--Speed limit providers-->
     <string name="speed_limit_providers">Speed limit providers</string>
@@ -162,6 +182,5 @@
 
     <!--Notification Channels-->
     <string name="channel_toggles">Show/hide toggles</string>
-
 
 </resources>

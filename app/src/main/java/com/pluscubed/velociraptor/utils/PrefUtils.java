@@ -32,6 +32,7 @@ public abstract class PrefUtils {
     private static final String PREF_SPEEDLIMIT_SIZE = "pref_speedlimit_size";
     private static final String PREF_SPEEDOMETER_SIZE = "pref_speedometer_size";
     private static final String PREF_GMAPS_ONLY_NAVIGATION = "pref_gmaps_only_nav";
+    private static final String PREF_TERMS_ACCEPTED = "pref_terms_accepted";
 
     private static SharedPreferences.Editor edit(Context context) {
         return getSharedPreferences(context).edit();
@@ -47,6 +48,14 @@ public abstract class PrefUtils {
 
     public static boolean isFirstRun(Context context) {
         return getSharedPreferences(context).getBoolean(PREF_FIRSTRUN, true);
+    }
+
+    public static void setTermsAccepted(Context context, boolean firstRun) {
+        edit(context).putBoolean(PREF_TERMS_ACCEPTED, firstRun).apply();
+    }
+
+    public static boolean isTermsAccepted(Context context) {
+        return getSharedPreferences(context).getBoolean(PREF_TERMS_ACCEPTED, false);
     }
 
     public static void setVersionCode(Context context, int versionCode) {
@@ -69,7 +78,7 @@ public abstract class PrefUtils {
         boolean metricDefault;
         Locale current = Locale.getDefault();
         if (current.equals(Locale.US) ||
-                current.equals(Locale.GB) ||
+                current.equals(Locale.UK) ||
                 current.getISO3Country().equalsIgnoreCase("mmr")) {
             metricDefault = false;
         } else {
