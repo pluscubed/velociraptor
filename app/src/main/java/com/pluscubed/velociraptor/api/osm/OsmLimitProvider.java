@@ -59,13 +59,7 @@ public class OsmLimitProvider implements LimitProvider {
         initializeOsmService(endpoint);
         osmOverpassApis.add(endpoint);
 
-        FirebaseRemoteConfig instance = FirebaseRemoteConfig.getInstance();
-        instance.fetch().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                instance.activateFetched();
-                refreshApiEndpoints();
-            }
-        });
+        refreshApiEndpoints();
     }
 
     private void initializeOsmService(OsmApiEndpoint endpoint) {

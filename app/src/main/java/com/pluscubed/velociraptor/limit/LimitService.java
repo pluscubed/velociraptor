@@ -26,6 +26,7 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.pluscubed.velociraptor.BuildConfig;
 import com.pluscubed.velociraptor.R;
 import com.pluscubed.velociraptor.api.LimitFetcher;
@@ -187,6 +188,13 @@ public class LimitService extends Service {
                 for (Purchase purchase : purchases) {
                     limitFetcher.verifyRaptorService(purchase);
                 }
+            }
+        });
+
+        FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.getInstance();
+        remoteConfig.fetch(3600).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                remoteConfig.activateFetched();
             }
         });
 
