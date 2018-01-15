@@ -14,6 +14,7 @@ import com.pluscubed.velociraptor.utils.Utils
 import okhttp3.OkHttpClient
 import rx.Observable
 import rx.schedulers.Schedulers
+import timber.log.Timber
 import java.util.*
 
 class RaptorLimitProvider(context: Context, client: OkHttpClient, val limitCache: LimitCache) : LimitProvider {
@@ -106,6 +107,7 @@ class RaptorLimitProvider(context: Context, client: OkHttpClient, val limitCache
                         }
                         var speedLimit = raptorResponse.generalSpeedLimit!!
                         if (imperialWorkaround) {
+                            Timber.d("Imperial Workaround: " + imperialWorkaround);
                             speedLimit = Utils.convertMphToKmh(speedLimit);
                         }
                         val response = LimitResponse.builder()

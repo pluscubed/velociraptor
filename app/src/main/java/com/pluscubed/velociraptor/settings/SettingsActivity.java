@@ -130,6 +130,8 @@ public class SettingsActivity extends AppCompatActivity {
     Spinner styleSpinner;
 
     //Providers
+    @BindView(R.id.here_title)
+    TextView hereTitle;
     @BindView(R.id.here_provider_desc)
     TextView herePriceDesc;
     @BindView(R.id.here_subscribe)
@@ -137,6 +139,8 @@ public class SettingsActivity extends AppCompatActivity {
     @BindView(R.id.here_editdata)
     Button hereEditDataButton;
 
+    @BindView(R.id.tomtom_title)
+    TextView tomtomTitle;
     @BindView(R.id.tomtom_provider_desc)
     TextView tomtomPriceDesc;
     @BindView(R.id.tomtom_subscribe)
@@ -468,8 +472,8 @@ public class SettingsActivity extends AppCompatActivity {
                     purchased.add(purchase.getSku());
                 }
 
-                setSubscribeButtonState(hereSubscribeButton, purchased.contains(BillingConstants.SKU_HERE));
-                setSubscribeButtonState(tomtomSubscribeButton, purchased.contains(BillingConstants.SKU_TOMTOM));
+                setSubscriptionState(hereSubscribeButton, hereTitle, purchased.contains(BillingConstants.SKU_HERE));
+                setSubscriptionState(tomtomSubscribeButton, tomtomTitle, purchased.contains(BillingConstants.SKU_TOMTOM));
             }
         });
 
@@ -482,13 +486,15 @@ public class SettingsActivity extends AppCompatActivity {
                 && billingManager.getBillingClientResponseCode() == BillingClient.BillingResponse.OK;
     }
 
-    private void setSubscribeButtonState(Button button, boolean subscribed) {
+    private void setSubscriptionState(Button button, TextView title, boolean subscribed) {
         if (subscribed) {
             button.setEnabled(false);
             button.setText(R.string.subscribed);
+            title.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_done_green_20dp, 0);
         } else {
             button.setEnabled(true);
             button.setText(R.string.subscribe);
+            title.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_cross_red_20dp, 0);
         }
     }
 

@@ -40,8 +40,10 @@
             android:paddingTop="16dp">
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:drawablePadding="8dp"
+                android:drawableRight="@drawable/ic_done_green_20dp"
                 android:paddingEnd="8dp"
                 android:paddingRight="8dp"
                 android:text="@string/openstreetmap"
@@ -125,8 +127,11 @@
             android:paddingTop="16dp">
 
             <TextView
-                android:layout_width="match_parent"
+                android:id="@+id/tomtom_title"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:drawablePadding="8dp"
+                android:drawableRight="@drawable/ic_cross_red_20dp"
                 android:paddingEnd="8dp"
                 android:paddingRight="8dp"
                 android:text="@string/tomtom_provider"
@@ -203,8 +208,11 @@
             android:paddingTop="16dp">
 
             <TextView
-                android:layout_width="match_parent"
+                android:id="@+id/here_title"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:drawablePadding="8dp"
+                android:drawableRight="@drawable/ic_cross_red_20dp"
                 android:paddingEnd="8dp"
                 android:paddingRight="8dp"
                 android:text="@string/here_provider"
