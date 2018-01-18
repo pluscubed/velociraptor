@@ -2,6 +2,7 @@ package com.pluscubed.velociraptor.limit;
 
 import android.annotation.SuppressLint;
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
@@ -12,13 +13,11 @@ import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
-import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
-import android.widget.Toast;
 
 import com.android.billingclient.api.Purchase;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -60,9 +59,8 @@ public class LimitService extends Service {
     public static final int VIEW_FLOATING = 0;
 
     public static final String EXTRA_HIDE_LIMIT = "com.pluscubed.velociraptor.HIDE_LIMIT";
-
+    public static final int NOTIFICATION_WARNING = 192;
     private static final int NOTIFICATION_FOREGROUND = 303;
-
     private int speedLimitViewType = -1;
     private LimitView speedLimitView;
 
@@ -160,7 +158,6 @@ public class LimitService extends Service {
         try {
             fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
         } catch (SecurityException unlikely) {
-            showToast("Velociraptor cannot obtain location");
         }
 
         billingManager = new BillingManager(this, new BillingManager.BillingUpdatesListener() {
@@ -221,7 +218,7 @@ public class LimitService extends Service {
     private boolean prequisitesMet() {
         if (!PrefUtils.isTermsAccepted(this)) {
             if (BuildConfig.VERSION_CODE > PrefUtils.getVersionCode(this)) {
-                showToast(getString(R.string.terms_warning));
+                showWarningNotification(getString(R.string.terms_warning));
             }
             stopSelf();
             return false;
@@ -229,21 +226,21 @@ public class LimitService extends Service {
 
         if (!Utils.isLocationPermissionGranted(LimitService.this)
                 || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this))) {
-            showToast(getString(R.string.permissions_warning));
+            showWarningNotification(getString(R.string.permissions_warning));
             stopSelf();
             return false;
         }
 
         LocationManager manager = (LocationManager) getSystemService(LOCATION_SERVICE);
         if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            showToast(getString(R.string.location_settings_warning));
+            showWarningNotification(getString(R.string.location_settings_warning));
         }
 
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
         if (!isConnected) {
-            showToast(getString(R.string.network_warning));
+            showWarningNotification(getString(R.string.network_warning));
         }
         return true;
     }
@@ -390,9 +387,22 @@ public class LimitService extends Service {
         return speed;
     }
 
-    void showToast(final String string) {
-        Handler handler = new Handler(Looper.getMainLooper());
-        handler.post(() -> Toast.makeText(LimitService.this.getApplicationContext(), string, Toast.LENGTH_LONG).show());
+    void showWarningNotification(final String string) {
+        Intent notificationIntent = new Intent(this, SettingsActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, PENDING_SETTINGS, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+        NotificationUtils.initChannels(this);
+        Notification notification = new NotificationCompat.Builder(this, NotificationUtils.CHANNEL_WARNINGS)
+                .setContentTitle(getString(R.string.grant_permission))
+                .setContentText(string)
+                .setPriority(Notification.PRIORITY_MIN)
+                .setSmallIcon(R.drawable.ic_speedometer_notif)
+                .setContentIntent(pendingIntent)
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(string))
+                .build();
+
+        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        manager.notify(NOTIFICATION_WARNING, notification);
     }
 
     @Override

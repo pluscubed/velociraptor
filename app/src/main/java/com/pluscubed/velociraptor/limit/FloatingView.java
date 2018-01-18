@@ -83,7 +83,6 @@ public class FloatingView implements LimitView {
         try {
             mWindowManager.addView(mDebuggingText, debuggingParams);
         } catch (Exception e) {
-            mService.showToast("Velociraptor error: " + e.getMessage());
         }
     }
 
@@ -122,7 +121,6 @@ public class FloatingView implements LimitView {
             try {
                 mWindowManager.addView(mFloatingView, params);
             } catch (Exception e) {
-                mService.showToast("Velociraptor error: " + e);
             }
         mFloatingView.setOnTouchListener(new FloatingOnTouchListener());
 

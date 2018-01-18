@@ -1,10 +1,10 @@
 ![Icon](./app/src/main/res/mipmap-mdpi/ic_launcher.png) Velociraptor
 =========
-Floating speed limit monitor for Android, using OpenStreetMap and HERE Maps APIs.
+Floating speed limit monitor for Android with speedometer and warning features.
 
 [![Get it on Google Play](http://i.imgur.com/PeDVOwW.png)](https://play.google.com/store/apps/details?id=com.pluscubed.velociraptor)
 
-    Copyright (C) 2016  Daniel Ciao
+    Copyright (C) 2018  Daniel Ciao
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by

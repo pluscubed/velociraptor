@@ -24,9 +24,14 @@ public abstract class LimitCacheWay implements WayModel {
             double clat = (coord1.lat + coord2.lat) / 2;
             double clon = (coord1.lon + coord2.lon) / 2;
 
-            LimitCacheWay way = new AutoValue_LimitCacheWay(clat, clon,
-                    (long) response.speedLimit(), response.timestamp(),
-                    coord1.lat, coord1.lon, coord2.lat, coord2.lon, response.roadName(), (long) response.origin());
+            LimitCacheWay way = new AutoValue_LimitCacheWay(
+                    clat, clon,
+                    (long) response.speedLimit(),
+                    response.timestamp(),
+                    coord1.lat, coord1.lon, coord2.lat, coord2.lon,
+                    response.roadName(),
+                    (long) response.origin()
+            );
             ways.add(way);
         }
         return ways;

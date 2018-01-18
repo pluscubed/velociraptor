@@ -32,7 +32,7 @@
     <string name="grant_permission">Grant permission</string>
     <string name="enable_location_desc">Allow Velociraptor to access your location</string>
 
-    <string name="permissions_warning">Velociraptor doesn\'t have adequate permissions. Please open the app to grant them.</string>
+    <string name="permissions_warning">Velociraptor doesn\'t have location permissions. Please open the app to grant them.</string>
     <string name="location_settings_warning">GPS is not turned on. Please enable for Velociraptor\'s speed limit monitor.</string>
     <string name="network_warning">Network is not connected. Velociraptor requires Internet connectivity to fetch the speed limit.</string>
 
@@ -182,5 +182,6 @@
 
     <!--Notification Channels-->
     <string name="channel_toggles">Show/hide toggles</string>
+    <string name="channel_warnings">Warnings</string>
 
 </resources>

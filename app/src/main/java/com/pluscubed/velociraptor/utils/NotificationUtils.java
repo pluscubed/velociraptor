@@ -11,6 +11,7 @@ public class NotificationUtils {
 
     public static final String CHANNEL_TOGGLES = "toggles";
     public static final String CHANNEL_RUNNING = "running";
+    public static final String CHANNEL_WARNINGS = "warnings";
 
     public static void initChannels(Context context) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
@@ -28,6 +29,13 @@ public class NotificationUtils {
         channel = new NotificationChannel(
                 CHANNEL_RUNNING,
                 context.getString(R.string.notif_title),
+                NotificationManager.IMPORTANCE_LOW
+        );
+        notificationManager.createNotificationChannel(channel);
+
+        channel = new NotificationChannel(
+                CHANNEL_WARNINGS,
+                context.getString(R.string.channel_warnings),
                 NotificationManager.IMPORTANCE_LOW
         );
         notificationManager.createNotificationChannel(channel);

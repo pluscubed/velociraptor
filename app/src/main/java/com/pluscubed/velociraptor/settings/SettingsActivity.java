@@ -8,6 +8,7 @@ import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
@@ -18,6 +19,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.content.res.AppCompatResources;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
@@ -148,6 +150,8 @@ public class SettingsActivity extends AppCompatActivity {
     @BindView(R.id.tomtom_editdata)
     Button tomtomEditDataButton;
 
+    @BindView(R.id.osm_title)
+    TextView osmTitle;
     @BindView(R.id.osm_editdata)
     Button osmEditDataButton;
     @BindView(R.id.osm_donate)
@@ -436,6 +440,12 @@ public class SettingsActivity extends AppCompatActivity {
             showTermsDialog();
         }
 
+        Drawable checkIcon = AppCompatResources.getDrawable(this, R.drawable.ic_done_green_20dp);
+        Drawable crossIcon = AppCompatResources.getDrawable(this, R.drawable.ic_cross_red_20dp);
+        osmTitle.setCompoundDrawablesWithIntrinsicBounds(null, null, checkIcon, null);
+        hereTitle.setCompoundDrawablesWithIntrinsicBounds(null, null, crossIcon, null);
+        tomtomTitle.setCompoundDrawablesWithIntrinsicBounds(null, null, crossIcon, null);
+
         billingManager = new BillingManager(this, new BillingManager.BillingUpdatesListener() {
             @Override
             public void onBillingClientSetupFinished() {
@@ -490,11 +500,13 @@ public class SettingsActivity extends AppCompatActivity {
         if (subscribed) {
             button.setEnabled(false);
             button.setText(R.string.subscribed);
-            title.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_done_green_20dp, 0);
+            Drawable checkIcon = AppCompatResources.getDrawable(this, R.drawable.ic_done_green_20dp);
+            title.setCompoundDrawablesWithIntrinsicBounds(null, null, checkIcon, null);
         } else {
             button.setEnabled(true);
             button.setText(R.string.subscribe);
-            title.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_cross_red_20dp, 0);
+            Drawable crossIcon = AppCompatResources.getDrawable(this, R.drawable.ic_cross_red_20dp);
+            title.setCompoundDrawablesWithIntrinsicBounds(null, null, crossIcon, null);
         }
     }
 
@@ -548,7 +560,7 @@ public class SettingsActivity extends AppCompatActivity {
                     String content = getString(R.string.support_dev_dialog);
 
                     MaterialDialog.Builder builder = new MaterialDialog.Builder(this)
-                            .icon(Utils.getVectorDrawableCompat(this, R.drawable.ic_favorite_black_24dp))
+                            .icon(AppCompatResources.getDrawable(this, R.drawable.ic_favorite_black_24dp))
                             .title(R.string.support_development)
                             .content(Html.fromHtml(content));
 

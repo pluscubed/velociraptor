@@ -7,6 +7,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.content.res.AppCompatResources;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -25,7 +26,6 @@ import com.pluscubed.velociraptor.BuildConfig;
 import com.pluscubed.velociraptor.R;
 import com.pluscubed.velociraptor.detection.AppDetectionService;
 import com.pluscubed.velociraptor.utils.PrefUtils;
-import com.pluscubed.velociraptor.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -187,7 +187,7 @@ public class AppSelectionActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_app_selection, menu);
         MenuItem item = menu.findItem(R.id.menu_app_selection_maps);
-        Drawable drawable = Utils.getVectorDrawableCompat(this, R.drawable.ic_map_white_24dp).mutate();
+        Drawable drawable = AppCompatResources.getDrawable(this, R.drawable.ic_map_white_24dp).mutate();
         drawable = DrawableCompat.wrap(drawable);
         if (mMapsOnly) {
             DrawableCompat.setTint(drawable, ContextCompat.getColor(this, R.color.colorAccent));
