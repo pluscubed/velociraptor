@@ -41,7 +41,7 @@ import org.json.JSONException;
 
 import java.util.List;
 
-import rx.Subscriber;
+import rx.SingleSubscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -59,7 +59,6 @@ public class LimitService extends Service {
     public static final int VIEW_FLOATING = 0;
 
     public static final String EXTRA_HIDE_LIMIT = "com.pluscubed.velociraptor.HIDE_LIMIT";
-    public static final int NOTIFICATION_WARNING = 192;
     private static final int NOTIFICATION_FOREGROUND = 303;
     private int speedLimitViewType = -1;
     private LimitView speedLimitView;
@@ -218,29 +217,37 @@ public class LimitService extends Service {
     private boolean prequisitesMet() {
         if (!PrefUtils.isTermsAccepted(this)) {
             if (BuildConfig.VERSION_CODE > PrefUtils.getVersionCode(this)) {
-                showWarningNotification(getString(R.string.terms_warning));
+                showWarningNotification(R.string.terms_warning);
             }
             stopSelf();
             return false;
+        } else {
+            dismissWarningNotification(R.string.terms_warning);
         }
 
         if (!Utils.isLocationPermissionGranted(LimitService.this)
                 || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this))) {
-            showWarningNotification(getString(R.string.permissions_warning));
+            showWarningNotification(R.string.permissions_warning);
             stopSelf();
             return false;
+        } else {
+            dismissWarningNotification(R.string.permissions_warning);
         }
 
         LocationManager manager = (LocationManager) getSystemService(LOCATION_SERVICE);
         if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            showWarningNotification(getString(R.string.location_settings_warning));
+            showWarningNotification(R.string.location_settings_warning);
+        } else {
+            dismissWarningNotification(R.string.location_settings_warning);
         }
 
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
         if (!isConnected) {
-            showWarningNotification(getString(R.string.network_warning));
+            showWarningNotification(R.string.network_warning);
+        } else {
+            dismissWarningNotification(R.string.network_warning);
         }
         return true;
     }
@@ -257,14 +264,16 @@ public class LimitService extends Service {
             speedLimitQuerySubscription = limitFetcher.getSpeedLimit(location)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Subscriber<LimitResponse>() {
-                        @SuppressLint("SetTextI18n")
+                    .subscribe(new SingleSubscriber<LimitResponse>() {
                         @Override
-                        public void onNext(LimitResponse limitResponse) {
+                        public void onSuccess(LimitResponse limitResponse) {
                             currentSpeedLimit = limitResponse.speedLimit();
 
                             updateLimitView(true);
                             updateDebuggingText(location, limitResponse, null);
+
+                            lastLocationWithFetchAttempt = location;
+                            speedLimitQuerySubscription = null;
                         }
 
                         @Override
@@ -273,10 +282,7 @@ public class LimitService extends Service {
 
                             updateLimitView(false);
                             updateDebuggingText(location, null, error);
-                        }
 
-                        @Override
-                        public void onCompleted() {
                             lastLocationWithFetchAttempt = location;
                             speedLimitQuerySubscription = null;
                         }
@@ -387,22 +393,28 @@ public class LimitService extends Service {
         return speed;
     }
 
-    void showWarningNotification(final String string) {
+    void showWarningNotification(int stringRes) {
         Intent notificationIntent = new Intent(this, SettingsActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, PENDING_SETTINGS, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
         NotificationUtils.initChannels(this);
+        String notificationText = getString(stringRes);
         Notification notification = new NotificationCompat.Builder(this, NotificationUtils.CHANNEL_WARNINGS)
-                .setContentTitle(getString(R.string.grant_permission))
-                .setContentText(string)
-                .setPriority(Notification.PRIORITY_MIN)
+                .setContentTitle(getString(R.string.warning_notif_title))
+                .setContentText(notificationText)
+                .setPriority(Notification.PRIORITY_LOW)
                 .setSmallIcon(R.drawable.ic_speedometer_notif)
                 .setContentIntent(pendingIntent)
-                .setStyle(new NotificationCompat.BigTextStyle().bigText(string))
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(notificationText))
                 .build();
 
         NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        manager.notify(NOTIFICATION_WARNING, notification);
+        manager.notify(stringRes, notification);
+    }
+
+    void dismissWarningNotification(int stringRes) {
+        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        manager.cancel(stringRes);
     }
 
     @Override

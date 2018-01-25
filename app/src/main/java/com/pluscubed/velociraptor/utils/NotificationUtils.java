@@ -29,7 +29,7 @@ public class NotificationUtils {
         channel = new NotificationChannel(
                 CHANNEL_RUNNING,
                 context.getString(R.string.notif_title),
-                NotificationManager.IMPORTANCE_LOW
+                NotificationManager.IMPORTANCE_MIN
         );
         notificationManager.createNotificationChannel(channel);
 
