@@ -1,7 +1,7 @@
 apply plugin: 'com.github.ben-manes.versions'
 
 buildscript {
-    ext.kotlin_version = '1.2.20'
+    ext.kotlin_version = '1.2.21'
     repositories {
         jcenter()
         google()
@@ -21,7 +21,7 @@ allprojects {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '4.4.1'
+    gradleVersion = '4.5'
     distributionType = Wrapper.DistributionType.ALL
 }
 

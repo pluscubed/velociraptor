@@ -151,9 +151,9 @@ dependencies {
     compile 'com.squareup.okhttp3:okhttp:3.9.1'
     compile 'com.squareup.okio:okio:1.13.0'
 
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.9.3'
-    compile 'com.fasterxml.jackson.core:jackson-core:2.9.3'
-    compile 'com.fasterxml.jackson.core:jackson-annotations:2.9.3'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.9.4'
+    compile 'com.fasterxml.jackson.core:jackson-core:2.9.4'
+    compile 'com.fasterxml.jackson.core:jackson-annotations:2.9.4'
 
     compile 'com.github.gigamole.arcprogressstackview:library:1.0.3'
     compile 'com.github.pluscubed:recycler-fast-scroll:0.3.2'
@@ -174,7 +174,7 @@ dependencies {
         transitive = true;
     }
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 
 
