@@ -4,17 +4,14 @@ package com.pluscubed.velociraptor.api.raptor
 import android.content.Context
 import android.location.Location
 import com.android.billingclient.api.Purchase
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.maps.android.PolyUtil
 import com.pluscubed.velociraptor.BuildConfig
 import com.pluscubed.velociraptor.api.*
 import com.pluscubed.velociraptor.billing.BillingConstants
 import com.pluscubed.velociraptor.cache.LimitCache
-import com.pluscubed.velociraptor.utils.Utils
 import okhttp3.OkHttpClient
 import rx.Observable
 import rx.schedulers.Schedulers
-import timber.log.Timber
 import java.util.*
 
 class RaptorLimitProvider(context: Context, client: OkHttpClient, val limitCache: LimitCache) : LimitProvider {
@@ -27,8 +24,6 @@ class RaptorLimitProvider(context: Context, client: OkHttpClient, val limitCache
 
     private var hereToken: String
     private var tomtomToken: String
-
-    private val imperialWorkaround: Boolean;
 
     companion object {
         @JvmField
@@ -52,9 +47,6 @@ class RaptorLimitProvider(context: Context, client: OkHttpClient, val limitCache
         }
         hereToken = ""
         tomtomToken = ""
-
-        val remoteConfig = FirebaseRemoteConfig.getInstance()
-        imperialWorkaround = remoteConfig.getBoolean("imperial_workaround");
     }
 
     fun verify(purchase: Purchase) {
@@ -105,11 +97,7 @@ class RaptorLimitProvider(context: Context, client: OkHttpClient, val limitCache
                         val coords = PolyUtil.decode(raptorResponse.polyline).map { latLng ->
                             Coord(latLng.latitude, latLng.longitude)
                         }
-                        var speedLimit = raptorResponse.generalSpeedLimit!!
-                        if (imperialWorkaround) {
-                            Timber.d("Imperial Workaround: " + imperialWorkaround);
-                            speedLimit = Utils.convertMphToKmh(speedLimit);
-                        }
+                        val speedLimit = raptorResponse.generalSpeedLimit!!
                         val response = LimitResponse.builder()
                                 .setRoadName(raptorResponse.name)
                                 .setSpeedLimit(speedLimit)
