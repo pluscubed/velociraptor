@@ -233,7 +233,7 @@ public class FloatingView implements LimitView {
 
     @Override
     public void setDebuggingText(String text) {
-        if (mDebuggingText != null) {
+        if (mDebuggingText != null && mDebuggingText.getVisibility() == View.VISIBLE) {
             mDebuggingText.setText(text);
         }
     }

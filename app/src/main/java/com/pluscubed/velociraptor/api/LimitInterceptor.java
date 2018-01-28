@@ -25,7 +25,6 @@ public class LimitInterceptor implements Interceptor {
         try {
             Response proceed = chain.proceed(request);
             if (!proceed.isSuccessful()) {
-                callback.updateTimeTaken(Integer.MAX_VALUE);
                 throw new IOException(proceed.code() + ": " + proceed.toString());
             } else {
                 callback.updateTimeTaken((int) (proceed.receivedResponseAtMillis() - proceed.sentRequestAtMillis()));

@@ -2,11 +2,14 @@ package com.pluscubed.velociraptor.cache;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.location.Location;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.PolyUtil;
 import com.pluscubed.velociraptor.api.Coord;
+import com.pluscubed.velociraptor.api.LimitProvider;
 import com.pluscubed.velociraptor.api.LimitResponse;
+import com.pluscubed.velociraptor.utils.Utils;
 import com.squareup.sqlbrite.BriteDatabase;
 import com.squareup.sqlbrite.SqlBrite;
 import com.squareup.sqldelight.SqlDelightStatement;
@@ -20,7 +23,7 @@ import rx.Scheduler;
 import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
-public class LimitCache {
+public class LimitCache implements LimitProvider {
 
     private static LimitCache instance;
 
@@ -28,10 +31,13 @@ public class LimitCache {
     private final LimitCacheWay.Put put;
     private final LimitCacheWay.Cleanup cleanup;
     private final LimitCacheWay.Update_way update;
+    private final Context context;
 
     LimitCache(Context context, Scheduler scheduler) {
+        this.context = context;
+
         SqlBrite sqlBrite = new SqlBrite.Builder().build();
-        LimitCacheSqlHelper helper = new LimitCacheSqlHelper(context);
+        LimitCacheSqlHelper helper = new LimitCacheSqlHelper(this.context);
         db = sqlBrite.wrapDatabaseHelper(helper, scheduler);
         SQLiteDatabase writableDatabase = db.getWritableDatabase();
 
@@ -79,11 +85,17 @@ public class LimitCache {
         }
     }
 
+    @Override
+    public Observable<LimitResponse> getSpeedLimit(Location location, LimitResponse lastResponse) {
+        String lastRoadName = lastResponse == null ? null : lastResponse.roadName();
+        return get(lastRoadName, new Coord(location));
+    }
+
     /**
-     * Returns the road segment matching most closely with the coord & previous road name.
-     * Returns empty if the coord is not on any segments in the database.
+     * Returns all responses matching with the coordinate, ordered by similarity to previous road name
+     * Or if nothing matches, return an empty response
      */
-    public Observable<LimitResponse> get(final String previousName, final Coord coord) {
+    public Observable<LimitResponse> get(final String previousRoadName, final Coord coord) {
         return Observable.defer(() -> {
             LimitCache.this.cleanup();
 
@@ -101,34 +113,47 @@ public class LimitCache {
                     .toList()
                     .flatMap(ways -> {
                         if (ways.isEmpty()) {
-                            return Observable.empty();
+                            return Observable.just(
+                                    LimitResponse.builder()
+                                            .setTimestamp(System.currentTimeMillis())
+                                            .setFromCache(true)
+                                            .initDebugInfo(context)
+                                            .build()
+                            );
                         }
 
-                        Collections.sort(ways, (way1, way2) -> Integer.compare((int) way2.origin(), (int) way1.origin()));
+                        Collections.sort(ways, (way1, way2) -> {
+                            //Higher origin = further to the front
+                            //Higher road similarity = further to the front
+                            int heuristic2 = (int) way2.origin() + getRoadNameSimilarity(way2, previousRoadName);
+                            int heuristic1 = (int) way1.origin() + getRoadNameSimilarity(way1, previousRoadName);
+                            return Integer.compare(heuristic2, heuristic1);
+                        });
 
-                        List<LimitCacheWay> validWays = Observable.from(ways)
-                                .filter(way -> way.maxspeed() != 0)
-                                .toList()
-                                .toBlocking().first();
-
-                        LimitResponse.Builder response;
-                        if (!validWays.isEmpty()) {
-                            response = validWays.get(0).toResponse();
-                            for (LimitCacheWay way : validWays) {
-                                if (way.road() != null && way.road().equals(previousName)) {
-                                    response = way.toResponse();
-                                    break;
-                                }
-                            }
-                        } else {
-                            response = ways.get(0).toResponse();
-                        }
-
-                        response.setFromCache(true);
-                        return Observable.just(response.build());
+                        return Observable.from(ways)
+                                .map(limitCacheWay -> limitCacheWay.toResponse()
+                                        .setFromCache(true)
+                                        .initDebugInfo(context)
+                                        .build());
+                    })
+                    .onErrorReturn(throwable -> {
+                        return LimitResponse.builder()
+                                .setTimestamp(System.currentTimeMillis())
+                                .setFromCache(true)
+                                .setError(throwable)
+                                .initDebugInfo(context)
+                                .build();
                     });
         });
 
+    }
+
+    private int getRoadNameSimilarity(LimitCacheWay way, String previousRoadName) {
+        if (way.road() == null) {
+            return 0;
+        }
+
+        return Utils.levenshteinDistance(way.road(), previousRoadName);
     }
 
 

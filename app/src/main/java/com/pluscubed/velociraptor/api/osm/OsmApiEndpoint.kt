@@ -30,7 +30,6 @@ class OsmApiEndpoint : Comparable<OsmApiEndpoint> {
     }
 
     override fun compareTo(other: OsmApiEndpoint): Int {
-        val timeCompare = timeTaken.compareTo(other.timeTaken)
-        return if (timeCompare != 0) timeCompare else baseUrl.compareTo(other.baseUrl);
+        return timeTaken.compareTo(other.timeTaken);
     }
 }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
@@ -50,7 +51,7 @@ public class OsmLimitProvider implements LimitProvider {
 
         osmOverpassApis = new ArrayList<>();
 
-        String endpointUrl = "http://overpass-api.de/api/";
+        String endpointUrl = "https://overpass.kumi.systems/api/";
         int resId = context.getResources().getIdentifier("overpass_api", "string", context.getPackageName());
         if (resId != 0) {
             endpointUrl = context.getString(resId);
@@ -66,9 +67,7 @@ public class OsmLimitProvider implements LimitProvider {
         LimitInterceptor osmInterceptor = new LimitInterceptor(new LimitInterceptor.Callback() {
             @Override
             public void updateTimeTaken(int timeTaken) {
-                endpoint.setTimeTaken(timeTaken);
-                Collections.sort(osmOverpassApis);
-                Timber.d("Endpoints: %s", osmOverpassApis);
+                updateEndpointTimeTaken(timeTaken, endpoint);
             }
         });
 
@@ -79,6 +78,12 @@ public class OsmLimitProvider implements LimitProvider {
 
         OsmService osmService = osmRest.create(OsmService.class);
         endpoint.setService(osmService);
+    }
+
+    private void updateEndpointTimeTaken(int timeTaken, OsmApiEndpoint endpoint) {
+        endpoint.setTimeTaken(timeTaken);
+        Collections.sort(osmOverpassApis);
+        Timber.d("Endpoints: %s", osmOverpassApis);
     }
 
     private void refreshApiEndpoints() {
@@ -115,6 +120,7 @@ public class OsmLimitProvider implements LimitProvider {
     private Single<OsmResponse> getOsmResponse(Location location) {
         OsmApiEndpoint selectedEndpoint;
         if (Math.random() < 0.7) {
+            //Select the fastest endpoint most of the time
             selectedEndpoint = osmOverpassApis.get(0);
         } else {
             //Select a random endpoint 30% of the time to "correct" for anomalies
@@ -123,7 +129,11 @@ public class OsmLimitProvider implements LimitProvider {
         return selectedEndpoint.getService()
                 .getOsm(buildQueryBody(location))
                 .doOnSubscribe(() -> logOsmRequest(selectedEndpoint))
-                .doOnError((throwable) -> logOsmError(selectedEndpoint, throwable));
+                .doOnError((throwable) -> {
+                    //catch any errors
+                    updateEndpointTimeTaken(Integer.MAX_VALUE, selectedEndpoint);
+                    logOsmError(selectedEndpoint, throwable);
+                });
     }
 
     @Override
@@ -134,42 +144,47 @@ public class OsmLimitProvider implements LimitProvider {
                         return Observable.error(new Exception("OSM null response"));
                     }
 
+                    LimitResponse.Builder builder = LimitResponse.builder()
+                            .setOrigin(LimitResponse.ORIGIN_OSM)
+                            .setTimestamp(System.currentTimeMillis());
+
+                    Observable<LimitResponse> emptyObservableReponse = Observable.defer(() -> Observable.just(
+                            builder.setDebugInfo("\nOSM info:\n--" + TextUtils.join("\n--", osmOverpassApis))
+                                    .initDebugInfo(context)
+                                    .build())
+                    );
+
                     List<Element> elements = osmApi.getElements();
 
                     if (elements.isEmpty()) {
-                        return Observable.empty();
+                        return emptyObservableReponse;
                     }
 
                     Element bestMatch = getBestElement(elements, lastResponse);
                     LimitResponse bestResponse = null;
 
                     for (Element element : elements) {
-                        LimitResponse.Builder responseBuilder = LimitResponse.builder();
 
                         //Get coords
                         if (element.getGeometry() != null && !element.getGeometry().isEmpty()) {
-                            responseBuilder.setCoords(element.getGeometry());
+                            builder.setCoords(element.getGeometry());
                         } else if (element != bestMatch) {
                             /* If coords are empty and element is not the best one,
                             no need to continue parsing info for cache. Skip to next element. */
                             continue;
                         }
 
-                        responseBuilder
-                                .setTimestamp(System.currentTimeMillis())
-                                .setOrigin(LimitResponse.ORIGIN_OSM);
-
                         //Get road names
                         Tags tags = element.getTags();
-                        responseBuilder.setRoadName(parseOsmRoadName(tags));
+                        builder.setRoadName(parseOsmRoadName(tags));
 
                         //Get speed limit
                         String maxspeed = tags.getMaxspeed();
                         if (maxspeed != null) {
-                            responseBuilder.setSpeedLimit(parseOsmSpeedLimit(maxspeed));
+                            builder.setSpeedLimit(parseOsmSpeedLimit(maxspeed));
                         }
 
-                        LimitResponse response = responseBuilder.build();
+                        LimitResponse response = builder.initDebugInfo(context).build();
 
                         //Cache
                         cache.put(response);
@@ -183,12 +198,31 @@ public class OsmLimitProvider implements LimitProvider {
                         return Observable.just(bestResponse);
                     }
 
-                    return Observable.empty();
-                });
+                    return emptyObservableReponse;
+                })
+                .onErrorReturn(throwable ->
+                        LimitResponse.builder()
+                                .setError(throwable)
+                                .setTimestamp(System.currentTimeMillis())
+                                .setOrigin(LimitResponse.ORIGIN_OSM)
+                                .setDebugInfo("\nOSM Info:\n--" + TextUtils.join("\n--", osmOverpassApis))
+                                .initDebugInfo(context)
+                                .build()
+                );
     }
 
     private String parseOsmRoadName(Tags tags) {
-        return tags.getRef() + ":" + tags.getName();
+        String ref = tags.getRef();
+        String name = tags.getName();
+        if (ref == null && name == null) {
+            return "null";
+        } else if (name != null && ref != null) {
+            return ref + " " + name;
+        } else if (name != null) {
+            return name;
+        } else {
+            return ref;
+        }
     }
 
     private int parseOsmSpeedLimit(String maxspeed) {

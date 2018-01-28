@@ -8,6 +8,7 @@ import com.pluscubed.velociraptor.BuildConfig;
 import com.pluscubed.velociraptor.api.osm.OsmLimitProvider;
 import com.pluscubed.velociraptor.api.raptor.RaptorLimitProvider;
 import com.pluscubed.velociraptor.cache.LimitCache;
+import com.pluscubed.velociraptor.utils.Utils;
 
 import java.util.concurrent.TimeUnit;
 
@@ -65,41 +66,52 @@ public class LimitFetcher {
     }
 
     public Single<LimitResponse> getSpeedLimit(Location location) {
-        String lastRoadName = lastResponse == null ? null : lastResponse.roadName();
-        Observable<LimitResponse> cacheQuery = LimitCache.getInstance(context)
-                .get(lastRoadName, new Coord(location));
+        Observable<LimitResponse> cacheQuery =
+                LimitCache.getInstance(context).getSpeedLimit(location, lastResponse);
+        return cacheQuery.toList()
+                .flatMap(cacheResponses -> {
+                    LimitResponse cacheResponse = cacheResponses.get(0);
 
-        Observable<LimitResponse> raptorQuery =
-                raptorLimitProvider.getSpeedLimit(location, lastResponse);
+                    Observable<LimitResponse> chain = Observable.just(cacheResponse);
 
-        Observable<LimitResponse> osmQuery =
-                osmLimitProvider.getSpeedLimit(location, lastResponse);
+                    if (cacheResponse.speedLimit() == -1 && Utils.isNetworkConnected(context)) {
+                        Observable<LimitResponse> raptorQuery =
+                                raptorLimitProvider.getSpeedLimit(location, lastResponse);
 
-        //Delay network query if the last response was received less than 5 seconds ago
-        if (lastNetworkResponse != null) {
-            long delay = 5000 - (System.currentTimeMillis() - lastNetworkResponse.timestamp());
-            raptorQuery = raptorQuery.delaySubscription(delay, TimeUnit.MILLISECONDS);
-        }
+                        // Delay network query if the last response was received less than 5 seconds ago
+                        if (lastNetworkResponse != null) {
+                            long delay = 5000 - (System.currentTimeMillis() - lastNetworkResponse.timestamp());
+                            raptorQuery = raptorQuery.delaySubscription(delay, TimeUnit.MILLISECONDS);
+                        }
 
-        Observable<LimitResponse> finalRaptorQuery = raptorQuery;
-        return cacheQuery.defaultIfEmpty(null)
-                .switchMap(limitResponse -> {
-                    if (limitResponse == null) {
-                        return finalRaptorQuery
-                                .switchIfEmpty(osmQuery)
-                                .defaultIfEmpty(LimitResponse.builder().build());
+                        // 1. Always try raptor service if cache didn't hit / didn't contain a limit
+                        chain = chain.concatWith(raptorQuery);
+
+                        // 2. Try OSM if the cache hits didn't contain a limit BUT were not from OSM
+                        //    i.e. query OSM as it might have the limit
+                        boolean cachedOsmWithNoLimit = false;
+                        for (LimitResponse cacheRes : cacheResponses) {
+                            if (cacheRes.origin() == LimitResponse.ORIGIN_OSM) {
+                                cachedOsmWithNoLimit = true;
+                                break;
+                            }
+                        }
+                        if (!cachedOsmWithNoLimit) {
+                            Observable<LimitResponse> osmQuery = osmLimitProvider.getSpeedLimit(location, lastResponse);
+                            chain = chain.concatWith(osmQuery);
+                        }
                     }
 
-                    //If it's from OSM & there's no valid speed limit
-                    if (limitResponse.origin() == LimitResponse.ORIGIN_OSM
-                            && limitResponse.speedLimit() == -1) {
-                        return finalRaptorQuery
-                                .defaultIfEmpty(limitResponse);
-                    }
-
-                    return Observable.just(limitResponse);
+                    return chain;
                 })
+                //Keep taking responses until one has a speed limit (or tried all)
+                .takeUntil(limitResponse -> limitResponse.speedLimit() != -1)
+                //Accumulate debug infos, based on the last response (the one with the speed limit or the last option)
+                .map(LimitResponse::toBuilder)
+                .reduce((acc, builder) -> builder.setDebugInfo(acc.debugInfo() + "\n" + builder.debugInfo()))
+                .map(LimitResponse.Builder::build)
                 .toSingle()
+                //Record the last response's timestamp and network response
                 .doOnSuccess(limitResponse -> {
                     if (limitResponse.timestamp() == 0) {
                         limitResponse = limitResponse.toBuilder()

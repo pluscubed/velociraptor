@@ -10,8 +10,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.location.Location;
 import android.location.LocationManager;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.IBinder;
 import android.os.Looper;
@@ -188,7 +186,7 @@ public class LimitService extends Service {
         });
 
         FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.getInstance();
-        remoteConfig.fetch(3600).addOnCompleteListener(task -> {
+        remoteConfig.fetch().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 remoteConfig.activateFetched();
             }
@@ -241,9 +239,7 @@ public class LimitService extends Service {
             dismissWarningNotification(R.string.location_settings_warning);
         }
 
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+        boolean isConnected = Utils.isNetworkConnected(this);
         if (!isConnected) {
             showWarningNotification(R.string.network_warning);
         } else {
@@ -267,9 +263,13 @@ public class LimitService extends Service {
                     .subscribe(new SingleSubscriber<LimitResponse>() {
                         @Override
                         public void onSuccess(LimitResponse limitResponse) {
-                            currentSpeedLimit = limitResponse.speedLimit();
+                            if (!limitResponse.isEmpty()) {
+                                currentSpeedLimit = limitResponse.speedLimit();
+                                updateLimitView(true);
+                            } else {
+                                updateLimitView(false);
+                            }
 
-                            updateLimitView(true);
                             updateDebuggingText(location, limitResponse, null);
 
                             lastLocationWithFetchAttempt = location;
@@ -298,40 +298,14 @@ public class LimitService extends Service {
         }
 
         if (error == null && limitResponse != null) {
-            String origin = getLimitProviderString(limitResponse.origin());
-
-            debuggingRequestInfo = "Origin: " + origin +
-                    "\nRoad name: " + limitResponse.roadName() +
-                    "\nFrom cache: " + limitResponse.fromCache() +
-                    "\nCoords: " + limitResponse.coords();
+            debuggingRequestInfo = limitResponse.debugInfo();
         } else if (error != null) {
-            debuggingRequestInfo = ("Last error: " + error);
+            debuggingRequestInfo = ("Catastrophic error: " + error);
         }
 
 
         text += debuggingRequestInfo;
         speedLimitView.setDebuggingText(text);
-    }
-
-    private String getLimitProviderString(int origin) {
-        String provider = "";
-        switch (origin) {
-            case LimitResponse.ORIGIN_HERE:
-                provider = getString(R.string.here_provider_short);
-                break;
-            case LimitResponse.ORIGIN_TOMTOM:
-                provider = getString(R.string.tomtom_provider_short);
-                break;
-            case LimitResponse.ORIGIN_OSM:
-                provider = getString(R.string.openstreetmap_short);
-                break;
-            case -1:
-                provider = "";
-                break;
-            default:
-                provider = String.valueOf(origin);
-        }
-        return provider;
     }
 
     private void updateLimitView(boolean success) {

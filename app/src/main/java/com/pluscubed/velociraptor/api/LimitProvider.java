@@ -7,8 +7,7 @@ import rx.Observable;
 public interface LimitProvider {
 
     /**
-     * Returns response (regardless of whether there is speed limit) and caches each way received,
-     * or empty if there is no road information
+     * Returns all responses and caches each way received (regardless of whether there is speed limit)
      */
     Observable<LimitResponse> getSpeedLimit(Location location, LimitResponse lastResponse);
 }
