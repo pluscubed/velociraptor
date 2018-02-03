@@ -3,7 +3,6 @@
 
     <!--Generic-->
     <string name="configure">Configure</string>
-    <string name="enable">Enable</string>
     <string name="done">Done</string>
     <string name="show">Show</string>
     <string name="hide">Hide</string>
@@ -19,12 +18,10 @@
     <!--Permission Settings-->
     <string name="open_settings_page">Open settings page</string>
     <string name="enable_floating_desc">Allow Velociraptor to display over map apps</string>
-    <string name="dialog_draw_overlay">To show floating elements on Android 6.0+, grant the \"Draw Over Other Apps\" permission</string>
     <string name="open_settings_failed_overlay">Unable to open settings. Please manually enable the \"Draw Over Other Apps\" setting for Velociraptor.</string>
 
     <string name="enable_accessibility_service">Turn on Accessibility Service</string>
     <string name="enable_accessibility_service_desc">Allow Velociraptor to launch automatically in map apps</string>
-    <string name="enable_accessibility_service_desc2">Mainly intended for users with disabilities</string>
     <string name="accessibility_service_summary">Auto-launch in map apps</string>
     <string name="accessibility_service_description">Allow Velociraptor to detect the foreground app and launch automatically.\n\nVelociraptor does not use any information other than the foreground app info. This service is mainly intended for users with disabilities.</string>
     <string name="open_settings_failed_accessibility">Unable to open settings. Please manually enable the Accessibility Service setting for Velociraptor.</string>
@@ -129,13 +126,8 @@
     <string name="subscribed">Subscribed</string>
     <string name="coverage">Coverage</string>
 
-    <string name="check_coverage">Check OpenStreetMap coverage</string>
-
 
     <!--Activation Settings-->
-    <string name="select_overlay_usage">Activation</string>
-
-    <string name="automatically_show">Show/hide in specified apps</string>
     <string name="show_in_apps">Auto-launch in these apps</string>
 
     <string name="persistent_notification_controls">Show notification controls</string>
@@ -155,8 +147,6 @@
     <!---Advanced settings-->
     <string name="advanced">Advanced</string>
     <string name="debugging_stats">Stats for nerds/debugging</string>
-    <string name="obtaining_gps_location">Obtaining GPS location…</string>
-
 
     <!--Changelog-->
     <string name="changelog">Changelog</string>
@@ -168,7 +158,6 @@
     <string name="support_development">Support development</string>
     <string name="in_app_unavailable">In-app billing not available</string>
     <string name="support_dev_dialog">Used for OpenStreetMap server costs; suggested amount is 1 USD per month.</string>
-    <string name="support_dev_dialog_badge">Thank you for your support!</string>
     <string name="per_month">%s per month</string>
     <string name="one_time">%s one-time</string>
 
