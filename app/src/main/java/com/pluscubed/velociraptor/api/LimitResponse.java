@@ -1,9 +1,6 @@
 package com.pluscubed.velociraptor.api;
 
-import android.content.Context;
-
 import com.google.auto.value.AutoValue;
-import com.pluscubed.velociraptor.R;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -29,17 +26,17 @@ public abstract class LimitResponse {
                 .setTimestamp(0);
     }
 
-    static String getLimitProviderString(Context context, int origin) {
+    static String getLimitProviderString(int origin) {
         String provider = "";
         switch (origin) {
             case LimitResponse.ORIGIN_HERE:
-                provider = context.getString(R.string.here_provider_short);
+                provider = "HERE";
                 break;
             case LimitResponse.ORIGIN_TOMTOM:
-                provider = context.getString(R.string.tomtom_provider_short);
+                provider = "TomTom";
                 break;
             case LimitResponse.ORIGIN_OSM:
-                provider = context.getString(R.string.openstreetmap_short);
+                provider = "OSM";
                 break;
             case -1:
                 provider = "?";
@@ -110,8 +107,8 @@ public abstract class LimitResponse {
 
         abstract Throwable error();
 
-        public Builder initDebugInfo(Context context) {
-            String origin = getLimitProviderString(context, origin());
+        public Builder initDebugInfo() {
+            String origin = getLimitProviderString(origin());
 
             String text =
                     "\nOrigin: " + origin +

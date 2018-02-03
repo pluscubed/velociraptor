@@ -14,7 +14,7 @@ import rx.Observable
 import rx.schedulers.Schedulers
 import java.util.*
 
-class RaptorLimitProvider(val context: Context, client: OkHttpClient, val limitCache: LimitCache) : LimitProvider {
+class RaptorLimitProvider(context: Context, client: OkHttpClient, val limitCache: LimitCache) : LimitProvider {
 
     private val SERVER_URL = "http://overpass.pluscubed.com:4000/"
 
@@ -55,10 +55,10 @@ class RaptorLimitProvider(val context: Context, client: OkHttpClient, val limitC
                 .subscribe({ verificationResponse ->
                     val token = verificationResponse.token
                     if (purchase.sku == BillingConstants.SKU_HERE || USE_DEBUG_ID) {
-                        //hereToken = token
+                        hereToken = token
                     }
                     if (purchase.sku == BillingConstants.SKU_TOMTOM || USE_DEBUG_ID) {
-                        //tomtomToken = token
+                        tomtomToken = token
                     }
                 }, { error ->
                     error.printStackTrace()
@@ -106,7 +106,7 @@ class RaptorLimitProvider(val context: Context, client: OkHttpClient, val limitC
                             .setTimestamp(System.currentTimeMillis())
                             .setCoords(coords)
                             .setOrigin(getOriginInt(isHere))
-                            .initDebugInfo(context)
+                            .initDebugInfo()
                             .build()
 
                     limitCache.put(response)
@@ -118,7 +118,7 @@ class RaptorLimitProvider(val context: Context, client: OkHttpClient, val limitC
                             .setError(throwable)
                             .setTimestamp(System.currentTimeMillis())
                             .setOrigin(getOriginInt(isHere))
-                            .initDebugInfo(context)
+                            .initDebugInfo()
                             .build();
                 }
     }

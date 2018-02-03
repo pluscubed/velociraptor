@@ -87,30 +87,21 @@
         <a href="https://github.com/pluscubed/velociraptor">GitHub</a> - source, issues, feature requests<br/>
         <a href="http://pluscubed.oneskyapp.com/collaboration/project/64120">OneSky</a> - translate the app to your language<br/>
         <a href="https://play.google.com/apps/testing/com.pluscubed.velociraptor">Beta testing</a> - try out upcoming releases
+    ]]></string>
+    <string name="licenses">Licenses</string>
 
-        <br/><br/>
-        <i>
-        This app uses Accessibility services. These services are intended for users with disabilities.<br/><br/>
-
+    <string name="terms_body"><![CDATA[
         By using Velociraptor, you absolve the developer, speed limit providers, and all other parties of any responsibility
         for accidents, legal consequences, and all other outcomes. The data presented by Velociraptor, including speed limits and current speed,
         is not guaranteed to be accurate. This app is not affiliated or endorsed by OpenStreetMap, HERE, TomTom, or Sygic. All trademarks
         belong to their respective owners.<br/><br/>
 
-        Please pay attention to the road and use with care.
-       </i>
-    ]]></string>
-    <string name="licenses">Licenses</string>
-
-    <string name="terms_body"><![CDATA[
-       By using Velociraptor, you absolve the developer, speed limit providers, and all other parties of any responsibility
-       for accidents, legal consequences, and all other outcomes. The data presented by Velociraptor, including speed limits and current speed,
-       is not guaranteed to be accurate. All trademarks belong to their respective owners.<br/><br/>
-
-       Please pay attention to the road and use with care.
+        <b>Please pay attention to the road and use with care.</b>
      ]]></string>
 
     <string name="accept">Accept</string>
+    <string name="terms">Terms</string>
+    <string name="privacy_policy">Privacy Policy</string>
     <string name="terms_warning">Open Velociraptor to accept the terms of use</string>
 
     <!--Speed limit providers-->

@@ -73,6 +73,8 @@ public class SettingsActivity extends AppCompatActivity {
     public static final int PENDING_SETTINGS = 2;
     public static final int NOTIFICATION_CONTROLS = 42;
 
+    public static final String PRIVACY_URL = "https://rawgit.com/plusCubed/velociraptor/master/privacy_policy.html";
+
     public static final String OSM_EDITDATA_URL = "http://openstreetmap.org";
     public static final String OSM_COVERAGE_URL = "http://product.itoworld.com/map/124";
     public static final String HERE_EDITDATA_URL = "https://mapcreator.here.com/mapcreator";
@@ -619,20 +621,33 @@ public class SettingsActivity extends AppCompatActivity {
                 .content(Html.fromHtml(getString(R.string.about_body)))
                 .neutralText(R.string.licenses)
                 .onNeutral((dialog, which) -> startActivity(new Intent(SettingsActivity.this, OssLicensesMenuActivity.class)))
+                .negativeText(R.string.terms)
+                .onNegative((dialog, which) -> showTermsDialog())
                 .iconRes(R.mipmap.ic_launcher)
                 .show();
     }
 
     private void showTermsDialog() {
-        new MaterialDialog.Builder(this)
-                .positiveText(R.string.accept)
+        MaterialDialog.Builder builder = new MaterialDialog.Builder(this)
                 .content(Html.fromHtml(getString(R.string.terms_body)))
-                .onPositive((dialog, which) -> {
-                    PrefUtils.setTermsAccepted(SettingsActivity.this, true);
+                .neutralText(R.string.privacy_policy)
+                .onNeutral((dialog, which) -> {
+                    openLink(PRIVACY_URL);
                 })
-                .iconRes(R.mipmap.ic_launcher)
-                .canceledOnTouchOutside(false)
-                .show();
+                .iconRes(R.mipmap.ic_launcher);
+
+        if (!PrefUtils.isTermsAccepted(this)) {
+            builder = builder
+                    .autoDismiss(false)
+                    .canceledOnTouchOutside(false)
+                    .positiveText(R.string.accept)
+                    .onPositive((dialog, which) -> {
+                        PrefUtils.setTermsAccepted(SettingsActivity.this, true);
+                        dialog.dismiss();
+                    });
+        }
+
+        builder.show();
     }
 
     private void showChangelog() {

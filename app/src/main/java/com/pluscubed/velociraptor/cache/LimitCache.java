@@ -117,7 +117,7 @@ public class LimitCache implements LimitProvider {
                                     LimitResponse.builder()
                                             .setTimestamp(System.currentTimeMillis())
                                             .setFromCache(true)
-                                            .initDebugInfo(context)
+                                            .initDebugInfo()
                                             .build()
                             );
                         }
@@ -133,7 +133,7 @@ public class LimitCache implements LimitProvider {
                         return Observable.from(ways)
                                 .map(limitCacheWay -> limitCacheWay.toResponse()
                                         .setFromCache(true)
-                                        .initDebugInfo(context)
+                                        .initDebugInfo()
                                         .build());
                     })
                     .onErrorReturn(throwable -> {
@@ -141,7 +141,7 @@ public class LimitCache implements LimitProvider {
                                 .setTimestamp(System.currentTimeMillis())
                                 .setFromCache(true)
                                 .setError(throwable)
-                                .initDebugInfo(context)
+                                .initDebugInfo()
                                 .build();
                     });
         });

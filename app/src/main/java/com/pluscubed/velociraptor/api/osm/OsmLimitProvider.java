@@ -150,7 +150,7 @@ public class OsmLimitProvider implements LimitProvider {
 
                     Observable<LimitResponse> emptyObservableReponse = Observable.defer(() -> Observable.just(
                             builder.setDebugInfo("\nOSM info:\n--" + TextUtils.join("\n--", osmOverpassApis))
-                                    .initDebugInfo(context)
+                                    .initDebugInfo()
                                     .build())
                     );
 
@@ -184,7 +184,7 @@ public class OsmLimitProvider implements LimitProvider {
                             builder.setSpeedLimit(parseOsmSpeedLimit(maxspeed));
                         }
 
-                        LimitResponse response = builder.initDebugInfo(context).build();
+                        LimitResponse response = builder.initDebugInfo().build();
 
                         //Cache
                         cache.put(response);
@@ -206,7 +206,7 @@ public class OsmLimitProvider implements LimitProvider {
                                 .setTimestamp(System.currentTimeMillis())
                                 .setOrigin(LimitResponse.ORIGIN_OSM)
                                 .setDebugInfo("\nOSM Info:\n--" + TextUtils.join("\n--", osmOverpassApis))
-                                .initDebugInfo(context)
+                                .initDebugInfo()
                                 .build()
                 );
     }
