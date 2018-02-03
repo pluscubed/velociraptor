@@ -3,7 +3,6 @@
     <string name="app_name">Velociraptor</string>
     <!--Generic-->
     <string name="configure">Konfiguracja</string>
-    <string name="enable">Włącz</string>
     <string name="done">Gotowe</string>
     <string name="show">Pokaż</string>
     <string name="hide">Ukryj</string>
@@ -17,20 +16,21 @@
     <!--Permission Settings-->
     <string name="open_settings_page">Otwórz ustawienia</string>
     <string name="enable_floating_desc">Aby wyświetlić nakładkę należy zezwolić na użycie uprawnienia \"Wyświetlanie nad innymi aplikacjami\"</string>
-    <string name="dialog_draw_overlay">Aby wyświetlić pływające elementy na Androidzie 6.0+ niezbędne jest nadanie uprawnienia \"Wyświetlanie nad innymi aplikacjami\"</string>
     <string name="open_settings_failed_overlay">Nie można otworzyć ustawień. Należy ręcznie nadać uprawnienie \"Wyświetlanie nad innymi aplikacjami\" dla Velociraptora.</string>
     <string name="enable_accessibility_service">Włącz usługę ułatwień dostepu</string>
     <string name="enable_accessibility_service_desc">Pozwól Velociraptor wykrywać bieżącą aplikację poprzez włączenie usługi dostępności</string>
+    <string name="accessibility_service_summary">Automatyczne uruchamianie w aplikacjach map</string>
     <string name="accessibility_service_description">Pozwól Velociraptor wykrywanie aplikacji pierwszoplanowych i automatycznie wyświetlanie. \n\nVelociraptor nie używa żadnych informacji, poza informacją o  aplikacjach na pierwszym planie.</string>
     <string name="open_settings_failed_accessibility">Nie można otworzyć ustawień. Należy ręcznie włączyć usługę ułatwień dostępu dla Velociraptora.</string>
     <string name="grant_permission">Nadaj uprawnienia</string>
-    <string name="enable_location_desc">W celu określenia limitu prędkości w twojej lokalizacji niezbędne jest nadanie uprawnienia \"Lokalizacja\"</string>
+    <string name="enable_location_desc">Pozwól Velociraptor uzyskać dostęp do Twojej lokalizacji</string>
     <string name="permissions_warning">Velociraptor nie ma odpowiednich uprawień. Uruchom aplikację, aby je nadać.</string>
     <string name="location_settings_warning">W celu użycia monitora ograniczenia prędkości niezbędne jest włączenie GPS dla tej aplikacji.</string>
     <string name="network_warning">Sieć nie jest dostępna. Velociraptor wymaga połączenia z Internetem w celu pobrania ograniczeń prędkości.</string>
     <!--General Settings-->
     <string name="general">Ogólne</string>
-    <string name="show_speedometer">Pokaż prędkościomierz</string>
+    <string name="show_limits">Ograniczenia prędkości</string>
+    <string name="show_speedometer">Prędkościomierz</string>
     <string name="sound_alert">Alarm dźwiękowy</string>
     <string name="test">Test</string>
     <string name="speed_unit">Jednostki prędkości</string>
@@ -56,27 +56,35 @@
 
 Aplikacja stworzona przez <b>Daniel Ciao</b><br/>
 
-<a href='http://pluscubed.com'>Strona WWW</a>&nbsp;&nbsp; 
-<a href='mailto:pluscubed@gmail.com'>Email</a>&nbsp;&nbsp; 
-<a href='https://twitter.com/plusCubed'>Twitter</a>&nbsp;&nbsp; 
-<a href='https://google.com/+DanielCiao'>Google+</a>&nbsp;&nbsp; 
-<a href='https://github.com/pluscubed'>GitHub</a>&nbsp;&nbsp; 
-<a href='https://www.linkedin.com/in/dciao'>LinkedIn</a><br/><br/> 
+<a href="http://pluscubed.com">Strona WWW</a>&nbsp;&nbsp; 
+<a href="mailto:pluscubed@gmail.com">Email</a>&nbsp;&nbsp; 
+<a href="https://twitter.com/plusCubed">Twitter</a>&nbsp;&nbsp; 
+<a href="https://google.com/+DanielCiao">Google+</a>&nbsp;&nbsp; 
+<a href="https://github.com/pluscubed">GitHub</a>&nbsp;&nbsp; 
+<a href="https://www.linkedin.com/in/dciao">LinkedIn</a><br/><br/> 
 
-<a href='https://play.google.com/store/apps/details?id=com.pluscubed.velociraptor'>Oceń w Sklepie Play!</a><br/><br/> 
+<a href="https://play.google.com/store/apps/details?id=com.pluscubed.velociraptor">Oceń w Sklepie Play!</a><br/><br/> 
 
-<a href='https://github.com/pluscubed/velociraptor'>GitHub</a> - pliki źródłowe, problemy oraz prośby zmian<br/>
-<a href='http://pluscubed.oneskyapp.com/collaboration/project/64120'>OneSky</a> - przetłumacz aplikację na swój język
+<a href="https://github.com/pluscubed/velociraptor">GitHub</a> - pliki źródłowe, problemy oraz prośby zmian<br/>
+<a href="http://pluscubed.oneskyapp.com/collaboration/project/64120">OneSky</a> - przetłumacz aplikację na swój język
 <a href="https://play.google.com/apps/testing/com.pluscubed.velociraptor">Beta testy</a> - wypróbuj przyszłych wydań]]></string>
+    <string name="licenses">Licencje</string>
+    <string name="accept">Akceptuj</string>
     <!--Speed limit providers-->
     <string name="speed_limit_providers">Dostawcy ograniczeń prędkości</string>
-    <string name="configure_here_database">Skonfiguruj bazę danych HERE Maps</string>
-    <string name="check_coverage">Sprawdź pokrycie OpenStreetMap</string>
+    <string name="subscribe_placeholder">Subskrybuj (7-dniowy darmowy okres próbny)</string>
+    <string name="here_provider">HERE Maps</string>
+    <string name="tomtom_provider_short">TomTom</string>
+    <string name="openstreetmap">OpenStreetMap</string>
+    <string name="openstreetmap_short">OSM</string>
+    <string name="share_link">Udostępnij link</string>
     <string name="osm_edit">Przejdź na stronę <b>openstreetmap.org</b>, aby dodać/edytować ograniczenia prędkości</string>
-    <string name="open_coverage_map_failed">Nie można otworzyć łącza. Proszę przejść ręcznie do http://product.itoworld.com/map/124.</string>
+    <string name="open_link_failed">Nie można otworzyć łącza. Proszę ręcznie przejść do %s.</string>
+    <string name="edit_data">Edytuj dane</string>
+    <string name="subscribe">Subskrybuj</string>
+    <string name="subscribed">Subskrybujesz</string>
+    <string name="coverage">Pokrycie</string>
     <!--Activation Settings-->
-    <string name="select_overlay_usage">Aktywacja</string>
-    <string name="automatically_show">Pokaż/ukryj w określonych aplikacjach</string>
     <string name="show_in_apps">Pokaż w tych aplikacjach:</string>
     <string name="persistent_notification_controls">Pokaż kontrolę powiadomień</string>
     <string name="controls_notif_title">Kontrola Velociraptor</string>
@@ -86,14 +94,12 @@ Aplikacja stworzona przez <b>Daniel Ciao</b><br/>
     <string name="gmaps_only_nav_jellybean">Funkcja dostępna tylko dla Androida 4.3+</string>
     <string name="open_settings_failed_notif_access">"Nie można otworzyć ustawienia. Proszę włączyć ręcznie ustawienie \"Dostęp do Powiadomień\" dla Velociraptor.
 "</string>
-    <string name="tip_qs_tile">Porada: Dodaj kafelek szybkich ustawień Velociraptora!</string>
     <!--App selection-->
     <string name="select_apps">Wybierz aplikacje</string>
     <string name="show_map_apps">Pokaż aplikacje map</string>
     <!---Advanced settings-->
     <string name="advanced">Zaawansowane</string>
     <string name="debugging_stats">Statystyki dla nerdów/debugowanie</string>
-    <string name="obtaining_gps_location">Uzyskiwanie lokalizacji GPS ...</string>
     <!--Changelog-->
     <string name="changelog">Lista zmian</string>
     <string name="rate">Ocena</string>
@@ -102,31 +108,8 @@ Aplikacja stworzona przez <b>Daniel Ciao</b><br/>
     <string name="support_development">Wsparcie rozwoju</string>
     <string name="in_app_unavailable">Rozliczenia w aplikacji nie jest dostępne</string>
     <string name="support_dev_dialog">Pokrycie kosztów utrzymania serwera OpenStreetMap; proponowana kwota 1USD miesięcznie</string>
-    <string name="support_dev_dialog_badge">Dziękuję za Twoje wsparcie!</string>
-    <string name="support_dev_dialog_notplay"><![CDATA[Pokrycie kosztów utrzymania serwera oraz API; sugerowana kwota wynosi 1 USD miesięcznie.
-&lt;br/&gt;&lt;br/&gt; 
-Można przekazać za pomocą PayPal  <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&amp;business=72HXHU5AXK2ZN&amp;lc=US&amp;item_name=Velociraptor%20Development&amp;item_number=velociraptor&amp;currency_code=USD&amp;bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted">tutaj</a>. Zakupy w aplikacji są dostępne, gdy aplikacja została pobrana z Google Play.]]></string>
     <string name="per_month">%s na miesiąc</string>
     <string name="one_time">%s jeden raz</string>
-    <!--Android Auto-->
-    <string name="notif_android_auto_title">Velociraptor dla Android Auto</string>
-    <string name="notif_android_auto_limit">Ograniczenie prędkości: %s</string>
-    <string name="android_auto_integration_switch">Integracja z Android Auto</string>
-    <string name="android_auto_instruction_dialog">Velociraptor działa jako aplikacja wiadomości dla Androida Auto. Aby go wykorzystać, aplikacja Android Auto musi być na pierwszym planie. Aby wyłączyć dźwięki powiadomień, dotknij przycisk zamknij lub raz przycisk odpowiedzi.</string>
-    <string name="auto_not_available">Aby skorzystać z integracji z Android Auto, pobierz Velociraptor AA z APKMirror</string>
-    <!--Tile-->
-    <!--HERE Config-->
-    <string name="here_config_step1">Po ukończeniu rejestracji, wciśnij <b>Start Coding</b></string>
-    <string name="here_config_step2">Wybierz <b>Generate App ID and App Code</b> w sekcji <b>JavaScript/REST</b></string>
-    <string name="here_config_title">Konfiguracja bazy danych HERE</string>
-    <string name="view_account">Wyświetl konto</string>
-    <string name="sign_up">Stwórz konto</string>
-    <string name="here_app_code">HERE App Code</string>
-    <string name="here_app_id">"ID aplikacji HERE "</string>
-    <string name="open_settings">Otwórz ustawienia</string>
-    <!--Wrong or missing speed limit-->
-    <string name="wrong_speed_limit">Nieprawidłowe lub brakujące ograniczenie prędkości?</string>
-    <string name="check_coverage_desc">Jeśli tak, a ograniczenie prędkości nie jest widoczne, to może być błąd. Użyj opcji statystyki debugowania i przycisk info, aby wysłać wiadomość.</string>
-    <string name="help_edit">Pomóż edytować dane o ograniczeniu prędkości</string>
-    <string name="wrong_speed_limit_desc">Otwórz OpenStreetMap na komputerze. Dotknij, aby udostępnić link (https://openstreetmap.org)</string>
+    <!--Notification Channels-->
+    <string name="channel_toggles">Pokaż/ukryj przełączniki</string>
 </resources>

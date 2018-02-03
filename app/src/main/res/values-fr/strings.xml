@@ -1,30 +1,55 @@
 <?xml version="1.0"?>
 <resources>
     <string name="app_name">Velociraptor</string>
+    <!--Generic-->
+    <string name="configure">Configurer</string>
+    <string name="done">OK</string>
+    <string name="show">Afficher</string>
+    <string name="hide">Masquer</string>
+    <string name="dismiss">Annuler</string>
+    <string name="kmph">%s km/h</string>
+    <string name="mph">%s mph</string>
+    <string name="percent">%s%%</string>
+    <string name="grant">Accorder</string>
     <string name="notif_content">Appuyer pour accéder aux paramètres</string>
-    <string name="notif_title">Velociraptor en cours d\'exécution</string>
-    <string name="dialog_draw_overlay">Pour afficher les éléments flottants sur Android 6.0+, accorder l\'autorisation \"Se superposer aux autres applications\"</string>
-    <string name="open_settings">Accéder aux paramètres</string>
-    <string name="accessibility_service_description">Pour détecter l\'application en arrière plan et afficher la vitesse limite, le service d\'accessibilité doit être activé.</string>
-    <string name="enable_accessibility_service">Activer le service d\'accessibilité</string>
-    <string name="enable_accessibility_service_desc">Permettre à Velociraptor de détecter l\'application actuelle en activant son service d\'accessibilité</string>
-    <string name="enable_floating_desc">Pour afficher en superposition, activer l\'autorisation \"Se superposer aux autres applications\"</string>
+    <string name="notif_title">Velociraptor est en cours d\'exécution</string>
+    <!--Permission Settings-->
     <string name="open_settings_page">Ouvrir les paramètres</string>
+    <string name="enable_floating_desc">Autoriser Velociraptor à s\'afficher sur les applications de navigation</string>
+    <string name="open_settings_failed_overlay">Impossible d\'accéder aux paramètres. Veuillez activer le paramètre \"Se superposer aux autres applications\" pour Velociraptor.</string>
+    <string name="enable_accessibility_service">Activer le service d\'accessibilité</string>
+    <string name="enable_accessibility_service_desc">Autoriser Velociraptor à se lancer automatiquement dans les applications de navigation</string>
+    <string name="accessibility_service_summary">Lancement automatique dans les applications de navigation</string>
+    <string name="accessibility_service_description">Autoriser Velociraptor à détecter l\'application en arrière-plan et se lancer automatiquement.\n\nVelociraptor n\'utilise aucune autre information que celles de l\'application en arrière-plan. Ce service est principalement destiné aux utilisateurs ayant un handicap.</string>
+    <string name="open_settings_failed_accessibility">Impossible d\'accéder aux paramètres. Activez manuellement le paramètre du service d\'accessibilité pour Velociraptor.</string>
     <string name="grant_permission">Accorder l\'autorisation</string>
-    <string name="enable_location_desc">Afin de déterminer la vitesse limite de votre position, veuillez accorder l\'autorisation de localisation</string>
+    <string name="enable_location_desc">Autoriser Velociraptor à accéder à votre localisation</string>
+    <string name="permissions_warning">Velociraptor n\'a pas les autorisations requises. Veuillez ouvrir l\'application pour les accorder.</string>
+    <string name="location_settings_warning">GPS désactivé. Veuillez l\'activer pour que Velociraptor fonctionne.</string>
+    <string name="network_warning">Réseau non connecté. Velociraptor requiert une connexion Internet pour récupérer la vitesse limite.</string>
+    <!--General Settings-->
+    <string name="general">Général</string>
+    <string name="show_limits">Limites de vitesse</string>
+    <string name="show_speedometer">Compteur de vitesse</string>
+    <string name="sound_alert">Alerte sonore</string>
+    <string name="test">Essayer</string>
     <string name="speed_unit">Unités de vitesse</string>
     <string name="style">Style</string>
     <string name="united_states">États-Unis</string>
     <string name="international">International</string>
-    <string name="open_settings_failed_overlay">Impossible d\'accéder aux paramètres. Veuillez activer le paramètre \"Se superposer aux autres applications\" pour Velociraptor.</string>
-    <string name="open_settings_failed_accessibility">Impossible d\'accéder aux paramètres. Veuillez activer le paramètre du service d\'accessibilité pour Velociraptor.</string>
-    <string name="permissions_warning">Velociraptor n\'a pas les autorisations requises. Veuillez ouvrir l\'application pour les accorder.</string>
-    <string name="location_settings_warning">GPS désactivé. Veuillez l\'activer pour que Velociraptor fonctionne.</string>
-    <string name="network_warning">Réseau non connecté. Velociraptor requiert une connexion Internet pour récupérer la vitesse limite.</string>
+    <string name="size">Taille</string>
+    <string name="size_limit_overview">Limitation de vitesse : %s</string>
+    <string name="size_speedometer_overview">Compteur de vitesse : %s</string>
+    <string name="transparency">Opacité</string>
     <string name="speeding_amount">Tolérance de vitesse</string>
-    <string name="show_speedometer">Afficher le compteur de vitesse</string>
+    <string name="tolerance_dialog_text">Avertir quand la limite de vitesse est dépassée de :</string>
+    <string name="plus">plus</string>
+    <string name="or">ou</string>
+    <string name="tolerance_desc">%1$s %2$s %3$s</string>
+    <string name="tip_tap_hide">Astuce : appuyez sur le signe pour le masquer temporairement !</string>
+    <!--About Dialog-->
+    <string name="about">À propos</string>
     <string name="about_dialog_title">Velociraptor v%s</string>
-    <string name="dismiss">Annuler</string>
     <string name="about_body"><![CDATA[<b>Velociraptor</b> est un compteur de vitesse flottant avec des fonctionnalités d\'avertissement via l\'utilisation des données de OpenStreetMap et de HERE Maps.<br/><br/>
 
 Développé par <b>Daniel Ciao</b><br/>
@@ -40,58 +65,40 @@ Développé par <b>Daniel Ciao</b><br/>
 
 <a href=\'https://github.com/pluscubed/velociraptor\'>GitHub</a> - source, bugs, demandes de fonctionnalités<br/>
 <a href=\'http://pluscubed.oneskyapp.com/collaboration/project/64120\'>OneSky</a> - traduire l\'application dans votre langue ]]></string>
-    <string name="about">À propos</string>
-    <string name="wrong_speed_limit">Vitesse limite incorrecte ou manquante ?</string>
-    <string name="wrong_speed_limit_desc">Accéder à OpenStreetMap sur votre ordinateur. Appuyer pour partager le lien (https://openstreetmap.org)</string>
-    <string name="configure">Configurer</string>
-    <string name="automatically_show">Afficher/masquer dans les applications spécifiées</string>
-    <string name="select_overlay_usage">Activation</string>
-    <string name="enable">Activer</string>
-    <string name="show_in_apps">Afficher dans ces applications :</string>
+    <string name="licenses">Licences</string>
+    <string name="accept">Accepter</string>
+    <string name="terms_warning">Ouvrir Velociraptor pour accepter les conditions d\'utilisation</string>
+    <!--Speed limit providers-->
+    <string name="speed_limit_providers">Fournisseurs de limitation de vitesse</string>
+    <string name="subscribe_placeholder">S\'abonner (essai gratuit de 7 jours)</string>
+    <string name="here_desc">S\'abonner pour %s (essai gratuit de 7 jours)</string>
+    <string name="tomtom_desc">S\'abonner pour %s (essai gratuit de 7 jours)</string>
+    <string name="edit_data">Modifier</string>
+    <string name="subscribe">S\'abonner</string>
+    <string name="subscribed">Abonné</string>
+    <string name="coverage">Couverture</string>
+    <!--Activation Settings-->
+    <string name="show_in_apps">Lancement automatique dans ces applications</string>
     <string name="persistent_notification_controls">Afficher les contrôles de notification</string>
-    <string name="done">OK</string>
-    <string name="select_apps">Sélectionner les applications</string>
-    <string name="show_map_apps">Afficher les applications de cartographie</string>
-    <string name="show">Afficher</string>
-    <string name="hide">Masquer</string>
     <string name="controls_notif_title">Contrôles Velociraptor</string>
     <string name="controls_notif_desc">Afficher ou masquer la vitesse limite</string>
-    <string name="general">Général</string>
+    <string name="gmaps_only_nav">Google Maps : en navigation uniquement</string>
+    <!--App selection-->
+    <string name="select_apps">Sélectionner les applications</string>
+    <string name="show_map_apps">Afficher les applications de navigation</string>
+    <!---Advanced settings-->
     <string name="advanced">Avancé</string>
-    <string name="changelog">Changelog</string>
-    <string name="help_edit">Aider à modifier les données de limitation de vitesse</string>
-    <string name="check_coverage_desc">Si oui et que la vitesse limite n\'est pas affichée, c\'est peut-être un bug. Utiliser l\'option Stats de débogage et le bouton Commentaire.</string>
-    <string name="check_coverage">Appuyer pour vérifier si votre zone est couverte</string>
-    <string name="obtaining_gps_location">Acquisition de la position GPS…</string>
     <string name="debugging_stats">Stats pour les curieux ou le débogage</string>
-    <string name="test">Essayer</string>
-    <string name="sound_alert">Alerte sonore</string>
-    <string name="open_coverage_map_failed">Impossible d\'ouvrir le lien. Veuillez aller manuellement sur http://product.itoworld.com/map/124.</string>
-    <string name="tolerance_dialog_text">Avertir quand la limite de vitesse est dépassée de :</string>
-    <string name="plus">plus</string>
-    <string name="or">ou</string>
-    <string name="kmph">%s km/h</string>
-    <string name="mph">%s mph</string>
-    <string name="percent">%s%%</string>
-    <string name="tolerance_desc">%1$s %2$s %3$s</string>
-    <string name="support_development">Soutenir le développement</string>
+    <!--Changelog-->
+    <string name="changelog">Changelog</string>
+    <string name="rate">Évaluer</string>
+    <string name="support">Aide</string>
+    <!--Support development-->
+    <string name="support_development">Aider le développement</string>
     <string name="in_app_unavailable">Achats via l\'application indisponibles</string>
-    <string name="support_dev_dialog">Utilisés pour les frais liés au serveur et l\'API, le montant suggéré est de 1 dollar US par mois. Un badge sera affiché en signe de ma sincère reconnaissance.</string>
-    <string name="support_dev_dialog_badge">Merci pour votre soutien !</string>
+    <string name="support_dev_dialog">Utilisé pour les coûts de serveur OpenStreetMap ; le montant suggéré est de 1 USD par mois.</string>
     <string name="per_month">%s par mois</string>
     <string name="one_time">%s une fois</string>
-    <string name="notif_android_auto_title">Velociraptor pour Android Auto</string>
-    <string name="notif_android_auto_limit">Limitation de vitesse : %s</string>
-    <string name="android_auto_integration_switch">Intégration Android Auto</string>
-    <string name="android_auto_instruction_dialog">Velociraptor agit comme une application de messagerie pour Android Auto. Pour arrêter les notifications sonores, appuyez une fois sur le bouton Fermer ou Répondre.</string>
-    <string name="transparency">Transparence</string>
-    <string name="auto_not_available">Non disponible dans la version Google Play de Velociraptor</string>
-    <string name="support_dev_dialog_notplay"><![CDATA[
-    Est utilisé pour payer les serveurs et les APIs. Montant recommandé : 1€.
-    &lt;br/&gt;&lt;br/&gt;
-    Vous pouvez faire un don par Paypal en cliquant <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&amp;business=72HXHU5AXK2ZN&amp;lc=US&amp;item_name=Velociraptor%20Development&amp;item_number=velociraptor&amp;currency_code=USD&amp;bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted">ici</a>. Les achats in-app sont disponibles si vous téléchargez l&#039;application depuis Google Play.
-]]></string>
-    <string name="size">Taille</string>
-    <string name="size_limit_overview">Limitation de vitesse : %s</string>
-    <string name="size_speedometer_overview">Compteur de vitesse : %s</string>
+    <!--Notification Channels-->
+    <string name="channel_toggles">Afficher/masquer</string>
 </resources>
