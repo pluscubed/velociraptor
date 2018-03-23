@@ -43,7 +43,7 @@
 
         </LinearLayout>
 
-        <Button
+        <android.support.design.button.MaterialButton
             android:id="@+id/button_floating_enabled"
             style="@style/Widget.Button.Colored"
             android:layout_width="wrap_content"
@@ -83,7 +83,7 @@
 
         </LinearLayout>
 
-        <Button
+        <android.support.design.button.MaterialButton
             android:id="@+id/button_location_enabled"
             style="@style/Widget.Button.Colored"
             android:layout_width="wrap_content"
@@ -125,7 +125,7 @@
 
     </LinearLayout>
 
-    <Button
+    <android.support.design.button.MaterialButton
         android:id="@+id/button_enable_service"
         style="@style/Widget.Button.Colored"
         android:layout_width="wrap_content"

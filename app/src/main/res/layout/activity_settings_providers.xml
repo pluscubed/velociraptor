@@ -73,16 +73,16 @@
         android:paddingLeft="12dp"
         android:paddingRight="12dp">
 
-        <Button
+        <android.support.design.button.MaterialButton
             android:id="@+id/osm_editdata"
-            style="@style/Widget.AppCompat.Button.Borderless"
+            style="@style/Widget.Button.Borderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/edit_data" />
 
-        <Button
+        <android.support.design.button.MaterialButton
             android:id="@+id/osm_coverage"
-            style="@style/Widget.AppCompat.Button.Borderless"
+            style="@style/Widget.Button.Borderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/coverage" />
@@ -92,9 +92,9 @@
             android:layout_height="0dp"
             android:layout_weight="1" />
 
-        <Button
+        <android.support.design.button.MaterialButton
             android:id="@+id/osm_donate"
-            style="@style/Widget.Button.Colored"
+            style="@style/Widget.Button.Colored.Unelevated"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/support" />
@@ -160,9 +160,9 @@
         android:paddingLeft="12dp"
         android:paddingRight="12dp">
 
-        <Button
+        <android.support.design.button.MaterialButton
             android:id="@+id/tomtom_editdata"
-            style="@style/Widget.AppCompat.Button.Borderless"
+            style="@style/Widget.Button.Borderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/edit_data" />
@@ -172,9 +172,9 @@
             android:layout_height="0dp"
             android:layout_weight="1" />
 
-        <Button
+        <android.support.design.button.MaterialButton
             android:id="@+id/tomtom_subscribe"
-            style="@style/Widget.Button.Colored"
+            style="@style/Widget.Button.Colored.Unelevated"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/subscribe" />
@@ -240,9 +240,9 @@
         android:paddingLeft="12dp"
         android:paddingRight="12dp">
 
-        <Button
+        <android.support.design.button.MaterialButton
             android:id="@+id/here_editdata"
-            style="@style/Widget.AppCompat.Button.Borderless"
+            style="@style/Widget.Button.Borderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/edit_data" />
@@ -252,9 +252,9 @@
             android:layout_height="0dp"
             android:layout_weight="1" />
 
-        <Button
+        <android.support.design.button.MaterialButton
             android:id="@+id/here_subscribe"
-            style="@style/Widget.Button.Colored"
+            style="@style/Widget.Button.Colored.Unelevated"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/subscribe" />

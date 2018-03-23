@@ -14,7 +14,7 @@
     <!--padding of each top/bottom side = ~3.58578643763-->
     <!--actual card width = 56dp-->
     <!--actual card height = 72dp-->
-    <android.support.v7.widget.CardView
+    <android.support.design.card.MaterialCardView
         android:id="@+id/limit"
         android:layout_width="61.172dp"
         android:layout_height="79.172dp"
@@ -58,7 +58,7 @@
 
         </LinearLayout>
 
-    </android.support.v7.widget.CardView>
+    </android.support.design.card.MaterialCardView>
 
     <include layout="@layout/floating_speedometer_stub" />
 </RelativeLayout>

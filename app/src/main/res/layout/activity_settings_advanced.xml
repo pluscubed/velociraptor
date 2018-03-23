@@ -57,7 +57,7 @@
             android:layout_height="match_parent" />
 
 
-        <Button
+        <android.support.design.button.MaterialButton
             android:id="@+id/button_app_selection"
             style="@style/Widget.Button.Borderless.Colored"
             android:layout_width="wrap_content"
