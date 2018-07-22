@@ -96,7 +96,15 @@ public class AppDetectionService extends AccessibilityService {
             } else {
                 enableGoogleMapsMonitoring(true);
 
-                if (searchGmapsSpeedLimitSign(getRootInActiveWindow())) {
+                AccessibilityNodeInfo rootInActiveWindow = null;
+                try {
+                    rootInActiveWindow = getRootInActiveWindow();
+                } catch (Exception e) {
+                    if (!BuildConfig.DEBUG) {
+                        Crashlytics.logException(e);
+                    }
+                }
+                if (rootInActiveWindow != null && searchGmapsSpeedLimitSign(rootInActiveWindow)) {
                     intent.putExtra(LimitService.EXTRA_HIDE_LIMIT, true);
                 } else {
                     intent.putExtra(LimitService.EXTRA_HIDE_LIMIT, false);

@@ -73,14 +73,14 @@
         android:paddingLeft="12dp"
         android:paddingRight="12dp">
 
-        <android.support.design.button.MaterialButton
+        <Button
             android:id="@+id/osm_editdata"
             style="@style/Widget.Button.Borderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/edit_data" />
 
-        <android.support.design.button.MaterialButton
+        <Button
             android:id="@+id/osm_coverage"
             style="@style/Widget.Button.Borderless"
             android:layout_width="wrap_content"
@@ -92,7 +92,7 @@
             android:layout_height="0dp"
             android:layout_weight="1" />
 
-        <android.support.design.button.MaterialButton
+        <Button
             android:id="@+id/osm_donate"
             style="@style/Widget.Button.Colored.Unelevated"
             android:layout_width="wrap_content"
@@ -160,7 +160,7 @@
         android:paddingLeft="12dp"
         android:paddingRight="12dp">
 
-        <android.support.design.button.MaterialButton
+        <Button
             android:id="@+id/tomtom_editdata"
             style="@style/Widget.Button.Borderless"
             android:layout_width="wrap_content"
@@ -172,7 +172,7 @@
             android:layout_height="0dp"
             android:layout_weight="1" />
 
-        <android.support.design.button.MaterialButton
+        <Button
             android:id="@+id/tomtom_subscribe"
             style="@style/Widget.Button.Colored.Unelevated"
             android:layout_width="wrap_content"
@@ -240,7 +240,7 @@
         android:paddingLeft="12dp"
         android:paddingRight="12dp">
 
-        <android.support.design.button.MaterialButton
+        <Button
             android:id="@+id/here_editdata"
             style="@style/Widget.Button.Borderless"
             android:layout_width="wrap_content"
@@ -252,7 +252,7 @@
             android:layout_height="0dp"
             android:layout_weight="1" />
 
-        <android.support.design.button.MaterialButton
+        <Button
             android:id="@+id/here_subscribe"
             style="@style/Widget.Button.Colored.Unelevated"
             android:layout_width="wrap_content"

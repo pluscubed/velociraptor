@@ -2,9 +2,10 @@ apply plugin: 'com.github.ben-manes.versions'
 
 buildscript {
     ext{
-        kotlin_version = '1.2.30'
-        support_version = '28.0.0-alpha1'
-        retrofit_version = '2.3.0'
+        kotlin_version = '1.2.50'
+        support_version = '28.0.0-alpha3'
+        play_version = '15.0.1'
+        retrofit_version = '2.4.0'
         okhttp_version = '3.10.0'
         leakcanary_version = '1.5.1'
     }
@@ -14,9 +15,9 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.1'
-        classpath 'com.github.ben-manes:gradle-versions-plugin:0.17.0'
-        classpath 'com.google.gms:google-services:3.2.0'
+        classpath 'com.android.tools.build:gradle:3.2.0-alpha18'
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.18.0'
+        classpath 'com.google.gms:google-services:4.0.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -28,7 +29,7 @@ allprojects {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '4.6'
+    gradleVersion = '4.7'
     distributionType = Wrapper.DistributionType.ALL
 }
 

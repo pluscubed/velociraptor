@@ -54,17 +54,17 @@
 
 Desarrollado por <b>Daniel Ciao</b><br/> 
 
-<a href='http://pluscubed.com'>Sitio Web</a>&nbsp;&nbsp; 
-<a href='mailto:pluscubed@gmail.com'>Correo</a>&nbsp;&nbsp; 
-<a href='https://twitter.com/plusCubed'>Twitter</a>&nbsp;&nbsp; 
-<a href='https://google.com/+DanielCiao'>Google+</a>&nbsp;&nbsp; 
-<a href='https://github.com/pluscubed'>GitHub</a>&nbsp;&nbsp; 
-<a href='https://www.linkedin.com/in/dciao'>LinkedIn</a><br/><br/> 
+<a href="http://pluscubed.com">Sitio Web</a>&nbsp;&nbsp; 
+<a href="mailto:pluscubed@gmail.com">Correo</a>&nbsp;&nbsp; 
+<a href="https://twitter.com/plusCubed">Twitter</a>&nbsp;&nbsp; 
+<a href="https://google.com/+DanielCiao">Google+</a>&nbsp;&nbsp; 
+<a href="https://github.com/pluscubed">GitHub</a>&nbsp;&nbsp; 
+<a href="https://www.linkedin.com/in/dciao">LinkedIn</a><br/><br/> 
 
-<a href='https://play.google.com/store/apps/details?id=com.pluscubed.velociraptor'>¡Puntúalo en la Play Store!</a><br/><br/> 
+<a href="https://play.google.com/store/apps/details?id=com.pluscubed.velociraptor">¡Puntúalo en la Play Store!</a><br/><br/> 
 
-<a href='https://github.com/pluscubed/velociraptor'>GitHub</a> - fuentes, incidencias y petición de funcionalidades<br/>
-<a href='http://pluscubed.oneskyapp.com/collaboration/project/64120'>OneSky</a> - traduce la aplicación a tu idioma]]></string>
+<a href="https://github.com/pluscubed/velociraptor">GitHub</a> - fuentes, incidencias y petición de funcionalidades<br/>
+<a href="http://pluscubed.oneskyapp.com/collaboration/project/64120">OneSky</a> - traduce la aplicación a tu idioma]]></string>
     <!--Speed limit providers-->
     <string name="speed_limit_providers">Proveedores de límites de velocidad</string>
     <string name="configure_here_database">Configurar base de datos de HERE Maps</string>

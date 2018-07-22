@@ -193,6 +193,7 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
         if (billingManager != null && billingManager.getBillingClientResponseCode() == BillingClient.BillingResponse.OK) {
             billingManager.queryPurchases();
         }
@@ -429,9 +430,6 @@ public class SettingsActivity extends AppCompatActivity {
         );
 
         osmDonateButton.setOnClickListener(view -> showSupportDialog());
-
-
-        invalidateStates();
 
         if (BuildConfig.VERSION_CODE > PrefUtils.getVersionCode(this)
                 && !PrefUtils.isFirstRun(this)) {
