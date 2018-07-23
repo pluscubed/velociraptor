@@ -19,7 +19,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Velociraptor"
         android:usesCleartextTraffic="true"
+        tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:label">
+
         <activity
             android:name=".settings.SettingsActivity"
             android:launchMode="singleTop">
