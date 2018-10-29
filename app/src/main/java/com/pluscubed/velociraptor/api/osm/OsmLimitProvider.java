@@ -25,7 +25,9 @@ import com.pluscubed.velociraptor.utils.Utils;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
@@ -97,10 +99,15 @@ public class OsmLimitProvider implements LimitProvider {
 
         String[] stringArray = apisString.replace("[", "").replace("]", "").split(",");
 
+        Set<String> existingUrls = new HashSet<>();
+        for (OsmApiEndpoint existing : osmOverpassApis) {
+            existingUrls.add(existing.getBaseUrl());
+        }
+
         for (int i = 0; i < stringArray.length; i++) {
             String apiHost = stringArray[i].replace("\"", "");
             boolean enabled = remoteConfig.getBoolean(FB_CONFIG_OSM_API_ENABLED_PREFIX + i);
-            if (enabled) {
+            if (enabled && !existingUrls.contains(apiHost)) {
                 OsmApiEndpoint endpoint = new OsmApiEndpoint(apiHost);
                 initializeOsmService(endpoint);
                 osmOverpassApis.add(endpoint);
