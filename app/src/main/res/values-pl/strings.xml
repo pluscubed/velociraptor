@@ -2,31 +2,32 @@
 <resources>
     <string name="app_name">Velociraptor</string>
     <!--Generic-->
-    <string name="configure">Konfiguracja</string>
+    <string name="configure">Konfiguruj</string>
     <string name="done">Gotowe</string>
     <string name="show">Pokaż</string>
     <string name="hide">Ukryj</string>
-    <string name="dismiss">Zamknij</string>
+    <string name="dismiss">Wyjdź</string>
     <string name="kmph">%s km/h</string>
     <string name="mph">%s mph</string>
     <string name="percent">%s%%</string>
     <string name="grant">Zezwól</string>
     <string name="notif_content">Kliknij, aby otworzyć ustawienia</string>
-    <string name="notif_title">Monitor Velociraptora jest uruchomiony</string>
+    <string name="notif_title">Velociraptor jest uruchomiony</string>
     <!--Permission Settings-->
     <string name="open_settings_page">Otwórz ustawienia</string>
-    <string name="enable_floating_desc">Aby wyświetlić nakładkę należy zezwolić na użycie uprawnienia \"Wyświetlanie nad innymi aplikacjami\"</string>
-    <string name="open_settings_failed_overlay">Nie można otworzyć ustawień. Należy ręcznie nadać uprawnienie \"Wyświetlanie nad innymi aplikacjami\" dla Velociraptora.</string>
+    <string name="enable_floating_desc">Zezwól aplikacji na użycie uprawnienia \"Wyświetlanie nad innymi aplikacjami\"</string>
+    <string name="open_settings_failed_overlay">Aplikacja nie może otworzyć ustawień telefonu. Nadaj proszę ręcznie aplikacji uprawnienie \"Wyświetlanie nad innymi aplikacjami” w ustawieniach telefonu.</string>
     <string name="enable_accessibility_service">Włącz usługę ułatwień dostepu</string>
-    <string name="enable_accessibility_service_desc">Pozwól Velociraptor wykrywać bieżącą aplikację poprzez włączenie usługi dostępności</string>
+    <string name="enable_accessibility_service_desc">"Pozwól aplikacji Velociraptor na automatyczne włączanie się w aplikacjach map "</string>
     <string name="accessibility_service_summary">Automatyczne uruchamianie w aplikacjach map</string>
-    <string name="accessibility_service_description">Pozwól Velociraptor wykrywanie aplikacji pierwszoplanowych i automatycznie wyświetlanie. \n\nVelociraptor nie używa żadnych informacji, poza informacją o  aplikacjach na pierwszym planie.</string>
+    <string name="accessibility_service_description">Pozwól Velociraptor wykrywanie aplikacji pierwszoplanowych i automatycznie uruchamianie.\n\nVelociraptor nie używa żadnych informacji, poza informacją o aplikacjach na pierwszym planie. Usługa ta przeznaczona jest głównie dla użytkowników niepełnosprawnych.</string>
     <string name="open_settings_failed_accessibility">Nie można otworzyć ustawień. Należy ręcznie włączyć usługę ułatwień dostępu dla Velociraptora.</string>
     <string name="grant_permission">Nadaj uprawnienia</string>
     <string name="enable_location_desc">Pozwól Velociraptor uzyskać dostęp do Twojej lokalizacji</string>
-    <string name="permissions_warning">Velociraptor nie ma odpowiednich uprawień. Uruchom aplikację, aby je nadać.</string>
-    <string name="location_settings_warning">W celu użycia monitora ograniczenia prędkości niezbędne jest włączenie GPS dla tej aplikacji.</string>
-    <string name="network_warning">Sieć nie jest dostępna. Velociraptor wymaga połączenia z Internetem w celu pobrania ograniczeń prędkości.</string>
+    <string name="warning_notif_title">Velociraptor nie może się uruchomić</string>
+    <string name="permissions_warning">Velociraptor nie ma uprawnień do odczytywania lokalizacji. Uruchom aplikację, aby je nadać.</string>
+    <string name="location_settings_warning">GPS nie jest włączony</string>
+    <string name="network_warning">Brak połączenia z siecią</string>
     <!--General Settings-->
     <string name="general">Ogólne</string>
     <string name="show_limits">Ograniczenia prędkości</string>
@@ -41,12 +42,12 @@
     <string name="size_limit_overview">Ograniczenie prędkości: %s</string>
     <string name="size_speedometer_overview">Prędkościomierz: %s</string>
     <string name="transparency">Przezroczystość</string>
-    <string name="speeding_amount">Tolerancja przyśpieszenia</string>
-    <string name="tolerance_dialog_text">Ostrzeż, gdy dopuszczalna prędkość przekroczy:</string>
+    <string name="speeding_amount">Margines przekroczenia prędkości</string>
+    <string name="tolerance_dialog_text">Ostrzegaj gdy dopuszczalna prędkość jest przekroczona o:</string>
     <string name="plus">plus</string>
     <string name="or">lub</string>
     <string name="tolerance_desc">%1$s %2$s %3$s</string>
-    <string name="tip_tap_hide">Wskazówka: Dotknij oznaczenia, aby tymczasowo go ukryć!</string>
+    <string name="tip_tap_hide">Wskazówka: Dotknij wskaźnik prędkości by go tymczasowo ukryć!</string>
     <!--About Dialog-->
     <string name="about">O aplikacji</string>
     <string name="about_dialog_title">Velociraptor v%s</string>
@@ -69,27 +70,42 @@ Aplikacja stworzona przez <b>Daniel Ciao</b><br/>
 <a href="http://pluscubed.oneskyapp.com/collaboration/project/64120">OneSky</a> - przetłumacz aplikację na swój język
 <a href="https://play.google.com/apps/testing/com.pluscubed.velociraptor">Beta testy</a> - wypróbuj przyszłych wydań]]></string>
     <string name="licenses">Licencje</string>
+    <string name="terms_body"><![CDATA[Deweloper i dostawcy danych dotyczących ograniczeń prędkości są zwolnieni od odpowiedzialności w przypadku wszelakich 
+wypadków, konsekwencji prawnych i wszystkich innych skutków.Dane prezentowane przez Velociraptor, w tym ograniczenia prędkości i aktualna prędkość, 
+nie muszą być dokładne. Ta aplikacja nie jest powiązana ani promowana przez OpenStreetMap, HERE, TomTom czy Sygic. Wszystkie znaki towarowe
+należą do swoich właścicieli.<br/><br/> 
+
+<b>Zwracaj uwagę na drogę i jeździj ostrożnie.</b> 
+ ]]></string>
     <string name="accept">Akceptuj</string>
+    <string name="terms">Warunki</string>
+    <string name="privacy_policy">Polityka prywatności</string>
+    <string name="terms_warning">Otwórz Velociraptor, aby zaakceptować warunki użytkowania</string>
     <!--Speed limit providers-->
     <string name="speed_limit_providers">Dostawcy ograniczeń prędkości</string>
     <string name="subscribe_placeholder">Subskrybuj (7-dniowy darmowy okres próbny)</string>
     <string name="here_provider">HERE Maps</string>
+    <string name="here_provider_short">HERE</string>
+    <string name="here_desc">Subskrybuj dla %s (7-dniowy darmowy okres próbny)</string>
+    <string name="tomtom_provider">Mapy TomTom</string>
     <string name="tomtom_provider_short">TomTom</string>
+    <string name="tomtom_desc">Subskrybuj dla %s (7-dniowy darmowy okres próbny)</string>
     <string name="openstreetmap">OpenStreetMap</string>
     <string name="openstreetmap_short">OSM</string>
     <string name="share_link">Udostępnij link</string>
-    <string name="osm_edit">Przejdź na stronę <b>openstreetmap.org</b>, aby dodać/edytować ograniczenia prędkości</string>
+    <string name="openstreetmap_desc">Bezpłatnie - serwer OSM Velociraptor jest obsługiwany przez Ciebie</string>
+    <string name="osm_edit">Przejdź na stronę &lt;DEBUG&gt;openstreetmap.org&lt;/DEBUG&gt;, aby dodać/edytować ograniczenia prędkości</string>
     <string name="open_link_failed">Nie można otworzyć łącza. Proszę ręcznie przejść do %s.</string>
     <string name="edit_data">Edytuj dane</string>
     <string name="subscribe">Subskrybuj</string>
     <string name="subscribed">Subskrybujesz</string>
     <string name="coverage">Pokrycie</string>
     <!--Activation Settings-->
-    <string name="show_in_apps">Pokaż w tych aplikacjach:</string>
+    <string name="show_in_apps">Automatyczne uruchamianie w tych aplikacjach:</string>
     <string name="persistent_notification_controls">Pokaż kontrolę powiadomień</string>
     <string name="controls_notif_title">Kontrola Velociraptor</string>
     <string name="controls_notif_desc">Pokazywanie lub ukrywanie monitora o ograniczeniu prędkości</string>
-    <string name="gmaps_only_nav">Google Maps: Tylko w nawigacji</string>
+    <string name="gmaps_only_nav">Mapy Google: tylko podczas nawigacji</string>
     <string name="gmaps_only_nav_notif_access">Aby korzystać z tej funkcji, Velociraptor potrzebuje dostępu do powiadomień, aby sprawdzać, kiedy nawigacja Google Maps jest otwarta</string>
     <string name="gmaps_only_nav_jellybean">Funkcja dostępna tylko dla Androida 4.3+</string>
     <string name="open_settings_failed_notif_access">"Nie można otworzyć ustawienia. Proszę włączyć ręcznie ustawienie \"Dostęp do Powiadomień\" dla Velociraptor.
@@ -112,4 +128,5 @@ Aplikacja stworzona przez <b>Daniel Ciao</b><br/>
     <string name="one_time">%s jeden raz</string>
     <!--Notification Channels-->
     <string name="channel_toggles">Pokaż/ukryj przełączniki</string>
+    <string name="channel_warnings">Ostrzeżenia</string>
 </resources>

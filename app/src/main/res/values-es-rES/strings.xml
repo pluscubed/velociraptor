@@ -3,7 +3,6 @@
     <string name="app_name">Velociraptor</string>
     <!--Generic-->
     <string name="configure">Configurar</string>
-    <string name="enable">Activar</string>
     <string name="done">Hecho</string>
     <string name="show">Mostrar</string>
     <string name="hide">Ocultar</string>
@@ -17,7 +16,6 @@
     <!--Permission Settings-->
     <string name="open_settings_page">Abrir página de ajustes</string>
     <string name="enable_floating_desc">Para mostrar la superposición, autoriza el permiso \"Escribir sobre otras aplicaciones\"</string>
-    <string name="dialog_draw_overlay">Para mostrar elementos flotantes en Android 6.0+, autoriza el permiso \"Escribir sobre otras aplicaciones\"</string>
     <string name="open_settings_failed_overlay">No se pueden abrir los ajustes. Activa manualmente el ajuste \"Escribir sobre otras aplicaciones\" para Velociraptor.</string>
     <string name="enable_accessibility_service">Activar Servicio de Accesibilidad</string>
     <string name="enable_accessibility_service_desc">Permitir a Velociraptor detectar la aplicación actual activando su servicio de accesibilidad</string>
@@ -65,16 +63,16 @@ Desarrollado por <b>Daniel Ciao</b><br/>
 
 <a href="https://github.com/pluscubed/velociraptor">GitHub</a> - fuentes, incidencias y petición de funcionalidades<br/>
 <a href="http://pluscubed.oneskyapp.com/collaboration/project/64120">OneSky</a> - traduce la aplicación a tu idioma]]></string>
+    <string name="privacy_policy">Política de privacidad</string>
+    <string name="terms_warning">Abrir Velociraptor y aceptar los términos de uso.</string>
     <!--Speed limit providers-->
     <string name="speed_limit_providers">Proveedores de límites de velocidad</string>
-    <string name="configure_here_database">Configurar base de datos de HERE Maps</string>
-    <string name="configure_here_database_desc">Obtener más precisión en los límites de velocidad con una cuenta gratuita de desarrollador HERE. Visita <b>mapcreator.here.com</b> para añadir/editar límites de velocidad.</string>
-    <string name="check_coverage">Pulsa para comprobar si tu área está cubierta</string>
+    <string name="subscribe_placeholder">Subscribirse (7 días gratuitos)</string>
+    <string name="here_provider">HERE Maps</string>
+    <string name="here_provider_short">HERE</string>
+    <string name="tomtom_provider">TomTom Maps</string>
     <string name="osm_edit">Visita <b>openstreetmap.org</b> en tu ordenador para añadir/editar límites de velocidad</string>
-    <string name="open_coverage_map_failed">No se pudo abrir el enlace. Ve manualmente a http://product.itoworld.com/map/124.</string>
     <!--Activation Settings-->
-    <string name="select_overlay_usage">Activación</string>
-    <string name="automatically_show">Mostrar/ocultar en ciertas aplicaciones</string>
     <string name="show_in_apps">Mostrar en estas aplicaciones:</string>
     <string name="persistent_notification_controls">Mostrar notificación con controles</string>
     <string name="controls_notif_title">Controles de Velociraptor</string>
@@ -89,41 +87,13 @@ Desarrollado por <b>Daniel Ciao</b><br/>
     <!---Advanced settings-->
     <string name="advanced">Opciones avanzadas</string>
     <string name="debugging_stats">Estadísticas para listillos/depuración</string>
-    <string name="obtaining_gps_location">Obteniendo ubicación GPS...</string>
     <!--Changelog-->
     <string name="changelog">Listado de cambios</string>
     <!--Support development-->
     <string name="support_development">Apoyar al desarrollador</string>
     <string name="in_app_unavailable">Pagos in-app no disponibles</string>
     <string name="support_dev_dialog">Usado para costes del API y del servidor; la cantidad sugerida es 1 USD al mes. Se mostrará un distintivo aquí con mis más sinceros agradecimientos.</string>
-    <string name="support_dev_dialog_badge">¡Gracias por tu apoyo!</string>
-    <string name="support_dev_dialog_notplay"><![CDATA[
-    Se usa para los costes del servidor y la API; la cantidad sugerida es 1 EUR al mes.
-    &lt;br/&gt;&lt;br/&gt;
-    Puedes donar usando PayPal <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&amp;business=72HXHU5AXK2ZN&amp;lc=US&amp;item_name=Velociraptor%20Development&amp;item_number=velociraptor&amp;currency_code=USD&amp;bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted">aquí</a>. Compras dentro de la aplicación disponibles si la has bajado de Google Play.
-    ]]></string>
     <string name="per_month">%s por mes</string>
     <string name="one_time">%s una vez</string>
-    <!--Android Auto-->
-    <string name="notif_android_auto_title">Velociraptor para Android Auto</string>
-    <string name="notif_android_auto_limit">Límite de Velocidad: %s</string>
-    <string name="android_auto_integration_switch">Integración con Android Auto</string>
-    <string name="android_auto_instruction_dialog">Velociraptor actúa como una aplicación de mensajería para Android Auto. Para detener los sonidos de notificaciones, toca una vez el botón cerrar o responder.</string>
-    <string name="auto_not_available">Para usar la integración con Android Auto, descargar Velociraptor AA desde APKMirror</string>
-    <!--Tile-->
-    <!--HERE Config-->
-    <string name="here_config_step1">Cuando termines de registrarte, pulsa <b>Start Coding</b></string>
-    <string name="here_config_step2">"Pulsa <b>Generar App ID y App Code</b>
-en la sección <b>JavaScript/REST</b> "</string>
-    <string name="here_config_title">Configuración de base de datos de HERE</string>
-    <string name="view_account">Ver cuenta</string>
-    <string name="sign_up">Iniciar sesión</string>
-    <string name="here_app_code">Código App HERE</string>
-    <string name="here_app_id">ID App HERE</string>
-    <string name="open_settings">Abrir Página de Ajustes</string>
-    <!--Wrong or missing speed limit-->
-    <string name="wrong_speed_limit">¿Falta el límite de velocidad o es erróneo?</string>
-    <string name="check_coverage_desc">Si el área está cubierta pero los límites no se muestran, entonces podría haber un error en la aplicación. Activa la casilla de depuración y pulsa el botón de contacto</string>
-    <string name="help_edit">Ayuda a actualizar los datos de los límites de velocidad</string>
-    <string name="wrong_speed_limit_desc">Ve a OpenStreetMap en tu ordenador. Pulsa para compartir el enlace (https://openstreetmap.org)</string>
+    <!--Notification Channels-->
 </resources>
