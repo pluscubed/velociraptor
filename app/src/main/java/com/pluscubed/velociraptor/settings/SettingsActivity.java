@@ -73,7 +73,7 @@ public class SettingsActivity extends AppCompatActivity {
     public static final int PENDING_SETTINGS = 2;
     public static final int NOTIFICATION_CONTROLS = 42;
 
-    public static final String PRIVACY_URL = "https://rawgit.com/plusCubed/velociraptor/master/privacy_policy.html";
+    public static final String PRIVACY_URL = "https://www.pluscubed.com/velociraptor/privacy_policy.html";
 
     public static final String OSM_EDITDATA_URL = "http://openstreetmap.org";
     public static final String OSM_COVERAGE_URL = "http://product.itoworld.com/map/124";
