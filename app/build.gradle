@@ -47,7 +47,9 @@ android {
         versionName "1.6.8"
         vectorDrawables.useSupportLibrary = true
         manifestPlaceholders = [appName: "@string/app_name"]
-        multiDexEnabled true
+        if(project.hasProperty("RELEASE_STORE_FILE")){
+            manifestPlaceholders.put("FABRIC_API_KEY", FABRIC_KEY_VELOCIRAPTOR)
+        }
 
         lintOptions {
             disable 'MissingTranslation'
@@ -78,6 +80,7 @@ android {
             } else {
                 signingConfig signingConfigs.debug
             }
+            ext.enableCrashlytics = false
         }
 
         debug {
@@ -87,6 +90,7 @@ android {
             versionNameSuffix '-DEBUG'
             testCoverageEnabled false
             manifestPlaceholders = [appName: "Velociraptor DEBUG"]
+            ext.enableCrashlytics = false
         }
     }
 

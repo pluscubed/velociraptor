@@ -4,6 +4,12 @@ Floating speed limit monitor for Android with speedometer and warning features.
 
 [![Get it on Google Play](http://i.imgur.com/PeDVOwW.png)](https://play.google.com/store/apps/details?id=com.pluscubed.velociraptor)
 
+### Development
+- Put `google-services.json` from Firebase in /app/
+- (Optional) Put `fabric.properties` in /app/ with apiSecret
+- (Optional) Put `apis.xml` with overpass_api and debug_id in /app/src/main/res/values/
+- (Optional) Put signing keys & Fabric API key in local.properties
+
     Copyright (C) 2018  Daniel Ciao
 
     This program is free software: you can redistribute it and/or modify
