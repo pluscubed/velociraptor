@@ -148,3 +148,5 @@ apis.xml
 google-services.json
 
 /captures
+
+/app/release/
