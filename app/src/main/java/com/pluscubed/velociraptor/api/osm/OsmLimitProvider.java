@@ -57,6 +57,8 @@ public class OsmLimitProvider implements LimitProvider {
         int resId = context.getResources().getIdentifier("overpass_api", "string", context.getPackageName());
         if (resId != 0) {
             endpointUrl = context.getString(resId);
+        } else {
+            Timber.d("Private overpass_api not set");
         }
         OsmApiEndpoint endpoint = new OsmApiEndpoint(endpointUrl);
         initializeOsmService(endpoint);

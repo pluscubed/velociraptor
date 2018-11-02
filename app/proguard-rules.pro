@@ -100,3 +100,6 @@
 
 #DbInspector
 -dontwarn org.apache.commons.**
+
+#Billing library
+-keep class com.android.vending.billing.**

@@ -89,7 +89,7 @@ public class BillingManager implements PurchasesUpdatedListener {
      */
     @Override
     public void onPurchasesUpdated(int resultCode, List<Purchase> purchases) {
-        if (resultCode == BillingResponse.OK) {
+        if (resultCode == BillingResponse.OK && purchases != null) {
             for (Purchase purchase : purchases) {
                 handlePurchase(purchase);
             }
@@ -278,13 +278,17 @@ public class BillingManager implements PurchasesUpdatedListener {
                             = billingClient.queryPurchases(SkuType.SUBS);
                     Log.i(TAG, "Querying purchases and subscriptions elapsed time: "
                             + (System.currentTimeMillis() - time) + "ms");
-                    Log.i(TAG, "Querying subscriptions result code: "
-                            + subscriptionResult.getResponseCode()
-                            + " res: " + subscriptionResult.getPurchasesList().size());
+                    if (subscriptionResult.getPurchasesList() != null) {
+                        Log.i(TAG, "Querying subscriptions result code: "
+                                + subscriptionResult.getResponseCode()
+                                + " res: " + subscriptionResult.getPurchasesList().size());
+                    }
 
                     if (subscriptionResult.getResponseCode() == BillingResponse.OK) {
-                        purchasesResult.getPurchasesList().addAll(
-                                subscriptionResult.getPurchasesList());
+                        if (subscriptionResult.getPurchasesList() != null && purchasesResult.getPurchasesList() != null) {
+                            purchasesResult.getPurchasesList().addAll(
+                                    subscriptionResult.getPurchasesList());
+                        }
                     } else {
                         Log.e(TAG, "Got an error response trying to query subscription purchases");
                     }

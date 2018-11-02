@@ -43,8 +43,8 @@ android {
         applicationId "com.pluscubed.velociraptor"
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 44
-        versionName "1.6.7"
+        versionCode 45
+        versionName "1.6.8"
         vectorDrawables.useSupportLibrary = true
         manifestPlaceholders = [appName: "@string/app_name"]
         multiDexEnabled true
@@ -135,7 +135,6 @@ dependencies {
     implementation "com.android.support:support-annotations:$support_version"
     implementation "com.android.support:cardview-v7:$support_version"
     implementation "com.android.support:design:$support_version"
-    implementation "com.android.support:customtabs:$support_version"
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
 
     implementation "com.google.firebase:firebase-core:16.0.4"
