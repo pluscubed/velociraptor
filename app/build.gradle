@@ -37,6 +37,10 @@ android {
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/LICENSE-FIREBASE.txt'
         exclude 'META-INF/NOTICE'
+        exclude 'kotlin/**'
+        exclude '**/*.kotlin_metadata'
+        exclude 'META-INF/*.kotlin_module'
+        exclude 'META-INF/*.version'
     }
 
     defaultConfig {
@@ -72,8 +76,7 @@ android {
 
         debugIap {
             debuggable true
-            minifyEnabled false
-            shrinkResources false
+            multiDexEnabled true
 
             if (project.hasProperty("RELEASE_STORE_FILE")) {
                 signingConfig signingConfigs.release
@@ -84,8 +87,8 @@ android {
         }
 
         debug {
-            minifyEnabled false
-            useProguard false
+            multiDexEnabled true
+
             applicationIdSuffix '.debug'
             versionNameSuffix '-DEBUG'
             testCoverageEnabled false
@@ -141,7 +144,7 @@ dependencies {
     implementation "com.android.support:design:$support_version"
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
 
-    implementation "com.google.firebase:firebase-core:16.0.4"
+    implementation "com.google.firebase:firebase-core:16.0.5"
     implementation "com.google.firebase:firebase-messaging:17.3.4"
     implementation "com.google.firebase:firebase-config:16.1.0"
 
