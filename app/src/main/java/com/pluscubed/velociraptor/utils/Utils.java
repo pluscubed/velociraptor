@@ -13,12 +13,13 @@ import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Handler;
 import android.provider.Settings;
-import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 
 import com.pluscubed.velociraptor.BuildConfig;
 import com.pluscubed.velociraptor.R;
 import com.pluscubed.velociraptor.limit.LimitService;
+
+import androidx.core.content.ContextCompat;
 
 public abstract class Utils {
 

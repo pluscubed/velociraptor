@@ -3,13 +3,14 @@ package com.pluscubed.velociraptor.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.support.annotation.IntDef;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
+
+import androidx.annotation.IntDef;
 
 public abstract class PrefUtils {
 

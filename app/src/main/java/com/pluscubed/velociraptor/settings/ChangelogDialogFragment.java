@@ -6,7 +6,6 @@ import android.app.DialogFragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.webkit.WebView;
@@ -17,6 +16,8 @@ import com.pluscubed.velociraptor.R;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+
+import androidx.annotation.NonNull;
 
 public class ChangelogDialogFragment extends DialogFragment {
 

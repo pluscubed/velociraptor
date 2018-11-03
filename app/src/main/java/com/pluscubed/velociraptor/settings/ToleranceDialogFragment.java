@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -20,6 +19,7 @@ import com.pluscubed.velociraptor.R;
 import com.pluscubed.velociraptor.utils.PrefUtils;
 import com.pluscubed.velociraptor.utils.Utils;
 
+import androidx.annotation.NonNull;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 

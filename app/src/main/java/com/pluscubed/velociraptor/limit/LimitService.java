@@ -14,8 +14,6 @@ import android.os.Build;
 import android.os.IBinder;
 import android.os.Looper;
 import android.provider.Settings;
-import android.support.annotation.Nullable;
-import android.support.v4.app.NotificationCompat;
 
 import com.android.billingclient.api.Purchase;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -39,6 +37,8 @@ import org.json.JSONException;
 
 import java.util.List;
 
+import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
 import rx.SingleSubscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
