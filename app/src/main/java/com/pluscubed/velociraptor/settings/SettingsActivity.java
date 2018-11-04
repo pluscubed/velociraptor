@@ -59,6 +59,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import rx.Emitter;
@@ -699,7 +700,7 @@ public class SettingsActivity extends AppCompatActivity {
         if (!start) {
             intent.putExtra(LimitService.EXTRA_CLOSE, true);
         }
-        startService(intent);
+        ContextCompat.startForegroundService(this, intent);
     }
 
     private void openSettings(String settingsAction, String packageName) {
