@@ -36,7 +36,7 @@ public class LimitFetcher {
 
         OkHttpClient client = buildOkHttpClient();
 
-        LimitCache cache = LimitCache.getInstance(context);
+        LimitCache cache = LimitCache.Companion.getInstance(context);
         this.osmLimitProvider = new OsmLimitProvider(context, client, cache);
         this.raptorLimitProvider = new RaptorLimitProvider(context, client, cache);
     }
@@ -70,7 +70,7 @@ public class LimitFetcher {
 
     public Single<LimitResponse> getSpeedLimit(Location location) {
         Observable<LimitResponse> cacheQuery =
-                LimitCache.getInstance(context).getSpeedLimit(location, lastResponse);
+                LimitCache.Companion.getInstance(context).getSpeedLimit(location, lastResponse);
         return cacheQuery.toList()
                 .flatMap(cacheResponses -> {
                     LimitResponse cacheResponse = cacheResponses.get(0);
