@@ -8,6 +8,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.HashSet;
 import java.util.Locale;
+import java.util.MissingResourceException;
 import java.util.Set;
 
 import androidx.annotation.IntDef;
@@ -76,15 +77,15 @@ public abstract class PrefUtils {
     }
 
     public static boolean getUseMetric(Context context) {
-        boolean metricDefault;
+        boolean metricDefault = true;
         Locale current = Locale.getDefault();
-        if (current.equals(Locale.US) ||
-                current.equals(Locale.UK) ||
-                current.getISO3Country().equalsIgnoreCase("mmr")) {
-            metricDefault = false;
-        } else {
-            metricDefault = true;
-        }
+        try {
+            if (current.equals(Locale.US) ||
+                    current.equals(Locale.UK) ||
+                    current.getISO3Country().equalsIgnoreCase("mmr")) {
+                metricDefault = false;
+            }
+        } catch (MissingResourceException e) {/*ignore*/}
         return getSharedPreferences(context).getBoolean(PREF_METRIC, metricDefault);
     }
 
