@@ -129,10 +129,6 @@ dependencies {
     debugImplementation 'im.dino:dbinspector:3.4.1@aar'
     debugIapImplementation 'im.dino:dbinspector:3.4.1@aar'
 
-    api 'com.google.auto.value:auto-value-annotations:1.6.2'
-    kapt "com.google.auto.value:auto-value:1.6.2"
-    kapt 'com.ryanharter.auto.value:auto-value-parcel:0.2.6'
-
     implementation "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
 

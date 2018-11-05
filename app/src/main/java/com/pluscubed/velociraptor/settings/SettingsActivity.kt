@@ -161,7 +161,8 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
         get() = billingManager != null && billingManager!!.billingClientResponseCode == BillingClient.BillingResponse.OK
 
     private val isNotificationAccessGranted: Boolean
-        get() = NotificationManagerCompat.getEnabledListenerPackages(this@SettingsActivity).contains(BuildConfig.APPLICATION_ID)
+        get() = NotificationManagerCompat.getEnabledListenerPackages(this@SettingsActivity)
+            .contains(BuildConfig.APPLICATION_ID)
 
 
     companion object {
@@ -215,20 +216,27 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
         notifControlsContainer.setOnClickListener { v ->
             val intent = Intent(this@SettingsActivity, LimitService::class.java)
             intent.putExtra(LimitService.EXTRA_NOTIF_START, true)
-            val pending = PendingIntent.getService(this@SettingsActivity,
-                    PENDING_SERVICE, intent, PendingIntent.FLAG_CANCEL_CURRENT)
+            val pending = PendingIntent.getService(
+                this@SettingsActivity,
+                PENDING_SERVICE, intent, PendingIntent.FLAG_CANCEL_CURRENT
+            )
 
             val intentClose = Intent(this@SettingsActivity, LimitService::class.java)
             intentClose.putExtra(LimitService.EXTRA_NOTIF_CLOSE, true)
-            val pendingClose = PendingIntent.getService(this@SettingsActivity,
-                    PENDING_SERVICE_CLOSE, intentClose, PendingIntent.FLAG_CANCEL_CURRENT)
+            val pendingClose = PendingIntent.getService(
+                this@SettingsActivity,
+                PENDING_SERVICE_CLOSE, intentClose, PendingIntent.FLAG_CANCEL_CURRENT
+            )
 
             val settings = Intent(this@SettingsActivity, SettingsActivity::class.java)
-            val settingsIntent = PendingIntent.getActivity(this@SettingsActivity,
-                    PENDING_SETTINGS, settings, PendingIntent.FLAG_CANCEL_CURRENT)
+            val settingsIntent = PendingIntent.getActivity(
+                this@SettingsActivity,
+                PENDING_SETTINGS, settings, PendingIntent.FLAG_CANCEL_CURRENT
+            )
 
             NotificationUtils.initChannels(this)
-            val builder = NotificationCompat.Builder(this@SettingsActivity, NotificationUtils.CHANNEL_TOGGLES)
+            val builder =
+                NotificationCompat.Builder(this@SettingsActivity, NotificationUtils.CHANNEL_TOGGLES)
                     .setSmallIcon(R.drawable.ic_speedometer_notif)
                     .setContentTitle(getString(R.string.controls_notif_title))
                     .setContentText(getString(R.string.controls_notif_desc))
@@ -241,13 +249,21 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
         }
 
 
-        appSelectionButton.setOnClickListener { v -> startActivity(Intent(this@SettingsActivity, AppSelectionActivity::class.java)) }
+        appSelectionButton.setOnClickListener { v ->
+            startActivity(
+                Intent(this@SettingsActivity, AppSelectionActivity::class.java)
+            )
+        }
 
         enableServiceButton.setOnClickListener { v ->
             try {
                 startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
             } catch (e: ActivityNotFoundException) {
-                Snackbar.make(enableServiceButton, R.string.open_settings_failed_accessibility, Snackbar.LENGTH_LONG).show()
+                Snackbar.make(
+                    enableServiceButton,
+                    R.string.open_settings_failed_accessibility,
+                    Snackbar.LENGTH_LONG
+                ).show()
             }
         }
 
@@ -256,22 +272,38 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
                 //Open the current default browswer App Info page
                 openSettings(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, BuildConfig.APPLICATION_ID)
             } catch (ignored: ActivityNotFoundException) {
-                Snackbar.make(enableFloatingButton, R.string.open_settings_failed_overlay, Snackbar.LENGTH_LONG).show()
+                Snackbar.make(
+                    enableFloatingButton,
+                    R.string.open_settings_failed_overlay,
+                    Snackbar.LENGTH_LONG
+                ).show()
             }
         }
 
-        enableLocationButton.setOnClickListener { v -> ActivityCompat.requestPermissions(this@SettingsActivity, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_LOCATION) }
+        enableLocationButton.setOnClickListener { v ->
+            ActivityCompat.requestPermissions(
+                this@SettingsActivity,
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                REQUEST_LOCATION
+            )
+        }
 
         val unitAdapter = ArrayAdapter(this, R.layout.spinner_item_text, arrayOf("mph", "km/h"))
         unitAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item)
         unitSpinner.adapter = unitAdapter
         unitSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View,
+                position: Int,
+                id: Long
+            ) {
                 if (PrefUtils.getUseMetric(this@SettingsActivity) != (position == 1)) {
                     PrefUtils.setUseMetric(this@SettingsActivity, position == 1)
                     unitSpinner.dropDownVerticalOffset = Utils.convertDpToPx(
-                            this@SettingsActivity,
-                            (unitSpinner.selectedItemPosition * -48).toFloat())
+                        this@SettingsActivity,
+                        (unitSpinner.selectedItemPosition * -48).toFloat()
+                    )
 
                     Utils.updateFloatingServicePrefs(this@SettingsActivity)
                 }
@@ -285,17 +317,26 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
         unitSpinner.dropDownVerticalOffset =
                 Utils.convertDpToPx(this, (unitSpinner.selectedItemPosition * -48).toFloat())
 
-        val styleAdapter = ArrayAdapter(this, R.layout.spinner_item_text,
-                arrayOf(getString(R.string.united_states), getString(R.string.international)))
+        val styleAdapter = ArrayAdapter(
+            this, R.layout.spinner_item_text,
+            arrayOf(getString(R.string.united_states), getString(R.string.international))
+        )
         styleAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item)
         styleSpinner.adapter = styleAdapter
         styleSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View,
+                position: Int,
+                id: Long
+            ) {
                 if (position != PrefUtils.getSignStyle(this@SettingsActivity)) {
                     PrefUtils.setSignStyle(this@SettingsActivity, position)
                     styleSpinner.dropDownVerticalOffset =
-                            Utils.convertDpToPx(this@SettingsActivity,
-                                    (styleSpinner.selectedItemPosition * -48).toFloat())
+                            Utils.convertDpToPx(
+                                this@SettingsActivity,
+                                (styleSpinner.selectedItemPosition * -48).toFloat()
+                            )
 
                     Utils.updateFloatingServicePrefs(this@SettingsActivity)
                 }
@@ -306,13 +347,29 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
             }
         }
         styleSpinner.setSelection(PrefUtils.getSignStyle(this))
-        styleSpinner.dropDownVerticalOffset = Utils.convertDpToPx(this, (styleSpinner.selectedItemPosition * -48).toFloat())
+        styleSpinner.dropDownVerticalOffset =
+                Utils.convertDpToPx(this, (styleSpinner.selectedItemPosition * -48).toFloat())
 
-        toleranceView.setOnClickListener { v -> ToleranceDialogFragment().show(supportFragmentManager, "dialog_tolerance") }
+        toleranceView.setOnClickListener { v ->
+            ToleranceDialogFragment().show(
+                supportFragmentManager,
+                "dialog_tolerance"
+            )
+        }
 
-        sizeView.setOnClickListener { v -> SizeDialogFragment().show(supportFragmentManager, "dialog_size") }
+        sizeView.setOnClickListener { v ->
+            SizeDialogFragment().show(
+                supportFragmentManager,
+                "dialog_size"
+            )
+        }
 
-        opacityView.setOnClickListener { v -> OpacityDialogFragment().show(supportFragmentManager, "dialog_opacity") }
+        opacityView.setOnClickListener { v ->
+            OpacityDialogFragment().show(
+                supportFragmentManager,
+                "dialog_opacity"
+            )
+        }
 
         showSpeedometerSwitch.isChecked = PrefUtils.getShowSpeedometer(this)
         (showSpeedometerSwitch.parent as View).setOnClickListener { v ->
@@ -343,10 +400,16 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
         }
 
         beepSwitch.isChecked = PrefUtils.isBeepAlertEnabled(this)
-        beepSwitch.setOnClickListener { v -> PrefUtils.setBeepAlertEnabled(this@SettingsActivity, beepSwitch.isChecked) }
+        beepSwitch.setOnClickListener { v ->
+            PrefUtils.setBeepAlertEnabled(
+                this@SettingsActivity,
+                beepSwitch.isChecked
+            )
+        }
         testBeepButton.setOnClickListener { v -> Utils.playBeeps() }
 
-        gmapsOnlyNavigationSwitch.isChecked = isNotificationAccessGranted && PrefUtils.isGmapsOnlyInNavigation(this)
+        gmapsOnlyNavigationSwitch.isChecked = isNotificationAccessGranted &&
+                PrefUtils.isGmapsOnlyInNavigation(this)
         gmapsOnlyNavigationContainer.setOnClickListener { v ->
             if (!gmapsOnlyNavigationSwitch.isEnabled) {
                 return@setOnClickListener
@@ -355,26 +418,38 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
             val accessGranted = isNotificationAccessGranted
             if (accessGranted) {
                 gmapsOnlyNavigationSwitch.toggle()
-                PrefUtils.setGmapsOnlyInNavigation(this@SettingsActivity, gmapsOnlyNavigationSwitch.isChecked)
+                PrefUtils.setGmapsOnlyInNavigation(
+                    this@SettingsActivity,
+                    gmapsOnlyNavigationSwitch.isChecked
+                )
             } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
                 MaterialDialog.Builder(this@SettingsActivity)
-                        .content(R.string.gmaps_only_nav_notif_access)
-                        .positiveText(R.string.grant)
-                        .onPositive { _, _ ->
-                            try {
-                                val settingsAction = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1)
+                    .content(R.string.gmaps_only_nav_notif_access)
+                    .positiveText(R.string.grant)
+                    .onPositive { _, _ ->
+                        try {
+                            val settingsAction =
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1)
                                     Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS
                                 else
                                     "android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"
-                                val intent = Intent(settingsAction)
-                                startActivity(intent)
-                            } catch (ignored: ActivityNotFoundException) {
-                                Snackbar.make(enableFloatingButton, R.string.open_settings_failed_notif_access, Snackbar.LENGTH_LONG).show()
-                            }
+                            val intent = Intent(settingsAction)
+                            startActivity(intent)
+                        } catch (ignored: ActivityNotFoundException) {
+                            Snackbar.make(
+                                enableFloatingButton,
+                                R.string.open_settings_failed_notif_access,
+                                Snackbar.LENGTH_LONG
+                            ).show()
                         }
-                        .show()
+                    }
+                    .show()
             } else {
-                Snackbar.make(findViewById(android.R.id.content), R.string.gmaps_only_nav_jellybean, Snackbar.LENGTH_LONG).show()
+                Snackbar.make(
+                    findViewById(android.R.id.content),
+                    R.string.gmaps_only_nav_jellybean,
+                    Snackbar.LENGTH_LONG
+                ).show()
             }
         }
 
@@ -382,32 +457,47 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
 
         hereSubscribeButton.setOnClickListener { view ->
             if (!isBillingManagerReady) {
-                Snackbar.make(findViewById(android.R.id.content), R.string.in_app_unavailable, Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(
+                    findViewById(android.R.id.content),
+                    R.string.in_app_unavailable,
+                    Snackbar.LENGTH_SHORT
+                ).show()
             }
-            billingManager!!.initiatePurchaseFlow(BillingConstants.SKU_HERE, BillingClient.SkuType.SUBS)
+            billingManager!!.initiatePurchaseFlow(
+                BillingConstants.SKU_HERE,
+                BillingClient.SkuType.SUBS
+            )
         }
 
         tomtomSubscribeButton.setOnClickListener { view ->
             if (!isBillingManagerReady) {
-                Snackbar.make(findViewById(android.R.id.content), R.string.in_app_unavailable, Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(
+                    findViewById(android.R.id.content),
+                    R.string.in_app_unavailable,
+                    Snackbar.LENGTH_SHORT
+                ).show()
             }
-            billingManager!!.initiatePurchaseFlow(BillingConstants.SKU_TOMTOM, BillingClient.SkuType.SUBS)
+            billingManager!!.initiatePurchaseFlow(
+                BillingConstants.SKU_TOMTOM,
+                BillingClient.SkuType.SUBS
+            )
         }
 
         tomtomEditDataButton.setOnClickListener { view -> openLink(TOMTOM_EDITDATA_URL) }
 
         osmCoverageButton.setOnClickListener { v ->
             if (Utils.isLocationPermissionGranted(this@SettingsActivity)) {
-                val fusedLocationProvider = LocationServices.getFusedLocationProviderClient(this@SettingsActivity)
+                val fusedLocationProvider =
+                    LocationServices.getFusedLocationProviderClient(this@SettingsActivity)
                 fusedLocationProvider.lastLocation
-                        .addOnCompleteListener(this@SettingsActivity) { task ->
-                            var uriString = OSM_COVERAGE_URL
-                            if (task.isSuccessful && task.result != null) {
-                                val lastLocation = task.result
-                                uriString += "?lon=" + lastLocation!!.longitude + "&lat=" + lastLocation.latitude + "&zoom=12"
-                            }
-                            openLink(uriString)
+                    .addOnCompleteListener(this@SettingsActivity) { task ->
+                        var uriString = OSM_COVERAGE_URL
+                        if (task.isSuccessful && task.result != null) {
+                            val lastLocation = task.result
+                            uriString += "?lon=" + lastLocation!!.longitude + "&lat=" + lastLocation.latitude + "&zoom=12"
                         }
+                        openLink(uriString)
+                    }
             } else {
                 openLink(OSM_COVERAGE_URL)
             }
@@ -415,15 +505,15 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
 
         osmEditDataButton.setOnClickListener { view ->
             MaterialDialog.Builder(this@SettingsActivity)
-                    .content(R.string.osm_edit)
-                    .positiveText(R.string.share_link)
-                    .onPositive { _, _ ->
-                        val shareIntent = Intent()
-                        shareIntent.type = "text/plain"
-                        shareIntent.putExtra(Intent.EXTRA_TEXT, OSM_EDITDATA_URL)
-                        startActivity(Intent.createChooser(shareIntent, getString(R.string.share_link)))
-                    }
-                    .show()
+                .content(R.string.osm_edit)
+                .positiveText(R.string.share_link)
+                .onPositive { _, _ ->
+                    val shareIntent = Intent()
+                    shareIntent.type = "text/plain"
+                    shareIntent.putExtra(Intent.EXTRA_TEXT, OSM_EDITDATA_URL)
+                    startActivity(Intent.createChooser(shareIntent, getString(R.string.share_link)))
+                }
+                .show()
         }
 
         osmDonateButton.setOnClickListener { view -> showSupportDialog() }
@@ -445,19 +535,25 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
         billingManager = BillingManager(this, object : BillingManager.BillingUpdatesListener {
             override fun onBillingClientSetupFinished() {
                 billingManager!!.querySkuDetailsAsync(
-                        BillingClient.SkuType.SUBS,
-                        Arrays.asList(BillingConstants.SKU_HERE, BillingConstants.SKU_TOMTOM)
+                    BillingClient.SkuType.SUBS,
+                    Arrays.asList(BillingConstants.SKU_HERE, BillingConstants.SKU_TOMTOM)
                 ) { responseCode, skuDetailsList ->
                     if (responseCode != BillingClient.BillingResponse.OK) {
                         return@querySkuDetailsAsync
                     }
                     for (details in skuDetailsList) {
                         if (details.sku == BillingConstants.SKU_HERE) {
-                            herePriceDesc.text = getString(R.string.here_desc, getString(R.string.per_month, details.price))
+                            herePriceDesc.text = getString(
+                                R.string.here_desc,
+                                getString(R.string.per_month, details.price)
+                            )
                         }
 
                         if (details.sku == BillingConstants.SKU_TOMTOM) {
-                            tomtomPriceDesc.text = getString(R.string.tomtom_desc, getString(R.string.per_month, details.price))
+                            tomtomPriceDesc.text = getString(
+                                R.string.tomtom_desc,
+                                getString(R.string.per_month, details.price)
+                            )
                         }
                     }
                 }
@@ -474,8 +570,16 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
                     purchased.add(purchase.sku)
                 }
 
-                setSubscriptionState(hereSubscribeButton, hereTitle, purchased.contains(BillingConstants.SKU_HERE))
-                setSubscriptionState(tomtomSubscribeButton, tomtomTitle, purchased.contains(BillingConstants.SKU_TOMTOM))
+                setSubscriptionState(
+                    hereSubscribeButton,
+                    hereTitle,
+                    purchased.contains(BillingConstants.SKU_HERE)
+                )
+                setSubscriptionState(
+                    tomtomSubscribeButton,
+                    tomtomTitle,
+                    purchased.contains(BillingConstants.SKU_TOMTOM)
+                )
             }
         })
 
@@ -505,15 +609,24 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
         try {
             this@SettingsActivity.startActivity(intent)
         } catch (e: ActivityNotFoundException) {
-            Snackbar.make(enableFloatingButton, getString(R.string.open_link_failed, uriString), Snackbar.LENGTH_LONG).show()
+            Snackbar.make(
+                enableFloatingButton,
+                getString(R.string.open_link_failed, uriString),
+                Snackbar.LENGTH_LONG
+            ).show()
         }
 
     }
 
-    private suspend fun querySkuDetails(manager: BillingManager,
-                                        itemType: String,
-                                        vararg skuList: String): List<SkuDetails> = suspendCoroutine { cont ->
-        manager.querySkuDetailsAsync(itemType, Arrays.asList(*skuList)) { responseCode, skuDetailsList ->
+    private suspend fun querySkuDetails(
+        manager: BillingManager,
+        itemType: String,
+        vararg skuList: String
+    ): List<SkuDetails> = suspendCoroutine { cont ->
+        manager.querySkuDetailsAsync(
+            itemType,
+            Arrays.asList(*skuList)
+        ) { responseCode, skuDetailsList ->
             if (responseCode != BillingClient.BillingResponse.OK) {
                 cont.resumeWithException(Throwable("Billing error: $responseCode"))
             } else {
@@ -524,27 +637,33 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
 
     fun showSupportDialog() {
         if (!isBillingManagerReady) {
-            Snackbar.make(findViewById(android.R.id.content), R.string.in_app_unavailable, Snackbar.LENGTH_SHORT).show()
+            Snackbar.make(
+                findViewById(android.R.id.content),
+                R.string.in_app_unavailable,
+                Snackbar.LENGTH_SHORT
+            ).show()
         }
 
         launch {
             try {
                 val monthlyDonations = async(Dispatchers.IO) {
                     querySkuDetails(
-                            billingManager!!,
-                            BillingClient.SkuType.SUBS,
-                            BillingConstants.SKU_D1_MONTHLY,
-                            BillingConstants.SKU_D3_MONTHLY)
+                        billingManager!!,
+                        BillingClient.SkuType.SUBS,
+                        BillingConstants.SKU_D1_MONTHLY,
+                        BillingConstants.SKU_D3_MONTHLY
+                    )
                 }
                 val oneTimeDonations = async(Dispatchers.IO) {
                     querySkuDetails(
-                            billingManager!!,
-                            BillingClient.SkuType.INAPP,
-                            BillingConstants.SKU_D1,
-                            BillingConstants.SKU_D3,
-                            BillingConstants.SKU_D5,
-                            BillingConstants.SKU_D10,
-                            BillingConstants.SKU_D20)
+                        billingManager!!,
+                        BillingClient.SkuType.INAPP,
+                        BillingConstants.SKU_D1,
+                        BillingConstants.SKU_D3,
+                        BillingConstants.SKU_D5,
+                        BillingConstants.SKU_D10,
+                        BillingConstants.SKU_D20
+                    )
                 }
 
                 val skuDetailsList = monthlyDonations.await() + oneTimeDonations.await()
@@ -552,9 +671,14 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
                 val content = getString(R.string.support_dev_dialog)
 
                 val builder = MaterialDialog.Builder(this@SettingsActivity)
-                        .icon(AppCompatResources.getDrawable(this@SettingsActivity, R.drawable.ic_favorite_black_24dp)!!)
-                        .title(R.string.support_development)
-                        .content(Html.fromHtml(content))
+                    .icon(
+                        AppCompatResources.getDrawable(
+                            this@SettingsActivity,
+                            R.drawable.ic_favorite_black_24dp
+                        )!!
+                    )
+                    .title(R.string.support_development)
+                    .content(Html.fromHtml(content))
 
                 val purchaseDisplay = ArrayList<String>()
                 for (details in skuDetailsList) {
@@ -568,14 +692,18 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
                 }
 
                 builder.items(purchaseDisplay)
-                        .itemsCallback { dialog, itemView, which, text ->
-                            val skuDetails = skuDetailsList[which]
-                            billingManager!!.initiatePurchaseFlow(skuDetails.sku, skuDetails.type)
-                        }
+                    .itemsCallback { dialog, itemView, which, text ->
+                        val skuDetails = skuDetailsList[which]
+                        billingManager!!.initiatePurchaseFlow(skuDetails.sku, skuDetails.type)
+                    }
 
                 builder.show()
             } catch (e: Exception) {
-                Snackbar.make(findViewById(android.R.id.content), R.string.in_app_unavailable, Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(
+                    findViewById(android.R.id.content),
+                    R.string.in_app_unavailable,
+                    Snackbar.LENGTH_SHORT
+                ).show()
             }
         }
     }
@@ -606,33 +734,40 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
 
     private fun showAboutDialog() {
         MaterialDialog.Builder(this)
-                .title(getString(R.string.about_dialog_title, BuildConfig.VERSION_NAME))
-                .positiveText(R.string.dismiss)
-                .content(Html.fromHtml(getString(R.string.about_body)))
-                .neutralText(R.string.licenses)
-                .onNeutral { _, _ -> startActivity(Intent(this@SettingsActivity, OssLicensesMenuActivity::class.java)) }
-                .negativeText(R.string.terms)
-                .onNegative { _, _ -> showTermsDialog() }
-                .iconRes(R.mipmap.ic_launcher)
-                .show()
+            .title(getString(R.string.about_dialog_title, BuildConfig.VERSION_NAME))
+            .positiveText(R.string.dismiss)
+            .content(Html.fromHtml(getString(R.string.about_body)))
+            .neutralText(R.string.licenses)
+            .onNeutral { _, _ ->
+                startActivity(
+                    Intent(
+                        this@SettingsActivity,
+                        OssLicensesMenuActivity::class.java
+                    )
+                )
+            }
+            .negativeText(R.string.terms)
+            .onNegative { _, _ -> showTermsDialog() }
+            .iconRes(R.mipmap.ic_launcher)
+            .show()
     }
 
     private fun showTermsDialog() {
         var builder: MaterialDialog.Builder = MaterialDialog.Builder(this)
-                .content(Html.fromHtml(getString(R.string.terms_body)))
-                .neutralText(R.string.privacy_policy)
-                .onNeutral { _, _ -> openLink(PRIVACY_URL) }
-                .iconRes(R.mipmap.ic_launcher)
+            .content(Html.fromHtml(getString(R.string.terms_body)))
+            .neutralText(R.string.privacy_policy)
+            .onNeutral { _, _ -> openLink(PRIVACY_URL) }
+            .iconRes(R.mipmap.ic_launcher)
 
         if (!PrefUtils.isTermsAccepted(this)) {
             builder = builder
-                    .autoDismiss(false)
-                    .canceledOnTouchOutside(false)
-                    .positiveText(R.string.accept)
-                    .onPositive { dialog, which ->
-                        PrefUtils.setTermsAccepted(this@SettingsActivity, true)
-                        dialog.dismiss()
-                    }
+                .autoDismiss(false)
+                .canceledOnTouchOutside(false)
+                .positiveText(R.string.accept)
+                .onPositive { dialog, which ->
+                    PrefUtils.setTermsAccepted(this@SettingsActivity, true)
+                    dialog.dismiss()
+                }
         }
 
         builder.show()
@@ -655,24 +790,34 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
         enabledLocationImage.setImageResource(if (permissionGranted) R.drawable.ic_done_green_40dp else R.drawable.ic_cross_red_40dp)
         enableLocationButton.isEnabled = !permissionGranted
 
-        @SuppressLint("NewApi", "LocalSuppress") val overlayEnabled = Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(this)
+        @SuppressLint("NewApi", "LocalSuppress") val overlayEnabled =
+            Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(this)
         enabledFloatingImage.setImageResource(if (overlayEnabled) R.drawable.ic_done_green_40dp else R.drawable.ic_cross_red_40dp)
         enableFloatingButton.isEnabled = !overlayEnabled
 
-        val serviceEnabled = Utils.isAccessibilityServiceEnabled(this, AppDetectionService::class.java)
+        val serviceEnabled =
+            Utils.isAccessibilityServiceEnabled(this, AppDetectionService::class.java)
         enabledServiceImage.setImageResource(if (serviceEnabled) R.drawable.ic_done_green_40dp else R.drawable.ic_cross_red_40dp)
         enableServiceButton.isEnabled = !serviceEnabled
 
-        val constant = getString(if (PrefUtils.getUseMetric(this)) R.string.kmph else R.string.mph,
-                PrefUtils.getSpeedingConstant(this).toString())
+        val constant = getString(
+            if (PrefUtils.getUseMetric(this)) R.string.kmph else R.string.mph,
+            PrefUtils.getSpeedingConstant(this).toString()
+        )
         val percent = getString(R.string.percent, PrefUtils.getSpeedingPercent(this).toString())
         val mode = if (PrefUtils.getToleranceMode(this)) "+" else getString(R.string.or)
         val overview = getString(R.string.tolerance_desc, percent, mode, constant)
         toleranceOverview.text = overview
 
-        val limitSizePercent = getString(R.string.percent, (PrefUtils.getSpeedLimitSize(this) * 100).toInt().toString())
+        val limitSizePercent = getString(
+            R.string.percent,
+            (PrefUtils.getSpeedLimitSize(this) * 100).toInt().toString()
+        )
         val speedLimitSize = getString(R.string.size_limit_overview, limitSizePercent)
-        val speedometerSizePercent = getString(R.string.percent, (PrefUtils.getSpeedometerSize(this) * 100).toInt().toString())
+        val speedometerSizePercent = getString(
+            R.string.percent,
+            (PrefUtils.getSpeedometerSize(this) * 100).toInt().toString()
+        )
         val speedometerSize = getString(R.string.size_speedometer_overview, speedometerSizePercent)
         sizeOverview.text = speedLimitSize + "\n" + speedometerSize
 

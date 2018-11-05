@@ -18,16 +18,18 @@ import com.pluscubed.velociraptor.api.LimitResponse
 import com.pluscubed.velociraptor.api.osm.data.Element
 import com.pluscubed.velociraptor.api.osm.data.OsmResponse
 import com.pluscubed.velociraptor.api.osm.data.Tags
-import com.pluscubed.velociraptor.cache.LimitCache
+import com.pluscubed.velociraptor.cache.CacheLimitProvider
 import com.pluscubed.velociraptor.utils.Utils
 import okhttp3.OkHttpClient
 import timber.log.Timber
 import java.io.IOException
 import java.util.*
 
-class OsmLimitProvider(private val context: Context,
-                       private val client: OkHttpClient,
-                       private val cache: LimitCache) : LimitProvider {
+class OsmLimitProvider(
+    private val context: Context,
+    private val client: OkHttpClient,
+    private val cacheLimitProvider: CacheLimitProvider
+) : LimitProvider {
 
 
     private val osmOverpassApis: MutableList<OsmApiEndpoint>
@@ -40,8 +42,8 @@ class OsmLimitProvider(private val context: Context,
         })
 
         val osmClient = client.newBuilder()
-                .addInterceptor(osmInterceptor)
-                .build()
+            .addInterceptor(osmInterceptor)
+            .build()
         val osmRest = LimitFetcher.buildRetrofit(osmClient, endpoint.baseUrl)
 
         val osmService = osmRest.create(OsmService::class.java)
@@ -63,7 +65,8 @@ class OsmLimitProvider(private val context: Context,
             return
         }
 
-        val stringArray = apisString.replace("[", "").replace("]", "").split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+        val stringArray = apisString.replace("[", "").replace("]", "").split(",".toRegex())
+            .dropLastWhile { it.isEmpty() }.toTypedArray()
 
         val existingUrls = HashSet<String>()
         for (existing in osmOverpassApis) {
@@ -111,18 +114,30 @@ class OsmLimitProvider(private val context: Context,
         }
     }
 
-    override suspend fun getSpeedLimit(location: Location, lastResponse: LimitResponse?, origin: Int): List<LimitResponse> {
+    override suspend fun getSpeedLimit(
+        location: Location,
+        lastResponse: LimitResponse?,
+        origin: Int
+    ): List<LimitResponse> {
         try {
             val osmResponse = getOsmResponse(location) ?: throw Exception("OSM null response")
 
-            val builder = LimitResponse.builder()
-                    .setOrigin(LimitResponse.ORIGIN_OSM)
-                    .setTimestamp(System.currentTimeMillis())
+            var limitResponse = LimitResponse(
+                origin = LimitResponse.ORIGIN_OSM,
+                timestamp = System.currentTimeMillis()
+            )
 
             val emptyObservableResponse = {
-                listOf(builder.setDebugInfo("\nOSM info:\n--" + TextUtils.join("\n--", osmOverpassApis))
+                listOf(
+                    limitResponse
+                        .copy(
+                            debugInfo = "\nOSM info:\n--" + TextUtils.join(
+                                "\n--",
+                                osmOverpassApis
+                            )
+                        )
                         .initDebugInfo()
-                        .build())
+                )
             }
 
             val elements = osmResponse.elements
@@ -138,27 +153,27 @@ class OsmLimitProvider(private val context: Context,
 
                 //Get coords
                 if (element.geometry != null && !element.geometry.isEmpty()) {
-                    builder.setCoords(element.geometry)
+                    limitResponse = limitResponse.copy(coords = element.geometry)
                 } else if (element !== bestMatch) {
                     /* If coords are empty and element is not the best one,
-                            no need to continue parsing info for cache. Skip to next element. */
+                            no need to continue parsing info for cacheLimitProvider. Skip to next element. */
                     continue
                 }
 
                 //Get road names
                 val tags = element.tags
-                builder.setRoadName(parseOsmRoadName(tags))
+                limitResponse = limitResponse.copy(roadName = parseOsmRoadName(tags))
 
                 //Get speed limit
                 val maxspeed = tags.maxspeed
                 if (maxspeed != null) {
-                    builder.setSpeedLimit(parseOsmSpeedLimit(maxspeed))
+                    limitResponse = limitResponse.copy(speedLimit = parseOsmSpeedLimit(maxspeed))
                 }
 
-                val response = builder.initDebugInfo().build()
+                val response = limitResponse.initDebugInfo()
 
                 //Cache
-                cache.put(response)
+                cacheLimitProvider.put(response)
 
                 if (element === bestMatch) {
                     bestResponse = response
@@ -172,13 +187,14 @@ class OsmLimitProvider(private val context: Context,
             return emptyObservableResponse()
 
         } catch (e: Exception) {
-            return listOf(LimitResponse.builder()
-                    .setError(e)
-                    .setTimestamp(System.currentTimeMillis())
-                    .setOrigin(LimitResponse.ORIGIN_OSM)
-                    .setDebugInfo("\nOSM Info:\n--" + TextUtils.join("\n--", osmOverpassApis))
-                    .initDebugInfo()
-                    .build())
+            return listOf(
+                LimitResponse(
+                    error = e,
+                    timestamp = System.currentTimeMillis(),
+                    origin = LimitResponse.ORIGIN_OSM,
+                    debugInfo = "\nOSM Info:\n--" + TextUtils.join("\n--", osmOverpassApis)
+                ).initDebugInfo()
+            )
         }
     }
 
@@ -216,7 +232,7 @@ class OsmLimitProvider(private val context: Context,
                 if (fallback == null && newTags.maxspeed != null) {
                     fallback = newElement
                 }
-                if (lastResponse.roadName() == parseOsmRoadName(newTags)) {
+                if (lastResponse.roadName == parseOsmRoadName(newTags)) {
                     bestElement = newElement
                     break
                 }
@@ -231,12 +247,14 @@ class OsmLimitProvider(private val context: Context,
 
     private fun logOsmRequest(endpoint: OsmApiEndpoint) {
         if (!BuildConfig.DEBUG) {
-            Answers.getInstance().logCustom(CustomEvent("OSM Request")
-                    .putCustomAttribute("Server", endpoint.baseUrl))
+            Answers.getInstance().logCustom(
+                CustomEvent("OSM Request")
+                    .putCustomAttribute("Server", endpoint.baseUrl)
+            )
 
             val endpointString = Uri.parse(endpoint.baseUrl).authority!!
-                    .replace(".", "_")
-                    .replace("-", "_")
+                .replace(".", "_")
+                .replace("-", "_")
             val key = "osm_request_$endpointString"
             FirebaseAnalytics.getInstance(context).logEvent(key, Bundle())
         }
@@ -245,13 +263,15 @@ class OsmLimitProvider(private val context: Context,
     private fun logOsmError(endpoint: OsmApiEndpoint, throwable: Throwable) {
         if (!BuildConfig.DEBUG) {
             if (throwable is IOException) {
-                Answers.getInstance().logCustom(CustomEvent("Network Error")
+                Answers.getInstance().logCustom(
+                    CustomEvent("Network Error")
                         .putCustomAttribute("Server", endpoint.baseUrl)
-                        .putCustomAttribute("Message", throwable.message))
+                        .putCustomAttribute("Message", throwable.message)
+                )
 
                 val endpointString = Uri.parse(endpoint.baseUrl).authority!!
-                        .replace(".", "_")
-                        .replace("-", "_")
+                    .replace(".", "_")
+                    .replace("-", "_")
                 val key = "osm_error_$endpointString"
                 FirebaseAnalytics.getInstance(context).logEvent(key, Bundle())
             }
@@ -261,10 +281,10 @@ class OsmLimitProvider(private val context: Context,
     }
 
     companion object {
-        val FB_CONFIG_OSM_APIS = "osm_apis"
-        val FB_CONFIG_OSM_API_ENABLED_PREFIX = "osm_api"
+        const val FB_CONFIG_OSM_APIS = "osm_apis"
+        const val FB_CONFIG_OSM_API_ENABLED_PREFIX = "osm_api"
 
-        val OSM_RADIUS = 15
+        const val OSM_RADIUS = 15
     }
 
     init {

@@ -22,8 +22,7 @@
 -dontwarn com.crashlytics.**
 
 #okio
--dontwarn java.nio.file.*
--dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
+-dontwarn org.codehaus.mojo.animal_sniffer.*
 
 #Retrofit
 -dontwarn retrofit2.**
@@ -58,45 +57,6 @@
 -keepclasseswithmembers class * {
     @com.fasterxml.jackson.annotation.* <methods>;
 }
-
-#RxJava
--keep class rx.** { *; }
-
--dontwarn sun.misc.**
-
--keepclassmembers class rx.internal.util.unsafe.*ArrayQueue*Field* {
-   long producerIndex;
-   long consumerIndex;
-}
-
--keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueProducerNodeRef {
-    rx.internal.util.atomic.LinkedQueueNode producerNode;
-}
-
--keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueConsumerNodeRef {
-    rx.internal.util.atomic.LinkedQueueNode consumerNode;
-}
-
--dontnote rx.internal.util.PlatformDependent
-
-#AutoValue
--dontwarn javax.lang.**
--dontwarn javax.tools.**
--dontwarn javax.annotation.**
--dontwarn autovalue.shaded.com.**
--dontwarn com.google.auto.value.**
--dontwarn javax.servlet.**
--dontwarn sun.misc.**
--dontwarn autovalue.shaded.org.apache.commons.**
--dontwarn org.apache.log4j.**
--dontwarn org.apache.log.**
--dontwarn org.apache.velocity.**
--dontwarn org.apache.tools.**
--dontwarn org.jdom.**
--dontwarn org.java.lang.**
-
-#Retrolambda
--dontwarn java.lang.invoke.*
 
 #DbInspector
 -dontwarn org.apache.commons.**

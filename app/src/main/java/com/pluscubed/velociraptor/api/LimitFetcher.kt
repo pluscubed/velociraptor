@@ -7,7 +7,7 @@ import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterF
 import com.pluscubed.velociraptor.BuildConfig
 import com.pluscubed.velociraptor.api.osm.OsmLimitProvider
 import com.pluscubed.velociraptor.api.raptor.RaptorLimitProvider
-import com.pluscubed.velociraptor.cache.LimitCache
+import com.pluscubed.velociraptor.cache.CacheLimitProvider
 import com.pluscubed.velociraptor.utils.Utils
 import kotlinx.coroutines.delay
 import okhttp3.OkHttpClient
@@ -29,16 +29,16 @@ class LimitFetcher(private val context: Context) {
 
         val client = buildOkHttpClient()
 
-        val cache = LimitCache.getInstance(context)
+        val cache = CacheLimitProvider.getInstance(context)
         this.osmLimitProvider = OsmLimitProvider(context, client, cache)
         this.raptorLimitProvider = RaptorLimitProvider(context, client, cache)
     }
 
     private fun buildOkHttpClient(): OkHttpClient {
         val builder = OkHttpClient.Builder()
-                .connectTimeout(15, TimeUnit.SECONDS)
-                .writeTimeout(15, TimeUnit.SECONDS)
-                .readTimeout(15, TimeUnit.SECONDS)
+            .connectTimeout(15, TimeUnit.SECONDS)
+            .writeTimeout(15, TimeUnit.SECONDS)
+            .readTimeout(15, TimeUnit.SECONDS)
         if (BuildConfig.DEBUG) {
             val loggingInterceptor = HttpLoggingInterceptor()
             loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
@@ -47,45 +47,51 @@ class LimitFetcher(private val context: Context) {
         return builder.build()
     }
 
-    suspend fun verifyRaptorService(purchase: Purchase) {
-        raptorLimitProvider.verify(purchase)
+    suspend fun verifyRaptorService(purchase: Purchase): Boolean {
+        return raptorLimitProvider.verify(purchase)
     }
 
     suspend fun getSpeedLimit(location: Location): LimitResponse {
         val limitResponses = ArrayList<LimitResponse>()
 
-        val cacheResponses = LimitCache.getInstance(context).getSpeedLimit(location, lastResponse)
+        val cacheResponses =
+            CacheLimitProvider.getInstance(context).getSpeedLimit(location, lastResponse)
         limitResponses.add(cacheResponses[0])
 
         val networkConnected = Utils.isNetworkConnected(context)
 
-        if (limitResponses.last().speedLimit() == -1 && networkConnected) {
+        if (limitResponses.last().speedLimit == -1 && networkConnected) {
             // Delay network query if the last response was received less than 5 seconds ago
             if (lastNetworkResponse != null) {
-                val delayMs = 5000 - (System.currentTimeMillis() - lastNetworkResponse!!.timestamp())
+                val delayMs = 5000 - (System.currentTimeMillis() - lastNetworkResponse!!.timestamp)
                 delay(delayMs)
             }
         }
 
         // 1. Always try raptor service if cache didn't hit / didn't contain a limit
-        if (limitResponses.last().speedLimit() == -1 && networkConnected) {
-            val hereResponses = raptorLimitProvider.getSpeedLimit(location, lastResponse, LimitResponse.ORIGIN_HERE)
+        if (limitResponses.last().speedLimit == -1 && networkConnected) {
+            val hereResponses =
+                raptorLimitProvider.getSpeedLimit(location, lastResponse, LimitResponse.ORIGIN_HERE)
             if (hereResponses.isNotEmpty())
                 limitResponses += hereResponses[0]
         }
 
-        if (limitResponses.last().speedLimit() == -1 && networkConnected) {
-            val tomtomResponses = raptorLimitProvider.getSpeedLimit(location, lastResponse, LimitResponse.ORIGIN_TOMTOM)
+        if (limitResponses.last().speedLimit == -1 && networkConnected) {
+            val tomtomResponses = raptorLimitProvider.getSpeedLimit(
+                location,
+                lastResponse,
+                LimitResponse.ORIGIN_TOMTOM
+            )
             if (tomtomResponses.isNotEmpty())
                 limitResponses += tomtomResponses[0]
         }
 
-        if (limitResponses.last().speedLimit() == -1 && networkConnected) {
+        if (limitResponses.last().speedLimit == -1 && networkConnected) {
             // 2. Try OSM if the cache hits didn't contain a limit BUT were not from OSM
             //    i.e. query OSM as it might have the limit
             var cachedOsmWithNoLimit = false
             for (cacheRes in cacheResponses) {
-                if (cacheRes.origin() == LimitResponse.ORIGIN_OSM) {
+                if (cacheRes.origin == LimitResponse.ORIGIN_OSM) {
                     cachedOsmWithNoLimit = true
                     break
                 }
@@ -97,21 +103,16 @@ class LimitFetcher(private val context: Context) {
         }
 
         //Accumulate debug infos, based on the last response (the one with the speed limit or the last option)
-        var finalResponse = limitResponses.map { limitResponse ->
-            limitResponse.toBuilder()
-        }.reduce { acc, builder ->
-            builder.setDebugInfo(acc.debugInfo() + "\n" + builder.debugInfo())
-        }.build()
-
+        var finalResponse = limitResponses.reduce { acc, next ->
+            next.copy(debugInfo = acc.debugInfo + "\n" + next.debugInfo)
+        }
 
         //Record the last response's timestamp and network response
-        if (finalResponse.timestamp() == 0L) {
-            finalResponse = finalResponse.toBuilder()
-                    .setTimestamp(System.currentTimeMillis())
-                    .build()
+        if (finalResponse.timestamp == 0L) {
+            finalResponse = finalResponse.copy(timestamp = System.currentTimeMillis())
         }
         lastResponse = finalResponse
-        if (!finalResponse.fromCache()) {
+        if (!finalResponse.fromCache) {
             lastNetworkResponse = finalResponse
         }
 
@@ -123,12 +124,12 @@ class LimitFetcher(private val context: Context) {
     companion object {
         fun buildRetrofit(client: OkHttpClient, baseUrl: String): Retrofit {
             return Retrofit.Builder()
-                    .baseUrl(baseUrl)
-                    .client(client)
-                    .addCallAdapterFactory(CoroutineCallAdapterFactory())
-                    .addConverterFactory(ScalarsConverterFactory.create())
-                    .addConverterFactory(JacksonConverterFactory.create())
-                    .build()
+                .baseUrl(baseUrl)
+                .client(client)
+                .addCallAdapterFactory(CoroutineCallAdapterFactory())
+                .addConverterFactory(ScalarsConverterFactory.create())
+                .addConverterFactory(JacksonConverterFactory.create())
+                .build()
         }
     }
 

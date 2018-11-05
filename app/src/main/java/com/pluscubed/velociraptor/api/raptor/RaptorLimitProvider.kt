@@ -7,13 +7,15 @@ import com.google.maps.android.PolyUtil
 import com.pluscubed.velociraptor.BuildConfig
 import com.pluscubed.velociraptor.api.*
 import com.pluscubed.velociraptor.billing.BillingConstants
-import com.pluscubed.velociraptor.cache.LimitCache
+import com.pluscubed.velociraptor.cache.CacheLimitProvider
 import okhttp3.OkHttpClient
 import java.util.*
 
-class RaptorLimitProvider(context: Context,
-                          client: OkHttpClient,
-                          private val limitCache: LimitCache) : LimitProvider {
+class RaptorLimitProvider(
+    context: Context,
+    client: OkHttpClient,
+    private val cacheLimitProvider: CacheLimitProvider
+) : LimitProvider {
 
     private val SERVER_URL = "http://overpass.pluscubed.com:4000/"
 
@@ -31,14 +33,15 @@ class RaptorLimitProvider(context: Context,
     init {
         val interceptor = LimitInterceptor(LimitInterceptor.Callback())
         val raptorClient = client.newBuilder()
-                .addInterceptor(interceptor)
-                .build()
+            .addInterceptor(interceptor)
+            .build()
         val raptorRest = LimitFetcher.buildRetrofit(raptorClient, SERVER_URL)
         raptorService = raptorRest.create(RaptorService::class.java)
 
         id = UUID.randomUUID().toString()
         if (USE_DEBUG_ID) {
-            val resId = context.resources.getIdentifier("debug_id", "string", context.getPackageName())
+            val resId =
+                context.resources.getIdentifier("debug_id", "string", context.getPackageName())
             if (resId != 0) {
                 id = context.getString(resId);
             }
@@ -47,18 +50,31 @@ class RaptorLimitProvider(context: Context,
         tomtomToken = ""
     }
 
-    suspend fun verify(purchase: Purchase) {
+    /**
+     * Returns whether updated token
+     */
+    suspend fun verify(purchase: Purchase): Boolean {
+        var updated = false
         val verificationResponse = raptorService.verify(id, purchase.originalJson).await()
         val token = verificationResponse.token
         if (purchase.sku == BillingConstants.SKU_HERE || USE_DEBUG_ID) {
+            if (hereToken.isEmpty())
+                updated = true
             hereToken = token
         }
         if (purchase.sku == BillingConstants.SKU_TOMTOM || USE_DEBUG_ID) {
+            if (tomtomToken.isEmpty())
+                updated = true
             tomtomToken = token
         }
+        return updated
     }
 
-    override suspend fun getSpeedLimit(location: Location, lastResponse: LimitResponse?, origin: Int): List<LimitResponse> {
+    override suspend fun getSpeedLimit(
+        location: Location,
+        lastResponse: LimitResponse?,
+        origin: Int
+    ): List<LimitResponse> {
         val latitude = String.format(Locale.getDefault(), "%.5f", location.latitude)
         val longitude = String.format(Locale.getDefault(), "%.5f", location.longitude)
 
@@ -78,11 +94,30 @@ class RaptorLimitProvider(context: Context,
         return emptyList()
     }
 
-    private suspend fun queryRaptorApi(isHere: Boolean, latitude: String, longitude: String, location: Location): LimitResponse {
+    private suspend fun queryRaptorApi(
+        isHere: Boolean,
+        latitude: String,
+        longitude: String,
+        location: Location
+    ): LimitResponse {
         val raptorQuery = if (isHere) {
-            raptorService.getHere("Bearer $hereToken", id, latitude, longitude, location.bearing.toInt(), "Metric")
+            raptorService.getHere(
+                "Bearer $hereToken",
+                id,
+                latitude,
+                longitude,
+                location.bearing.toInt(),
+                "Metric"
+            )
         } else {
-            raptorService.getTomtom("Bearer $tomtomToken", id, latitude, longitude, location.bearing.toInt(), "Metric")
+            raptorService.getTomtom(
+                "Bearer $tomtomToken",
+                id,
+                latitude,
+                longitude,
+                location.bearing.toInt(),
+                "Metric"
+            )
         }
 
         try {
@@ -96,30 +131,28 @@ class RaptorLimitProvider(context: Context,
             } else {
                 raptorResponse.generalSpeedLimit!!
             }
-            val response = LimitResponse.builder()
-                    .setRoadName(raptorResponse.name)
-                    .setSpeedLimit(speedLimit)
-                    .setTimestamp(System.currentTimeMillis())
-                    .setCoords(coords)
-                    .setOrigin(getOriginInt(isHere))
-                    .initDebugInfo()
-                    .build()
+            val response = LimitResponse(
+                roadName = raptorResponse.name,
+                speedLimit = speedLimit,
+                timestamp = System.currentTimeMillis(),
+                coords = coords,
+                origin = getOriginInt(isHere)
+            ).initDebugInfo()
 
-            limitCache.put(response)
+            cacheLimitProvider.put(response)
 
             return response
         } catch (e: Exception) {
-            return LimitResponse.builder()
-                    .setError(e)
-                    .setTimestamp(System.currentTimeMillis())
-                    .setOrigin(getOriginInt(isHere))
-                    .initDebugInfo()
-                    .build()
+            return LimitResponse(
+                error = e,
+                timestamp = System.currentTimeMillis(),
+                origin = getOriginInt(isHere)
+            ).initDebugInfo()
         }
     }
 
     private fun getOriginInt(here: Boolean) =
-            if (here) LimitResponse.ORIGIN_HERE else LimitResponse.ORIGIN_TOMTOM
+        if (here) LimitResponse.ORIGIN_HERE else LimitResponse.ORIGIN_TOMTOM
 
 
 }

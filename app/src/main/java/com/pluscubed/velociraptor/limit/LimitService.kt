@@ -16,6 +16,7 @@ import android.os.Looper
 import android.provider.Settings
 import androidx.core.app.NotificationCompat
 import com.android.billingclient.api.Purchase
+import com.crashlytics.android.Crashlytics
 import com.google.android.gms.location.*
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.pluscubed.velociraptor.BuildConfig
@@ -66,8 +67,14 @@ class LimitService : Service(), CoroutineScope {
 
     @SuppressLint("InflateParams")
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        job = Job()
+
         if (intent != null) {
-            if (!isStartedFromNotification && intent.getBooleanExtra(EXTRA_CLOSE, false) || intent.getBooleanExtra(EXTRA_NOTIF_CLOSE, false)) {
+            if (!isStartedFromNotification && intent.getBooleanExtra(
+                    EXTRA_CLOSE,
+                    false
+                ) || intent.getBooleanExtra(EXTRA_NOTIF_CLOSE, false)
+            ) {
                 onStop()
                 stopSelf()
                 return super.onStartCommand(intent, flags, startId)
@@ -108,7 +115,6 @@ class LimitService : Service(), CoroutineScope {
 
         debuggingRequestInfo = ""
 
-        job = Job()
         limitFetcher = LimitFetcher(this)
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
@@ -126,7 +132,11 @@ class LimitService : Service(), CoroutineScope {
         }
 
         try {
-            fusedLocationClient!!.requestLocationUpdates(locationRequest, locationCallback!!, Looper.myLooper())
+            fusedLocationClient!!.requestLocationUpdates(
+                locationRequest,
+                locationCallback!!,
+                Looper.myLooper()
+            )
         } catch (unlikely: SecurityException) {
         }
 
@@ -134,14 +144,12 @@ class LimitService : Service(), CoroutineScope {
             override fun onBillingClientSetupFinished() {
                 if (RaptorLimitProvider.USE_DEBUG_ID) {
                     launch(Dispatchers.IO) {
-                        try {
-                            limitFetcher!!.verifyRaptorService(Purchase(
-                                    "{\"productId\": \"debug\", \"purchaseToken\": \"debug\"}",
-                                    ""
-                            ))
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                        }
+                        verifyPurchase(
+                            Purchase(
+                                """{"productId": "debug", "purchaseToken": "debug"}""",
+                                ""
+                            )
+                        )
                     }
                 }
             }
@@ -151,14 +159,8 @@ class LimitService : Service(), CoroutineScope {
             }
 
             override fun onPurchasesUpdated(purchases: List<Purchase>) {
-                for (purchase in purchases) {
-                    launch(Dispatchers.IO) {
-                        try {
-                            limitFetcher!!.verifyRaptorService(purchase)
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                        }
-                    }
+                launch(Dispatchers.IO) {
+                    verifyPurchase(*purchases.toTypedArray())
                 }
             }
         })
@@ -175,18 +177,43 @@ class LimitService : Service(), CoroutineScope {
         return super.onStartCommand(intent, flags, startId)
     }
 
+    private suspend fun verifyPurchase(vararg purchases: Purchase) {
+        try {
+            var updated = false
+            purchases.forEach { purchase ->
+                updated = limitFetcher!!.verifyRaptorService(purchase) || updated
+            }
+
+            if (updated) {
+                // Force refetch
+                speedLimitJob?.cancel()
+                lastLocationWithFetchAttempt = null
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            if (!BuildConfig.DEBUG) {
+                Crashlytics.logException(e)
+            }
+        }
+    }
+
     private fun startNotification() {
         val notificationIntent = Intent(this, SettingsActivity::class.java)
-        val pendingIntent = PendingIntent.getActivity(this, PENDING_SETTINGS, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT)
+        val pendingIntent = PendingIntent.getActivity(
+            this,
+            PENDING_SETTINGS,
+            notificationIntent,
+            PendingIntent.FLAG_CANCEL_CURRENT
+        )
 
         NotificationUtils.initChannels(this)
         val notification = NotificationCompat.Builder(this, NotificationUtils.CHANNEL_RUNNING)
-                .setContentTitle(getString(R.string.notif_title))
-                .setContentText(getString(R.string.notif_content))
-                .setPriority(Notification.PRIORITY_MIN)
-                .setSmallIcon(R.drawable.ic_speedometer_notif)
-                .setContentIntent(pendingIntent)
-                .build()
+            .setContentTitle(getString(R.string.notif_title))
+            .setContentText(getString(R.string.notif_content))
+            .setPriority(Notification.PRIORITY_MIN)
+            .setSmallIcon(R.drawable.ic_speedometer_notif)
+            .setContentIntent(pendingIntent)
+            .build()
         startForeground(NOTIFICATION_FOREGROUND, notification)
     }
 
@@ -201,7 +228,10 @@ class LimitService : Service(), CoroutineScope {
             dismissWarningNotification(R.string.terms_warning)
         }
 
-        if (!Utils.isLocationPermissionGranted(this@LimitService) || Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
+        if (!Utils.isLocationPermissionGranted(this@LimitService) ||
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+            !Settings.canDrawOverlays(this)
+        ) {
             showWarningNotification(R.string.permissions_warning)
             stopSelf()
             return false
@@ -231,16 +261,20 @@ class LimitService : Service(), CoroutineScope {
         updateDebuggingText(location, null, null)
 
         if ((speedLimitJob == null || !speedLimitJob!!.isActive) &&
-                !isLimitHidden &&
-                PrefUtils.getShowLimits(this@LimitService) &&
-                (lastLocationWithFetchAttempt == null || location.distanceTo(lastLocationWithFetchAttempt) > 10)) {
+            !isLimitHidden &&
+            PrefUtils.getShowLimits(this@LimitService) &&
+            (lastLocationWithFetchAttempt == null || location.distanceTo(
+                lastLocationWithFetchAttempt
+            ) > 10)
+        ) {
 
             speedLimitJob = launch {
                 try {
-                    val limitResponse = withContext(Dispatchers.IO) { limitFetcher!!.getSpeedLimit(location) }
+                    val limitResponse =
+                        withContext(Dispatchers.IO) { limitFetcher!!.getSpeedLimit(location) }
 
                     if (!limitResponse.isEmpty) {
-                        currentSpeedLimit = limitResponse.speedLimit()
+                        currentSpeedLimit = limitResponse.speedLimit
                         updateLimitView(true)
                     } else {
                         updateLimitView(false)
@@ -262,7 +296,11 @@ class LimitService : Service(), CoroutineScope {
         }
     }
 
-    private fun updateDebuggingText(location: Location, limitResponse: LimitResponse?, error: Throwable?) {
+    private fun updateDebuggingText(
+        location: Location,
+        limitResponse: LimitResponse?,
+        error: Throwable?
+    ) {
         var text = "Location: $location\n"
 
         if (lastLocationWithFetchAttempt != null) {
@@ -270,7 +308,7 @@ class LimitService : Service(), CoroutineScope {
         }
 
         if (error == null && limitResponse != null) {
-            debuggingRequestInfo = limitResponse.debugInfo()
+            debuggingRequestInfo = limitResponse.debugInfo
         } else if (error != null) {
             debuggingRequestInfo = "Catastrophic error: $error"
         }
@@ -317,7 +355,10 @@ class LimitService : Service(), CoroutineScope {
             speedLimitView!!.setSpeeding(true)
             if (speedingStartTimestamp == -1L) {
                 speedingStartTimestamp = System.currentTimeMillis()
-            } else if (System.currentTimeMillis() > speedingStartTimestamp + 2000L && PrefUtils.isBeepAlertEnabled(this)) {
+            } else if (System.currentTimeMillis() > speedingStartTimestamp + 2000L && PrefUtils.isBeepAlertEnabled(
+                    this
+                )
+            ) {
                 Utils.playBeeps()
                 speedingStartTimestamp = java.lang.Long.MAX_VALUE - 2000L
             }
@@ -341,18 +382,23 @@ class LimitService : Service(), CoroutineScope {
 
     internal fun showWarningNotification(stringRes: Int) {
         val notificationIntent = Intent(this, SettingsActivity::class.java)
-        val pendingIntent = PendingIntent.getActivity(this, PENDING_SETTINGS, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT)
+        val pendingIntent = PendingIntent.getActivity(
+            this,
+            PENDING_SETTINGS,
+            notificationIntent,
+            PendingIntent.FLAG_CANCEL_CURRENT
+        )
 
         NotificationUtils.initChannels(this)
         val notificationText = getString(stringRes)
         val notification = NotificationCompat.Builder(this, NotificationUtils.CHANNEL_WARNINGS)
-                .setContentTitle(getString(R.string.warning_notif_title))
-                .setContentText(notificationText)
-                .setPriority(Notification.PRIORITY_LOW)
-                .setSmallIcon(R.drawable.ic_speedometer_notif)
-                .setContentIntent(pendingIntent)
-                .setStyle(NotificationCompat.BigTextStyle().bigText(notificationText))
-                .build()
+            .setContentTitle(getString(R.string.warning_notif_title))
+            .setContentText(notificationText)
+            .setPriority(Notification.PRIORITY_LOW)
+            .setSmallIcon(R.drawable.ic_speedometer_notif)
+            .setContentIntent(pendingIntent)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(notificationText))
+            .build()
 
         val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         manager.notify(stringRes, notification)

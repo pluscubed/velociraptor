@@ -72,7 +72,12 @@ class AppSelectionActivity : AppCompatActivity(), CoroutineScope {
             }
             mAdapter!!.setAppInfos(ArrayList())
         }
-        mSwipeRefreshLayout!!.setColorSchemeColors(ContextCompat.getColor(this, R.color.colorAccent))
+        mSwipeRefreshLayout!!.setColorSchemeColors(
+            ContextCompat.getColor(
+                this,
+                R.color.colorAccent
+            )
+        )
 
         if (savedInstanceState == null) {
             mMapsOnly = true
@@ -182,7 +187,8 @@ class AppSelectionActivity : AppCompatActivity(), CoroutineScope {
                 mMapsOnly = !mMapsOnly
                 invalidateOptionsMenu()
                 mAdapter!!.setAppInfos(if (mMapsOnly) mMapApps else mAppList)
-                mSwipeRefreshLayout!!.isRefreshing = mMapsOnly && mLoadingMapApps || !mMapsOnly && mLoadingAppList
+                mSwipeRefreshLayout!!.isRefreshing = mMapsOnly && mLoadingMapApps || !mMapsOnly &&
+                        mLoadingAppList
                 return true
             }
         }
@@ -239,9 +245,9 @@ class AppSelectionActivity : AppCompatActivity(), CoroutineScope {
             val app = mAppInfos!![position]
 
             Glide.with(this@AppSelectionActivity)
-                    .load(app)
-                    .crossFade()
-                    .into(holder.icon)
+                .load(app)
+                .crossFade()
+                .into(holder.icon)
 
             holder.title.text = app.name
             holder.desc.text = app.packageName
