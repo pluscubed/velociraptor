@@ -15,10 +15,10 @@ import com.pluscubed.velociraptor.api.LimitFetcher
 import com.pluscubed.velociraptor.api.LimitInterceptor
 import com.pluscubed.velociraptor.api.LimitProvider
 import com.pluscubed.velociraptor.api.LimitResponse
+import com.pluscubed.velociraptor.api.cache.CacheLimitProvider
 import com.pluscubed.velociraptor.api.osm.data.Element
 import com.pluscubed.velociraptor.api.osm.data.OsmResponse
 import com.pluscubed.velociraptor.api.osm.data.Tags
-import com.pluscubed.velociraptor.cache.CacheLimitProvider
 import com.pluscubed.velociraptor.utils.PrefUtils
 import com.pluscubed.velociraptor.utils.Utils
 import okhttp3.OkHttpClient

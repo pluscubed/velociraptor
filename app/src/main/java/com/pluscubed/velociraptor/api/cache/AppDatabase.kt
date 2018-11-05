@@ -1,4 +1,4 @@
-package com.pluscubed.velociraptor.cache
+package com.pluscubed.velociraptor.api.cache
 
 import androidx.room.Database
 import androidx.room.RoomDatabase

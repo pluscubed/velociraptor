@@ -6,8 +6,8 @@ import com.android.billingclient.api.Purchase
 import com.google.maps.android.PolyUtil
 import com.pluscubed.velociraptor.BuildConfig
 import com.pluscubed.velociraptor.api.*
+import com.pluscubed.velociraptor.api.cache.CacheLimitProvider
 import com.pluscubed.velociraptor.billing.BillingConstants
-import com.pluscubed.velociraptor.cache.CacheLimitProvider
 import com.pluscubed.velociraptor.utils.PrefUtils
 import okhttp3.OkHttpClient
 import java.util.*

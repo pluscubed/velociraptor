@@ -5,9 +5,9 @@ import android.location.Location
 import com.android.billingclient.api.Purchase
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.pluscubed.velociraptor.BuildConfig
+import com.pluscubed.velociraptor.api.cache.CacheLimitProvider
 import com.pluscubed.velociraptor.api.osm.OsmLimitProvider
 import com.pluscubed.velociraptor.api.raptor.RaptorLimitProvider
-import com.pluscubed.velociraptor.cache.CacheLimitProvider
 import com.pluscubed.velociraptor.utils.PrefUtils
 import com.pluscubed.velociraptor.utils.Utils
 import kotlinx.coroutines.delay
