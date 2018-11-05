@@ -62,7 +62,6 @@ public class FloatingView implements LimitView {
 
         mWindowManager = (WindowManager) service.getSystemService(Context.WINDOW_SERVICE);
         inflateMonitor();
-        inflateDebugging();
 
         updatePrefs();
     }
@@ -233,7 +232,7 @@ public class FloatingView implements LimitView {
 
     @Override
     public void setDebuggingText(String text) {
-        if (mDebuggingText != null && mDebuggingText.getVisibility() == View.VISIBLE) {
+        if (mDebuggingText != null) {
             mDebuggingText.setText(text);
         }
     }
@@ -255,8 +254,11 @@ public class FloatingView implements LimitView {
         mStyle = prefStyle;
 
         boolean debuggingEnabled = PrefUtils.isDebuggingEnabled(mService);
-        if (mDebuggingText != null) {
-            mDebuggingText.setVisibility(debuggingEnabled ? View.VISIBLE : View.GONE);
+        if (debuggingEnabled && mDebuggingText == null) {
+            inflateDebugging();
+        } else if (!debuggingEnabled && mDebuggingText != null) {
+            removeWindowView(mDebuggingText);
+            mDebuggingText = null;
         }
 
         boolean speedometerShown = PrefUtils.getShowSpeedometer(mService);

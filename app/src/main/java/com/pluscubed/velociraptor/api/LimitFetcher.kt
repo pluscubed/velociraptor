@@ -8,6 +8,7 @@ import com.pluscubed.velociraptor.BuildConfig
 import com.pluscubed.velociraptor.api.osm.OsmLimitProvider
 import com.pluscubed.velociraptor.api.raptor.RaptorLimitProvider
 import com.pluscubed.velociraptor.cache.CacheLimitProvider
+import com.pluscubed.velociraptor.utils.PrefUtils
 import com.pluscubed.velociraptor.utils.Utils
 import kotlinx.coroutines.delay
 import okhttp3.OkHttpClient
@@ -19,6 +20,7 @@ import java.util.concurrent.TimeUnit
 
 class LimitFetcher(private val context: Context) {
 
+    private val cacheLimitProvider: CacheLimitProvider
     private val osmLimitProvider: OsmLimitProvider
     private val raptorLimitProvider: RaptorLimitProvider
 
@@ -26,12 +28,11 @@ class LimitFetcher(private val context: Context) {
     private var lastNetworkResponse: LimitResponse? = null
 
     init {
-
         val client = buildOkHttpClient()
 
-        val cache = CacheLimitProvider.getInstance(context)
-        this.osmLimitProvider = OsmLimitProvider(context, client, cache)
-        this.raptorLimitProvider = RaptorLimitProvider(context, client, cache)
+        this.cacheLimitProvider = CacheLimitProvider(context)
+        this.osmLimitProvider = OsmLimitProvider(context, client, cacheLimitProvider)
+        this.raptorLimitProvider = RaptorLimitProvider(context, client, cacheLimitProvider)
     }
 
     private fun buildOkHttpClient(): OkHttpClient {
@@ -54,8 +55,7 @@ class LimitFetcher(private val context: Context) {
     suspend fun getSpeedLimit(location: Location): LimitResponse {
         val limitResponses = ArrayList<LimitResponse>()
 
-        val cacheResponses =
-            CacheLimitProvider.getInstance(context).getSpeedLimit(location, lastResponse)
+        val cacheResponses = cacheLimitProvider.getSpeedLimit(location, lastResponse)
         limitResponses.add(cacheResponses[0])
 
         val networkConnected = Utils.isNetworkConnected(context)
@@ -103,9 +103,13 @@ class LimitFetcher(private val context: Context) {
         }
 
         //Accumulate debug infos, based on the last response (the one with the speed limit or the last option)
-        var finalResponse = limitResponses.reduce { acc, next ->
-            next.copy(debugInfo = acc.debugInfo + "\n" + next.debugInfo)
-        }
+        var finalResponse =
+            if (PrefUtils.isDebuggingEnabled(context))
+                limitResponses.reduce { acc, next ->
+                    next.copy(debugInfo = acc.debugInfo + "\n" + next.debugInfo)
+                }
+            else
+                limitResponses.last()
 
         //Record the last response's timestamp and network response
         if (finalResponse.timestamp == 0L) {

@@ -102,6 +102,7 @@ class LimitService : Service(), CoroutineScope {
             } else if (intent.getBooleanExtra(EXTRA_PREF_CHANGE, false)) {
                 speedLimitView!!.updatePrefs()
 
+                forceRefetch()
                 updateLimitView(false)
                 updateSpeedometer(lastLocationWithSpeed)
             }
@@ -185,9 +186,7 @@ class LimitService : Service(), CoroutineScope {
             }
 
             if (updated) {
-                // Force refetch
-                speedLimitJob?.cancel()
-                lastLocationWithFetchAttempt = null
+                forceRefetch()
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -195,6 +194,12 @@ class LimitService : Service(), CoroutineScope {
                 Crashlytics.logException(e)
             }
         }
+    }
+
+    private fun forceRefetch() {
+        // Force refetch
+        speedLimitJob?.cancel()
+        lastLocationWithFetchAttempt = null
     }
 
     private fun startNotification() {
@@ -260,14 +265,12 @@ class LimitService : Service(), CoroutineScope {
         updateSpeedometer(location)
         updateDebuggingText(location, null, null)
 
-        if ((speedLimitJob == null || !speedLimitJob!!.isActive) &&
-            !isLimitHidden &&
-            PrefUtils.getShowLimits(this@LimitService) &&
-            (lastLocationWithFetchAttempt == null || location.distanceTo(
-                lastLocationWithFetchAttempt
-            ) > 10)
-        ) {
+        val speedLimitInactive = speedLimitJob == null || !speedLimitJob!!.isActive
+        val showLimits = PrefUtils.getShowLimits(this@LimitService)
+        val farFromLastLocation = lastLocationWithFetchAttempt == null ||
+                location.distanceTo(lastLocationWithFetchAttempt) > 10
 
+        if (speedLimitInactive && !isLimitHidden && showLimits && farFromLastLocation) {
             speedLimitJob = launch {
                 try {
                     val limitResponse =
@@ -283,6 +286,7 @@ class LimitService : Service(), CoroutineScope {
                     updateDebuggingText(location, limitResponse, null)
 
                     lastLocationWithFetchAttempt = location
+                } catch (ignore: CancellationException) {
                 } catch (e: Exception) {
                     Timber.d(e)
 
@@ -301,6 +305,11 @@ class LimitService : Service(), CoroutineScope {
         limitResponse: LimitResponse?,
         error: Throwable?
     ) {
+        if (!PrefUtils.isDebuggingEnabled(this)) {
+            debuggingRequestInfo = ""
+            return
+        }
+
         var text = "Location: $location\n"
 
         if (lastLocationWithFetchAttempt != null) {
@@ -353,12 +362,13 @@ class LimitService : Service(), CoroutineScope {
 
         if (currentSpeedLimit != -1 && kmhSpeed > warningLimit) {
             speedLimitView!!.setSpeeding(true)
+
+            val currentTimeMillis = System.currentTimeMillis()
+            val beepEnabled = PrefUtils.isBeepAlertEnabled(this)
+
             if (speedingStartTimestamp == -1L) {
-                speedingStartTimestamp = System.currentTimeMillis()
-            } else if (System.currentTimeMillis() > speedingStartTimestamp + 2000L && PrefUtils.isBeepAlertEnabled(
-                    this
-                )
-            ) {
+                speedingStartTimestamp = currentTimeMillis
+            } else if (currentTimeMillis > speedingStartTimestamp + 2000L && beepEnabled) {
                 Utils.playBeeps()
                 speedingStartTimestamp = java.lang.Long.MAX_VALUE - 2000L
             }

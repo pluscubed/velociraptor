@@ -8,11 +8,12 @@ import com.pluscubed.velociraptor.BuildConfig
 import com.pluscubed.velociraptor.api.*
 import com.pluscubed.velociraptor.billing.BillingConstants
 import com.pluscubed.velociraptor.cache.CacheLimitProvider
+import com.pluscubed.velociraptor.utils.PrefUtils
 import okhttp3.OkHttpClient
 import java.util.*
 
 class RaptorLimitProvider(
-    context: Context,
+    private val context: Context,
     client: OkHttpClient,
     private val cacheLimitProvider: CacheLimitProvider
 ) : LimitProvider {
@@ -120,6 +121,7 @@ class RaptorLimitProvider(
             )
         }
 
+        val debuggingEnabled = PrefUtils.isDebuggingEnabled(context)
         try {
             val raptorResponse = raptorQuery.await();
 
@@ -137,7 +139,7 @@ class RaptorLimitProvider(
                 timestamp = System.currentTimeMillis(),
                 coords = coords,
                 origin = getOriginInt(isHere)
-            ).initDebugInfo()
+            ).initDebugInfo(debuggingEnabled)
 
             cacheLimitProvider.put(response)
 
@@ -147,7 +149,7 @@ class RaptorLimitProvider(
                 error = e,
                 timestamp = System.currentTimeMillis(),
                 origin = getOriginInt(isHere)
-            ).initDebugInfo()
+            ).initDebugInfo(debuggingEnabled)
         }
     }
 

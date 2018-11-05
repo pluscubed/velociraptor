@@ -19,20 +19,24 @@ data class LimitResponse(
     val isEmpty: Boolean
         get() = coords.isEmpty()
 
-    fun initDebugInfo(): LimitResponse {
-        val origin = getLimitProviderString(origin)
+    fun initDebugInfo(debuggingEnabled: Boolean): LimitResponse {
+        if (debuggingEnabled) {
+            val origin = getLimitProviderString(origin)
 
-        var text = "\nOrigin: " + origin +
-                "\n--From cache: " + fromCache
-        if (error == null) {
-            text += "\n--Road name: " + roadName +
-                    "\n--Coords: " + coords +
-                    "\n--Limit: " + speedLimit
+            var text = "\nOrigin: " + origin +
+                    "\n--From cache: " + fromCache
+            if (error == null) {
+                text += "\n--Road name: " + roadName +
+                        "\n--Coords: " + coords +
+                        "\n--Limit: " + speedLimit
+            } else {
+                text += "\n--Error: " + error.toString()
+            }
+
+            return copy(debugInfo = debugInfo + text)
         } else {
-            text += "\n--Error: " + error.toString()
+            return this
         }
-
-        return copy(debugInfo = debugInfo + text)
     }
 
     companion object {

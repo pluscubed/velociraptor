@@ -19,6 +19,7 @@ import com.pluscubed.velociraptor.api.osm.data.Element
 import com.pluscubed.velociraptor.api.osm.data.OsmResponse
 import com.pluscubed.velociraptor.api.osm.data.Tags
 import com.pluscubed.velociraptor.cache.CacheLimitProvider
+import com.pluscubed.velociraptor.utils.PrefUtils
 import com.pluscubed.velociraptor.utils.Utils
 import okhttp3.OkHttpClient
 import timber.log.Timber
@@ -119,25 +120,21 @@ class OsmLimitProvider(
         lastResponse: LimitResponse?,
         origin: Int
     ): List<LimitResponse> {
+        val debuggingEnabled = PrefUtils.isDebuggingEnabled(context)
+        var limitResponse = LimitResponse(
+            timestamp = System.currentTimeMillis(),
+            origin = LimitResponse.ORIGIN_OSM,
+            debugInfo =
+            if (debuggingEnabled)
+                "\nOSM Info:\n--" + TextUtils.join("\n--", osmOverpassApis)
+            else
+                ""
+        )
         try {
             val osmResponse = getOsmResponse(location) ?: throw Exception("OSM null response")
 
-            var limitResponse = LimitResponse(
-                origin = LimitResponse.ORIGIN_OSM,
-                timestamp = System.currentTimeMillis()
-            )
-
             val emptyObservableResponse = {
-                listOf(
-                    limitResponse
-                        .copy(
-                            debugInfo = "\nOSM info:\n--" + TextUtils.join(
-                                "\n--",
-                                osmOverpassApis
-                            )
-                        )
-                        .initDebugInfo()
-                )
+                listOf(limitResponse.initDebugInfo(debuggingEnabled))
             }
 
             val elements = osmResponse.elements
@@ -170,7 +167,7 @@ class OsmLimitProvider(
                     limitResponse = limitResponse.copy(speedLimit = parseOsmSpeedLimit(maxspeed))
                 }
 
-                val response = limitResponse.initDebugInfo()
+                val response = limitResponse.initDebugInfo(debuggingEnabled)
 
                 //Cache
                 cacheLimitProvider.put(response)
@@ -188,12 +185,7 @@ class OsmLimitProvider(
 
         } catch (e: Exception) {
             return listOf(
-                LimitResponse(
-                    error = e,
-                    timestamp = System.currentTimeMillis(),
-                    origin = LimitResponse.ORIGIN_OSM,
-                    debugInfo = "\nOSM Info:\n--" + TextUtils.join("\n--", osmOverpassApis)
-                ).initDebugInfo()
+                limitResponse.copy(error = e).initDebugInfo(debuggingEnabled)
             )
         }
     }

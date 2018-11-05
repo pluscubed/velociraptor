@@ -7,20 +7,18 @@ import com.google.maps.android.PolyUtil
 import com.pluscubed.velociraptor.api.Coord
 import com.pluscubed.velociraptor.api.LimitProvider
 import com.pluscubed.velociraptor.api.LimitResponse
+import com.pluscubed.velociraptor.utils.PrefUtils
 import com.pluscubed.velociraptor.utils.Utils
 import timber.log.Timber
 import java.util.Arrays
 import kotlin.Comparator
 
-class CacheLimitProvider internal constructor(context: Context) : LimitProvider {
+class CacheLimitProvider(private val context: Context) : LimitProvider {
 
-    private val db: AppDatabase
-
-    init {
-        db = Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, "cache.db")
+    private val db: AppDatabase =
+        Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, "cache.db")
             .fallbackToDestructiveMigration()
             .build()
-    }
 
     fun put(response: LimitResponse) {
         if (response.coords.isEmpty()) {
@@ -68,12 +66,14 @@ class CacheLimitProvider internal constructor(context: Context) : LimitProvider 
                 isLocationOnPath(coord1, coord2, coord)
             };
 
+        val debuggingEnabled = PrefUtils.isDebuggingEnabled(context)
+
         if (onPathWays.isEmpty()) {
             return listOf(
                 LimitResponse(
                     timestamp = System.currentTimeMillis(),
                     fromCache = true
-                ).initDebugInfo()
+                ).initDebugInfo(debuggingEnabled)
             )
         }
 
@@ -87,7 +87,9 @@ class CacheLimitProvider internal constructor(context: Context) : LimitProvider 
                     heuristic2.compareTo(heuristic1)
                 })
                 .map { limitCacheWay ->
-                    limitCacheWay.toResponse().copy(fromCache = true).initDebugInfo()
+                    limitCacheWay.toResponse()
+                        .copy(fromCache = true)
+                        .initDebugInfo(debuggingEnabled)
                 }
         } catch (e: Exception) {
             return listOf(
@@ -95,7 +97,7 @@ class CacheLimitProvider internal constructor(context: Context) : LimitProvider 
                     timestamp = System.currentTimeMillis(),
                     error = e,
                     fromCache = true
-                ).initDebugInfo()
+                ).initDebugInfo(debuggingEnabled)
             )
         }
     }
@@ -111,15 +113,6 @@ class CacheLimitProvider internal constructor(context: Context) : LimitProvider 
     }
 
     companion object {
-        private var instance: CacheLimitProvider? = null
-
-
-        fun getInstance(context: Context): CacheLimitProvider {
-            if (instance == null) {
-                instance = CacheLimitProvider(context)
-            }
-            return instance as CacheLimitProvider
-        }
 
         private fun isLocationOnPath(p1: Coord, p2: Coord, t: Coord): Boolean {
             val latLngs = Arrays.asList(p1.toLatLng(), p2.toLatLng())
