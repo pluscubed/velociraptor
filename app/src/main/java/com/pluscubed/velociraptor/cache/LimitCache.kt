@@ -8,7 +8,6 @@ import com.pluscubed.velociraptor.api.Coord
 import com.pluscubed.velociraptor.api.LimitProvider
 import com.pluscubed.velociraptor.api.LimitResponse
 import com.pluscubed.velociraptor.utils.Utils
-import rx.Observable
 import rx.Scheduler
 import rx.schedulers.Schedulers
 import timber.log.Timber
@@ -18,27 +17,29 @@ import kotlin.Comparator
 class LimitCache internal constructor(context: Context, private val scheduler: Scheduler) : LimitProvider {
 
     private val db: AppDatabase
+    private val repo: WayRepo
 
     init {
         db = Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, "cache.db")
                 .fallbackToDestructiveMigration()
                 .build()
+        repo = WayRepo(db.wayDao())
     }
 
-    fun put(response: LimitResponse) {
+    suspend fun put(response: LimitResponse) {
         if (response.coords().isEmpty()) {
             return
         }
 
         val ways = Way.fromResponse(response)
-        val ids = db.wayDao().put(ways)
+        val ids = repo.put(ways)
         for (i in ways.indices) {
             val way = ways[i]
             Timber.d("Cache put: ${ids[i]} - $way")
         }
     }
 
-    override fun getSpeedLimit(location: Location, lastResponse: LimitResponse?): Observable<LimitResponse> {
+    override suspend fun getSpeedLimit(location: Location, lastResponse: LimitResponse?, origin: Int): List<LimitResponse> {
         val lastRoadName = lastResponse?.roadName()
         return get(lastRoadName, Coord(location))
     }
@@ -47,57 +48,51 @@ class LimitCache internal constructor(context: Context, private val scheduler: S
      * Returns all responses matching with the coordinate, ordered by similarity to previous road name
      * Or if nothing matches, return an empty response
      */
-    fun get(previousRoadName: String?, coord: Coord): Observable<LimitResponse> {
-        return Observable.defer {
-            this@LimitCache.cleanup()
+    suspend fun get(previousRoadName: String?, coord: Coord): List<LimitResponse> {
+        this@LimitCache.cleanup()
 
-            val selectedWays = db.wayDao()
-                    .selectByCoord(coord.lat, Math.pow(Math.cos(Math.toRadians(coord.lat)), 2.0), coord.lon)
+        val selectedWays =
+                repo.selectByCoord(coord.lat, Math.pow(Math.cos(Math.toRadians(coord.lat)), 2.0), coord.lon)
 
-            Observable.from(selectedWays)
-                    .filter { (_, _, _, _, lat1, lon1, lat2, lon2) ->
-                        val coord1 = Coord(lat1, lon1)
-                        val coord2 = Coord(lat2, lon2)
-                        isLocationOnPath(coord1, coord2, coord)
-                    }
-                    .toList()
-                    .flatMap { ways ->
-                        if (ways.isEmpty()) {
-                            return@flatMap Observable.just(
-                                    LimitResponse.builder()
-                                            .setTimestamp(System.currentTimeMillis())
-                                            .setFromCache(true)
-                                            .initDebugInfo()
-                                            .build()
-                            )
-                        }
 
-                        ways.sortWith(Comparator { way1, way2 ->
-                            //Higher origin = further to the front
-                            //Higher road similarity = further to the front
-                            val heuristic2 = way2.origin + getRoadNameSimilarity(way2, previousRoadName)
-                            val heuristic1 = way1.origin + getRoadNameSimilarity(way1, previousRoadName)
-                            heuristic2.compareTo(heuristic1)
-                        })
+        val onPathWays = selectedWays
+                .filter { (_, _, _, _, lat1, lon1, lat2, lon2) ->
+                    val coord1 = Coord(lat1, lon1)
+                    val coord2 = Coord(lat2, lon2)
+                    isLocationOnPath(coord1, coord2, coord)
+                };
 
-                        Observable.from(ways)
-                                .map { limitCacheWay ->
-                                    limitCacheWay.toResponse()
-                                            .setFromCache(true)
-                                            .initDebugInfo()
-                                            .build()
-                                }
-                    }
-                    .onErrorReturn { throwable ->
-                        LimitResponse.builder()
-                                .setTimestamp(System.currentTimeMillis())
+        if (onPathWays.isEmpty()) {
+            return listOf(LimitResponse.builder()
+                    .setTimestamp(System.currentTimeMillis())
+                    .setFromCache(true)
+                    .initDebugInfo()
+                    .build())
+        }
+
+        try {
+            return onPathWays
+                    .sortedWith(Comparator { way1, way2 ->
+                        //Higher origin = further to the front
+                        //Higher road similarity = further to the front
+                        val heuristic2 = way2.origin + getRoadNameSimilarity(way2, previousRoadName)
+                        val heuristic1 = way1.origin + getRoadNameSimilarity(way1, previousRoadName)
+                        heuristic2.compareTo(heuristic1)
+                    })
+                    .map { limitCacheWay ->
+                        limitCacheWay.toResponse()
                                 .setFromCache(true)
-                                .setError(throwable)
                                 .initDebugInfo()
                                 .build()
                     }
-        }.subscribeOn(scheduler)
-
+        } catch (e: Exception) {
+            return listOf(LimitResponse.builder()
+                    .setTimestamp(System.currentTimeMillis())
+                    .setFromCache(true)
+                    .setError(e)
+                    .initDebugInfo()
+                    .build())
+        }
     }
 
     private fun getRoadNameSimilarity(way: Way, previousRoadName: String?): Int {
@@ -106,8 +101,8 @@ class LimitCache internal constructor(context: Context, private val scheduler: S
     }
 
 
-    private fun cleanup() {
-        db.wayDao().cleanup(System.currentTimeMillis())
+    private suspend fun cleanup() {
+        repo.cleanup(System.currentTimeMillis())
     }
 
     companion object {

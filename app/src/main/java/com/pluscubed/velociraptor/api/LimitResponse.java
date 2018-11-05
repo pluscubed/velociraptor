@@ -10,6 +10,7 @@ import java.util.List;
 @AutoValue
 public abstract class LimitResponse {
 
+    public static final int ORIGIN_INVALID = -1;
     public static final int ORIGIN_HERE = 2;
     public static final int ORIGIN_TOMTOM = 1;
     public static final int ORIGIN_OSM = 0;
