@@ -8,37 +8,36 @@ import com.pluscubed.velociraptor.api.Coord
 import com.pluscubed.velociraptor.api.LimitProvider
 import com.pluscubed.velociraptor.api.LimitResponse
 import com.pluscubed.velociraptor.utils.Utils
-import rx.Scheduler
-import rx.schedulers.Schedulers
 import timber.log.Timber
 import java.util.Arrays
 import kotlin.Comparator
 
-class LimitCache internal constructor(context: Context, private val scheduler: Scheduler) : LimitProvider {
+class LimitCache internal constructor(context: Context) : LimitProvider {
 
     private val db: AppDatabase
-    private val repo: WayRepo
 
     init {
         db = Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, "cache.db")
                 .fallbackToDestructiveMigration()
                 .build()
-        repo = WayRepo(db.wayDao())
     }
 
-    suspend fun put(response: LimitResponse) {
+    fun put(response: LimitResponse) {
         if (response.coords().isEmpty()) {
             return
         }
 
         val ways = Way.fromResponse(response)
-        val ids = repo.put(ways)
+        val ids = db.wayDao().put(ways)
         for (i in ways.indices) {
             val way = ways[i]
             Timber.d("Cache put: ${ids[i]} - $way")
         }
     }
 
+    /**
+     * Returns list with at least 1 element
+     */
     override suspend fun getSpeedLimit(location: Location, lastResponse: LimitResponse?, origin: Int): List<LimitResponse> {
         val lastRoadName = lastResponse?.roadName()
         return get(lastRoadName, Coord(location))
@@ -48,12 +47,11 @@ class LimitCache internal constructor(context: Context, private val scheduler: S
      * Returns all responses matching with the coordinate, ordered by similarity to previous road name
      * Or if nothing matches, return an empty response
      */
-    suspend fun get(previousRoadName: String?, coord: Coord): List<LimitResponse> {
+    fun get(previousRoadName: String?, coord: Coord): List<LimitResponse> {
         this@LimitCache.cleanup()
 
         val selectedWays =
-                repo.selectByCoord(coord.lat, Math.pow(Math.cos(Math.toRadians(coord.lat)), 2.0), coord.lon)
-
+                db.wayDao().selectByCoord(coord.lat, Math.pow(Math.cos(Math.toRadians(coord.lat)), 2.0), coord.lon)
 
         val onPathWays = selectedWays
                 .filter { (_, _, _, _, lat1, lon1, lat2, lon2) ->
@@ -96,13 +94,13 @@ class LimitCache internal constructor(context: Context, private val scheduler: S
     }
 
     private fun getRoadNameSimilarity(way: Way, previousRoadName: String?): Int {
-        return if (way.road == null) 0
-        else Utils.levenshteinDistance(way.road, previousRoadName!!)
+        return if (way.road == null || previousRoadName == null) 0
+        else Utils.levenshteinDistance(way.road, previousRoadName)
     }
 
 
-    private suspend fun cleanup() {
-        repo.cleanup(System.currentTimeMillis())
+    private fun cleanup() {
+        db.wayDao().cleanup(System.currentTimeMillis())
     }
 
     companion object {
@@ -111,7 +109,7 @@ class LimitCache internal constructor(context: Context, private val scheduler: S
 
         fun getInstance(context: Context): LimitCache {
             if (instance == null) {
-                instance = LimitCache(context, Schedulers.io())
+                instance = LimitCache(context)
             }
             return instance as LimitCache
         }

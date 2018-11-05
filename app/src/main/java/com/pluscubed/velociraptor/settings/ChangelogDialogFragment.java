@@ -2,7 +2,6 @@ package com.pluscubed.velociraptor.settings;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,6 +17,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
 
 public class ChangelogDialogFragment extends DialogFragment {
 

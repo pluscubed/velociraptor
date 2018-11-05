@@ -25,8 +25,7 @@ class RaptorLimitProvider(context: Context,
     private var tomtomToken: String
 
     companion object {
-        @JvmField
-        val USE_DEBUG_ID = BuildConfig.BUILD_TYPE == "debug"
+        const val USE_DEBUG_ID = BuildConfig.BUILD_TYPE == "debug"
     }
 
     init {

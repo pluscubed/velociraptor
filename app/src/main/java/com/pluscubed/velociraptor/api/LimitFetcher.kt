@@ -69,13 +69,15 @@ class LimitFetcher(private val context: Context) {
 
         // 1. Always try raptor service if cache didn't hit / didn't contain a limit
         if (limitResponses.last().speedLimit() == -1 && networkConnected) {
-            val hereResponse = raptorLimitProvider.getSpeedLimit(location, lastResponse, LimitResponse.ORIGIN_HERE)
-            limitResponses.add(hereResponse[0])
+            val hereResponses = raptorLimitProvider.getSpeedLimit(location, lastResponse, LimitResponse.ORIGIN_HERE)
+            if (hereResponses.isNotEmpty())
+                limitResponses += hereResponses[0]
         }
 
         if (limitResponses.last().speedLimit() == -1 && networkConnected) {
-            val tomtomResponse = raptorLimitProvider.getSpeedLimit(location, lastResponse, LimitResponse.ORIGIN_TOMTOM)
-            limitResponses.add(tomtomResponse[0])
+            val tomtomResponses = raptorLimitProvider.getSpeedLimit(location, lastResponse, LimitResponse.ORIGIN_TOMTOM)
+            if (tomtomResponses.isNotEmpty())
+                limitResponses += tomtomResponses[0]
         }
 
         if (limitResponses.last().speedLimit() == -1 && networkConnected) {
@@ -97,7 +99,7 @@ class LimitFetcher(private val context: Context) {
         //Accumulate debug infos, based on the last response (the one with the speed limit or the last option)
         var finalResponse = limitResponses.map { limitResponse ->
             limitResponse.toBuilder()
-        }.reduceRight { acc, builder ->
+        }.reduce { acc, builder ->
             builder.setDebugInfo(acc.debugInfo() + "\n" + builder.debugInfo())
         }.build()
 
