@@ -24,7 +24,6 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.core.content.ContextCompat
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.afollestad.materialdialogs.MaterialDialog
@@ -294,7 +293,7 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
         unitSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>,
-                view: View,
+                view: View?,
                 position: Int,
                 id: Long
             ) {
@@ -326,7 +325,7 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
         styleSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>,
-                view: View,
+                view: View?,
                 position: Int,
                 id: Long
             ) {
@@ -833,7 +832,7 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
         if (!start) {
             intent.putExtra(LimitService.EXTRA_CLOSE, true)
         }
-        ContextCompat.startForegroundService(this, intent)
+        startService(intent)
     }
 
     private fun openSettings(settingsAction: String, packageName: String) {

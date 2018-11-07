@@ -65,10 +65,14 @@ class LimitService : Service(), CoroutineScope {
         return null
     }
 
+    override fun onCreate() {
+        super.onCreate()
+        startNotification()
+        job = Job()
+    }
+
     @SuppressLint("InflateParams")
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        job = Job()
-
         if (intent != null) {
             if (!isStartedFromNotification && intent.getBooleanExtra(
                     EXTRA_CLOSE,
@@ -108,11 +112,10 @@ class LimitService : Service(), CoroutineScope {
             }
         }
 
-
         if (isRunning || !prequisitesMet() || speedLimitView == null)
             return super.onStartCommand(intent, flags, startId)
 
-        startNotification()
+        isRunning = true
 
         debuggingRequestInfo = ""
 
@@ -172,8 +175,6 @@ class LimitService : Service(), CoroutineScope {
                 remoteConfig.activateFetched()
             }
         }
-
-        isRunning = true
 
         return super.onStartCommand(intent, flags, startId)
     }
@@ -440,6 +441,8 @@ class LimitService : Service(), CoroutineScope {
 
         if (billingManager != null)
             billingManager!!.destroy()
+
+        isRunning = false;
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {

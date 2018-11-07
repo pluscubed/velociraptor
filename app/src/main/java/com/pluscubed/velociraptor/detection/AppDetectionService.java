@@ -19,7 +19,6 @@ import com.pluscubed.velociraptor.utils.PrefUtils;
 import java.util.List;
 import java.util.Set;
 
-import androidx.core.content.ContextCompat;
 import timber.log.Timber;
 
 public class AppDetectionService extends AccessibilityService {
@@ -122,7 +121,7 @@ public class AppDetectionService extends AccessibilityService {
         }
 
         try {
-            ContextCompat.startForegroundService(this, intent);
+            startService(intent);
         } catch (Exception e) {
             if (!BuildConfig.DEBUG) {
                 Crashlytics.logException(e);
