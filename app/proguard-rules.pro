@@ -42,20 +42,12 @@
 }
 
 #Jackson
--dontwarn org.w3c.**
--dontwarn java.beans.**
--keep class com.fasterxml.jackson.databind.ObjectMapper {
-    public <methods>;
-    protected <methods>;
-}
--keep class com.fasterxml.jackson.databind.ObjectWriter {
-    public ** writeValueAsString(**);
-}
-
+-keep @com.fasterxml.jackson.annotation.JsonIgnoreProperties class * { *; }
+-keep class com.fasterxml.** { *; }
+-keep class org.codehaus.** { *; }
 -keepnames class com.fasterxml.jackson.** { *; }
-
--keepclasseswithmembers class * {
-    @com.fasterxml.jackson.annotation.* <methods>;
+-keepclassmembers public final enum com.fasterxml.jackson.annotation.JsonAutoDetect$Visibility {
+    public static final com.fasterxml.jackson.annotation.JsonAutoDetect$Visibility *;
 }
 
 #DbInspector
