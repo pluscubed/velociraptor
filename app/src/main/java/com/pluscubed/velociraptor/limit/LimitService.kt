@@ -325,6 +325,7 @@ class LimitService : Service(), CoroutineScope {
 
 
         text += debuggingRequestInfo
+        text += "\n\nYou can turn off this window in the Velociraptor app"
         speedLimitView!!.setDebuggingText(text)
     }
 
