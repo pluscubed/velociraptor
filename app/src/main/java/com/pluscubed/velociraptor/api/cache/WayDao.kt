@@ -28,4 +28,7 @@ interface WayDao {
     """
     )
     fun cleanup(timestamp: Long)
+
+    @Query("DELETE FROM way")
+    fun clear()
 }

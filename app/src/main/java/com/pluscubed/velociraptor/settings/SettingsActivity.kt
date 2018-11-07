@@ -30,11 +30,13 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.Purchase
 import com.android.billingclient.api.SkuDetails
+import com.crashlytics.android.Crashlytics
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.google.android.material.snackbar.Snackbar
 import com.pluscubed.velociraptor.BuildConfig
 import com.pluscubed.velociraptor.R
+import com.pluscubed.velociraptor.api.cache.CacheLimitProvider
 import com.pluscubed.velociraptor.billing.BillingConstants
 import com.pluscubed.velociraptor.billing.BillingManager
 import com.pluscubed.velociraptor.detection.AppDetectionService
@@ -135,6 +137,9 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
     @BindView(R.id.switch_debugging)
     lateinit var debuggingSwitch: SwitchCompat
 
+    @BindView(R.id.linear_clear_cache)
+    lateinit var clearCacheContainer: View
+
     @BindView(R.id.linear_app_selection)
     lateinit var appSelectionContainer: ViewGroup
     @BindView(R.id.button_app_selection)
@@ -148,6 +153,9 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
     @BindView(R.id.switch_notif_controls)
     lateinit var notifControlsContainer: View
 
+    private val cacheLimitProvider: CacheLimitProvider by lazy {
+        CacheLimitProvider(this@SettingsActivity)
+    }
 
     private var notificationManager: NotificationManager? = null
     private var billingManager: BillingManager? = null
@@ -247,6 +255,21 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
             notificationManager!!.notify(NOTIFICATION_CONTROLS, notification)
         }
 
+        clearCacheContainer.setOnClickListener { v ->
+            launch {
+                try {
+                    withContext(Dispatchers.IO) { cacheLimitProvider.clear() }
+                    Snackbar.make(
+                        clearCacheContainer,
+                        getString(R.string.cache_cleared),
+                        Snackbar.LENGTH_SHORT
+                    ).show()
+                } catch (e: Exception) {
+                    Snackbar.make(clearCacheContainer, "Error: $e", Snackbar.LENGTH_SHORT).show()
+                    if (!BuildConfig.DEBUG) Crashlytics.logException(e)
+                }
+            }
+        }
 
         appSelectionButton.setOnClickListener { v ->
             startActivity(

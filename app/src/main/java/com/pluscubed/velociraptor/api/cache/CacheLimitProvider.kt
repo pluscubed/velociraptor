@@ -112,6 +112,10 @@ class CacheLimitProvider(private val context: Context) : LimitProvider {
         db.wayDao().cleanup(System.currentTimeMillis())
     }
 
+    public fun clear() {
+        db.wayDao().clear()
+    }
+
     companion object {
 
         private fun isLocationOnPath(p1: Coord, p2: Coord, t: Coord): Boolean {

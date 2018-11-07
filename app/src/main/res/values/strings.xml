@@ -147,6 +147,8 @@
     <!---Advanced settings-->
     <string name="advanced">Advanced</string>
     <string name="debugging_stats">Stats for nerds/debugging</string>
+    <string name="clear_cache">Clear speed limit cache</string>
+    <string name="cache_cleared">Cache cleared!</string>
 
     <!--Changelog-->
     <string name="changelog">Changelog</string>
