@@ -14,7 +14,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Speed Limit Size" />
+        android:text="@string/size_speedometer_text" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -47,7 +47,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Speedometer Size" />
+        android:text="@string/size_speedometer_text" />
 
     <LinearLayout
         android:layout_width="match_parent"
