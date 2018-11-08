@@ -44,6 +44,8 @@ Per favore, apri l\'app per ottenerli.</string>
     <string name="size">Formato</string>
     <string name="size_limit_overview">Lmite di velocità : %s</string>
     <string name="size_speedometer_overview">Contachilometri : %s</string>
+    <string name="size_limit_text">Lmite di velocità</string>
+    <string name="size_speedometer_text">Contachilometri</string>
     <string name="transparency">Evidenza</string>
     <string name="speeding_amount">Avviso Velocità:</string>
     <string name="tolerance_dialog_text">Avvisa quando il limite di velocità viene superato di:</string>
