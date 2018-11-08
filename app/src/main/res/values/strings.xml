@@ -52,6 +52,8 @@
     <string name="size">Size</string>
     <string name="size_limit_overview">Speed Limit: %s</string>
     <string name="size_speedometer_overview">Speedometer: %s</string>
+    <string name="size_limit_text">Speed Limit</string>
+    <string name="size_speedometer_text">Speedometer</string>
 
     <string name="transparency">Opacity</string>
 
