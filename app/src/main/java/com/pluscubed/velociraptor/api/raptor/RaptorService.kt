@@ -1,6 +1,6 @@
 package com.pluscubed.velociraptor.api.raptor
 
-import kotlinx.coroutines.Deferred
+import retrofit2.Call
 import retrofit2.http.*
 
 interface RaptorService {
@@ -10,7 +10,7 @@ interface RaptorService {
         @Path("id") id: String,
         @Body data: String
     )
-            : Deferred<VerificationResponse>
+            : Call<VerificationResponse?>
 
     @GET("tomtom")
     fun getTomtom(
@@ -21,7 +21,7 @@ interface RaptorService {
         @Query("vehicle_heading") heading: Int,
         @Query("units") units: String
     )
-            : Deferred<RaptorResponse>
+            : Call<RaptorResponse?>
 
     @GET("here")
     fun getHere(
@@ -32,5 +32,5 @@ interface RaptorService {
         @Query("vehicle_heading") heading: Int,
         @Query("units") units: String
     )
-            : Deferred<RaptorResponse>
+            : Call<RaptorResponse?>
 }

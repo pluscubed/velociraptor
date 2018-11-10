@@ -36,7 +36,7 @@ class CacheLimitProvider(private val context: Context) : LimitProvider {
     /**
      * Returns list with at least 1 element
      */
-    override suspend fun getSpeedLimit(
+    override fun getSpeedLimit(
         location: Location,
         lastResponse: LimitResponse?,
         origin: Int

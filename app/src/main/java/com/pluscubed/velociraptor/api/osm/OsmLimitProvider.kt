@@ -53,7 +53,7 @@ class OsmLimitProvider(
 
     private fun updateEndpointTimeTaken(timeTaken: Int, endpoint: OsmApiEndpoint) {
         endpoint.timeTaken = timeTaken
-        Collections.sort(osmOverpassApis)
+        osmOverpassApis.sort()
         Timber.d("Endpoints: %s", osmOverpassApis)
     }
 
@@ -94,7 +94,7 @@ class OsmLimitProvider(
                 "[\"highway\"];out body geom;")
     }
 
-    private suspend fun getOsmResponse(location: Location): OsmResponse? {
+    private fun getOsmResponse(location: Location): OsmResponse {
         val selectedEndpoint: OsmApiEndpoint
         if (Math.random() < 0.7) {
             //Select the fastest endpoint most of the time
@@ -104,18 +104,19 @@ class OsmLimitProvider(
             selectedEndpoint = osmOverpassApis[(Math.random() * osmOverpassApis.size).toInt()]
         }
         try {
-            val osmResponse = selectedEndpoint.service!!.getOsm(buildQueryBody(location)).await()
+            val osmNetworkResponse =
+                selectedEndpoint.service!!.getOsm(buildQueryBody(location)).execute()
             logOsmRequest(selectedEndpoint)
-            return osmResponse
+            return Utils.getResponseBody(osmNetworkResponse)
         } catch (e: Exception) {
-            //catch any errors
+            //catch any errors, rethrow
             updateEndpointTimeTaken(Integer.MAX_VALUE, selectedEndpoint)
             logOsmError(selectedEndpoint, e)
             throw e
         }
     }
 
-    override suspend fun getSpeedLimit(
+    override fun getSpeedLimit(
         location: Location,
         lastResponse: LimitResponse?,
         origin: Int
@@ -131,7 +132,7 @@ class OsmLimitProvider(
                 ""
         )
         try {
-            val osmResponse = getOsmResponse(location) ?: throw Exception("OSM null response")
+            val osmResponse = getOsmResponse(location)
 
             val emptyObservableResponse = {
                 listOf(limitResponse.initDebugInfo(debuggingEnabled))

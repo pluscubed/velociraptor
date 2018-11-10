@@ -272,7 +272,7 @@ public class FloatingView implements LimitView {
         }
 
         if (mSpeedometerUnitsText != null) {
-            mSpeedometerUnitsText.setText(Utils.getUnitText(mService));
+            mSpeedometerUnitsText.setText(Utils.INSTANCE.getUnitText(mService));
         }
 
         if (mFloatingView != null) {
@@ -313,8 +313,8 @@ public class FloatingView implements LimitView {
             }
 
             ViewGroup.LayoutParams layoutParams = mLimitView.getLayoutParams();
-            layoutParams.width = Utils.convertDpToPx(mService, width);
-            layoutParams.height = Utils.convertDpToPx(mService, height);
+            layoutParams.width = Utils.INSTANCE.convertDpToPx(mService, width);
+            layoutParams.height = Utils.INSTANCE.convertDpToPx(mService, height);
             mLimitView.setLayoutParams(layoutParams);
 
             if (textSize != 0) {
@@ -341,8 +341,8 @@ public class FloatingView implements LimitView {
             mSpeedometerUnitsText.setTextSize(TypedValue.COMPLEX_UNIT_SP, labelTextSize);
 
             ViewGroup.LayoutParams layoutParams = mSpeedometerView.getLayoutParams();
-            layoutParams.width = Utils.convertDpToPx(mService, width);
-            layoutParams.height = Utils.convertDpToPx(mService, height);
+            layoutParams.width = Utils.INSTANCE.convertDpToPx(mService, width);
+            layoutParams.height = Utils.INSTANCE.convertDpToPx(mService, height);
             mSpeedometerView.setLayoutParams(layoutParams);
         }
     }

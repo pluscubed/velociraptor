@@ -2,6 +2,7 @@ package com.pluscubed.velociraptor.api.raptor
 
 import android.content.Context
 import android.location.Location
+import androidx.annotation.WorkerThread
 import com.android.billingclient.api.Purchase
 import com.google.maps.android.PolyUtil
 import com.pluscubed.velociraptor.BuildConfig
@@ -9,6 +10,7 @@ import com.pluscubed.velociraptor.api.*
 import com.pluscubed.velociraptor.api.cache.CacheLimitProvider
 import com.pluscubed.velociraptor.billing.BillingConstants
 import com.pluscubed.velociraptor.utils.PrefUtils
+import com.pluscubed.velociraptor.utils.Utils
 import okhttp3.OkHttpClient
 import java.util.*
 
@@ -54,9 +56,11 @@ class RaptorLimitProvider(
     /**
      * Returns whether updated token
      */
-    suspend fun verify(purchase: Purchase): Boolean {
+    @WorkerThread
+    fun verify(purchase: Purchase): Boolean {
         var updated = false
-        val verificationResponse = raptorService.verify(id, purchase.originalJson).await()
+        val verificationNetworkResponse = raptorService.verify(id, purchase.originalJson).execute()
+        val verificationResponse = Utils.getResponseBody(verificationNetworkResponse)
         val token = verificationResponse.token
         if (purchase.sku == BillingConstants.SKU_HERE || USE_DEBUG_ID) {
             if (hereToken.isEmpty())
@@ -71,7 +75,7 @@ class RaptorLimitProvider(
         return updated
     }
 
-    override suspend fun getSpeedLimit(
+    override fun getSpeedLimit(
         location: Location,
         lastResponse: LimitResponse?,
         origin: Int
@@ -95,7 +99,7 @@ class RaptorLimitProvider(
         return emptyList()
     }
 
-    private suspend fun queryRaptorApi(
+    private fun queryRaptorApi(
         isHere: Boolean,
         latitude: String,
         longitude: String,
@@ -123,7 +127,8 @@ class RaptorLimitProvider(
 
         val debuggingEnabled = PrefUtils.isDebuggingEnabled(context)
         try {
-            val raptorResponse = raptorQuery.await();
+            val raptorNetworkResponse = raptorQuery.execute();
+            val raptorResponse = Utils.getResponseBody(raptorNetworkResponse)
 
             val coords = PolyUtil.decode(raptorResponse.polyline).map { latLng ->
                 Coord(latLng.latitude, latLng.longitude)

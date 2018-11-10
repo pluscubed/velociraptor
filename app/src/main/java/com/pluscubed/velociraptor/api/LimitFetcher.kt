@@ -3,7 +3,6 @@ package com.pluscubed.velociraptor.api
 import android.content.Context
 import android.location.Location
 import com.android.billingclient.api.Purchase
-import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.pluscubed.velociraptor.BuildConfig
 import com.pluscubed.velociraptor.api.cache.CacheLimitProvider
 import com.pluscubed.velociraptor.api.osm.OsmLimitProvider
@@ -48,7 +47,7 @@ class LimitFetcher(private val context: Context) {
         return builder.build()
     }
 
-    suspend fun verifyRaptorService(purchase: Purchase): Boolean {
+    fun verifyRaptorService(purchase: Purchase): Boolean {
         return raptorLimitProvider.verify(purchase)
     }
 
@@ -130,7 +129,6 @@ class LimitFetcher(private val context: Context) {
             return Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .client(client)
-                .addCallAdapterFactory(CoroutineCallAdapterFactory())
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(JacksonConverterFactory.create())
                 .build()
