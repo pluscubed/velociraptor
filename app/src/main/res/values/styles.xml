@@ -15,12 +15,10 @@
     </style>
 
     <style name="Widget.Button.Colored" parent="Widget.MaterialComponents.Button">
-        <item name="android:textColor">@color/btn_colored_text_material</item>
         <item name="android:textAllCaps">false</item>
     </style>
 
     <style name="Widget.Button.Colored.Unelevated" parent="Widget.MaterialComponents.Button.UnelevatedButton">
-        <item name="android:textColor">@color/btn_colored_text_material</item>
         <item name="android:textAllCaps">false</item>
     </style>
 
@@ -29,7 +27,6 @@
     </style>
 
     <style name="Widget.Button.Borderless.Colored" parent="Widget.MaterialComponents.Button.TextButton">
-        <item name="android:textColor">@color/btn_colored_borderless_text_material</item>
         <item name="android:textAllCaps">false</item>
     </style>
 

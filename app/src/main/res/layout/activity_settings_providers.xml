@@ -14,7 +14,7 @@
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:text="@string/speed_limit_providers"
-        android:textColor="?colorAccent"
+        android:textColor="?android:textColorPrimary"
         android:textSize="14sp"
         android:textStyle="bold" />
 

@@ -34,6 +34,9 @@
     <string name="location_settings_warning">GPS isn\'t turned on</string>
     <string name="network_warning">No network connection</string>
 
+    <string name="troubleshoot_label">Not automatically launching?</string>
+    <string name="troubleshoot">Troubleshoot</string>
+
     <!--General Settings-->
     <string name="general">General</string>
 

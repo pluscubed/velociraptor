@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:gravity="center_horizontal"
     android:orientation="vertical"
     android:paddingTop="23dp"
@@ -31,7 +32,6 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"
                 android:contentDescription="@null"
                 tools:src="@drawable/ic_cross_red_40dp" />
 
@@ -71,7 +71,6 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"
                 android:contentDescription="@null"
                 tools:src="@drawable/ic_cross_red_40dp" />
 
@@ -113,7 +112,6 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
             android:contentDescription="@null"
             tools:src="@drawable/ic_cross_red_40dp" />
 
@@ -135,7 +133,46 @@
 
     <Space
         android:layout_width="match_parent"
-        android:layout_height="24dp" />
+        android:layout_height="8dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:baselineAligned="false"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="16dp"
+        android:paddingEnd="12dp"
+        tools:ignore="UseCompoundDrawables">
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="16dp"
+            android:tint="#8a000000"
+            app:srcCompat="@drawable/ic_lightbulb_outline_black_24dp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/troubleshoot_label"
+            android:textSize="16sp"
+            android:textStyle="italic"
+            tools:ignore="RtlSymmetry" />
+
+        <Button
+            android:id="@+id/button_troubleshoot"
+            style="@style/Widget.Button.Borderless.Colored"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/troubleshoot" />
+
+    </LinearLayout>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="8dp" />
 
     <View
         android:layout_width="match_parent"

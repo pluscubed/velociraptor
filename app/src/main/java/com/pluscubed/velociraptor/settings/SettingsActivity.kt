@@ -72,6 +72,8 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
     lateinit var enableServiceButton: Button
     @BindView(R.id.image_service_enabled)
     lateinit var enabledServiceImage: ImageView
+    @BindView(R.id.button_troubleshoot)
+    lateinit var troubleshootButton: Button
 
     //General
     @BindView(R.id.switch_limits)
@@ -140,8 +142,6 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
     @BindView(R.id.linear_clear_cache)
     lateinit var clearCacheContainer: View
 
-    @BindView(R.id.linear_app_selection)
-    lateinit var appSelectionContainer: ViewGroup
     @BindView(R.id.button_app_selection)
     lateinit var appSelectionButton: Button
 
@@ -179,11 +179,13 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
         const val NOTIFICATION_CONTROLS = 42
 
         const val PRIVACY_URL = "https://www.pluscubed.com/velociraptor/privacy_policy.html"
+        const val TROUBLESHOOT_URL = "https://www.pluscubed.com/velociraptor/troubleshoot.html"
 
         const val OSM_EDITDATA_URL = "http://openstreetmap.org"
         const val OSM_COVERAGE_URL = "http://product.itoworld.com/map/124"
         const val HERE_EDITDATA_URL = "https://mapcreator.here.com/mapcreator"
         const val TOMTOM_EDITDATA_URL = "https://www.tomtom.com/mapshare/tools"
+
 
         private const val REQUEST_LOCATION = 105
     }
@@ -220,7 +222,7 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
         }
 
         notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notifControlsContainer.setOnClickListener { v ->
+        notifControlsContainer.setOnClickListener {
             val intent = Intent(this@SettingsActivity, LimitService::class.java)
             intent.putExtra(LimitService.EXTRA_NOTIF_START, true)
             val pending = PendingIntent.getService(
@@ -255,7 +257,11 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
             notificationManager!!.notify(NOTIFICATION_CONTROLS, notification)
         }
 
-        clearCacheContainer.setOnClickListener { v ->
+        troubleshootButton.setOnClickListener {
+            openLink(TROUBLESHOOT_URL)
+        }
+
+        clearCacheContainer.setOnClickListener {
             launch {
                 try {
                     withContext(Dispatchers.IO) { cacheLimitProvider.clear() }
@@ -271,13 +277,13 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
             }
         }
 
-        appSelectionButton.setOnClickListener { v ->
+        appSelectionButton.setOnClickListener {
             startActivity(
                     Intent(this@SettingsActivity, AppSelectionActivity::class.java)
             )
         }
 
-        enableServiceButton.setOnClickListener { v ->
+        enableServiceButton.setOnClickListener {
             try {
                 startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
             } catch (e: ActivityNotFoundException) {
