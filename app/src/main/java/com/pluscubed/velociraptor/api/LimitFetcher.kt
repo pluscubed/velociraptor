@@ -15,6 +15,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.jackson.JacksonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
+import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 class LimitFetcher(private val context: Context) {
@@ -55,6 +56,7 @@ class LimitFetcher(private val context: Context) {
         val limitResponses = ArrayList<LimitResponse>()
 
         val cacheResponses = cacheLimitProvider.getSpeedLimit(location, lastResponse)
+        Timber.v(cacheResponses.toString())
         limitResponses.add(cacheResponses[0])
 
         val networkConnected = Utils.isNetworkConnected(context)

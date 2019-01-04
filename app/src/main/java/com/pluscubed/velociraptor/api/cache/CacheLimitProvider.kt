@@ -82,12 +82,26 @@ class CacheLimitProvider(private val context: Context) : LimitProvider {
         try {
             return onPathWays
                     .sortedWith(Comparator { way1, way2 ->
-                        //Higher origin = further to the front
-                        //Higher road similarity = further to the front
-                        val heuristic2 = way2.origin + getRoadNameSimilarity(way2, previousRoadName)
-                        val heuristic1 = way1.origin + getRoadNameSimilarity(way1, previousRoadName)
-                        heuristic2.compareTo(heuristic1)
+                        // Sort: road name similar, then whether speed exists, then better source
+
+                        val roadNameSimilar1 = isRoadNameSimilar(way1, previousRoadName)
+                        val roadNameSimilar2 = isRoadNameSimilar(way2, previousRoadName)
+
+                        if (roadNameSimilar1 == roadNameSimilar2) {
+                            val speedExists1 = way1.maxspeed != -1
+                            val speedExists2 = way2.maxspeed != -1
+
+                            if (speedExists1 == speedExists2) {
+                                //Higher origin = further to the front
+                                way1.origin.compareTo(way2.origin)
+                            } else {
+                                speedExists1.compareTo(speedExists2)
+                            }
+                        } else {
+                            roadNameSimilar1.compareTo(roadNameSimilar2)
+                        }
                     })
+                    .reversed()
                     .map { limitCacheWay ->
                         limitCacheWay.toResponse()
                                 .copy(fromCache = true)
@@ -102,6 +116,10 @@ class CacheLimitProvider(private val context: Context) : LimitProvider {
                     ).initDebugInfo(debuggingEnabled)
             )
         }
+    }
+
+    private fun isRoadNameSimilar(way: Way, previousRoadName: String?): Boolean {
+        return getRoadNameSimilarity(way, previousRoadName) > 0.5
     }
 
     private fun getRoadNameSimilarity(way: Way, previousRoadName: String?): Double {

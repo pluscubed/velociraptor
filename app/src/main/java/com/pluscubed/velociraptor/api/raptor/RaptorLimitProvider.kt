@@ -139,7 +139,7 @@ class RaptorLimitProvider(
                 raptorResponse.generalSpeedLimit!!
             }
             val response = LimitResponse(
-                    roadName = raptorResponse.name,
+                    roadName = if (raptorResponse.name.isEmpty()) "null" else raptorResponse.name,
                     speedLimit = speedLimit,
                     timestamp = System.currentTimeMillis(),
                     coords = coords,
