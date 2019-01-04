@@ -13,7 +13,7 @@ public interface LimitView {
 
     void setDebuggingText(String text);
 
-    void setLimitText(String text);
+    void setLimit(String limit, String source);
 
     void updatePrefs();
 

@@ -49,9 +49,6 @@ android {
         versionName "1.6.10"
         vectorDrawables.useSupportLibrary = true
         manifestPlaceholders = [appName: "@string/app_name"]
-        if(project.hasProperty("RELEASE_STORE_FILE")){
-            manifestPlaceholders.put("FABRIC_API_KEY", FABRIC_API_KEY)
-        }
 
         lintOptions {
             disable 'MissingTranslation'
@@ -81,7 +78,6 @@ android {
             } else {
                 signingConfig signingConfigs.debug
             }
-            ext.enableCrashlytics = false
         }
 
         debug {
@@ -91,7 +87,6 @@ android {
             versionNameSuffix '-DEBUG'
             testCoverageEnabled false
             manifestPlaceholders = [appName: "Velociraptor DEBUG"]
-            ext.enableCrashlytics = false
         }
     }
 
@@ -119,7 +114,7 @@ ext{
     leakcanary_version = '1.6.2'
     jackson_version = '2.9.8'
     room_version = '2.1.0-alpha03'
-    butterknife_version = '9.0.0-SNAPSHOT'
+    butterknife_version = '10.0.0'
 }
 
 dependencies {
@@ -175,6 +170,7 @@ dependencies {
 
     implementation 'com.jakewharton.timber:timber:4.7.1'
 
+    // LeakCanary temporarily disabled
     debugImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakcanary_version"
     debugIapImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakcanary_version"
     testImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakcanary_version"

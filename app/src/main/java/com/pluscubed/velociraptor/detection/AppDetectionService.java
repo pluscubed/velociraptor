@@ -1,35 +1,34 @@
 package com.pluscubed.velociraptor.detection;
 
 import android.accessibilityservice.AccessibilityService;
-import android.accessibilityservice.AccessibilityServiceInfo;
-import android.annotation.TargetApi;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.view.accessibility.AccessibilityEvent;
-import android.view.accessibility.AccessibilityNodeInfo;
 
 import com.crashlytics.android.Crashlytics;
 import com.pluscubed.velociraptor.BuildConfig;
 import com.pluscubed.velociraptor.limit.LimitService;
+import com.pluscubed.velociraptor.utils.LimitedSizeQueue;
 import com.pluscubed.velociraptor.utils.PrefUtils;
 
-import java.util.List;
+import java.util.ListIterator;
 import java.util.Set;
 
+import androidx.core.util.Pair;
 import timber.log.Timber;
 
 public class AppDetectionService extends AccessibilityService {
 
     public static final String GOOGLE_MAPS_PACKAGE = "com.google.android.apps.maps";
-    public static final String GMAPS_BOTTOM_CONTAINER_ID = "com.google.android.apps.maps:id/bottommapoverlay_container";
-    public static final String GMAPS_SPEED_LIMIT_TEXT = "SPEED LIMIT";
     private static AppDetectionService INSTANCE;
 
     private Set<String> enabledApps;
     private boolean isGmapsNavigating;
+
+    //time and whether opened
+    private LimitedSizeQueue<Pair<Long, Boolean>> pastEvents;
 
     public static AppDetectionService get() {
         return INSTANCE;
@@ -39,6 +38,8 @@ public class AppDetectionService extends AccessibilityService {
     protected void onServiceConnected() {
         super.onServiceConnected();
         INSTANCE = this;
+        isGmapsNavigating = false;
+        pastEvents = new LimitedSizeQueue<>(5);
     }
 
     @Override
@@ -53,21 +54,14 @@ public class AppDetectionService extends AccessibilityService {
 
     public void setGmapsNavigating(boolean gmapsNavigating) {
         this.isGmapsNavigating = gmapsNavigating;
-        enableGoogleMapsMonitoring(true);
     }
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
-        if (enabledApps == null) {
-            updateSelectedApps();
-        }
-
-        if (event.getPackageName() == null
-                || event.getClassName() == null
-                || (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED && !event.getPackageName().equals(GOOGLE_MAPS_PACKAGE)
-                || enabledApps == null)) {
+        if (event.getPackageName() == null || event.getClassName() == null) {
             return;
         }
+
 
         Timber.d(event.toString());
 
@@ -75,6 +69,9 @@ public class AppDetectionService extends AccessibilityService {
                 event.getPackageName().toString(),
                 event.getClassName().toString()
         );
+
+        long eventTime = event.getEventTime();
+        event.recycle();
 
         boolean isActivity = componentName.getPackageName().toLowerCase().contains("activity")
                 || tryGetActivity(componentName) != null;
@@ -85,40 +82,32 @@ public class AppDetectionService extends AccessibilityService {
 
         Intent intent = new Intent(this, LimitService.class);
 
+        if (enabledApps == null) {
+            updateSelectedApps();
+        }
         boolean shouldStartService = enabledApps.contains(componentName.getPackageName());
 
-        if (componentName.getPackageName().equals(GOOGLE_MAPS_PACKAGE)) {
-            if (PrefUtils.isGmapsOnlyInNavigation(this) && !isGmapsNavigating) {
-                enableGoogleMapsMonitoring(false);
-                intent.putExtra(LimitService.EXTRA_HIDE_LIMIT, false);
-
-                shouldStartService = false;
-            } else {
-                enableGoogleMapsMonitoring(true);
-
-                AccessibilityNodeInfo rootInActiveWindow = null;
-                try {
-                    rootInActiveWindow = getRootInActiveWindow();
-                } catch (Exception e) {
-                    if (!BuildConfig.DEBUG) {
-                        Crashlytics.logException(e);
-                    }
-                }
-                if (rootInActiveWindow != null && searchGmapsSpeedLimitSign(rootInActiveWindow)) {
-                    intent.putExtra(LimitService.EXTRA_HIDE_LIMIT, true);
-                } else {
-                    intent.putExtra(LimitService.EXTRA_HIDE_LIMIT, false);
-                }
-            }
-        } else {
-            enableGoogleMapsMonitoring(false);
-            intent.putExtra(LimitService.EXTRA_HIDE_LIMIT, false);
+        if (componentName.getPackageName().equals(GOOGLE_MAPS_PACKAGE) && PrefUtils.isGmapsOnlyInNavigation(this) && !isGmapsNavigating) {
+            shouldStartService = false;
         }
 
+        if (componentName.getPackageName().equals(BuildConfig.APPLICATION_ID)) {
+            shouldStartService = true;
+        }
 
-        if (!shouldStartService && !componentName.getPackageName().equals(BuildConfig.APPLICATION_ID)) {
+        // Check 5 previous events - if within 200ms and launched the service, don't close
+        ListIterator<Pair<Long, Boolean>> iterator = pastEvents.listIterator(pastEvents.size());
+        while (iterator.hasPrevious()) {
+            Pair<Long, Boolean> pastEvent = iterator.previous();
+            if (pastEvent.second && Math.abs(eventTime - pastEvent.first) < 200) {
+                shouldStartService = true;
+            }
+        }
+
+        if (!shouldStartService) {
             intent.putExtra(LimitService.EXTRA_CLOSE, true);
         }
+        pastEvents.add(new Pair<>(eventTime, shouldStartService));
 
         try {
             startService(intent);
@@ -127,70 +116,6 @@ public class AppDetectionService extends AccessibilityService {
                 Crashlytics.logException(e);
             }
         }
-    }
-
-    private void enableGoogleMapsMonitoring(boolean enable) {
-        try {
-            AccessibilityServiceInfo serviceInfo = getServiceInfo();
-            if (serviceInfo != null) {
-                if (enable) {
-                    serviceInfo.eventTypes = AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED |
-                            AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED;
-                    serviceInfo.notificationTimeout = 500;
-                } else {
-                    serviceInfo.eventTypes = AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED;
-                    serviceInfo.notificationTimeout = 0;
-                }
-                setServiceInfo(serviceInfo);
-            }
-        } catch (Exception e) {
-            if (!BuildConfig.DEBUG) {
-                Crashlytics.logException(e);
-            }
-        }
-    }
-
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
-    private boolean searchGmapsSpeedLimitSign(AccessibilityNodeInfo source) throws SecurityException {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2 || source == null) {
-            return false;
-        }
-
-        List<AccessibilityNodeInfo> speedLimitNodes =
-                source.findAccessibilityNodeInfosByViewId(GMAPS_BOTTOM_CONTAINER_ID);
-
-        source.recycle();
-
-        for (AccessibilityNodeInfo info : speedLimitNodes) {
-            if (info.isVisibleToUser()) {
-                return searchSpeedLimitText(info, 0);
-            }
-        }
-
-        return false;
-    }
-
-    private boolean searchSpeedLimitText(AccessibilityNodeInfo source, int depth) throws SecurityException {
-        if (depth > 10 || source == null) {
-            return false;
-        }
-
-        if (source.getText() != null) {
-            String text = source.getText().toString();
-            if (text.contains(GMAPS_SPEED_LIMIT_TEXT)) {
-                return true;
-            }
-        }
-
-        for (int i = 0; i < source.getChildCount(); i++) {
-            if (searchSpeedLimitText(source.getChild(i), depth + 1)) {
-                return true;
-            }
-        }
-
-        source.recycle();
-
-        return false;
     }
 
     private ActivityInfo tryGetActivity(ComponentName componentName) {

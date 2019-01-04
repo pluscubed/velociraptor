@@ -28,6 +28,16 @@
             android:textColor="?android:textColorPrimary"
             app:autoSizeTextType="uniform" />
 
+        <TextView
+            android:id="@+id/limit_source_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|bottom"
+            android:includeFontPadding="false"
+            android:textColor="?android:textColorPrimaryInverse"
+            tools:text="HERE"
+            tools:textSize="8dp" />
+
     </FrameLayout>
 
     <include layout="@layout/floating_speedometer_stub" />

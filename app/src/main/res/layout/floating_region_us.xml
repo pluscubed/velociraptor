@@ -12,8 +12,7 @@
     <!--width/height = card width/height + sum of padding of the sides-->
     <!--padding of each left/right side = ~2.58578643763-->
     <!--padding of each top/bottom side = ~3.58578643763-->
-    <!--actual card width = 56dp-->
-    <!--actual card height = 72dp-->
+    <!--layout_width, layout_height dimensions set dynamically-->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/limit"
         android:layout_width="61.172dp"
@@ -33,6 +32,7 @@
             android:layout_gravity="center"
             android:orientation="vertical">
 
+            <!--text sizes set dynamically-->
             <TextView
                 android:id="@+id/limit_label_text"
                 android:layout_width="wrap_content"
@@ -43,7 +43,7 @@
                 android:text="SPEED\nLIMIT"
                 android:textColor="?android:textColorPrimary"
                 android:textStyle="bold"
-                tools:textSize="12sp" />
+                tools:textSize="12dp" />
 
             <TextView
                 android:id="@+id/limit_text"
@@ -54,7 +54,18 @@
                 android:includeFontPadding="false"
                 android:text="--"
                 android:textColor="?android:textColorPrimary"
-                tools:textSize="28sp" />
+                tools:textSize="28dp" />
+
+            <TextView
+                android:id="@+id/limit_source_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:background="#fff"
+                android:includeFontPadding="false"
+                android:textColor="?android:textColorPrimary"
+                tools:text="HERE"
+                tools:textSize="8dp" />
 
         </LinearLayout>
 

@@ -7,8 +7,8 @@ import com.google.maps.android.PolyUtil
 import com.pluscubed.velociraptor.api.Coord
 import com.pluscubed.velociraptor.api.LimitProvider
 import com.pluscubed.velociraptor.api.LimitResponse
+import com.pluscubed.velociraptor.utils.NormalizedLevenshtein
 import com.pluscubed.velociraptor.utils.PrefUtils
-import com.pluscubed.velociraptor.utils.Utils
 import timber.log.Timber
 import java.util.Arrays
 import kotlin.Comparator
@@ -19,6 +19,8 @@ class CacheLimitProvider(private val context: Context) : LimitProvider {
         Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, "cache.db")
             .fallbackToDestructiveMigration()
             .build()
+
+    private val normalizedLevenshtein = NormalizedLevenshtein()
 
     fun put(response: LimitResponse) {
         if (response.coords.isEmpty()) {
@@ -102,9 +104,9 @@ class CacheLimitProvider(private val context: Context) : LimitProvider {
         }
     }
 
-    private fun getRoadNameSimilarity(way: Way, previousRoadName: String?): Int {
-        return if (previousRoadName == null) 0
-        else Utils.levenshteinDistance(way.road, previousRoadName)
+    private fun getRoadNameSimilarity(way: Way, previousRoadName: String?): Double {
+        return if (previousRoadName == null) 0.0
+        else normalizedLevenshtein.similarity(way.road, previousRoadName)
     }
 
 

@@ -82,11 +82,10 @@ object Utils {
 
     private fun playTone() {
         try {
-            val toneGen1 = ToneGenerator(AudioManager.STREAM_ALARM, 100)
+            val toneGen1 = ToneGenerator(AudioManager.STREAM_MUSIC, 100)
             toneGen1.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 100)
         } catch (ignored: RuntimeException) {
         }
-
     }
 
     @JvmOverloads
@@ -117,48 +116,6 @@ object Utils {
             context,
             Manifest.permission.ACCESS_FINE_LOCATION
         ) == PackageManager.PERMISSION_GRANTED
-    }
-
-    fun levenshteinDistance(lhs: CharSequence, rhs: CharSequence): Int {
-        val len0 = lhs.length + 1
-        val len1 = rhs.length + 1
-
-        // the array of distances
-        var cost = IntArray(len0)
-        var newcost = IntArray(len0)
-
-        // initial cost of skipping prefix in String s0
-        for (i in 0 until len0) cost[i] = i
-
-        // dynamically computing the array of distances
-
-        // transformation cost for each letter in s1
-        for (j in 1 until len1) {
-            // initial cost of skipping prefix in String s1
-            newcost[0] = j
-
-            // transformation cost for each letter in s0
-            for (i in 1 until len0) {
-                // matching current letters in both strings
-                val match = if (lhs[i - 1] == rhs[j - 1]) 0 else 1
-
-                // computing cost for each transformation
-                val cost_replace = cost[i - 1] + match
-                val cost_insert = cost[i] + 1
-                val cost_delete = newcost[i - 1] + 1
-
-                // keep minimum cost
-                newcost[i] = Math.min(Math.min(cost_insert, cost_delete), cost_replace)
-            }
-
-            // swap cost/newcost arrays
-            val swap = cost
-            cost = newcost
-            newcost = swap
-        }
-
-        // the distance is the cost for transforming all letters in both strings
-        return cost[len0 - 1]
     }
 
     fun isNetworkConnected(context: Context): Boolean {

@@ -125,11 +125,12 @@ class OsmLimitProvider(
         var limitResponse = LimitResponse(
             timestamp = System.currentTimeMillis(),
             origin = LimitResponse.ORIGIN_OSM,
-            debugInfo =
-            if (debuggingEnabled)
-                "\nOSM Info:\n--" + TextUtils.join("\n--", osmOverpassApis)
-            else
-                ""
+                debugInfo = (
+                        if (debuggingEnabled)
+                            "\nOSM Info:\n--" + TextUtils.join("\n--", osmOverpassApis)
+                        else
+                            ""
+                        )
         )
         try {
             val osmResponse = getOsmResponse(location)

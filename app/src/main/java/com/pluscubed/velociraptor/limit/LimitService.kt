@@ -44,7 +44,7 @@ class LimitService : Service(), CoroutineScope {
 
     private var speedLimitJob: Job? = null
 
-    private var currentSpeedLimit = -1
+    private var currentLimitResponse: LimitResponse? = null
     private var lastLocationWithSpeed: Location? = null
     private var lastLocationWithFetchAttempt: Location? = null
 
@@ -95,16 +95,16 @@ class LimitService : Service(), CoroutineScope {
 
             if (intent.extras != null && intent.extras!!.containsKey(EXTRA_HIDE_LIMIT)) {
                 isLimitHidden = intent.getBooleanExtra(EXTRA_HIDE_LIMIT, false)
-                speedLimitView!!.hideLimit(isLimitHidden)
+                speedLimitView?.hideLimit(isLimitHidden)
                 if (isLimitHidden) {
-                    currentSpeedLimit = -1
+                    currentLimitResponse = null;
                 }
             }
 
             if (intent.getBooleanExtra(EXTRA_NOTIF_START, false)) {
                 isStartedFromNotification = true
             } else if (intent.getBooleanExtra(EXTRA_PREF_CHANGE, false)) {
-                speedLimitView!!.updatePrefs()
+                speedLimitView?.updatePrefs()
 
                 forceRefetch()
                 updateLimitView(false)
@@ -179,7 +179,7 @@ class LimitService : Service(), CoroutineScope {
         return super.onStartCommand(intent, flags, startId)
     }
 
-    private suspend fun verifyPurchase(vararg purchases: Purchase) {
+    private fun verifyPurchase(vararg purchases: Purchase) {
         try {
             var updated = false
             purchases.forEach { purchase ->
@@ -278,7 +278,7 @@ class LimitService : Service(), CoroutineScope {
                         withContext(Dispatchers.IO) { limitFetcher!!.getSpeedLimit(location) }
 
                     if (!limitResponse.isEmpty) {
-                        currentSpeedLimit = limitResponse.speedLimit
+                        currentLimitResponse = limitResponse
                         updateLimitView(true)
                     } else {
                         updateLimitView(false)
@@ -326,19 +326,24 @@ class LimitService : Service(), CoroutineScope {
 
         text += debuggingRequestInfo
         text += "\n\nYou can turn off this window in the Velociraptor app"
-        speedLimitView!!.setDebuggingText(text)
+        speedLimitView?.setDebuggingText(text)
     }
 
     private fun updateLimitView(success: Boolean) {
         var text = "--"
-        if (currentSpeedLimit != -1) {
-            text = convertToUiSpeed(currentSpeedLimit).toString()
+        val speedLimit = getCurrentSpeedLimit()
+        if (speedLimit != -1) {
+            text = convertToUiSpeed(speedLimit).toString()
             if (!success) {
                 text = "($text)"
             }
-        }
 
-        speedLimitView!!.setLimitText(text)
+            val provider = currentLimitResponse?.origin ?: LimitResponse.ORIGIN_INVALID
+            val providerString = LimitResponse.getLimitProviderString(provider)
+            speedLimitView?.setLimit(text, providerString)
+        } else {
+            speedLimitView?.setLimit(text, "")
+        }
     }
 
     private fun updateSpeedometer(location: Location?) {
@@ -354,6 +359,7 @@ class LimitService : Service(), CoroutineScope {
         val percentToleranceFactor = 1 + PrefUtils.getSpeedingPercent(this).toFloat() / 100
         val constantTolerance = PrefUtils.getSpeedingConstant(this)
 
+        val currentSpeedLimit = getCurrentSpeedLimit()
         val percentToleratedLimit = (currentSpeedLimit * percentToleranceFactor).toInt()
         val warningLimit: Int
         if (PrefUtils.getToleranceMode(this)) {
@@ -363,7 +369,7 @@ class LimitService : Service(), CoroutineScope {
         }
 
         if (currentSpeedLimit != -1 && kmhSpeed > warningLimit) {
-            speedLimitView!!.setSpeeding(true)
+            speedLimitView?.setSpeeding(true)
 
             val currentTimeMillis = System.currentTimeMillis()
             val beepEnabled = PrefUtils.isBeepAlertEnabled(this)
@@ -375,14 +381,16 @@ class LimitService : Service(), CoroutineScope {
                 speedingStartTimestamp = java.lang.Long.MAX_VALUE - 2000L
             }
         } else {
-            speedLimitView!!.setSpeeding(false)
+            speedLimitView?.setSpeeding(false)
             speedingStartTimestamp = -1
         }
 
-        speedLimitView!!.setSpeed(convertToUiSpeed(kmhSpeed), speedometerPercentage)
+        speedLimitView?.setSpeed(convertToUiSpeed(kmhSpeed), speedometerPercentage)
 
         lastLocationWithSpeed = location
     }
+
+    private fun getCurrentSpeedLimit() = currentLimitResponse?.speedLimit ?: -1
 
     private fun convertToUiSpeed(kmhSpeed: Int): Int {
         var speed = kmhSpeed

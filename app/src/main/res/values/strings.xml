@@ -23,7 +23,7 @@
     <string name="enable_accessibility_service">Turn on Accessibility Service</string>
     <string name="enable_accessibility_service_desc">Allow Velociraptor to launch automatically in map apps</string>
     <string name="accessibility_service_summary">Auto-launch in map apps</string>
-    <string name="accessibility_service_description">Allow Velociraptor to detect the foreground app and launch automatically.\n\nVelociraptor does not use any information other than the foreground app info. This service is mainly intended for users with disabilities.</string>
+    <string name="accessibility_service_description">Allow Velociraptor to detect the foreground app and launch automatically.\n\nVelociraptor does not use any information other than the foreground app info.</string>
     <string name="open_settings_failed_accessibility">Unable to open settings. Please manually enable the Accessibility Service setting for Velociraptor.</string>
 
     <string name="grant_permission">Grant permission</string>
