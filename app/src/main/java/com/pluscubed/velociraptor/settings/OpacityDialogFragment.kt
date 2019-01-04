@@ -12,6 +12,7 @@ import androidx.fragment.app.DialogFragment
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.customview.customView
 import com.pluscubed.velociraptor.R
 import com.pluscubed.velociraptor.utils.PrefUtils
 import com.pluscubed.velociraptor.utils.Utils
@@ -56,8 +57,8 @@ class OpacityDialogFragment : DialogFragment() {
 
                 try {
                     PrefUtils.setOpacity(
-                        activity,
-                        Integer.parseInt(percentEditText.text.toString())
+                            activity,
+                            Integer.parseInt(percentEditText.text.toString())
                     )
                     Utils.updateFloatingServicePrefs(activity)
                 } catch (ignored: NumberFormatException) {
@@ -73,8 +74,8 @@ class OpacityDialogFragment : DialogFragment() {
 
                     try {
                         PrefUtils.setOpacity(
-                            activity,
-                            Integer.parseInt(percentEditText.text.toString())
+                                activity,
+                                Integer.parseInt(percentEditText.text.toString())
                         )
                         Utils.updateFloatingServicePrefs(activity)
                     } catch (ignored: NumberFormatException) {
@@ -88,15 +89,14 @@ class OpacityDialogFragment : DialogFragment() {
             override fun onStopTrackingTouch(seekBar: SeekBar) {}
         })
 
-        return MaterialDialog.Builder(activity!!)
-            .customView(dialog, true)
-            .title(R.string.transparency)
-            .negativeText(android.R.string.cancel)
-            .positiveText(android.R.string.ok)
-            .onNegative { _, _ ->
-                PrefUtils.setOpacity(activity, initialTransparency)
-                Utils.updateFloatingServicePrefs(activity)
-            }.build()
+        return MaterialDialog(activity!!)
+                .customView(view = dialog, scrollable = true)
+                .title(R.string.transparency)
+                .negativeButton(android.R.string.cancel) {
+                    PrefUtils.setOpacity(activity, initialTransparency)
+                    Utils.updateFloatingServicePrefs(activity)
+                }
+                .positiveButton(android.R.string.ok)
     }
 
 }

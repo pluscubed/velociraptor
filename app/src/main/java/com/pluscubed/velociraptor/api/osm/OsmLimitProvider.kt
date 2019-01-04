@@ -27,9 +27,9 @@ import java.io.IOException
 import java.util.*
 
 class OsmLimitProvider(
-    private val context: Context,
-    private val client: OkHttpClient,
-    private val cacheLimitProvider: CacheLimitProvider
+        private val context: Context,
+        private val client: OkHttpClient,
+        private val cacheLimitProvider: CacheLimitProvider
 ) : LimitProvider {
 
 
@@ -43,8 +43,8 @@ class OsmLimitProvider(
         })
 
         val osmClient = client.newBuilder()
-            .addInterceptor(osmInterceptor)
-            .build()
+                .addInterceptor(osmInterceptor)
+                .build()
         val osmRest = LimitFetcher.buildRetrofit(osmClient, endpoint.baseUrl)
 
         val osmService = osmRest.create(OsmService::class.java)
@@ -67,7 +67,7 @@ class OsmLimitProvider(
         }
 
         val stringArray = apisString.replace("[", "").replace("]", "").split(",".toRegex())
-            .dropLastWhile { it.isEmpty() }.toTypedArray()
+                .dropLastWhile { it.isEmpty() }.toTypedArray()
 
         val existingUrls = HashSet<String>()
         for (existing in osmOverpassApis) {
@@ -105,7 +105,7 @@ class OsmLimitProvider(
         }
         try {
             val osmNetworkResponse =
-                selectedEndpoint.service!!.getOsm(buildQueryBody(location)).execute()
+                    selectedEndpoint.service!!.getOsm(buildQueryBody(location)).execute()
             logOsmRequest(selectedEndpoint)
             return Utils.getResponseBody(osmNetworkResponse)
         } catch (e: Exception) {
@@ -117,14 +117,14 @@ class OsmLimitProvider(
     }
 
     override fun getSpeedLimit(
-        location: Location,
-        lastResponse: LimitResponse?,
-        origin: Int
+            location: Location,
+            lastResponse: LimitResponse?,
+            origin: Int
     ): List<LimitResponse> {
         val debuggingEnabled = PrefUtils.isDebuggingEnabled(context)
         var limitResponse = LimitResponse(
-            timestamp = System.currentTimeMillis(),
-            origin = LimitResponse.ORIGIN_OSM,
+                timestamp = System.currentTimeMillis(),
+                origin = LimitResponse.ORIGIN_OSM,
                 debugInfo = (
                         if (debuggingEnabled)
                             "\nOSM Info:\n--" + TextUtils.join("\n--", osmOverpassApis)
@@ -187,7 +187,7 @@ class OsmLimitProvider(
 
         } catch (e: Exception) {
             return listOf(
-                limitResponse.copy(error = e).initDebugInfo(debuggingEnabled)
+                    limitResponse.copy(error = e).initDebugInfo(debuggingEnabled)
             )
         }
     }
@@ -242,13 +242,13 @@ class OsmLimitProvider(
     private fun logOsmRequest(endpoint: OsmApiEndpoint) {
         if (!BuildConfig.DEBUG) {
             Answers.getInstance().logCustom(
-                CustomEvent("OSM Request")
-                    .putCustomAttribute("Server", endpoint.baseUrl)
+                    CustomEvent("OSM Request")
+                            .putCustomAttribute("Server", endpoint.baseUrl)
             )
 
             val endpointString = Uri.parse(endpoint.baseUrl).authority!!
-                .replace(".", "_")
-                .replace("-", "_")
+                    .replace(".", "_")
+                    .replace("-", "_")
             val key = "osm_request_$endpointString"
             FirebaseAnalytics.getInstance(context).logEvent(key, Bundle())
         }
@@ -258,14 +258,14 @@ class OsmLimitProvider(
         if (!BuildConfig.DEBUG) {
             if (throwable is IOException) {
                 Answers.getInstance().logCustom(
-                    CustomEvent("Network Error")
-                        .putCustomAttribute("Server", endpoint.baseUrl)
-                        .putCustomAttribute("Message", throwable.message)
+                        CustomEvent("Network Error")
+                                .putCustomAttribute("Server", endpoint.baseUrl)
+                                .putCustomAttribute("Message", throwable.message)
                 )
 
                 val endpointString = Uri.parse(endpoint.baseUrl).authority!!
-                    .replace(".", "_")
-                    .replace("-", "_")
+                        .replace(".", "_")
+                        .replace("-", "_")
                 val key = "osm_error_$endpointString"
                 FirebaseAnalytics.getInstance(context).logEvent(key, Bundle())
             }

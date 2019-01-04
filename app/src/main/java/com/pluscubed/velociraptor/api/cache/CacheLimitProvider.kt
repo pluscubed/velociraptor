@@ -16,9 +16,9 @@ import kotlin.Comparator
 class CacheLimitProvider(private val context: Context) : LimitProvider {
 
     private val db: AppDatabase =
-        Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, "cache.db")
-            .fallbackToDestructiveMigration()
-            .build()
+            Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, "cache.db")
+                    .fallbackToDestructiveMigration()
+                    .build()
 
     private val normalizedLevenshtein = NormalizedLevenshtein()
 
@@ -39,9 +39,9 @@ class CacheLimitProvider(private val context: Context) : LimitProvider {
      * Returns list with at least 1 element
      */
     override fun getSpeedLimit(
-        location: Location,
-        lastResponse: LimitResponse?,
-        origin: Int
+            location: Location,
+            lastResponse: LimitResponse?,
+            origin: Int
     ): List<LimitResponse> {
         val lastRoadName = lastResponse?.roadName
         return get(lastRoadName, Coord(location))
@@ -55,51 +55,51 @@ class CacheLimitProvider(private val context: Context) : LimitProvider {
         this@CacheLimitProvider.cleanup()
 
         val selectedWays =
-            db.wayDao().selectByCoord(
-                coord.lat,
-                Math.pow(Math.cos(Math.toRadians(coord.lat)), 2.0),
-                coord.lon
-            )
+                db.wayDao().selectByCoord(
+                        coord.lat,
+                        Math.pow(Math.cos(Math.toRadians(coord.lat)), 2.0),
+                        coord.lon
+                )
 
         val onPathWays = selectedWays
-            .filter { (_, _, _, _, lat1, lon1, lat2, lon2) ->
-                val coord1 = Coord(lat1, lon1)
-                val coord2 = Coord(lat2, lon2)
-                isLocationOnPath(coord1, coord2, coord)
-            };
+                .filter { (_, _, _, _, lat1, lon1, lat2, lon2) ->
+                    val coord1 = Coord(lat1, lon1)
+                    val coord2 = Coord(lat2, lon2)
+                    isLocationOnPath(coord1, coord2, coord)
+                };
 
         val debuggingEnabled = PrefUtils.isDebuggingEnabled(context)
 
         if (onPathWays.isEmpty()) {
             return listOf(
-                LimitResponse(
-                    timestamp = System.currentTimeMillis(),
-                    fromCache = true
-                ).initDebugInfo(debuggingEnabled)
+                    LimitResponse(
+                            timestamp = System.currentTimeMillis(),
+                            fromCache = true
+                    ).initDebugInfo(debuggingEnabled)
             )
         }
 
         try {
             return onPathWays
-                .sortedWith(Comparator { way1, way2 ->
-                    //Higher origin = further to the front
-                    //Higher road similarity = further to the front
-                    val heuristic2 = way2.origin + getRoadNameSimilarity(way2, previousRoadName)
-                    val heuristic1 = way1.origin + getRoadNameSimilarity(way1, previousRoadName)
-                    heuristic2.compareTo(heuristic1)
-                })
-                .map { limitCacheWay ->
-                    limitCacheWay.toResponse()
-                        .copy(fromCache = true)
-                        .initDebugInfo(debuggingEnabled)
-                }
+                    .sortedWith(Comparator { way1, way2 ->
+                        //Higher origin = further to the front
+                        //Higher road similarity = further to the front
+                        val heuristic2 = way2.origin + getRoadNameSimilarity(way2, previousRoadName)
+                        val heuristic1 = way1.origin + getRoadNameSimilarity(way1, previousRoadName)
+                        heuristic2.compareTo(heuristic1)
+                    })
+                    .map { limitCacheWay ->
+                        limitCacheWay.toResponse()
+                                .copy(fromCache = true)
+                                .initDebugInfo(debuggingEnabled)
+                    }
         } catch (e: Exception) {
             return listOf(
-                LimitResponse(
-                    timestamp = System.currentTimeMillis(),
-                    error = e,
-                    fromCache = true
-                ).initDebugInfo(debuggingEnabled)
+                    LimitResponse(
+                            timestamp = System.currentTimeMillis(),
+                            error = e,
+                            fromCache = true
+                    ).initDebugInfo(debuggingEnabled)
             )
         }
     }

@@ -14,6 +14,7 @@ import androidx.fragment.app.DialogFragment
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.customview.customView
 import com.pluscubed.velociraptor.R
 import com.pluscubed.velociraptor.utils.PrefUtils
 import com.pluscubed.velociraptor.utils.Utils
@@ -123,26 +124,25 @@ class ToleranceDialogFragment : DialogFragment() {
             andButton.isChecked = false
         }
 
-        return MaterialDialog.Builder(activity!!)
-            .customView(dialog, true)
-            .title(R.string.speeding_amount)
-            .negativeText(android.R.string.cancel)
-            .positiveText(android.R.string.ok)
-            .onPositive { _, _ ->
-                try {
-                    PrefUtils.setSpeedingConstant(
-                        activity,
-                        Integer.parseInt(constantEditText.text.toString())
-                    )
-                    PrefUtils.setSpeedingPercent(
-                        activity,
-                        Integer.parseInt(percentEditText.text.toString())
-                    )
-                } catch (ignored: NumberFormatException) {
-                }
+        return MaterialDialog(activity!!)
+                .customView(view = dialog, scrollable = true)
+                .title(R.string.speeding_amount)
+                .negativeButton(android.R.string.cancel)
+                .positiveButton(android.R.string.ok) {
+                    try {
+                        PrefUtils.setSpeedingConstant(
+                                activity,
+                                Integer.parseInt(constantEditText.text.toString())
+                        )
+                        PrefUtils.setSpeedingPercent(
+                                activity,
+                                Integer.parseInt(percentEditText.text.toString())
+                        )
+                    } catch (ignored: NumberFormatException) {
+                    }
 
-                PrefUtils.setToleranceMode(activity, andButton.isChecked)
-            }.build()
+                    PrefUtils.setToleranceMode(activity, andButton.isChecked)
+                }
     }
 
     override fun onDismiss(dialog: DialogInterface?) {

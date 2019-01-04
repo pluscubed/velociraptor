@@ -11,6 +11,8 @@
 
         <item name="android:textColor">?android:textColorPrimary</item>
         <item name="android:windowContentOverlay">@null</item>
+
+        <item name="md_corner_radius">8dp</item>
     </style>
 
     <style name="Widget.Button.Colored" parent="Widget.MaterialComponents.Button">
