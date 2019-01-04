@@ -91,7 +91,7 @@ należą do swoich właścicieli.<br/><br/>
     <string name="openstreetmap">OpenStreetMap</string>
     <string name="share_link">Udostępnij link</string>
     <string name="openstreetmap_desc">Bezpłatnie - serwer OSM Velociraptor jest obsługiwany przez Ciebie</string>
-    <string name="osm_edit">Przejdź na stronę &lt;DEBUG&gt;openstreetmap.org&lt;/DEBUG&gt;, aby dodać/edytować ograniczenia prędkości</string>
+    <string name="osm_edit">Przejdź na stronę %s, aby dodać/edytować ograniczenia prędkości</string>
     <string name="open_link_failed">Nie można otworzyć łącza. Proszę ręcznie przejść do %s.</string>
     <string name="edit_data">Edytuj dane</string>
     <string name="subscribe">Subskrybuj</string>

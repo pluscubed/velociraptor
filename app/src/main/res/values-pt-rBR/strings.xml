@@ -1,77 +1,88 @@
 <?xml version="1.0"?>
 <resources>
     <string name="app_name">Velociraptor</string>
+    <!--Generic-->
+    <string name="configure">Configure</string>
+    <string name="done">Pronto</string>
+    <string name="show">Mostre</string>
+    <string name="hide">Esconda</string>
+    <string name="dismiss">Fechar</string>
+    <string name="kmph">%s km/h</string>
+    <string name="mph">%s MPH</string>
+    <string name="percent">%s%%</string>
     <string name="notif_content">Pressione para abrir a página de configurações</string>
-    <string name="notif_title">Velociraptor monitorando</string>
-    <string name="accessibility_service_description">Dê a permissão ao Velociraptor para  reconhecer aplicativos e aparecer automaticamente.\n\nO Velociraptor não usa nenhuma outra informação além do aplicativo atual.</string>
+    <string name="notif_title">Velociraptor ativado</string>
+    <!--Permission Settings-->
+    <string name="open_settings_page">Abra página de configurações</string>
+    <string name="enable_floating_desc">Dê a permissão ao Velociraptor para aparecer sobre outros aplicativos</string>
+    <string name="open_settings_failed_overlay">Não foi possível abrir a página de configurações. Por favor, dê a permissão ao Velociraptor para aparecer sobre outros aplicativos.</string>
     <string name="enable_accessibility_service">Habilite o serviço de acessibilidade</string>
     <string name="enable_accessibility_service_desc">Dê a permissão ao Velociraptor para  reconhecer o aplicativo atual o ativando no serviço de acessibilidade</string>
-    <string name="enable_floating_desc">Dê a permissão ao Velociraptor para aparecer sobre outros aplicativos</string>
-    <string name="open_settings_page">Abra página de configurações</string>
-    <string name="grant_permission">Permita</string>
-    <string name="enable_location_desc">Para determinar a velocidade máxima local, dê a permissão ao Velociraptor para acessar sua localização</string>
+    <string name="accessibility_service_description">Dê a permissão ao Velociraptor para  reconhecer aplicativos e aparecer automaticamente.\n\nO Velociraptor não usa nenhuma outra informação além do aplicativo atual.</string>
+    <string name="open_settings_failed_accessibility">Não pôde abrir a página de configurações. Por favor, dê a permissão ao Velociraptor no serviço de acessibilidade</string>
+    <string name="grant_permission">Dê a permissão</string>
+    <string name="enable_location_desc">Dê a permissão ao Velociraptor para acessar sua localização</string>
+    <string name="permissions_warning">O Velociraptor não tem as permissões adequadas.  Por favor, abra o aplicativo e as configure.</string>
+    <string name="location_settings_warning">O GPS não está ligado</string>
+    <string name="network_warning">Rede desconectada</string>
+    <!--General Settings-->
+    <string name="general">Geral</string>
+    <string name="show_speedometer">Velocímetro</string>
+    <string name="sound_alert">Alerta sonoro</string>
+    <string name="test">Teste</string>
     <string name="speed_unit">Unidade de velocidade</string>
     <string name="style">Estilo</string>
     <string name="united_states">Estados Unidos</string>
     <string name="international">Internacional</string>
-    <string name="open_settings_failed_overlay">Não pôde abrir a página de configurações.  Por favor, dê a permissão ao Velociraptor para aparecer sobre outros aplicativos.</string>
-    <string name="open_settings_failed_accessibility">Não pôde abrir a página de configurações.  Por favor, ative o Velociraptor no serviço de acessibilidade</string>
-    <string name="permissions_warning">O Velociraptor não tem as permissões adequadas.  Por favor, abra o aplicativo e as configure.</string>
-    <string name="location_settings_warning">O GPS não está ligado.  Por favor, dê a permissão ao Velociraptor para acessar sua localização.</string>
-    <string name="network_warning">Rede desconectada.  O Velociraptor requer conexão à internet para obter a velocidade máxima local.</string>
+    <string name="size">Tamanho</string>
+    <string name="size_limit_overview">Limite de velocidade: %s</string>
+    <string name="size_speedometer_overview">Velocímetro: %s</string>
+    <string name="transparency">Transparência</string>
     <string name="speeding_amount">Tolerância para o excesso de velocidade</string>
-    <string name="show_speedometer">Mostre o velocímetro</string>
+    <string name="tolerance_dialog_text">Avise quando o limite de velocidade for excedido por:</string>
+    <string name="plus">mais</string>
+    <string name="or">ou</string>
+    <string name="tolerance_desc">%1$s %2$s %3$s</string>
+    <!--About Dialog-->
+    <string name="about">Sobre</string>
     <string name="about_dialog_title">Velociraptor v%s</string>
-    <string name="dismiss">Fechar</string>
     <string name="about_body"><![CDATA[
         <b>Velociraptor</b> é um monitor da velocidade máxima com velocímetro e avisos, usando dados sobre a velocidade máxima do OpenStreetMap e do HERE Maps.
         <br/><br/>
 
         Desenvolvido por <b>Daniel Ciao</b><br/>
 
-        <a href=\'http://pluscubed.com\'>Website</a>&nbsp;&nbsp;
-        <a href=\'mailto:pluscubed@gmail.com\'>Email</a>&nbsp;&nbsp;
-        <a href=\'https://twitter.com/plusCubed\'>Twitter</a>&nbsp;&nbsp;
-        <a href=\'https://google.com/+DanielCiao\'>Google+</a>&nbsp;&nbsp;
-        <a href=\'https://github.com/pluscubed\'>GitHub</a>&nbsp;&nbsp;
-        <a href=\'https://www.linkedin.com/in/dciao\'>LinkedIn</a><br/><br/>
+        <a href="http://pluscubed.com">Website</a>&nbsp;&nbsp;
+        <a href="mailto:pluscubed@gmail.com">Email</a>&nbsp;&nbsp;
+        <a href="https://twitter.com/plusCubed">Twitter</a>&nbsp;&nbsp;
+        <a href="https://google.com/+DanielCiao">Google+</a>&nbsp;&nbsp;
+        <a href="https://github.com/pluscubed">GitHub</a>&nbsp;&nbsp;
+        <a href="https://www.linkedin.com/in/dciao">LinkedIn</a><br/><br/>
 
-        <a href=\'https://play.google.com/store/apps/details?id=com.pluscubed.velociraptor\'>Avalie o Velociraptor na Play Store!</a><br/><br/>
+        <a href="https://play.google.com/store/apps/details?id=com.pluscubed.velociraptor">Avalie o Velociraptor na Play Store!</a><br/><br/>
 
-        <a href=\'https://github.com/pluscubed/velociraptor\'>GitHub</a> para o código fonte, problemas e sugestões<br/>
-        <a href=\'http://pluscubed.oneskyapp.com/collaboration/project/64120\'>OneSky</a> para traduzir o Velociraptor para sua língua
-    ]]></string>
-    <string name="about">Sobre</string>
-    <string name="configure">Configure</string>
+        <a href="https://github.com/pluscubed/velociraptor">GitHub</a> para o código fonte, problemas e sugestões<br/>
+        <a href="http://pluscubed.oneskyapp.com/collaboration/project/64120">OneSky</a> para traduzir o Velociraptor para sua língua<br/> 
+<a href="https://play.google.com/apps/testing/com.pluscubed.velociraptor">Teste beta</a>]]></string>
+    <!--Speed limit providers-->
+    <!--Activation Settings-->
     <string name="show_in_apps">Aparecer sobre estes aplicativos:</string>
     <string name="persistent_notification_controls">Mostre controles na notificação</string>
-    <string name="done">Pronto</string>
-    <string name="select_apps">Selecione aplicativos</string>
-    <string name="show_map_apps">Mostre aplicativos de mapas</string>
-    <string name="show">Mostre</string>
-    <string name="hide">Esconda</string>
     <string name="controls_notif_title">Controles do Velociraptor</string>
     <string name="controls_notif_desc">Mostre ou esconda a velocidade máxima</string>
-    <string name="general">Geral</string>
+    <!--App selection-->
+    <string name="select_apps">Selecione aplicativos</string>
+    <string name="show_map_apps">Mostre aplicativos de mapas</string>
+    <!---Advanced settings-->
     <string name="advanced">Avançada</string>
-    <string name="changelog">Lista de alterações</string>
     <string name="debugging_stats">Estatísticas de atividades</string>
-    <string name="test">Teste</string>
-    <string name="sound_alert">Alerta sonoro</string>
-    <string name="tolerance_dialog_text">Avise quando a velocidade máxima é excedida em:</string>
-    <string name="plus">mais</string>
-    <string name="or">ou</string>
-    <string name="kmph">%s km/h</string>
-    <string name="mph">%s MPH</string>
-    <string name="percent">%s%%</string>
-    <string name="tolerance_desc">%1$s %2$s %3$s</string>
+    <!--Changelog-->
+    <string name="changelog">Lista de alterações</string>
+    <!--Support development-->
     <string name="support_development">Apóie o desenvolvimento</string>
     <string name="in_app_unavailable">Não está disponível cobrança no aplicativo</string>
     <string name="support_dev_dialog">Usado para custear o servidor e o uso de APIs.  A quantia sugerida é US$1.00 por mês.  Um distintivo será mostrado aqui em sinal de minha sincera gratidão.</string>
     <string name="per_month">%s por mês</string>
     <string name="one_time">%s uma única vez</string>
-    <string name="transparency">Transparência</string>
-    <string name="size">Tamanho</string>
-    <string name="size_limit_overview">Limite de velocidade: %s</string>
-    <string name="size_speedometer_overview">Velocímetro: %s</string>
+    <!--Notification Channels-->
 </resources>

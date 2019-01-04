@@ -23,6 +23,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.text.parseAsHtml
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.afollestad.materialdialogs.MaterialDialog
@@ -181,8 +182,8 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
         const val PRIVACY_URL = "https://www.pluscubed.com/velociraptor/privacy_policy.html"
         const val TROUBLESHOOT_URL = "https://www.pluscubed.com/velociraptor/troubleshoot.html"
 
-        const val OSM_EDITDATA_URL = "http://openstreetmap.org"
-        const val OSM_COVERAGE_URL = "http://product.itoworld.com/map/124"
+        const val OSM_EDITDATA_URL = "https://openstreetmap.org"
+        const val OSM_COVERAGE_URL = "https://product.itoworld.com/map/124"
         const val HERE_EDITDATA_URL = "https://mapcreator.here.com/mapcreator"
         const val TOMTOM_EDITDATA_URL = "https://www.tomtom.com/mapshare/tools"
 
@@ -528,7 +529,11 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
         osmEditDataButton.setOnClickListener { view ->
             MaterialDialog(this@SettingsActivity)
                     .show {
-                        message(R.string.osm_edit)
+                        var text = getString(R.string.osm_edit)
+                        if (text.contains("%s")) {
+                            text = text.format("<b>$OSM_EDITDATA_URL</b>")
+                        }
+                        message(text = text.parseAsHtml(), lineHeightMultiplier = 1.2f)
                         positiveButton(R.string.share_link) { _ ->
                             val shareIntent = Intent()
                             shareIntent.type = "text/plain"

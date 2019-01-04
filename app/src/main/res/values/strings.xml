@@ -119,8 +119,8 @@
 
     <string name="openstreetmap">OpenStreetMap</string>
     <string name="share_link">Share Link</string>
-    <string name="openstreetmap_desc">Free - Velociraptor\'s OSM server is supported by you</string>
-    <string name="osm_edit">Visit <DEBUG>openstreetmap.org</DEBUG> on your computer to add/edit speed limits</string>
+    <string name="openstreetmap_desc">Free - Velociraptor\'s OSM server is supported by users</string>
+    <string name="osm_edit">Visit %s on your computer to add/edit speed limits</string>
     <string name="open_link_failed">Unable to open link. Please manually go to %s.</string>
 
     <string name="edit_data">Edit Data</string>

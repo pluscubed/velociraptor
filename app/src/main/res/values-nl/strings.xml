@@ -80,7 +80,7 @@
     <string name="openstreetmap">OpenStreetMap</string>
     <string name="share_link">Link delen</string>
     <string name="openstreetmap_desc">Gratis - Velociraptor\'s OSM-server wordt door jou ondersteund</string>
-    <string name="osm_edit">Ga naar &lt;DEBUG&gt;openstreetmap.org&lt;/DEBUG&gt; op een computer om snelheidslimieten aan te passen</string>
+    <string name="osm_edit">Ga naar %s op een computer om snelheidslimieten aan te passen</string>
     <string name="open_link_failed">Kan link niet openen. Ga zelf naar %s.</string>
     <string name="edit_data">Gegevens bewerken</string>
     <string name="subscribe">Abonneren</string>

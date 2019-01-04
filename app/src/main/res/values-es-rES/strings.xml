@@ -70,7 +70,7 @@ Desarrollado por <b>Daniel Ciao</b><br/>
     <string name="subscribe_placeholder">Subscribirse (7 días gratuitos)</string>
     <string name="here_provider">HERE Maps</string>
     <string name="tomtom_provider">TomTom Maps</string>
-    <string name="osm_edit">Visita <b>openstreetmap.org</b> en tu ordenador para añadir/editar límites de velocidad</string>
+    <string name="osm_edit">Visita %s en tu ordenador para añadir/editar límites de velocidad</string>
     <!--Activation Settings-->
     <string name="show_in_apps">Mostrar en estas aplicaciones:</string>
     <string name="persistent_notification_controls">Mostrar notificación con controles</string>

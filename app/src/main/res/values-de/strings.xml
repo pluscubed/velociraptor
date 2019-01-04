@@ -12,25 +12,26 @@
     <string name="percent">%s%%</string>
     <string name="grant">Zulassen</string>
     <string name="notif_content">Tippe, um Einstellungen aufzurufen</string>
-    <string name="notif_title">Velociraptor Anzeige läuft</string>
+    <string name="notif_title">Velociraptor läuft</string>
     <!--Permission Settings-->
     <string name="open_settings_page">Einstellungsseite öffnen</string>
-    <string name="enable_floating_desc">Um das Overlay anzuzeigen, ist die  Berechtigung \"über anderen Apps einblenden\" nötig.</string>
+    <string name="enable_floating_desc">Um das Overlay anzuzeigen, ist die  Berechtigung \"über anderen Apps einblenden\" erforderlich.</string>
     <string name="open_settings_failed_overlay">Einstellungen können nicht geöffnet werden. Bitte erlauben Sie \"über anderen Apps einblenden\" für Velociraptor manuell.</string>
-    <string name="enable_accessibility_service">Zugriffsdienst aktivieren</string>
-    <string name="enable_accessibility_service_desc">Erlaube Velociraptor durch Aktivieren der Bedienungshilfen, die aktuell laufende App zu erkennen</string>
-    <string name="accessibility_service_summary">Autostart in Kartenapps</string>
-    <string name="accessibility_service_description">Um die Vordergrund-App zu bestimmen und die Geschwindigkeit anzuzeigen, muss der \"Bedienungshilfen\"-Dienst  aktiviert werden.</string>
+    <string name="enable_accessibility_service">\"Bedienungshilfen\"-Dienst aktivieren</string>
+    <string name="enable_accessibility_service_desc">Erlaube Velociraptor, durch Aktivieren der Bedienungshilfen, eine eine laufende Navigations-App zu erkennen.</string>
+    <string name="accessibility_service_summary">Autostart in Navigations-Apps</string>
+    <string name="accessibility_service_description">Erlaube Velociraptor die Vordergrund-App zu ereknnen und automatisch zu starten.\n\nVelociraptor nutzt ausschließlich die Information, welche App im Vordergrund läuft. Dieser Service vereinfacht die Bedienung.</string>
     <string name="open_settings_failed_accessibility">Einstellungen können nicht geöffnet werden. Bitte aktivieren Sie die Bedienungshilfen in den Systemeinstellungen manuell.</string>
     <string name="grant_permission">Berechtigung erteilen</string>
-    <string name="enable_location_desc">Um die erlaubte Geschwindigkeit zu bestimmen, ist die Berechtigung zur Standortbestimmung nötig.</string>
-    <string name="permissions_warning">Velociraptor hat nicht die nötigen Berechtigungen. Um diese erneut zu vergeben, starten Sie bitte die App.</string>
-    <string name="location_settings_warning">GPS ist ausgeschaltet. Bitte aktivieren Sie es, damit Velociraptor die Geschwindigkeit auswerten kann.</string>
-    <string name="network_warning">Kein Internet. Velociraptor braucht eine Internetverbindung um die Geschwindigkeitsbegrenzung zu laden.</string>
+    <string name="enable_location_desc">Erteile die Berechtigung zur Standortbestimmung.</string>
+    <string name="warning_notif_title">Velociraptor kann nicht gestartet werden</string>
+    <string name="permissions_warning">Velociraptor hat nicht die Berechtigungen den Standort zu bestimmen. Um diese zu erteilen, starten Sie bitte die App.</string>
+    <string name="location_settings_warning">GPS ist ausgeschaltet.</string>
+    <string name="network_warning">Kein Internetzugriff.</string>
     <!--General Settings-->
     <string name="general">Allgemein</string>
     <string name="show_limits">Geschwindigkeitsbegrenzungen</string>
-    <string name="show_speedometer">Geschwindigkeit anzeigen</string>
+    <string name="show_speedometer">Geschwindigkeitsanzeige</string>
     <string name="sound_alert">Alarmton</string>
     <string name="test">Test</string>
     <string name="speed_unit">Einheit der Geschwindigkeit</string>
@@ -40,9 +41,11 @@
     <string name="size">Größe</string>
     <string name="size_limit_overview">Geschwindigkeitsbegrenzung: %s</string>
     <string name="size_speedometer_overview">Geschwindigkeitsanzeige: %s</string>
+    <string name="size_limit_text">Geschwindigkeitsbegrenzung</string>
+    <string name="size_speedometer_text">Geschwindigkeitsanzeige</string>
     <string name="transparency">Transparenz</string>
     <string name="speeding_amount">Zulässige Überschreitung der Höchstgeschwindigkeit</string>
-    <string name="tolerance_dialog_text">Warnt bei Überschreitung von</string>
+    <string name="tolerance_dialog_text">Warnen bei Überschreitung von:</string>
     <string name="plus">plus</string>
     <string name="or">oder</string>
     <string name="tolerance_desc">%1$s %2$s %3$s</string>
@@ -57,14 +60,27 @@
         Entwickelt von <b>Daniel Ciao</b><br/>
 
         <a href="http://pluscubed.com">Webseite</a>&nbsp;&nbsp;
+        <a href="mailto:pluscubed@gmail.com">Email</a>&nbsp;&nbsp; 
         <a href="https://twitter.com/plusCubed">Twitter</a>&nbsp;&nbsp;
         <a href="https://google.com/+DanielCiao">Google+</a>&nbsp;&nbsp;
         <a href="https://github.com/pluscubed">GitHub</a>&nbsp;&nbsp;
         <a href="https://www.linkedin.com/in/dciao">LinkedIn</a><br/><br/>
 
+        <a href="https://play.google.com/store/apps/details?id=com.pluscubed.velociraptor">Bewerten Sie im Play Store!</a><br/><br/> 
+
         <a href="https://github.com/pluscubed/velociraptor">GitHub</a> - Quelltext, Probleme, Feature-Wünsche<br/>
-    ]]></string>
+       <a href="http://pluscubed.oneskyapp.com/collaboration/project/64120">OneSky</a> - Übersetzen Sie die App in Ihre Sprache<br/>
+       <a href="https://play.google.com/apps/testing/com.pluscubed.velociraptor">Beta-test</a>
+
+ ]]></string>
     <string name="licenses">Lizenzen</string>
+    <string name="terms_body"><![CDATA[Durch die Nutzung von Velociraptor entbinden Sie den Entwickler, die Anbieter der Geschwindigkeitsgrenzen und alle anderen Beteiligten von jeglicher Haftung bezüglich Unfällen, rechtlicher Konsequenzen und aller anderer Folgen. Die Daten, inklusive Geschwindigkeitsbegrenzung und aktueller Geschwindigkeit, welche durch Velociraptor bereit gestellt werden, erheben keinen Anspruch auf Richtigkeit. Diese App ist nicht an OpenStreetMap, HERE, TomTom, oder Sygic angegliedert und wird nicht von diesen Unternehmen unterstützt. Alle Warenzeichen gehören den betreffenden Inhabern.<br/><br/>
+
+<b>Bitte achten SIe auf die Straße und verwenden SIe die App mit Vorsicht.</b> ]]></string>
+    <string name="accept">Akzeptieren</string>
+    <string name="terms">Bedingungen</string>
+    <string name="privacy_policy">Datenschutzerklärung</string>
+    <string name="terms_warning">Öffne Velociraptor und die Nutzungsbedingungen zu akzeptieren</string>
     <!--Speed limit providers-->
     <string name="speed_limit_providers">Geschwindigkeitsbegrenzungsprovider</string>
     <string name="subscribe_placeholder">Abonniere (7 Tage kostenlos testen)</string>
@@ -75,7 +91,7 @@
     <string name="openstreetmap">OpenStreetMap</string>
     <string name="share_link">Link teilen</string>
     <string name="openstreetmap_desc">Kostenlos - Der OSM-Server für Velociraptor wird durch Spenden finanziert</string>
-    <string name="osm_edit">Öffne &lt;DEBUG&gt;openstreetmap.org&lt;/DEBUG&gt; am PC um Geschwindigkeitslimits zu konfigurieren</string>
+    <string name="osm_edit">Öffne %s am PC um Geschwindigkeitslimits zu konfigurieren</string>
     <string name="open_link_failed">Link kann nicht geöffnet werden. Bitte gehe zu %s.</string>
     <string name="edit_data">Bearbeite Daten</string>
     <string name="subscribe">Abonniere</string>
@@ -83,11 +99,11 @@
     <string name="coverage">Abdeckung</string>
     <!--Activation Settings-->
     <string name="show_in_apps">Zeige in diesen Apps</string>
-    <string name="persistent_notification_controls">Zeige Benachrichtigungkontrollen</string>
+    <string name="persistent_notification_controls">Zeige Benachrichtigungverwaltung</string>
     <string name="controls_notif_title">Velociraptor Einstellungen</string>
-    <string name="controls_notif_desc">Zeig oder verstecke die Höchstgeschwindigkeit Anzeige</string>
+    <string name="controls_notif_desc">Zeig oder verstecke die Höchstgeschwindigkeitsanzeige</string>
     <string name="gmaps_only_nav">Google Maps: nur während der Navigation</string>
-    <string name="gmaps_only_nav_notif_access">Um dieses Feature zu nutzen benötigt Velociraptor Benachrichtigungszugriff um zu prüfen ob Google Maps läuft</string>
+    <string name="gmaps_only_nav_notif_access">Um dieses Feature zu nutzen benötigt Velociraptor den aktivierten Bedienungshilfen-Dienst demit geprüft werden kann, ob Google Maps läuft</string>
     <string name="open_settings_failed_notif_access">Einstellungen können nicht geöffnet werden. Bitte aktiviere die \"Benachrichtigungseinstellungen\" für Velociraptor manuell.</string>
     <!--App selection-->
     <string name="select_apps">Wähle Apps aus</string>
@@ -95,6 +111,8 @@
     <!---Advanced settings-->
     <string name="advanced">Fortgeschritten</string>
     <string name="debugging_stats">Statistik für Nerds / Debugging</string>
+    <string name="clear_cache">Cache der Geschwindigkeitsbegrenzungen leeren</string>
+    <string name="cache_cleared">Cache geleert!</string>
     <!--Changelog-->
     <string name="changelog">Änderungsprotokoll</string>
     <string name="rate">Bewerte</string>
@@ -105,8 +123,7 @@
     <string name="support_dev_dialog">Wird für die Unterhaltung des OSM-Servers verwendet; empfohlen 1 USD pro Monat (Betrag wird in der Auswahl in € umgerechnet).</string>
     <string name="per_month">%s pro Monat</string>
     <string name="one_time">%s einmalig</string>
-    <!--Tile-->
-    <!--HERE Config-->
-    <!--Wrong or missing speed limit-->
-    <!--Android Auto-->
+    <!--Notification Channels-->
+    <string name="channel_toggles">Anzeige anzeigen/ausblenden</string>
+    <string name="channel_warnings">Warnungen</string>
 </resources>
