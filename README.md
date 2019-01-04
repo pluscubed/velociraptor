@@ -8,10 +8,14 @@ Floating speed limit monitor for Android with speedometer and warning features.
 - Put `google-services.json` from Firebase in /app/
 - (Optional) Put `fabric.properties` in /app/ with apiSecret
 - (Optional) Put `apis.xml` with overpass_api and debug_id in /app/src/main/res/values/
-- (Optional) Put signing keys & Fabric API key in local.properties  
+- (Optional) Put signing keys in gradle.properties/local.properties
+    - RELEASE_STORE_FILE
+    - RELEASE_STORE_PASSWORD
+    - RELEASE_KEY_ALIAS_VELOCIRAPTOR
+    - RELEASE_KEY_PASSWORD_VELOCIRAPTOR
 
 ```
-Copyright (C) 2018  Daniel Ciao
+Copyright (C) 2019  Daniel Ciao
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
