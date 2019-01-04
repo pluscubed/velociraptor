@@ -1,7 +1,0 @@
-<resources>
-
-    <style name="Theme.Velociraptor" parent="Base.Theme.Velociraptor">
-        <item name="toolbarShadow">@null</item>
-    </style>
-
-</resources>

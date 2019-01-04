@@ -3,8 +3,6 @@
     <string name="app_name">Velociraptor</string>
     <string name="notif_content">Kosketa avataksesi asetukset</string>
     <string name="notif_title">Velociraptorin näyttö käynnissä</string>
-    <string name="dialog_draw_overlay">Salli käyttöoikeus \"piirrä muihin sovelluksiin\", jotta kelluvat elementit näkyvät Android 6.0+:ssa</string>
-    <string name="open_settings">Avaa Asetukset-sivu</string>
     <string name="accessibility_service_description">Helppokäyttöisyyspalvelun tulee olla päällä, jotta etualalla oleva sovellus tunnistetaan ja nopeusrajoitus näytetään.</string>
     <string name="enable_accessibility_service">Kytke helppokäyttöisyyspalvelu päälle</string>
     <string name="enable_accessibility_service_desc">Salli Velociraptorin tunnistaa tämänhetkinen sovellus kytkemällä sen helppokäyttöisyyspalvelu päälle</string>
@@ -44,12 +42,7 @@
         <a href=\'http://pluscubed.oneskyapp.com/collaboration/project/64120\'>OneSky</a> - käännä sovellus kielellesi
     ]]></string>
     <string name="about">Tietoja</string>
-    <string name="wrong_speed_limit">Väärä tai puuttuva nopeusrajoitus?</string>
-    <string name="wrong_speed_limit_desc">Mene OpenStreetMappiin tietokoneellasi. Kosketa jakaaksesi linkin (https://openstreetmap.org)</string>
     <string name="configure">Konfiguroi</string>
-    <string name="automatically_show">Näytä/piilota määrätyissä sovelluksissa</string>
-    <string name="select_overlay_usage">Aktivointi</string>
-    <string name="enable">Kytke päälle</string>
     <string name="show_in_apps">Näytä näissä sovelluksissa:</string>
     <string name="persistent_notification_controls">Näytä ilmoituskontrollit</string>
     <string name="done">Tehty</string>

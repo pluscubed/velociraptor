@@ -69,7 +69,6 @@ Desarrollado por <b>Daniel Ciao</b><br/>
     <string name="speed_limit_providers">Proveedores de límites de velocidad</string>
     <string name="subscribe_placeholder">Subscribirse (7 días gratuitos)</string>
     <string name="here_provider">HERE Maps</string>
-    <string name="here_provider_short">HERE</string>
     <string name="tomtom_provider">TomTom Maps</string>
     <string name="osm_edit">Visita <b>openstreetmap.org</b> en tu ordenador para añadir/editar límites de velocidad</string>
     <!--Activation Settings-->
@@ -79,7 +78,6 @@ Desarrollado por <b>Daniel Ciao</b><br/>
     <string name="controls_notif_desc">Mostrar u ocultar el monitor de límite de velocidad</string>
     <string name="gmaps_only_nav">Google Maps: Sólo en navegación</string>
     <string name="gmaps_only_nav_notif_access">Para usar esta función, Velociraptor necesita acceso a notificaciones cuando Google Maps Navigation está abierto</string>
-    <string name="gmaps_only_nav_jellybean">Solo disponible para Android 4.3+</string>
     <string name="open_settings_failed_notif_access">No es posible abrir los ajustes. Por favor active manualmente el acceso a las notificaciones para Velociraptor.</string>
     <!--App selection-->
     <string name="select_apps">Elegir aplicaciones</string>

@@ -109,15 +109,12 @@
     <string name="subscribe_placeholder">Subscribe (7-day free trial)</string>
 
     <string name="here_provider">HERE Maps</string>
-    <string name="here_provider_short">HERE</string>
     <string name="here_desc">Subscribe for %s (7-day free trial)</string>
 
     <string name="tomtom_provider">TomTom Maps</string>
-    <string name="tomtom_provider_short">TomTom</string>
     <string name="tomtom_desc">Subscribe for %s (7-day free trial)</string>
 
     <string name="openstreetmap">OpenStreetMap</string>
-    <string name="openstreetmap_short">OSM</string>
     <string name="share_link">Share Link</string>
     <string name="openstreetmap_desc">Free - Velociraptor\'s OSM server is supported by you</string>
     <string name="osm_edit">Visit <DEBUG>openstreetmap.org</DEBUG> on your computer to add/edit speed limits</string>
@@ -138,7 +135,6 @@
 
     <string name="gmaps_only_nav">Google Maps: Only when navigating</string>
     <string name="gmaps_only_nav_notif_access">To use this feature, Velociraptor needs Notification Access to check when Google Maps navigation is open</string>
-    <string name="gmaps_only_nav_jellybean">Only available for Android 4.3+</string>
     <string name="open_settings_failed_notif_access">Unable to open settings. Please manually enable the \"Notification access\" setting for Velociraptor.</string>
 
     <!--App selection-->

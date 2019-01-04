@@ -1,9 +1,7 @@
 package com.pluscubed.velociraptor.detection;
 
-import android.annotation.TargetApi;
 import android.app.Notification;
 import android.content.Intent;
-import android.os.Build;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.text.TextUtils;
@@ -11,7 +9,6 @@ import android.text.TextUtils;
 import com.pluscubed.velociraptor.limit.LimitService;
 import com.pluscubed.velociraptor.utils.PrefUtils;
 
-@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
 public class GmapsNavNotificationListener extends NotificationListenerService {
 
     @Override

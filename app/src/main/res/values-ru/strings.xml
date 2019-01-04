@@ -3,8 +3,6 @@
     <string name="app_name">Velociraptor</string>
     <string name="notif_content">Нажмите, чтобы открыть настройки</string>
     <string name="notif_title">Velociraptor монитор работает</string>
-    <string name="dialog_draw_overlay">Чтобы показать плавающие элементы на Android 6.0+, предоставить разрешение \"рисовать поверх других приложений\"</string>
-    <string name="open_settings">Открыть параметры страницы</string>
     <string name="accessibility_service_description">Чтобы обнаружить приложение на переднем плане и дисплей ограничения скорости, доступность услуг должны быть включены.</string>
     <string name="enable_accessibility_service">"Включить службу "</string>
     <string name="enable_accessibility_service_desc">Для автоматического отображения ограничения скорости на карте приложения , включите службу</string>
@@ -42,12 +40,7 @@
 <a href=\'https://github.com/pluscubed/velociraptor\'>GitHub</a> - Источник, вопросы, пожелания<br/> 
 <a href=\'http://pluscubed.oneskyapp.com/collaboration/project/64120\'>OneSky</a> - переведите приложение на свой язык]]></string>
     <string name="about">О приложении</string>
-    <string name="wrong_speed_limit">Неправильное или отсутствует ограничение скорости?</string>
-    <string name="wrong_speed_limit_desc">Перейдите к OpenStreetMap на вашем компьютере. Коснитесь , чтобы поделиться ссылкой (https://openstreetmap.org)</string>
     <string name="configure">Настроить</string>
-    <string name="automatically_show">Показать/Скрыть в указанных приложениях</string>
-    <string name="select_overlay_usage">Активация</string>
-    <string name="enable">Включить</string>
     <string name="show_in_apps">Показать в этих приложениях:</string>
     <string name="persistent_notification_controls">Показать уведомления элементов управления</string>
     <string name="done">Готово</string>
@@ -60,7 +53,4 @@
     <string name="general">Общие</string>
     <string name="advanced">Дополнительно</string>
     <string name="changelog">История изменений</string>
-    <string name="help_edit">Помочь изменить ограничение скорости передачи данных</string>
-    <string name="check_coverage_desc">Если да и ограничение скорости не проявляется, там может быть ошибка. Используйте кнопку обратной связи на самом верху.</string>
-    <string name="check_coverage">Прикоснуться, чтобы проверить, если ваш район</string>
 </resources>

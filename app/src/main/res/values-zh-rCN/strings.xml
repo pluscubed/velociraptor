@@ -3,8 +3,6 @@
     <string name="app_name">Velociraptor</string>
     <string name="notif_content">轻触来打开设置</string>
     <string name="notif_title">Velociraptor速度限制</string>
-    <string name="dialog_draw_overlay">为了在安卓6.0以上显示浮动界面，请允许Velociraptor在其它应用的上层显示</string>
-    <string name="open_settings">打开设置界面</string>
     <string name="accessibility_service_description">Velociraptor可以随谷歌地图自动开启速度提醒，请在设置中开启无障碍服务</string>
     <string name="enable_accessibility_service">启用无障碍服务</string>
     <string name="enable_accessibility_service_desc">Velociraptor可以随谷歌地图自动进行速度提醒，请在设置中开启无障碍服务</string>
@@ -42,6 +40,4 @@
         <a href=\'http://pluscubed.oneskyapp.com/collaboration/project/64120\'>OneSky</a> - translate the app to your language
     ]]></string>
     <string name="about">关于</string>
-    <string name="wrong_speed_limit">速度限制信息错误或缺失？</string>
-    <string name="wrong_speed_limit_desc">在电脑上访问 OpenStreetMap来修正数据。点击链接分享（https://openstreetmap.org）</string>
 </resources>

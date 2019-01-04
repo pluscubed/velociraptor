@@ -43,7 +43,7 @@ android {
 
     defaultConfig {
         applicationId "com.pluscubed.velociraptor"
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 28
         versionCode 47
         versionName "1.6.10"

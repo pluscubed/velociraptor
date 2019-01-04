@@ -3,7 +3,6 @@
     <string name="app_name">Velociraptor</string>
     <!--Generic-->
     <string name="configure">Konfigurera</string>
-    <string name="enable">Tillåt</string>
     <string name="done">Klar</string>
     <string name="show">Visa</string>
     <string name="hide">Dölj</string>
@@ -16,7 +15,6 @@
     <!--Permission Settings-->
     <string name="open_settings_page">Öppna inställningssidan</string>
     <string name="enable_floating_desc">Aktivera \"Program som kan visas överst\"-rättigheten för att visa överlappningen.</string>
-    <string name="dialog_draw_overlay">För att visa flytande element i Android 6.0+, tillåt \"Visa Över Andra Applikationer\"-behörigheten.</string>
     <string name="open_settings_failed_overlay">Misslyckades att öppna inställningar. Vänligen aktivera \"Program som kan visas överst\"-inställningen för Velociraptor manuellt.</string>
     <string name="enable_accessibility_service">Aktivera tillgänglighetstjänster</string>
     <string name="enable_accessibility_service_desc">Tillåt Velociraptor att upptäcka den aktuella appen genom att slå på dess tillgänglighetsservice.</string>
@@ -67,11 +65,7 @@
         <a href=\'http://pluscubed.oneskyapp.com/collaboration/project/64120\'>OneSky</a> - översätt appen till ditt språk
     ]]></string>
     <!--Speed limit providers-->
-    <string name="check_coverage">Tryck för att kontrollera om ditt område är täckt</string>
-    <string name="open_coverage_map_failed">Kan inte öppna länken. Vänligen gå till http://product.itoworld.com/map/124 manuellt.</string>
     <!--Activation Settings-->
-    <string name="select_overlay_usage">Aktivering</string>
-    <string name="automatically_show">Visa/dölj i specifika appar</string>
     <string name="show_in_apps">Visa i följande appar:</string>
     <string name="persistent_notification_controls">Visa notifikationskontroller</string>
     <string name="controls_notif_title">Velociraptorkontroller</string>
@@ -82,32 +76,15 @@
     <!---Advanced settings-->
     <string name="advanced">Avancerat</string>
     <string name="debugging_stats">Statistik för nördar/debugging</string>
-    <string name="obtaining_gps_location">Hämtar GPS-position...</string>
     <!--Changelog-->
     <string name="changelog">Förändringslogg</string>
     <!--Support development-->
     <string name="support_development">Stöd utvecklingen</string>
     <string name="in_app_unavailable">Köp i appar är inte tillgängligt.</string>
     <string name="support_dev_dialog">Används för OpenStreetMap-serverkostnader; rekommenderat belopp är 1 USD per månad.</string>
-    <string name="support_dev_dialog_badge">Tack för ditt stöd!</string>
-    <string name="support_dev_dialog_notplay"><![CDATA[
-    Används för server- och API-kostnader; föreslaget belopp är 1 USD per månad.
-    &lt;br/&gt;&lt;br/&gt;
-    Du kan donera via PayPal <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&amp;business=72HXHU5AXK2ZN&amp;lc=US&amp;item_name=Velociraptor%20Development&amp;item_number=velociraptor&amp;currency_code=USD&amp;bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted">här</a>. Köp i appen är tillgängliga om du laddar ner från Google Play.
-    ]]></string>
     <string name="per_month">%s per månad</string>
     <string name="one_time">%s i engångsavgift</string>
     <!--Android Auto-->
-    <string name="notif_android_auto_title">Velociraptor för Android Auto</string>
-    <string name="notif_android_auto_limit">Hastighetsgräns: %s</string>
-    <string name="android_auto_integration_switch">Android Auto-integration</string>
-    <string name="android_auto_instruction_dialog">Velociraptor fungerar som en meddelandeapp för Android Auto.\nFör att använda denna måste Android Auto-appen vara förgrundsapp.\nFör att stänga av notifikationsljuden, tryck på stäng- eller svaraknappen en gång.</string>
-    <string name="auto_not_available">Inte tillgänglig i Google Play-versionen av Velociraptor.</string>
     <!--Tile-->
-    <string name="open_settings">Öppna inställningssidan</string>
     <!--Wrong or missing speed limit-->
-    <string name="wrong_speed_limit">Fel eller saknad hastighetsbegränsning?</string>
-    <string name="check_coverage_desc">Om ja och hastighetsbegränsningen inte visas, kan det finnas en bugg. Använd debugstatistikinställningarna och infoknappen för att skicka feedback.</string>
-    <string name="help_edit">Hjälp till att redigera hastighetsbegränsningsinformation</string>
-    <string name="wrong_speed_limit_desc">Gå till OpenStreetMap på din dator. Tryck för att dela länken (https://openstreetmap.org)</string>
 </resources>

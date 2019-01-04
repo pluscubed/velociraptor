@@ -3,8 +3,6 @@
     <string name="app_name">Velociraptor</string>
     <string name="notif_content">Ayarları açmak için dokunun</string>
     <string name="notif_title">Velociraptor Hız Limiti</string>
-    <string name="dialog_draw_overlay">Android 6.0+ cihazlarda bilgi baloncuklarını göstermek için, \"Diğer uygulamaların üzerinde görüntüleme\" iznini verin</string>
-    <string name="open_settings">Ayarlar Sayfasını Aç</string>
     <string name="accessibility_service_description">Uygulamanın ön planda olup olmadığının algılanması ve hız limitinin gösterilmesi için Erişilebilirlik Servisi aktif olmalıdır.</string>
     <string name="enable_accessibility_service">Erişilebilirlik Servisini Aktifleştir</string>
     <string name="enable_accessibility_service_desc">Hız limitini harita uygulamaları üzerinde otomatik olarak göstermek için, Erişilebilirlik servisini aktif edin</string>

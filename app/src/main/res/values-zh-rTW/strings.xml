@@ -3,8 +3,6 @@
     <string name="app_name">Velociraptor</string>
     <string name="notif_content">輕觸以設定</string>
     <string name="notif_title">Velociraptor 速限提醒</string>
-    <string name="dialog_draw_overlay">為了要在 Android 6.0+ 的系統顯示懸浮介面，請啟用「在其他應用程式上繪製內容」權限</string>
-    <string name="open_settings">前往設定頁面</string>
     <string name="accessibility_service_description">為了使 Velociraptor 能夠偵測目前執行的應用程式以便適時地顯示速限提醒，請啟用此項無障礙服務。</string>
     <string name="enable_accessibility_service">啟用無障礙服務</string>
     <string name="enable_accessibility_service_desc">要讓速限提醒自動顯示在地圖類型的應用程式上，請啟用必要的無障礙服務</string>
@@ -42,6 +40,4 @@
         <a href=\'http://pluscubed.oneskyapp.com/collaboration/project/64120\'>OneSky</a> - translate the app to your language
     ]]></string>
     <string name="about">關於</string>
-    <string name="wrong_speed_limit">速限有誤或遺漏嗎？</string>
-    <string name="wrong_speed_limit_desc">請使用您的電腦前往 OpenStreetMap 編輯正確的速限資料。輕觸此處可分享網址 (https://openstreetmap.org)</string>
 </resources>

@@ -3,8 +3,6 @@
     <string name="app_name">Velociraptor</string>
     <string name="notif_content">Érintsd meg a beállításokhoz</string>
     <string name="notif_title">Velociraptor fut</string>
-    <string name="dialog_draw_overlay">A lebegő elemek megjelenítéséhez kérlek add meg \"Megjelenítés más alkalmazások felett\" engedélyt</string>
-    <string name="open_settings">Beállítások megnyitása</string>
     <string name="accessibility_service_description">Engedd a Velociraptornak, hogy érzékelje a futó appot és megjelenhessen automatikusan. \n\nA Velociraptor nem használ az app nevén kívül más információt.</string>
     <string name="enable_accessibility_service">Kisegítő lehetőségek szolgáltatás engedélyezése</string>
     <string name="enable_accessibility_service_desc">Kérlek kapcsold be a kisegítő lehetőségek szolgáltatást, hogy a Velicoraptor felismerhesse milyen alkalmazás fut épp</string>
@@ -43,12 +41,7 @@ Fejlesztette: <b>Daniel Ciao</b><br/>
 <a href=\'http://ost4cel.oneskyapp.com/collaboration/project/64120\'>OneSky</a> - fordítsd le az alkalmazást a saját nyelvedre
 ]]></string>
     <string name="about">Névjegy</string>
-    <string name="wrong_speed_limit">Hibás vagy hiányzó sebességhatár?</string>
-    <string name="wrong_speed_limit_desc">Nyisd meg az OpenStreetMap-et a számítógépen. Érintsd meg a link megosztásához (https://openstreetmap.org)</string>
     <string name="configure">Beállítások</string>
-    <string name="automatically_show">Megjelenítés/elrejtés bizonyos applikációkban</string>
-    <string name="select_overlay_usage">Aktiválás</string>
-    <string name="enable">Engedélyezés</string>
     <string name="show_in_apps">Mutasd a következő alkalmazásokban:</string>
     <string name="persistent_notification_controls">Értesítési beállítások megjelenítése</string>
     <string name="done">Kész</string>
@@ -61,14 +54,9 @@ Fejlesztette: <b>Daniel Ciao</b><br/>
     <string name="general">Általános</string>
     <string name="advanced">Haladó</string>
     <string name="changelog">Változások listája</string>
-    <string name="help_edit">Segíts a sebességhatár-információk szerkesztésében</string>
-    <string name="check_coverage_desc">Ha \"igen\", és a sebességhatár nem látszódik, lehet hogy hiba történt. Használd a hibakeresési statisztikák opciót és az infó gombot a visszajelzés elküldéséhez.</string>
-    <string name="check_coverage">Érints meg, hogy ellenőrizd, a területeden elérhető-e a sebességhatár-információ</string>
-    <string name="obtaining_gps_location">GPS-pozíció meghatározása…</string>
     <string name="debugging_stats">Statisztkák nördöknek/hibakereséshez</string>
     <string name="test">Teszt</string>
     <string name="sound_alert">Hangjelzés</string>
-    <string name="open_coverage_map_failed">A linket nem lehet megnyitni. Kérlek kézzel nyisd meg a következőt: http://product.itoworld.com/map/124</string>
     <string name="tolerance_dialog_text">Figyelmeztess, ha a sebességhatár túllépés eléri:</string>
     <string name="plus">plusz</string>
     <string name="or">vagy</string>
@@ -79,19 +67,9 @@ Fejlesztette: <b>Daniel Ciao</b><br/>
     <string name="support_development">A fejlesztés támogatása</string>
     <string name="in_app_unavailable">Alkalmazáson belüli számlázás nem elérhető</string>
     <string name="support_dev_dialog">A szerver és API fenttartására lesz felhasználva; javasolt összeg havi 1 USD. Egy jelvény fogja jelképezni legmélyebb hálámat.</string>
-    <string name="support_dev_dialog_badge">Köszönöm a támogatást!</string>
     <string name="per_month">Havonta %s</string>
     <string name="one_time">Egy alkalommal %s</string>
-    <string name="notif_android_auto_title">Velociraptor az Android Auto-ban</string>
-    <string name="notif_android_auto_limit">Sebességhatár: %s</string>
-    <string name="android_auto_integration_switch">Android Auto integráció</string>
-    <string name="android_auto_instruction_dialog">Velociraptor az Android Auto-ban üzenetküldő alkalmazásként viselkedik. \nHasználatához az Android Auto applikációnak kell az aktívnak lennie. \nA hangjelzések leállításához érintsd meg egyszer a Bezárás vagy a Válasz gombot.</string>
     <string name="transparency">Átlátszóság</string>
-    <string name="auto_not_available">Nem elérhető a Velociraptor Google Play verziójában</string>
-    <string name="support_dev_dialog_notplay"><![CDATA[A szerver és API fenntartására lesz felhasználva, javasolt összeg: 1 USD havonta.
-&lt;br/&gt;&lt;br/&gt; 
-Paypallal is támogathatsz <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&amp;business=72HXHU5AXK2ZN&amp;lc=US&amp;item_name=Velociraptor%20Development&amp;item_number=velociraptor&amp;currency_code=USD&amp;bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted">itt</a>. 
-Alkalmazáson belüli vásárlás elérhető, ha a Google Playról töltötted le a programot.]]></string>
     <string name="size">Méret</string>
     <string name="size_limit_overview">Sebességhatár: %s</string>
     <string name="size_speedometer_overview">Sebességmérő: %s</string>

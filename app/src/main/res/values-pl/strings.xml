@@ -85,13 +85,10 @@ należą do swoich właścicieli.<br/><br/>
     <string name="speed_limit_providers">Dostawcy ograniczeń prędkości</string>
     <string name="subscribe_placeholder">Subskrybuj (7-dniowy darmowy okres próbny)</string>
     <string name="here_provider">HERE Maps</string>
-    <string name="here_provider_short">HERE</string>
     <string name="here_desc">Subskrybuj dla %s (7-dniowy darmowy okres próbny)</string>
     <string name="tomtom_provider">Mapy TomTom</string>
-    <string name="tomtom_provider_short">TomTom</string>
     <string name="tomtom_desc">Subskrybuj dla %s (7-dniowy darmowy okres próbny)</string>
     <string name="openstreetmap">OpenStreetMap</string>
-    <string name="openstreetmap_short">OSM</string>
     <string name="share_link">Udostępnij link</string>
     <string name="openstreetmap_desc">Bezpłatnie - serwer OSM Velociraptor jest obsługiwany przez Ciebie</string>
     <string name="osm_edit">Przejdź na stronę &lt;DEBUG&gt;openstreetmap.org&lt;/DEBUG&gt;, aby dodać/edytować ograniczenia prędkości</string>
@@ -107,7 +104,6 @@ należą do swoich właścicieli.<br/><br/>
     <string name="controls_notif_desc">Pokazywanie lub ukrywanie monitora o ograniczeniu prędkości</string>
     <string name="gmaps_only_nav">Mapy Google: tylko podczas nawigacji</string>
     <string name="gmaps_only_nav_notif_access">Aby korzystać z tej funkcji, Velociraptor potrzebuje dostępu do powiadomień, aby sprawdzać, kiedy nawigacja Google Maps jest otwarta</string>
-    <string name="gmaps_only_nav_jellybean">Funkcja dostępna tylko dla Androida 4.3+</string>
     <string name="open_settings_failed_notif_access">"Nie można otworzyć ustawienia. Proszę włączyć ręcznie ustawienie \"Dostęp do Powiadomień\" dla Velociraptor.
 "</string>
     <!--App selection-->

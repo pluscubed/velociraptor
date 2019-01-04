@@ -3,8 +3,6 @@
     <string name="app_name">Velociraptor</string>
     <string name="notif_content">Toque para abrir ajustes</string>
     <string name="notif_title">Velociraptor: Monitor ejecutandose</string>
-    <string name="dialog_draw_overlay">Para mostrar los elementos flotantes en Android 6.0 o superior, concede el permiso \"Dibujar sobre otras aplicaciones\"</string>
-    <string name="open_settings">Abrir página de ajustes</string>
     <string name="accessibility_service_description">Permite a Velociraptor mostrarse automaticamente al detectar la aplicacion en primer plano.\n\nVelociraptor no usa ninguna otra informacion mas que la de la aplicacion en primer plano.</string>
     <string name="enable_accessibility_service">Habilitar el servicio de accesibilidad</string>
     <string name="enable_accessibility_service_desc">Permite a Velociraptor detectar la aplicacion actual habilitando el servicio de accesibilidad</string>
@@ -44,13 +42,7 @@ Desarrollado por <b>Daniel Ciao</b><br/>
 <a href=\'http://pluscubed.oneskyapp.com/collaboration/project/64120\'>OneSky</a> - traduce la aplicacion a tu lenguaje
 ]]></string>
     <string name="about">Acerca de</string>
-    <string name="wrong_speed_limit">Falta o error de limite de velocidad?</string>
-    <string name="wrong_speed_limit_desc">Vaya a OpenStreetMap en su computadora. Toque para compartir el link
-(https://openstreetmap.org)</string>
     <string name="configure">Configurar</string>
-    <string name="automatically_show">Mostrar/ocultar en app especifica</string>
-    <string name="select_overlay_usage">Activacion</string>
-    <string name="enable">Habilitar</string>
     <string name="show_in_apps">Mostrar en estas apps:</string>
     <string name="persistent_notification_controls">Mostrar en barra de notificacion</string>
     <string name="done">Listo</string>
@@ -63,14 +55,9 @@ Desarrollado por <b>Daniel Ciao</b><br/>
     <string name="general">General</string>
     <string name="advanced">Avanzado</string>
     <string name="changelog">Registro de cambios</string>
-    <string name="help_edit">Ayude a editar los limites de velocidad</string>
-    <string name="check_coverage_desc">Si esta y el limite no se muestra, puede que haya un error. Use el boton de estadisticas de depuracion y el boton de info para enviar reporte.</string>
-    <string name="check_coverage">Toque para comprobar si su área esta cubierta</string>
-    <string name="obtaining_gps_location">Obteniendo ubicación GPS…</string>
     <string name="debugging_stats">Estadisticas para nerds/depuracion</string>
     <string name="test">Muestra</string>
     <string name="sound_alert">Alerta sonora</string>
-    <string name="open_coverage_map_failed">No es posible abrir el enlace. Por favor vaya manualmente a http://product.itoworld.com/map/124.</string>
     <string name="tolerance_dialog_text">Advertir cuando el limite de velocidad es excedido por:</string>
     <string name="plus">Mas</string>
     <string name="or">o</string>
@@ -81,19 +68,9 @@ Desarrollado por <b>Daniel Ciao</b><br/>
     <string name="support_development">Apoye el desarrollo</string>
     <string name="in_app_unavailable">Facturacion de compra integrada no disponible</string>
     <string name="support_dev_dialog">Usado para el costo del server y API; monto sugerido de 1 USD por mes. Una medalla será mostrada aquí por mi sincero agradecimiento.</string>
-    <string name="support_dev_dialog_badge">Gracias por tu Apoyo!</string>
     <string name="per_month">%s por mes</string>
     <string name="one_time">%s una vez</string>
-    <string name="notif_android_auto_title">Velociraptor para Android Auto</string>
-    <string name="notif_android_auto_limit">Limite de velocidad: %s</string>
-    <string name="android_auto_integration_switch">Integracion con Android Auto</string>
-    <string name="android_auto_instruction_dialog">Velociraptor actua como aplicacion de mensajeria para Android Auto.\nPara usarlo, Android Auto tiene que ser la aplicacion en primer plano.\nPara detener las notificaciones sonoras, toque el boton de cerrar o responder una vez.</string>
     <string name="transparency">Opacidad</string>
-    <string name="auto_not_available">No disponible en la version de Google Play de Velociraptor</string>
-    <string name="support_dev_dialog_notplay"><![CDATA[
-Usado para costos de server y APi; el monto sugerido es de 1 USD por mes. 
-&lt;br/&gt;&lt;br/&gt;
-Puede donar usando PayPal <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&amp;business=72HXHU5AXK2ZN&amp;lc=US&amp;item_name=Velociraptor%20Development&amp;item_number=velociraptor&amp;currency_code=USD&amp;bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted">here</a>. Compra integrada disponible si descarga la aplicacion por Google Play. ]]></string>
     <string name="size">Tamaño indicador</string>
     <string name="size_limit_overview">Limite Velocidad: %s</string>
     <string name="size_speedometer_overview">Velocimetro: %s</string>

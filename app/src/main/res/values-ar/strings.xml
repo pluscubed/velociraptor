@@ -3,8 +3,6 @@
     <string name="app_name">فيلوسيرابتور</string>
     <string name="notif_content">المس لفتح الإعدادات</string>
     <string name="notif_title">مراقبة فيلوسيرابتور تعمل</string>
-    <string name="dialog_draw_overlay">لإظهار عناصر تطفو على أندرويد 6.0+، امنح إذن \"الرسم على  تطبيقات أخرى\"</string>
-    <string name="open_settings">افتح صفحة الاعدادات</string>
     <string name="accessibility_service_description">للكشف عن التطبيقات بالواجهة وعرض حدود السرعة المسموح بها، يجب تمكين خدمة الوصول.</string>
     <string name="enable_accessibility_service">تفعيل خدمة الوصول.</string>
     <string name="enable_accessibility_service_desc">السماح لفيلوسيرابتور بالكشف عن التطبيق الحالي عن طريق تشغيل خدمة الوصول</string>
@@ -44,12 +42,7 @@
         <a href=\'http://pluscubed.oneskyapp.com/collaboration/project/64120\'>OneSky</a> -ترجم التطبيق للغتك
     ]]></string>
     <string name="about">عن</string>
-    <string name="wrong_speed_limit">حد أقصى للسرعة خاطئ أو مفقود؟</string>
-    <string name="wrong_speed_limit_desc">إذهب إلى OpenStreetMap على جهاز الكمبيوتر الخاص بك لتعديل البيانات. قم بمشاركة الرابط (https://openstreetmap.org)</string>
     <string name="configure">تهيئة</string>
-    <string name="automatically_show">اظهار/اخفاء في تطبيقات معينة</string>
-    <string name="select_overlay_usage">التفعيل</string>
-    <string name="enable">تفعيل</string>
     <string name="show_in_apps">اظهار بهذه التطبيقات:</string>
     <string name="persistent_notification_controls">اظهار ادوات تحكم التنبيهات</string>
     <string name="done">تم</string>
@@ -62,14 +55,9 @@
     <string name="general">عام</string>
     <string name="advanced">متقدم</string>
     <string name="changelog">سجل التحديثات</string>
-    <string name="help_edit">ساعد في تعديل بيانات السرعة القصوى</string>
-    <string name="check_coverage_desc">إذا كانت الإجابة بنعم ولا يظهر الحد الأقصى للسرعة، قد يكون هناك خلل. قم بتفعيل المدقق (debugging stats option) وزر التعليقات بالأعلى</string>
-    <string name="check_coverage">اضغط لمعرفة ما اذا كان يتم تغطية منطقتك</string>
-    <string name="obtaining_gps_location">تحديد الموقع الجغرافي ....</string>
     <string name="debugging_stats">إحصاءات مفصلة / تدقيق الأخطاء</string>
     <string name="test">اختبار</string>
     <string name="sound_alert">صوت الإنذار</string>
-    <string name="open_coverage_map_failed">تعذر فتح الرابط , برجاء الدخول يدويا الى  http://product.itoworld.com/map/124.</string>
     <string name="tolerance_dialog_text">تحذير عند الزيادة عن حد السرعة بـ :</string>
     <string name="plus">زيادة</string>
     <string name="or">أو</string>

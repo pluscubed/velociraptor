@@ -44,12 +44,6 @@
             android:layout_height="match_parent"
             android:layout_gravity="end" />
 
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="5dp"
-            android:background="?toolbarShadow" />
-
     </FrameLayout>
 
 

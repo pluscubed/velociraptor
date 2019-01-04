@@ -3,7 +3,6 @@
     <string name="app_name">Velociraptor</string>
     <!--Generic-->
     <string name="configure">Konfigurieren</string>
-    <string name="enable">Aktivieren</string>
     <string name="done">Erledigt</string>
     <string name="show">Zeige</string>
     <string name="hide">Verstecke</string>
@@ -17,11 +16,9 @@
     <!--Permission Settings-->
     <string name="open_settings_page">Einstellungsseite öffnen</string>
     <string name="enable_floating_desc">Um das Overlay anzuzeigen, ist die  Berechtigung \"über anderen Apps einblenden\" nötig.</string>
-    <string name="dialog_draw_overlay">Um das Overlay in Android 6.0 oder höher anzuzeigen, ist die Berechtigung \"über anderen Apps einblenden\" nötig.</string>
     <string name="open_settings_failed_overlay">Einstellungen können nicht geöffnet werden. Bitte erlauben Sie \"über anderen Apps einblenden\" für Velociraptor manuell.</string>
     <string name="enable_accessibility_service">Zugriffsdienst aktivieren</string>
     <string name="enable_accessibility_service_desc">Erlaube Velociraptor durch Aktivieren der Bedienungshilfen, die aktuell laufende App zu erkennen</string>
-    <string name="enable_accessibility_service_desc2">Hauptsächlich beabsichtigt für User mit Behinderung</string>
     <string name="accessibility_service_summary">Autostart in Kartenapps</string>
     <string name="accessibility_service_description">Um die Vordergrund-App zu bestimmen und die Geschwindigkeit anzuzeigen, muss der \"Bedienungshilfen\"-Dienst  aktiviert werden.</string>
     <string name="open_settings_failed_accessibility">Einstellungen können nicht geöffnet werden. Bitte aktivieren Sie die Bedienungshilfen in den Systemeinstellungen manuell.</string>
@@ -72,13 +69,10 @@
     <string name="speed_limit_providers">Geschwindigkeitsbegrenzungsprovider</string>
     <string name="subscribe_placeholder">Abonniere (7 Tage kostenlos testen)</string>
     <string name="here_provider">HERE Karten</string>
-    <string name="here_provider_short">HERE</string>
     <string name="here_desc">Abonniere %s (7 Tage kostenlos testen)</string>
     <string name="tomtom_provider">TomTom Karten</string>
-    <string name="tomtom_provider_short">TomTom</string>
     <string name="tomtom_desc">Abonniere %s (7 Tage kostenlos testen)</string>
     <string name="openstreetmap">OpenStreetMap</string>
-    <string name="openstreetmap_short">OSM</string>
     <string name="share_link">Link teilen</string>
     <string name="openstreetmap_desc">Kostenlos - Der OSM-Server für Velociraptor wird durch Spenden finanziert</string>
     <string name="osm_edit">Öffne &lt;DEBUG&gt;openstreetmap.org&lt;/DEBUG&gt; am PC um Geschwindigkeitslimits zu konfigurieren</string>
@@ -87,17 +81,13 @@
     <string name="subscribe">Abonniere</string>
     <string name="subscribed">Abonniert</string>
     <string name="coverage">Abdeckung</string>
-    <string name="check_coverage">Prüft OpenStreetMap Abdeckung</string>
     <!--Activation Settings-->
-    <string name="select_overlay_usage">Aktivierung</string>
-    <string name="automatically_show">Anzeigen/Ausblenden in bestimmten Anwendungen</string>
     <string name="show_in_apps">Zeige in diesen Apps</string>
     <string name="persistent_notification_controls">Zeige Benachrichtigungkontrollen</string>
     <string name="controls_notif_title">Velociraptor Einstellungen</string>
     <string name="controls_notif_desc">Zeig oder verstecke die Höchstgeschwindigkeit Anzeige</string>
     <string name="gmaps_only_nav">Google Maps: nur während der Navigation</string>
     <string name="gmaps_only_nav_notif_access">Um dieses Feature zu nutzen benötigt Velociraptor Benachrichtigungszugriff um zu prüfen ob Google Maps läuft</string>
-    <string name="gmaps_only_nav_jellybean">Nur für Android 4.3+ verfügbar</string>
     <string name="open_settings_failed_notif_access">Einstellungen können nicht geöffnet werden. Bitte aktiviere die \"Benachrichtigungseinstellungen\" für Velociraptor manuell.</string>
     <!--App selection-->
     <string name="select_apps">Wähle Apps aus</string>
@@ -105,7 +95,6 @@
     <!---Advanced settings-->
     <string name="advanced">Fortgeschritten</string>
     <string name="debugging_stats">Statistik für Nerds / Debugging</string>
-    <string name="obtaining_gps_location">Suche GPS-Position ...</string>
     <!--Changelog-->
     <string name="changelog">Änderungsprotokoll</string>
     <string name="rate">Bewerte</string>
@@ -114,33 +103,10 @@
     <string name="support_development">Entwicklungsunterstützung</string>
     <string name="in_app_unavailable">In-App Käufe nicht verfügbar</string>
     <string name="support_dev_dialog">Wird für die Unterhaltung des OSM-Servers verwendet; empfohlen 1 USD pro Monat (Betrag wird in der Auswahl in € umgerechnet).</string>
-    <string name="support_dev_dialog_badge">Danke für deine Unterstützung</string>
     <string name="per_month">%s pro Monat</string>
     <string name="one_time">%s einmalig</string>
     <!--Tile-->
-    <string name="tile_name">Velociraptor an/aus</string>
-    <string name="configure_here_database">HERE Datenbank konfigurieren</string>
-    <string name="configure_here_database_desc">Für genauere Geschwindigkeitsbegrenzungen erstelle einen HERE Entwickleraccount. Auf <b>mapcreator.here.com</b> kannst du Geschwindigkeitsbegrenzungen bearbeiten.</string>
     <!--HERE Config-->
-    <string name="here_config_step1">Klicke <b>Starte Programmierung</b> nach der Registrierung</string>
-    <string name="here_config_step2">Klicke <b>Erzeuge App ID und App Code</b> im Bereich <b>JavaScript/REST</b></string>
-    <string name="here_config_title">HERE Datenbank Konfiguration</string>
-    <string name="sign_up">Login</string>
-    <string name="view_account">Account anzeigen</string>
-    <string name="here_app_code">HERE App Code</string>
-    <string name="here_app_id">HERE App ID</string>
-    <string name="open_settings">Einstellungsseite öffnen</string>
     <!--Wrong or missing speed limit-->
-    <string name="wrong_speed_limit">Falsche oder fehlende Geschwindigkeitsbegrenzung ?</string>
-    <string name="check_coverage_desc">Sofern ja und die Geschwindigkeitsbegrenzung wird nicht angezeigt, so besteht vielleicht ein Bug. Benutze die Debugging-Daten und den Info-Button um eine Rückmeldung an uns zu senden.</string>
-    <string name="open_coverage_map_failed">Link öffnen nicht möglich. Bitte öffne ihn manuell http://product.itoworld.com/map/124</string>
-    <string name="help_edit">Hilf mit, die Geschwindigkeitsbegrenzung Daten zu bearbeiten</string>
-    <string name="wrong_speed_limit_desc">Öffnen Sie OpenStreetMap auf Ihrem Computer. Tippen Sie auf den Link um ihn zu teilen (https://openstreetmap.org)</string>
-    <string name="tip_qs_tile">Tip: füge Velociraptor\'s Schnelleinstellungskachel hinzu</string>
     <!--Android Auto-->
-    <string name="notif_android_auto_title">Velociraptor für Android Auto</string>
-    <string name="notif_android_auto_limit">Geschwindigkeitsbegrenzung: %s</string>
-    <string name="android_auto_integration_switch">Android Auto Integration</string>
-    <string name="android_auto_instruction_dialog">Velociraptor verhält sich als Nachrichtenapp für Android Auto.\nDie Android Auto App muss dafür im Vordergrund laufen.\nUm die Benachrichtigungen zu stoppen, tippe auf den Beenden oder Antworten Buton.</string>
-    <string name="auto_not_available">Lade Velociraptor von APKMirror herunter um die Android Auto Integration zu nutzen</string>
 </resources>

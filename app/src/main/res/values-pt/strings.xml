@@ -3,8 +3,6 @@
     <string name="app_name">Velociraptor</string>
     <string name="notif_content">Pressione para abrir as configurações</string>
     <string name="notif_title">Velociraptor Limite de velocidade</string>
-    <string name="dialog_draw_overlay">Para ser visível o elemento flutuante no Android 6.0+, garanta a permissão para \"Desenhar sobre as outras aplicações\"</string>
-    <string name="open_settings">Abrir a página de configurações</string>
     <string name="accessibility_service_description">Para detectar que a aplicação se encontra em primeiro plano e mostrar o limite de velocidade, o Serviço de Acessibilidade necessita de estar activo.</string>
     <string name="enable_accessibility_service">Activar Serviço de Acessibilidade</string>
     <string name="enable_accessibility_service_desc">Para mostrar automaticamente o limite de velocidade nas aplicações de mapas, active o serviço de acessibilidade</string>

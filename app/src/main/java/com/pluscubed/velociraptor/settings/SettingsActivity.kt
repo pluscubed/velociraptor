@@ -444,7 +444,7 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
                         this@SettingsActivity,
                         gmapsOnlyNavigationSwitch.isChecked
                 )
-            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            } else {
                 MaterialDialog(this@SettingsActivity)
                         .show {
                             message(R.string.gmaps_only_nav_notif_access)
@@ -466,12 +466,6 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
                                 }
                             }
                         }
-            } else {
-                Snackbar.make(
-                        findViewById(android.R.id.content),
-                        R.string.gmaps_only_nav_jellybean,
-                        Snackbar.LENGTH_LONG
-                ).show()
             }
         }
 

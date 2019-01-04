@@ -3,8 +3,6 @@
     <string name="app_name">Velociraptor</string>
     <string name="notif_content">Tryk for at åbne indstillinger</string>
     <string name="notif_title">Velociraptorovervåger kører</string>
-    <string name="dialog_draw_overlay">For at vise flydende elementer i Android 6.0+, skal der gives tilladelse til \"Tegn over andre apps\"</string>
-    <string name="open_settings">Åbn indstillinger</string>
     <string name="accessibility_service_description">For at se forgrundsappen og vise hastighedsgrænsen, skal tilgængelighedstjeneste være aktiveret.</string>
     <string name="enable_accessibility_service">Aktivér tilgængelighedstjeneste</string>
     <string name="enable_accessibility_service_desc">Tillad Velociraptor at registrere den åbne app ved at slå tilgængelighedstjeneste til</string>
@@ -44,12 +42,7 @@
         <a href=\'http://pluscubed.oneskyapp.com/collaboration/project/64120\'>OneSky</a> - oversæt appen til dit sprog
     ]]></string>
     <string name="about">Om</string>
-    <string name="wrong_speed_limit">Forkert eller manglende fartgrænse?</string>
-    <string name="wrong_speed_limit_desc">Gå til OpenStreetMap på computeren for at redigere dataene. Tryk på for at dele link (https://openstreetmap.org)</string>
     <string name="configure">Indstil</string>
-    <string name="automatically_show">Vis/skjul i bestemte apps</string>
-    <string name="select_overlay_usage">Brug af svævende overvåger</string>
-    <string name="enable">Aktivér</string>
     <string name="show_in_apps">Vis i disse apps:</string>
     <string name="persistent_notification_controls">Vis notifikationsknapper</string>
     <string name="done">Færdig</string>
@@ -62,7 +55,4 @@
     <string name="general">Generelle</string>
     <string name="advanced">Avanceret</string>
     <string name="changelog">Liste over ændringer</string>
-    <string name="help_edit">Hjælp med at redigere data om hastigedsbegrænsninger</string>
-    <string name="check_coverage_desc">Hvis ja og hastighedsbegrænsningen ikke er vist, er der muligvis en fejl. Brug feedback knappen øverst-</string>
-    <string name="check_coverage">Berør for at teste om dit område er dækket</string>
 </resources>
