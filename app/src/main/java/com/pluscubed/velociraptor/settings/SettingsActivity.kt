@@ -327,14 +327,16 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
                     position: Int,
                     id: Long
             ) {
-                if (PrefUtils.getUseMetric(this@SettingsActivity) != (position == 1)) {
-                    PrefUtils.setUseMetric(this@SettingsActivity, position == 1)
+                val isMetric = position == 1
+                if (PrefUtils.getUseMetric(this@SettingsActivity) != isMetric) {
+                    PrefUtils.setUseMetric(this@SettingsActivity, isMetric)
                     unitSpinner.dropDownVerticalOffset = Utils.convertDpToPx(
                             this@SettingsActivity,
                             (unitSpinner.selectedItemPosition * -48).toFloat()
                     )
 
                     Utils.updateFloatingServicePrefs(this@SettingsActivity)
+                    invalidateStates()
                 }
             }
 

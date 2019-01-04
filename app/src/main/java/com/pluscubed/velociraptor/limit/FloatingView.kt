@@ -96,6 +96,7 @@ class FloatingView(private val service: LimitService) : LimitView {
             else -> R.layout.floating_region_international
         }
 
+        // System.err errors here are printed by the ArcProgressStackView library
         floatingView = LayoutInflater.from(ContextThemeWrapper(service, R.style.Theme_Velociraptor))
                 .inflate(layout, null, false)
 
