@@ -71,7 +71,10 @@ public class AppDetectionService extends AccessibilityService {
         );
 
         long eventTime = event.getEventTime();
-        event.recycle();
+        try {
+            event.recycle();
+        } catch (Exception ignored) {
+        }
 
         boolean isActivity = componentName.getPackageName().toLowerCase().contains("activity")
                 || tryGetActivity(componentName) != null;
