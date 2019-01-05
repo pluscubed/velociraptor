@@ -45,10 +45,15 @@ android {
         applicationId "com.pluscubed.velociraptor"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 47
-        versionName "1.6.10"
+        versionCode 48
+        versionName "1.6.11"
         vectorDrawables.useSupportLibrary = true
         manifestPlaceholders = [appName: "@string/app_name"]
+        if(project.hasProperty("FABRIC_KEY_VELOCIRAPTOR")){
+            manifestPlaceholders.put("FABRIC_API_KEY", FABRIC_KEY_VELOCIRAPTOR)
+        }else{
+            manifestPlaceholders.put("FABRIC_API_KEY", "")
+        }
 
         lintOptions {
             disable 'MissingTranslation'
@@ -146,7 +151,7 @@ dependencies {
     implementation "com.google.android.gms:play-services-maps:16.0.0"
     implementation "com.google.maps.android:android-maps-utils:0.5"
 
-    implementation 'com.afollestad.material-dialogs:core:2.0.0-rc6'
+    implementation 'com.afollestad.material-dialogs:core:2.0.0-rc7'
 
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-jackson:$retrofit_version"
