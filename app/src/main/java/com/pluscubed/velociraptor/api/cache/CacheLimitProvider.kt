@@ -7,6 +7,7 @@ import com.google.maps.android.PolyUtil
 import com.pluscubed.velociraptor.api.Coord
 import com.pluscubed.velociraptor.api.LimitProvider
 import com.pluscubed.velociraptor.api.LimitResponse
+import com.pluscubed.velociraptor.api.osm.OsmLimitProvider
 import com.pluscubed.velociraptor.utils.NormalizedLevenshtein
 import com.pluscubed.velociraptor.utils.PrefUtils
 import timber.log.Timber
@@ -20,7 +21,7 @@ class CacheLimitProvider(private val context: Context) : LimitProvider {
                     .fallbackToDestructiveMigration()
                     .build()
 
-    private val normalizedLevenshtein = NormalizedLevenshtein()
+    private val normalleven = NormalizedLevenshtein()
 
     fun put(response: LimitResponse) {
         if (response.coords.isEmpty()) {
@@ -123,8 +124,32 @@ class CacheLimitProvider(private val context: Context) : LimitProvider {
     }
 
     private fun getRoadNameSimilarity(way: Way, previousRoadName: String?): Double {
-        return if (previousRoadName == null) 0.0
-        else normalizedLevenshtein.similarity(way.road, previousRoadName)
+        if (previousRoadName == null)
+            return 0.0
+        else {
+            val roadLower = way.road.toLowerCase()
+            val prevRoadNameLower = previousRoadName.toLowerCase()
+
+            //Split ref, name
+            val roadNameSplittable = roadLower.contains(OsmLimitProvider.ROADNAME_DELIM)
+            val previousRoadNameSplittable = prevRoadNameLower.contains(OsmLimitProvider.ROADNAME_DELIM)
+
+            if (roadNameSplittable && !previousRoadNameSplittable) {
+                val split = roadLower.split(OsmLimitProvider.ROADNAME_DELIM)
+                return Math.max(
+                        normalleven.similarity(split[0], prevRoadNameLower),
+                        normalleven.similarity(split[1], prevRoadNameLower)
+                )
+            } else if (!roadNameSplittable && previousRoadNameSplittable) {
+                val split = prevRoadNameLower.split(OsmLimitProvider.ROADNAME_DELIM)
+                return Math.max(
+                        normalleven.similarity(roadLower, split[0]),
+                        normalleven.similarity(roadLower, split[1])
+                )
+            } else {
+                return normalleven.similarity(roadLower, prevRoadNameLower)
+            }
+        }
     }
 
 

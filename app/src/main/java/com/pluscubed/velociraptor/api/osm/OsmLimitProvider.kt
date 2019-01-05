@@ -32,7 +32,6 @@ class OsmLimitProvider(
         private val cacheLimitProvider: CacheLimitProvider
 ) : LimitProvider {
 
-
     private val osmOverpassApis: MutableList<OsmApiEndpoint>
 
     private fun initializeOsmService(endpoint: OsmApiEndpoint) {
@@ -198,7 +197,7 @@ class OsmLimitProvider(
         return if (ref == null && name == null) {
             "null"
         } else if (name != null && ref != null) {
-            "$ref $name"
+            "$ref$ROADNAME_DELIM$name"
         } else name ?: ref
     }
 
@@ -279,6 +278,7 @@ class OsmLimitProvider(
         const val FB_CONFIG_OSM_API_ENABLED_PREFIX = "osm_api"
 
         const val OSM_RADIUS = 15
+        const val ROADNAME_DELIM = "`"
     }
 
     init {
