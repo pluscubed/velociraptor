@@ -6,17 +6,17 @@
     <string name="done">Pronto</string>
     <string name="show">Mostre</string>
     <string name="hide">Esconda</string>
-    <string name="dismiss">Fechar</string>
+    <string name="dismiss">Feche</string>
     <string name="kmph">%s km/h</string>
     <string name="mph">%s MPH</string>
     <string name="percent">%s%%</string>
-    <string name="notif_content">Pressione para abrir a página de configurações</string>
+    <string name="notif_content">Pressione para configurar</string>
     <string name="notif_title">Velociraptor ativado</string>
     <!--Permission Settings-->
-    <string name="open_settings_page">Abra página de configurações</string>
-    <string name="enable_floating_desc">Dê a permissão ao Velociraptor para aparecer sobre outros aplicativos</string>
+    <string name="open_settings_page">Abra para configurar</string>
+    <string name="enable_floating_desc">Dê permissão ao Velociraptor para aparecer sobre outros aplicativos</string>
     <string name="open_settings_failed_overlay">Não foi possível abrir a página de configurações. Por favor, dê a permissão ao Velociraptor para aparecer sobre outros aplicativos.</string>
-    <string name="enable_accessibility_service">Habilite o serviço de acessibilidade</string>
+    <string name="enable_accessibility_service">Habilite o serviço de acesso</string>
     <string name="enable_accessibility_service_desc">Dê a permissão ao Velociraptor para  reconhecer o aplicativo atual o ativando no serviço de acessibilidade</string>
     <string name="accessibility_service_description">Dê a permissão ao Velociraptor para  reconhecer aplicativos e aparecer automaticamente.\n\nO Velociraptor não usa nenhuma outra informação além do aplicativo atual.</string>
     <string name="open_settings_failed_accessibility">Não pôde abrir a página de configurações. Por favor, dê a permissão ao Velociraptor no serviço de acessibilidade</string>
@@ -30,7 +30,7 @@
     <string name="show_speedometer">Velocímetro</string>
     <string name="sound_alert">Alerta sonoro</string>
     <string name="test">Teste</string>
-    <string name="speed_unit">Unidade de velocidade</string>
+    <string name="speed_unit">Unidades de velocidade</string>
     <string name="style">Estilo</string>
     <string name="united_states">Estados Unidos</string>
     <string name="international">Internacional</string>

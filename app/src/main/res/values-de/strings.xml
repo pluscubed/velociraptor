@@ -28,6 +28,8 @@
     <string name="permissions_warning">Velociraptor hat nicht die Berechtigungen den Standort zu bestimmen. Um diese zu erteilen, starten Sie bitte die App.</string>
     <string name="location_settings_warning">GPS ist ausgeschaltet.</string>
     <string name="network_warning">Kein Internetzugriff.</string>
+    <string name="troubleshoot_label">Startet nicht automatisch?</string>
+    <string name="troubleshoot">Problembehebung</string>
     <!--General Settings-->
     <string name="general">Allgemein</string>
     <string name="show_limits">Geschwindigkeitsbegrenzungen</string>
