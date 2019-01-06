@@ -34,8 +34,8 @@ class AppSelectionActivity : AppCompatActivity(), CoroutineScope {
     private var mSwipeRefreshLayout: SwipeRefreshLayout? = null
 
     private var mSelectedApps: MutableSet<String>? = null
-    private var mAppList: List<AppInfo>? = null
-    private var mMapApps: List<AppInfo>? = null
+    private var mAppList: ArrayList<AppInfo>? = null
+    private var mMapApps: ArrayList<AppInfo>? = null
 
     private var mMapsOnly: Boolean = false
 
@@ -124,7 +124,7 @@ class AppSelectionActivity : AppCompatActivity(), CoroutineScope {
                 mAdapter!!.setAppInfos(installedApps)
                 mSwipeRefreshLayout!!.isRefreshing = false
             }
-            mAppList = installedApps
+            mAppList = ArrayList(installedApps)
 
             mLoadingAppList = false
         } catch (e: Exception) {
@@ -149,7 +149,7 @@ class AppSelectionActivity : AppCompatActivity(), CoroutineScope {
                 mAdapter!!.setAppInfos(mapApps)
                 mSwipeRefreshLayout!!.isRefreshing = false
             }
-            mMapApps = mapApps
+            mMapApps = ArrayList(mapApps)
 
             mLoadingMapApps = false
         } catch (e: Exception) {
@@ -211,8 +211,8 @@ class AppSelectionActivity : AppCompatActivity(), CoroutineScope {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putParcelableArrayList(STATE_APPS, mAppList as ArrayList<AppInfo>?)
-        outState.putParcelableArrayList(STATE_MAP_APPS, mMapApps as ArrayList<AppInfo>?)
+        outState.putParcelableArrayList(STATE_APPS, mAppList)
+        outState.putParcelableArrayList(STATE_MAP_APPS, mMapApps)
         outState.putBoolean(STATE_MAPS_ONLY, mMapsOnly)
         outState.putStringArrayList(STATE_SELECTED_APPS, ArrayList(mSelectedApps!!))
         super.onSaveInstanceState(outState)
