@@ -12,9 +12,9 @@ buildscript {
 }
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'io.fabric'
 apply plugin: 'com.google.android.gms.oss-licenses-plugin'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'io.fabric'
 
 android {
     compileSdkVersion 28
@@ -113,10 +113,9 @@ repositories {
 }
 
 ext{
-    support_version = '1.0.0'
     retrofit_version = '2.5.0'
     okhttp_version = '3.12.1'
-    leakcanary_version = '1.6.2'
+    leakcanary_version = '1.6.3'
     jackson_version = '2.9.8'
     room_version = '2.1.0-alpha03'
     butterknife_version = '10.0.0'
@@ -142,12 +141,12 @@ dependencies {
 
     implementation "com.google.firebase:firebase-core:16.0.6"
     implementation "com.google.firebase:firebase-messaging:17.3.4"
-    implementation "com.google.firebase:firebase-config:16.1.2"
+    implementation "com.google.firebase:firebase-config:16.1.3"
 
     implementation "com.android.billingclient:billing:1.2"
 
     implementation "com.google.android.gms:play-services-location:16.0.0"
-    implementation "com.google.android.gms:play-services-oss-licenses:16.0.1"
+    implementation "com.google.android.gms:play-services-oss-licenses:16.0.2"
     implementation "com.google.android.gms:play-services-maps:16.0.0"
     implementation "com.google.maps.android:android-maps-utils:0.5"
 

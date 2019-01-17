@@ -563,28 +563,32 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
 
         billingManager = BillingManager(this, object : BillingManager.BillingUpdatesListener {
             override fun onBillingClientSetupFinished() {
-                billingManager!!.querySkuDetailsAsync(
+                try {
+                    billingManager?.querySkuDetailsAsync(
                         BillingClient.SkuType.SUBS,
                         Arrays.asList(BillingConstants.SKU_HERE, BillingConstants.SKU_TOMTOM)
-                ) { responseCode, skuDetailsList ->
-                    if (responseCode != BillingClient.BillingResponse.OK) {
-                        return@querySkuDetailsAsync
-                    }
-                    for (details in skuDetailsList) {
-                        if (details.sku == BillingConstants.SKU_HERE) {
-                            herePriceDesc.text = getString(
+                    ) { responseCode, skuDetailsList ->
+                        if (responseCode != BillingClient.BillingResponse.OK) {
+                            return@querySkuDetailsAsync
+                        }
+                        for (details in skuDetailsList) {
+                            if (details.sku == BillingConstants.SKU_HERE) {
+                                herePriceDesc.text = getString(
                                     R.string.here_desc,
                                     getString(R.string.per_month, details.price)
-                            )
-                        }
+                                )
+                            }
 
-                        if (details.sku == BillingConstants.SKU_TOMTOM) {
-                            tomtomPriceDesc.text = getString(
+                            if (details.sku == BillingConstants.SKU_TOMTOM) {
+                                tomtomPriceDesc.text = getString(
                                     R.string.tomtom_desc,
                                     getString(R.string.per_month, details.price)
-                            )
+                                )
+                            }
                         }
                     }
+                } catch (e: Exception) {
+                    Crashlytics.logException(e);
                 }
             }
 
