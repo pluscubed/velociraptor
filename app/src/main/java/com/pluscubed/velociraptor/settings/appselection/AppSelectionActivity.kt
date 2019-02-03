@@ -16,6 +16,8 @@ import androidx.core.graphics.drawable.DrawableCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import butterknife.BindView
+import butterknife.ButterKnife
 import com.bumptech.glide.Glide
 import com.crashlytics.android.Crashlytics
 import com.pluscubed.recyclerfastscroll.RecyclerFastScroller
@@ -29,18 +31,25 @@ import kotlin.coroutines.CoroutineContext
 
 class AppSelectionActivity : AppCompatActivity(), CoroutineScope {
 
-    private var mAdapter: AppAdapter? = null
-    private var mScroller: RecyclerFastScroller? = null
-    private var mSwipeRefreshLayout: SwipeRefreshLayout? = null
+    private lateinit var adapter: AppAdapter
 
-    private var mSelectedApps: MutableSet<String>? = null
-    private var mAppList: ArrayList<AppInfo>? = null
-    private var mMapApps: ArrayList<AppInfo>? = null
+    @BindView(R.id.fastscroller)
+    lateinit var scroller: RecyclerFastScroller
+    @BindView(R.id.swiperefresh)
+    lateinit var swipeRefreshLayout: SwipeRefreshLayout
+    @BindView(R.id.recyclerview)
+    lateinit var recyclerView: RecyclerView
+    @BindView(R.id.toolbar)
+    lateinit var toolbar: Toolbar
 
-    private var mMapsOnly: Boolean = false
+    private var selectedPackageNames: MutableSet<String>? = null
+    private var allApps: ArrayList<AppInfo>? = null
+    private var mapApps: ArrayList<AppInfo>? = null
 
-    private var mLoadingAppList: Boolean = false
-    private var mLoadingMapApps: Boolean = false
+    private var isMapsOnly: Boolean = false
+
+    private var isLoadingAllApps: Boolean = false
+    private var isLoadingMapApps: Boolean = false
 
     protected lateinit var job: Job
     override val coroutineContext: CoroutineContext
@@ -49,30 +58,29 @@ class AppSelectionActivity : AppCompatActivity(), CoroutineScope {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_appselection)
+        ButterKnife.bind(this)
 
-        val toolbar = findViewById<View>(R.id.toolbar) as Toolbar
         setSupportActionBar(toolbar)
 
         job = Job()
 
-        val recyclerView = findViewById<View>(R.id.recyclerview) as RecyclerView
-        mAdapter = AppAdapter()
-        recyclerView.adapter = mAdapter
+        adapter = AppAdapter()
+        recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        mScroller = findViewById<View>(R.id.fastscroller) as RecyclerFastScroller
-        mScroller!!.attachRecyclerView(recyclerView)
+        scroller = findViewById(R.id.fastscroller)
+        scroller.attachRecyclerView(recyclerView)
 
-        mSwipeRefreshLayout = findViewById<View>(R.id.swiperefresh) as SwipeRefreshLayout
-        mSwipeRefreshLayout!!.setOnRefreshListener {
-            if (mMapsOnly) {
+        swipeRefreshLayout = findViewById(R.id.swiperefresh)
+        swipeRefreshLayout.setOnRefreshListener {
+            if (isMapsOnly) {
                 reloadMapApps()
             } else {
                 reloadInstalledApps()
             }
-            mAdapter!!.setAppInfos(ArrayList())
+            adapter.setAppInfos(ArrayList())
         }
-        mSwipeRefreshLayout!!.setColorSchemeColors(
+        swipeRefreshLayout.setColorSchemeColors(
                 ContextCompat.getColor(
                         this,
                         R.color.colorAccent
@@ -80,24 +88,25 @@ class AppSelectionActivity : AppCompatActivity(), CoroutineScope {
         )
 
         if (savedInstanceState == null) {
-            mMapsOnly = true
+            isMapsOnly = true
         } else {
-            mAppList = savedInstanceState.getParcelableArrayList(STATE_APPS)
-            mMapApps = savedInstanceState.getParcelableArrayList(STATE_MAP_APPS)
-            mMapsOnly = savedInstanceState.getBoolean(STATE_MAPS_ONLY)
-            mSelectedApps = HashSet(savedInstanceState.getStringArrayList(STATE_SELECTED_APPS))
+            allApps = savedInstanceState.getParcelableArrayList(STATE_APPS)
+            mapApps = savedInstanceState.getParcelableArrayList(STATE_MAP_APPS)
+            isMapsOnly = savedInstanceState.getBoolean(STATE_MAPS_ONLY)
+            selectedPackageNames =
+                HashSet(savedInstanceState.getStringArrayList(STATE_SELECTED_APPS))
         }
 
-        if (mMapApps == null) {
+        if (mapApps == null) {
             reloadMapApps()
-        } else if (mMapsOnly) {
-            mAdapter!!.setAppInfos(mMapApps)
+        } else if (isMapsOnly) {
+            adapter.setAppInfos(mapApps)
         }
 
-        if (mAppList == null) {
+        if (allApps == null) {
             reloadInstalledApps()
-        } else if (!mMapsOnly) {
-            mAdapter!!.setAppInfos(mAppList)
+        } else if (!isMapsOnly) {
+            adapter.setAppInfos(allApps)
         }
 
         setTitle(R.string.select_apps)
@@ -105,28 +114,29 @@ class AppSelectionActivity : AppCompatActivity(), CoroutineScope {
 
     override fun onPostResume() {
         super.onPostResume()
-        if (mLoadingAppList || mLoadingMapApps) {
-            mSwipeRefreshLayout!!.isRefreshing = true
+        if (isLoadingAllApps || isLoadingMapApps) {
+            swipeRefreshLayout.isRefreshing = true
         }
     }
 
     private fun reloadInstalledApps() = launch {
-        mLoadingAppList = true
-        mSwipeRefreshLayout!!.isRefreshing = true
-        mSelectedApps = HashSet(PrefUtils.getApps(this@AppSelectionActivity))
+        isLoadingAllApps = true
+        if (!isMapsOnly)
+            swipeRefreshLayout.isRefreshing = true
+        selectedPackageNames = HashSet(PrefUtils.getApps(this@AppSelectionActivity))
 
         try {
             val installedApps = withContext(Dispatchers.IO) {
                 SelectedAppDatabase.getInstalledApps(this@AppSelectionActivity)
             }
 
-            if (!mMapsOnly) {
-                mAdapter!!.setAppInfos(installedApps)
-                mSwipeRefreshLayout!!.isRefreshing = false
+            if (!isMapsOnly) {
+                adapter.setAppInfos(installedApps)
+                swipeRefreshLayout.isRefreshing = false
             }
-            mAppList = ArrayList(installedApps)
+            allApps = ArrayList(installedApps)
 
-            mLoadingAppList = false
+            isLoadingAllApps = false
         } catch (e: Exception) {
             e.printStackTrace()
             if (!BuildConfig.DEBUG) {
@@ -136,22 +146,23 @@ class AppSelectionActivity : AppCompatActivity(), CoroutineScope {
     }
 
     private fun reloadMapApps() = launch {
-        mLoadingMapApps = true
-        mSwipeRefreshLayout!!.isRefreshing = true
-        mSelectedApps = PrefUtils.getApps(this@AppSelectionActivity)
+        isLoadingMapApps = true
+        if (isMapsOnly)
+            swipeRefreshLayout.isRefreshing = true
+        selectedPackageNames = PrefUtils.getApps(this@AppSelectionActivity)
 
         try {
             val mapApps = withContext(Dispatchers.IO) {
                 SelectedAppDatabase.getMapApps(this@AppSelectionActivity)
             }
 
-            if (mMapsOnly) {
-                mAdapter!!.setAppInfos(mapApps)
-                mSwipeRefreshLayout!!.isRefreshing = false
+            if (isMapsOnly) {
+                adapter.setAppInfos(mapApps)
+                swipeRefreshLayout.isRefreshing = false
             }
-            mMapApps = ArrayList(mapApps)
+            this@AppSelectionActivity.mapApps = ArrayList(mapApps)
 
-            mLoadingMapApps = false
+            isLoadingMapApps = false
         } catch (e: Exception) {
             e.printStackTrace()
             if (!BuildConfig.DEBUG) {
@@ -170,7 +181,7 @@ class AppSelectionActivity : AppCompatActivity(), CoroutineScope {
         val item = menu.findItem(R.id.menu_app_selection_maps)
         var drawable = AppCompatResources.getDrawable(this, R.drawable.ic_map_white_24dp)!!.mutate()
         drawable = DrawableCompat.wrap(drawable)
-        if (mMapsOnly) {
+        if (isMapsOnly) {
             DrawableCompat.setTint(drawable, ContextCompat.getColor(this, R.color.colorAccent))
         }
         item.icon = drawable
@@ -184,11 +195,11 @@ class AppSelectionActivity : AppCompatActivity(), CoroutineScope {
                 return true
             }
             R.id.menu_app_selection_maps -> {
-                mMapsOnly = !mMapsOnly
+                isMapsOnly = !isMapsOnly
                 invalidateOptionsMenu()
-                mAdapter!!.setAppInfos(if (mMapsOnly) mMapApps else mAppList)
-                mSwipeRefreshLayout!!.isRefreshing = mMapsOnly && mLoadingMapApps || !mMapsOnly &&
-                        mLoadingAppList
+                adapter.setAppInfos(if (isMapsOnly) mapApps else allApps)
+                swipeRefreshLayout.isRefreshing = isMapsOnly && isLoadingMapApps ||
+                        !isMapsOnly && isLoadingAllApps
                 return true
             }
         }
@@ -198,12 +209,12 @@ class AppSelectionActivity : AppCompatActivity(), CoroutineScope {
     private fun onItemClick(appInfo: AppInfo, checked: Boolean) {
         if (appInfo.packageName != null && !appInfo.packageName.isEmpty()) {
             if (checked) {
-                mSelectedApps!!.add(appInfo.packageName)
+                selectedPackageNames?.add(appInfo.packageName)
             } else {
-                mSelectedApps!!.remove(appInfo.packageName)
+                selectedPackageNames?.remove(appInfo.packageName)
             }
 
-            PrefUtils.setApps(this, mSelectedApps)
+            PrefUtils.setApps(this, selectedPackageNames)
             if (AppDetectionService.get() != null) {
                 AppDetectionService.get().updateSelectedApps()
             }
@@ -211,10 +222,10 @@ class AppSelectionActivity : AppCompatActivity(), CoroutineScope {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putParcelableArrayList(STATE_APPS, mAppList)
-        outState.putParcelableArrayList(STATE_MAP_APPS, mMapApps)
-        outState.putBoolean(STATE_MAPS_ONLY, mMapsOnly)
-        outState.putStringArrayList(STATE_SELECTED_APPS, ArrayList(mSelectedApps!!))
+        outState.putParcelableArrayList(STATE_APPS, allApps)
+        outState.putParcelableArrayList(STATE_MAP_APPS, mapApps)
+        outState.putBoolean(STATE_MAPS_ONLY, isMapsOnly)
+        outState.putStringArrayList(STATE_SELECTED_APPS, ArrayList(selectedPackageNames!!))
         super.onSaveInstanceState(outState)
     }
 
@@ -251,7 +262,7 @@ class AppSelectionActivity : AppCompatActivity(), CoroutineScope {
 
             holder.title.text = app.name
             holder.desc.text = app.packageName
-            holder.checkbox.isChecked = mSelectedApps!!.contains(app.packageName)
+            holder.checkbox.isChecked = selectedPackageNames!!.contains(app.packageName)
 
         }
 
@@ -270,11 +281,10 @@ class AppSelectionActivity : AppCompatActivity(), CoroutineScope {
             var checkbox: CheckBox
 
             init {
-
-                icon = itemView.findViewById<View>(R.id.image_app) as ImageView
-                title = itemView.findViewById<View>(R.id.text_name) as TextView
-                desc = itemView.findViewById<View>(R.id.text_desc) as TextView
-                checkbox = itemView.findViewById<View>(R.id.checkbox) as CheckBox
+                icon = itemView.findViewById(R.id.image_app)
+                title = itemView.findViewById(R.id.text_name)
+                desc = itemView.findViewById(R.id.text_desc)
+                checkbox = itemView.findViewById(R.id.checkbox)
 
                 itemView.setOnClickListener {
                     checkbox.toggle()
