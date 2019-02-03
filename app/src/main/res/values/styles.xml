@@ -30,4 +30,10 @@
         <item name="android:textAllCaps">false</item>
     </style>
 
+    <style name="Widget.Button.OutlinedButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:textAllCaps">false</item>
+        <item name="strokeColor">@color/colorAccent</item>
+        <item name="strokeWidth">2dp</item>
+    </style>
+
 </resources>

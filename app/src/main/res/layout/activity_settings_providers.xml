@@ -94,7 +94,7 @@
 
         <Button
             android:id="@+id/osm_donate"
-            style="@style/Widget.Button.Colored.Unelevated"
+            style="@style/Widget.Button.OutlinedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/donate" />
