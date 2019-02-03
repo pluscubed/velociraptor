@@ -35,6 +35,7 @@ public abstract class PrefUtils {
     private static final String PREF_SPEEDOMETER_SIZE = "pref_speedometer_size";
     private static final String PREF_GMAPS_ONLY_NAVIGATION = "pref_gmaps_only_nav";
     private static final String PREF_TERMS_ACCEPTED = "pref_terms_accepted";
+    public static final String PREF_SUPPORTED = "pref_supported";
 
     private static SharedPreferences.Editor edit(Context context) {
         return getSharedPreferences(context).edit();
@@ -205,6 +206,14 @@ public abstract class PrefUtils {
 
     public static void setGmapsOnlyInNavigation(Context context, boolean only) {
         edit(context).putBoolean(PREF_GMAPS_ONLY_NAVIGATION, only).apply();
+    }
+
+    public static boolean hasSupported(Context context) {
+        return getSharedPreferences(context).getBoolean(PREF_SUPPORTED, false);
+    }
+
+    public static void setSupported(Context context, boolean supported) {
+        edit(context).putBoolean(PREF_SUPPORTED, supported).apply();
     }
 
     @IntDef({STYLE_US, STYLE_INTERNATIONAL})

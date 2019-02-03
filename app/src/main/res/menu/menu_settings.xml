@@ -3,6 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/menu_settings_support"
+        android:icon="@drawable/ic_favorite_black_24dp"
+        android:title="@string/support_development"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/menu_settings_changelog"
         android:icon="@drawable/ic_new_releases_black_24dp"
         android:title="@string/changelog"

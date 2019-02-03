@@ -170,7 +170,7 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
 
     private val isNotificationAccessGranted: Boolean
         get() = NotificationManagerCompat.getEnabledListenerPackages(this@SettingsActivity)
-                .contains(BuildConfig.APPLICATION_ID)
+            .contains(BuildConfig.APPLICATION_ID)
 
 
     companion object {
@@ -184,6 +184,7 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
 
         const val OSM_EDITDATA_URL = "https://openstreetmap.org"
         const val OSM_COVERAGE_URL = "https://product.itoworld.com/map/124"
+        const val OSM_DONATE_URL = "https://donate.openstreetmap.org"
         const val HERE_EDITDATA_URL = "https://mapcreator.here.com/mapcreator"
         const val TOMTOM_EDITDATA_URL = "https://www.tomtom.com/mapshare/tools"
 
@@ -227,33 +228,33 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
             val intent = Intent(this@SettingsActivity, LimitService::class.java)
             intent.putExtra(LimitService.EXTRA_NOTIF_START, true)
             val pending = PendingIntent.getService(
-                    this@SettingsActivity,
-                    PENDING_SERVICE, intent, PendingIntent.FLAG_CANCEL_CURRENT
+                this@SettingsActivity,
+                PENDING_SERVICE, intent, PendingIntent.FLAG_CANCEL_CURRENT
             )
 
             val intentClose = Intent(this@SettingsActivity, LimitService::class.java)
             intentClose.putExtra(LimitService.EXTRA_NOTIF_CLOSE, true)
             val pendingClose = PendingIntent.getService(
-                    this@SettingsActivity,
-                    PENDING_SERVICE_CLOSE, intentClose, PendingIntent.FLAG_CANCEL_CURRENT
+                this@SettingsActivity,
+                PENDING_SERVICE_CLOSE, intentClose, PendingIntent.FLAG_CANCEL_CURRENT
             )
 
             val settings = Intent(this@SettingsActivity, SettingsActivity::class.java)
             val settingsIntent = PendingIntent.getActivity(
-                    this@SettingsActivity,
-                    PENDING_SETTINGS, settings, PendingIntent.FLAG_CANCEL_CURRENT
+                this@SettingsActivity,
+                PENDING_SETTINGS, settings, PendingIntent.FLAG_CANCEL_CURRENT
             )
 
             NotificationUtils.initChannels(this)
             val builder =
-                    NotificationCompat.Builder(this@SettingsActivity, NotificationUtils.CHANNEL_TOGGLES)
-                            .setSmallIcon(R.drawable.ic_speedometer_notif)
-                            .setContentTitle(getString(R.string.controls_notif_title))
-                            .setContentText(getString(R.string.controls_notif_desc))
-                            .addAction(0, getString(R.string.show), pending)
-                            .addAction(0, getString(R.string.hide), pendingClose)
-                            .setDeleteIntent(pendingClose)
-                            .setContentIntent(settingsIntent)
+                NotificationCompat.Builder(this@SettingsActivity, NotificationUtils.CHANNEL_TOGGLES)
+                    .setSmallIcon(R.drawable.ic_speedometer_notif)
+                    .setContentTitle(getString(R.string.controls_notif_title))
+                    .setContentText(getString(R.string.controls_notif_desc))
+                    .addAction(0, getString(R.string.show), pending)
+                    .addAction(0, getString(R.string.hide), pendingClose)
+                    .setDeleteIntent(pendingClose)
+                    .setContentIntent(settingsIntent)
             val notification = builder.build()
             notificationManager!!.notify(NOTIFICATION_CONTROLS, notification)
         }
@@ -267,9 +268,9 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
                 try {
                     withContext(Dispatchers.IO) { cacheLimitProvider.clear() }
                     Snackbar.make(
-                            clearCacheContainer,
-                            getString(R.string.cache_cleared),
-                            Snackbar.LENGTH_SHORT
+                        clearCacheContainer,
+                        getString(R.string.cache_cleared),
+                        Snackbar.LENGTH_SHORT
                     ).show()
                 } catch (e: Exception) {
                     Snackbar.make(clearCacheContainer, "Error: $e", Snackbar.LENGTH_SHORT).show()
@@ -280,7 +281,7 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
 
         appSelectionButton.setOnClickListener {
             startActivity(
-                    Intent(this@SettingsActivity, AppSelectionActivity::class.java)
+                Intent(this@SettingsActivity, AppSelectionActivity::class.java)
             )
         }
 
@@ -289,9 +290,9 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
                 startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
             } catch (e: ActivityNotFoundException) {
                 Snackbar.make(
-                        enableServiceButton,
-                        R.string.open_settings_failed_accessibility,
-                        Snackbar.LENGTH_LONG
+                    enableServiceButton,
+                    R.string.open_settings_failed_accessibility,
+                    Snackbar.LENGTH_LONG
                 ).show()
             }
         }
@@ -302,18 +303,18 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
                 openSettings(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, BuildConfig.APPLICATION_ID)
             } catch (ignored: ActivityNotFoundException) {
                 Snackbar.make(
-                        enableFloatingButton,
-                        R.string.open_settings_failed_overlay,
-                        Snackbar.LENGTH_LONG
+                    enableFloatingButton,
+                    R.string.open_settings_failed_overlay,
+                    Snackbar.LENGTH_LONG
                 ).show()
             }
         }
 
         enableLocationButton.setOnClickListener { v ->
             ActivityCompat.requestPermissions(
-                    this@SettingsActivity,
-                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                    REQUEST_LOCATION
+                this@SettingsActivity,
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                REQUEST_LOCATION
             )
         }
 
@@ -322,17 +323,17 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
         unitSpinner.adapter = unitAdapter
         unitSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
-                    parent: AdapterView<*>,
-                    view: View?,
-                    position: Int,
-                    id: Long
+                parent: AdapterView<*>,
+                view: View?,
+                position: Int,
+                id: Long
             ) {
                 val isMetric = position == 1
                 if (PrefUtils.getUseMetric(this@SettingsActivity) != isMetric) {
                     PrefUtils.setUseMetric(this@SettingsActivity, isMetric)
                     unitSpinner.dropDownVerticalOffset = Utils.convertDpToPx(
-                            this@SettingsActivity,
-                            (unitSpinner.selectedItemPosition * -48).toFloat()
+                        this@SettingsActivity,
+                        (unitSpinner.selectedItemPosition * -48).toFloat()
                     )
 
                     Utils.updateFloatingServicePrefs(this@SettingsActivity)
@@ -346,28 +347,28 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
         }
         unitSpinner.setSelection(if (PrefUtils.getUseMetric(this)) 1 else 0)
         unitSpinner.dropDownVerticalOffset =
-                Utils.convertDpToPx(this, (unitSpinner.selectedItemPosition * -48).toFloat())
+            Utils.convertDpToPx(this, (unitSpinner.selectedItemPosition * -48).toFloat())
 
         val styleAdapter = ArrayAdapter(
-                this, R.layout.spinner_item_text,
-                arrayOf(getString(R.string.united_states), getString(R.string.international))
+            this, R.layout.spinner_item_text,
+            arrayOf(getString(R.string.united_states), getString(R.string.international))
         )
         styleAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item)
         styleSpinner.adapter = styleAdapter
         styleSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
-                    parent: AdapterView<*>,
-                    view: View?,
-                    position: Int,
-                    id: Long
+                parent: AdapterView<*>,
+                view: View?,
+                position: Int,
+                id: Long
             ) {
                 if (position != PrefUtils.getSignStyle(this@SettingsActivity)) {
                     PrefUtils.setSignStyle(this@SettingsActivity, position)
                     styleSpinner.dropDownVerticalOffset =
-                            Utils.convertDpToPx(
-                                    this@SettingsActivity,
-                                    (styleSpinner.selectedItemPosition * -48).toFloat()
-                            )
+                        Utils.convertDpToPx(
+                            this@SettingsActivity,
+                            (styleSpinner.selectedItemPosition * -48).toFloat()
+                        )
 
                     Utils.updateFloatingServicePrefs(this@SettingsActivity)
                 }
@@ -379,26 +380,26 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
         }
         styleSpinner.setSelection(PrefUtils.getSignStyle(this))
         styleSpinner.dropDownVerticalOffset =
-                Utils.convertDpToPx(this, (styleSpinner.selectedItemPosition * -48).toFloat())
+            Utils.convertDpToPx(this, (styleSpinner.selectedItemPosition * -48).toFloat())
 
         toleranceView.setOnClickListener { v ->
             ToleranceDialogFragment().show(
-                    supportFragmentManager,
-                    "dialog_tolerance"
+                supportFragmentManager,
+                "dialog_tolerance"
             )
         }
 
         sizeView.setOnClickListener { v ->
             SizeDialogFragment().show(
-                    supportFragmentManager,
-                    "dialog_size"
+                supportFragmentManager,
+                "dialog_size"
             )
         }
 
         opacityView.setOnClickListener { v ->
             OpacityDialogFragment().show(
-                    supportFragmentManager,
-                    "dialog_opacity"
+                supportFragmentManager,
+                "dialog_opacity"
             )
         }
 
@@ -433,8 +434,8 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
         beepSwitch.isChecked = PrefUtils.isBeepAlertEnabled(this)
         beepSwitch.setOnClickListener { v ->
             PrefUtils.setBeepAlertEnabled(
-                    this@SettingsActivity,
-                    beepSwitch.isChecked
+                this@SettingsActivity,
+                beepSwitch.isChecked
             )
         }
         testBeepButton.setOnClickListener { v -> Utils.playBeeps() }
@@ -450,31 +451,31 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
             if (accessGranted) {
                 gmapsOnlyNavigationSwitch.toggle()
                 PrefUtils.setGmapsOnlyInNavigation(
-                        this@SettingsActivity,
-                        gmapsOnlyNavigationSwitch.isChecked
+                    this@SettingsActivity,
+                    gmapsOnlyNavigationSwitch.isChecked
                 )
             } else {
                 MaterialDialog(this@SettingsActivity)
-                        .show {
-                            message(R.string.gmaps_only_nav_notif_access)
-                            positiveButton(R.string.grant) {
-                                try {
-                                    val settingsAction =
-                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1)
-                                                Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS
-                                            else
-                                                "android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"
-                                    val intent = Intent(settingsAction)
-                                    startActivity(intent)
-                                } catch (ignored: ActivityNotFoundException) {
-                                    Snackbar.make(
-                                            enableFloatingButton,
-                                            R.string.open_settings_failed_notif_access,
-                                            Snackbar.LENGTH_LONG
-                                    ).show()
-                                }
+                    .show {
+                        message(R.string.gmaps_only_nav_notif_access)
+                        positiveButton(R.string.grant) {
+                            try {
+                                val settingsAction =
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1)
+                                        Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS
+                                    else
+                                        "android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"
+                                val intent = Intent(settingsAction)
+                                startActivity(intent)
+                            } catch (ignored: ActivityNotFoundException) {
+                                Snackbar.make(
+                                    enableFloatingButton,
+                                    R.string.open_settings_failed_notif_access,
+                                    Snackbar.LENGTH_LONG
+                                ).show()
                             }
                         }
+                    }
             }
         }
 
@@ -483,28 +484,28 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
         hereSubscribeButton.setOnClickListener { view ->
             if (!isBillingManagerReady) {
                 Snackbar.make(
-                        findViewById(android.R.id.content),
-                        R.string.in_app_unavailable,
-                        Snackbar.LENGTH_SHORT
+                    findViewById(android.R.id.content),
+                    R.string.in_app_unavailable,
+                    Snackbar.LENGTH_SHORT
                 ).show()
             }
             billingManager!!.initiatePurchaseFlow(
-                    BillingConstants.SKU_HERE,
-                    BillingClient.SkuType.SUBS
+                BillingConstants.SKU_HERE,
+                BillingClient.SkuType.SUBS
             )
         }
 
         tomtomSubscribeButton.setOnClickListener { view ->
             if (!isBillingManagerReady) {
                 Snackbar.make(
-                        findViewById(android.R.id.content),
-                        R.string.in_app_unavailable,
-                        Snackbar.LENGTH_SHORT
+                    findViewById(android.R.id.content),
+                    R.string.in_app_unavailable,
+                    Snackbar.LENGTH_SHORT
                 ).show()
             }
             billingManager!!.initiatePurchaseFlow(
-                    BillingConstants.SKU_TOMTOM,
-                    BillingClient.SkuType.SUBS
+                BillingConstants.SKU_TOMTOM,
+                BillingClient.SkuType.SUBS
             )
         }
 
@@ -513,16 +514,16 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
         osmCoverageButton.setOnClickListener { v ->
             if (Utils.isLocationPermissionGranted(this@SettingsActivity)) {
                 val fusedLocationProvider =
-                        LocationServices.getFusedLocationProviderClient(this@SettingsActivity)
+                    LocationServices.getFusedLocationProviderClient(this@SettingsActivity)
                 fusedLocationProvider.lastLocation
-                        .addOnCompleteListener(this@SettingsActivity) { task ->
-                            var uriString = OSM_COVERAGE_URL
-                            if (task.isSuccessful && task.result != null) {
-                                val lastLocation = task.result
-                                uriString += "?lon=" + lastLocation!!.longitude + "&lat=" + lastLocation.latitude + "&zoom=12"
-                            }
-                            openLink(uriString)
+                    .addOnCompleteListener(this@SettingsActivity) { task ->
+                        var uriString = OSM_COVERAGE_URL
+                        if (task.isSuccessful && task.result != null) {
+                            val lastLocation = task.result
+                            uriString += "?lon=" + lastLocation!!.longitude + "&lat=" + lastLocation.latitude + "&zoom=12"
                         }
+                        openLink(uriString)
+                    }
             } else {
                 openLink(OSM_COVERAGE_URL)
             }
@@ -530,22 +531,27 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
 
         osmEditDataButton.setOnClickListener { view ->
             MaterialDialog(this@SettingsActivity)
-                    .show {
-                        var text = getString(R.string.osm_edit)
-                        if (text.contains("%s")) {
-                            text = text.format("<b>$OSM_EDITDATA_URL</b>")
-                        }
-                        message(text = text.parseAsHtml(), lineHeightMultiplier = 1.2f)
-                        positiveButton(R.string.share_link) { _ ->
-                            val shareIntent = Intent()
-                            shareIntent.type = "text/plain"
-                            shareIntent.putExtra(Intent.EXTRA_TEXT, OSM_EDITDATA_URL)
-                            startActivity(Intent.createChooser(shareIntent, getString(R.string.share_link)))
-                        }
+                .show {
+                    var text = getString(R.string.osm_edit)
+                    if (text.contains("%s")) {
+                        text = text.format("<b>$OSM_EDITDATA_URL</b>")
                     }
+                    message(text = text.parseAsHtml(), lineHeightMultiplier = 1.2f)
+                    positiveButton(R.string.share_link) { _ ->
+                        val shareIntent = Intent()
+                        shareIntent.type = "text/plain"
+                        shareIntent.putExtra(Intent.EXTRA_TEXT, OSM_EDITDATA_URL)
+                        startActivity(
+                            Intent.createChooser(
+                                shareIntent,
+                                getString(R.string.share_link)
+                            )
+                        )
+                    }
+                }
         }
 
-        osmDonateButton.setOnClickListener { view -> showSupportDialog() }
+        osmDonateButton.setOnClickListener { view -> openLink(OSM_DONATE_URL) }
 
         if (BuildConfig.VERSION_CODE > PrefUtils.getVersionCode(this) && !PrefUtils.isFirstRun(this)) {
             showChangelog()
@@ -599,19 +605,37 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
             override fun onPurchasesUpdated(purchases: List<Purchase>) {
                 val purchased = HashSet<String>()
 
+                if (purchased.size > 0) {
+                    PrefUtils.setSupported(this@SettingsActivity, true)
+                }
+
                 for (purchase in purchases) {
-                    purchased.add(purchase.sku)
+                    when (purchase.sku) {
+                        BillingConstants.SKU_D1,
+                        BillingConstants.SKU_D3,
+                        BillingConstants.SKU_D5,
+                        BillingConstants.SKU_D10,
+                        BillingConstants.SKU_D20 -> {
+                            try {
+                                billingManager?.consumeAsync(purchase.purchaseToken);
+                            } catch (e: Exception) {
+                                Crashlytics.logException(e);
+                            }
+                        }
+                        else ->
+                            purchased.add(purchase.sku)
+                    }
                 }
 
                 setSubscriptionState(
-                        hereSubscribeButton,
-                        hereTitle,
-                        purchased.contains(BillingConstants.SKU_HERE)
+                    hereSubscribeButton,
+                    hereTitle,
+                    purchased.contains(BillingConstants.SKU_HERE)
                 )
                 setSubscriptionState(
-                        tomtomSubscribeButton,
-                        tomtomTitle,
-                        purchased.contains(BillingConstants.SKU_TOMTOM)
+                    tomtomSubscribeButton,
+                    tomtomTitle,
+                    purchased.contains(BillingConstants.SKU_TOMTOM)
                 )
             }
         })
@@ -643,22 +667,22 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
             this@SettingsActivity.startActivity(intent)
         } catch (e: ActivityNotFoundException) {
             Snackbar.make(
-                    enableFloatingButton,
-                    getString(R.string.open_link_failed, uriString),
-                    Snackbar.LENGTH_LONG
+                enableFloatingButton,
+                getString(R.string.open_link_failed, uriString),
+                Snackbar.LENGTH_LONG
             ).show()
         }
 
     }
 
     private suspend fun querySkuDetails(
-            manager: BillingManager,
-            itemType: String,
-            vararg skuList: String
+        manager: BillingManager,
+        itemType: String,
+        vararg skuList: String
     ): List<SkuDetails> = suspendCoroutine { cont ->
         manager.querySkuDetailsAsync(
-                itemType,
-                Arrays.asList(*skuList)
+            itemType,
+            Arrays.asList(*skuList)
         ) { responseCode, skuDetailsList ->
             if (responseCode != BillingClient.BillingResponse.OK) {
                 cont.resumeWithException(Throwable("Billing error: $responseCode"))
@@ -671,9 +695,9 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
     fun showSupportDialog() {
         if (!isBillingManagerReady) {
             Snackbar.make(
-                    findViewById(android.R.id.content),
-                    R.string.in_app_unavailable,
-                    Snackbar.LENGTH_SHORT
+                findViewById(android.R.id.content),
+                R.string.in_app_unavailable,
+                Snackbar.LENGTH_SHORT
             ).show()
         }
 
@@ -681,36 +705,42 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
             try {
                 val monthlyDonations = async(Dispatchers.IO) {
                     querySkuDetails(
-                            billingManager!!,
-                            BillingClient.SkuType.SUBS,
-                            BillingConstants.SKU_D1_MONTHLY,
-                            BillingConstants.SKU_D3_MONTHLY
+                        billingManager!!,
+                        BillingClient.SkuType.SUBS,
+                        BillingConstants.SKU_D1_MONTHLY,
+                        BillingConstants.SKU_D3_MONTHLY
                     )
                 }
                 val oneTimeDonations = async(Dispatchers.IO) {
                     querySkuDetails(
-                            billingManager!!,
-                            BillingClient.SkuType.INAPP,
-                            BillingConstants.SKU_D1,
-                            BillingConstants.SKU_D3,
-                            BillingConstants.SKU_D5,
-                            BillingConstants.SKU_D10,
-                            BillingConstants.SKU_D20
+                        billingManager!!,
+                        BillingClient.SkuType.INAPP,
+                        BillingConstants.SKU_D1,
+                        BillingConstants.SKU_D3,
+                        BillingConstants.SKU_D5,
+                        BillingConstants.SKU_D10,
+                        BillingConstants.SKU_D20
                     )
                 }
 
                 val skuDetailsList = monthlyDonations.await() + oneTimeDonations.await()
 
+                @Suppress("DEPRECATION")
+                var text = getString(R.string.support_dev_dialog)
+
+                if (PrefUtils.hasSupported(this@SettingsActivity)) {
+                    text += "\n\n\uD83C\uDF89 " + getString(R.string.support_dev_dialog_badge) + " \uD83C\uDF89"
+                }
 
                 var dialog = MaterialDialog(this@SettingsActivity)
-                        .icon(
-                                drawable = AppCompatResources.getDrawable(
-                                        this@SettingsActivity,
-                                        R.drawable.ic_favorite_black_24dp
-                                )
+                    .icon(
+                        drawable = AppCompatResources.getDrawable(
+                            this@SettingsActivity,
+                            R.drawable.ic_favorite_black_24dp
                         )
-                        .title(R.string.support_development)
-                        .message(R.string.support_dev_dialog, html = true, lineHeightMultiplier = 1.2f)
+                    )
+                    .title(R.string.support_development)
+                    .message(text = text, lineHeightMultiplier = 1.2f)
 
                 val purchaseDisplay = ArrayList<String>()
                 for (details in skuDetailsList) {
@@ -731,10 +761,11 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
                 dialog.show()
             } catch (e: Exception) {
                 Snackbar.make(
-                        findViewById(android.R.id.content),
-                        R.string.in_app_unavailable,
-                        Snackbar.LENGTH_SHORT
+                    findViewById(android.R.id.content),
+                    R.string.in_app_unavailable,
+                    Snackbar.LENGTH_SHORT
                 ).show()
+                e.printStackTrace()
             }
         }
     }
@@ -759,41 +790,42 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
                 showChangelog()
                 return true
             }
+            R.id.menu_settings_support -> {
+                showSupportDialog()
+                return true
+            }
         }
         return super.onOptionsItemSelected(item)
     }
 
     private fun showAboutDialog() {
         MaterialDialog(this)
-                .title(text = getString(R.string.about_dialog_title, BuildConfig.VERSION_NAME))
-                .positiveButton(R.string.dismiss)
-                .message(R.string.about_body, html = true, lineHeightMultiplier = 1.2f)
-                .neutralButton(R.string.licenses) {
-                    startActivity(
-                            Intent(
-                                    this@SettingsActivity,
-                                    OssLicensesMenuActivity::class.java
-                            )
-                    )
-                }
-                .negativeButton(R.string.terms) { showTermsDialog() }
-                .icon(R.mipmap.ic_launcher)
-                .show()
+            .title(text = getString(R.string.about_dialog_title, BuildConfig.VERSION_NAME))
+            .positiveButton(R.string.dismiss)
+            .message(R.string.about_body, html = true, lineHeightMultiplier = 1.2f)
+            .neutralButton(R.string.licenses) {
+                startActivity(
+                    Intent(this@SettingsActivity, OssLicensesMenuActivity::class.java)
+                )
+            }
+            .negativeButton(R.string.terms) { showTermsDialog() }
+            .icon(R.mipmap.ic_launcher)
+            .show()
     }
 
     private fun showTermsDialog() {
         var dialog = MaterialDialog(this)
-                .message(R.string.terms_body, html = true, lineHeightMultiplier = 1.2f)
-                .neutralButton(R.string.privacy_policy) { openLink(PRIVACY_URL) }
+            .message(R.string.terms_body, html = true, lineHeightMultiplier = 1.2f)
+            .neutralButton(R.string.privacy_policy) { openLink(PRIVACY_URL) }
 
         if (!PrefUtils.isTermsAccepted(this)) {
             dialog = dialog
-                    .noAutoDismiss()
-                    .cancelOnTouchOutside(false)
-                    .positiveButton(R.string.accept) {
-                        PrefUtils.setTermsAccepted(this@SettingsActivity, true)
-                        it.dismiss()
-                    }
+                .noAutoDismiss()
+                .cancelOnTouchOutside(false)
+                .positiveButton(R.string.accept) {
+                    PrefUtils.setTermsAccepted(this@SettingsActivity, true)
+                    it.dismiss()
+                }
         }
 
         dialog.show()
@@ -817,18 +849,18 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
         enableLocationButton.isEnabled = !permissionGranted
 
         @SuppressLint("NewApi", "LocalSuppress") val overlayEnabled =
-                Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(this)
+            Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(this)
         enabledFloatingImage.setImageResource(if (overlayEnabled) R.drawable.ic_done_green_40dp else R.drawable.ic_cross_red_40dp)
         enableFloatingButton.isEnabled = !overlayEnabled
 
         val serviceEnabled =
-                Utils.isAccessibilityServiceEnabled(this, AppDetectionService::class.java)
+            Utils.isAccessibilityServiceEnabled(this, AppDetectionService::class.java)
         enabledServiceImage.setImageResource(if (serviceEnabled) R.drawable.ic_done_green_40dp else R.drawable.ic_cross_red_40dp)
         enableServiceButton.isEnabled = !serviceEnabled
 
         val constant = getString(
-                if (PrefUtils.getUseMetric(this)) R.string.kmph else R.string.mph,
-                PrefUtils.getSpeedingConstant(this).toString()
+            if (PrefUtils.getUseMetric(this)) R.string.kmph else R.string.mph,
+            PrefUtils.getSpeedingConstant(this).toString()
         )
         val percent = getString(R.string.percent, PrefUtils.getSpeedingPercent(this).toString())
         val mode = if (PrefUtils.getToleranceMode(this)) "+" else getString(R.string.or)
@@ -836,13 +868,13 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
         toleranceOverview.text = overview
 
         val limitSizePercent = getString(
-                R.string.percent,
-                (PrefUtils.getSpeedLimitSize(this) * 100).toInt().toString()
+            R.string.percent,
+            (PrefUtils.getSpeedLimitSize(this) * 100).toInt().toString()
         )
         val speedLimitSize = getString(R.string.size_limit_overview, limitSizePercent)
         val speedometerSizePercent = getString(
-                R.string.percent,
-                (PrefUtils.getSpeedometerSize(this) * 100).toInt().toString()
+            R.string.percent,
+            (PrefUtils.getSpeedometerSize(this) * 100).toInt().toString()
         )
         val speedometerSize = getString(R.string.size_speedometer_overview, speedometerSizePercent)
         sizeOverview.text = speedLimitSize + "\n" + speedometerSize

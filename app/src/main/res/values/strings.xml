@@ -119,7 +119,8 @@
 
     <string name="openstreetmap">OpenStreetMap</string>
     <string name="share_link">Share Link</string>
-    <string name="openstreetmap_desc">Free - Velociraptor\'s OSM server is supported by users</string>
+    <string name="openstreetmap_desc">Free</string>
+    <string name="donate">Donate</string>
     <string name="osm_edit">Visit %s on your computer to add/edit speed limits</string>
     <string name="open_link_failed">Unable to open link. Please manually go to %s.</string>
 
@@ -160,9 +161,10 @@
     <!--Support development-->
     <string name="support_development">Support development</string>
     <string name="in_app_unavailable">In-app billing not available</string>
-    <string name="support_dev_dialog">Used for OpenStreetMap server costs; suggested amount is 1 USD per month.</string>
+    <string name="support_dev_dialog">Suggested amount is 1 USD per month. This is NOT necessary for using the app (but you will get a little badge here :) </string>
     <string name="per_month">%s per month</string>
     <string name="one_time">%s one-time</string>
+    <string name="support_dev_dialog_badge">Thank you for your support!</string>
 
     <!--Notification Channels-->
     <string name="channel_toggles">Show/hide toggles</string>
