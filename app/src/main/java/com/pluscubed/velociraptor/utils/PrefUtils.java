@@ -35,7 +35,7 @@ public abstract class PrefUtils {
     private static final String PREF_SPEEDOMETER_SIZE = "pref_speedometer_size";
     private static final String PREF_GMAPS_ONLY_NAVIGATION = "pref_gmaps_only_nav";
     private static final String PREF_TERMS_ACCEPTED = "pref_terms_accepted";
-    public static final String PREF_SUPPORTED = "pref_supported";
+    private static final String PREF_SUPPORTED = "pref_supported";
 
     private static SharedPreferences.Editor edit(Context context) {
         return getSharedPreferences(context).edit();
