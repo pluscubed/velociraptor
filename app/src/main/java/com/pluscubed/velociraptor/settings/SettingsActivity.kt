@@ -702,6 +702,7 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
         }
 
         launch {
+            supervisorScope {
             try {
                 val monthlyDonations = async(Dispatchers.IO) {
                     querySkuDetails(
@@ -766,6 +767,7 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
                     Snackbar.LENGTH_SHORT
                 ).show()
                 e.printStackTrace()
+            }
             }
         }
     }
