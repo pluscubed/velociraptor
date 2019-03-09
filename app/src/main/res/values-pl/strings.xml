@@ -28,6 +28,7 @@
     <string name="permissions_warning">Velociraptor nie ma uprawnień do odczytywania lokalizacji. Uruchom aplikację, aby je nadać.</string>
     <string name="location_settings_warning">GPS nie jest włączony</string>
     <string name="network_warning">Brak połączenia z siecią</string>
+    <string name="troubleshoot_label">Nie uruchamia się automatycznie?</string>
     <!--General Settings-->
     <string name="general">Ogólne</string>
     <string name="show_limits">Ograniczenia prędkości</string>
@@ -41,6 +42,8 @@
     <string name="size">Rozmiar</string>
     <string name="size_limit_overview">Ograniczenie prędkości: %s</string>
     <string name="size_speedometer_overview">Prędkościomierz: %s</string>
+    <string name="size_limit_text">Ograniczenie prędkości</string>
+    <string name="size_speedometer_text">Prędkościomierz</string>
     <string name="transparency">Przezroczystość</string>
     <string name="speeding_amount">Margines przekroczenia prędkości</string>
     <string name="tolerance_dialog_text">Ostrzegaj gdy dopuszczalna prędkość jest przekroczona o:</string>
@@ -112,6 +115,7 @@ należą do swoich właścicieli.<br/><br/>
     <!---Advanced settings-->
     <string name="advanced">Zaawansowane</string>
     <string name="debugging_stats">Statystyki dla nerdów/debugowanie</string>
+    <string name="cache_cleared">Pamięć podręczna wyczyszczona!</string>
     <!--Changelog-->
     <string name="changelog">Lista zmian</string>
     <string name="rate">Ocena</string>

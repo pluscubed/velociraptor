@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<resources>
+    <string name="app_name">Velociraptor</string>
+    <!--Generic-->
+    <string name="configure">Налаштування</string>
+    <string name="done">Виконано</string>
+    <string name="show">Показати</string>
+    <string name="hide">Приховати</string>
+    <string name="dismiss">Відхилити</string>
+    <string name="kmph">% км/год</string>
+    <string name="mph">% миль/год</string>
+    <string name="percent">%s%%</string>
+    <string name="grant">Грант</string>
+    <string name="notif_content">Торкніться, щоб відкрити параметри</string>
+    <string name="notif_title">Velociraptor працює</string>
+    <!--Permission Settings-->
+    <string name="open_settings_page">Відкрийте сторінку налаштувань</string>
+    <string name="enable_floating_desc">Дозволити Velociraptor відображатися поверх карт</string>
+    <string name="open_settings_failed_overlay">Неможливо відкрити налаштування. Будь ласка задайте налаштування \"Малювати поверх інших програм\"</string>
+    <string name="enable_accessibility_service">Увімкніть службу доступу</string>
+    <string name="enable_accessibility_service_desc">Дозволити Velociraptor запускатися автоматично в програмах карт</string>
+    <string name="accessibility_service_summary">Автозапуск в додатках карт</string>
+    <!--General Settings-->
+    <!--About Dialog-->
+    <!--Speed limit providers-->
+    <!--Activation Settings-->
+    <!--App selection-->
+    <!---Advanced settings-->
+    <!--Changelog-->
+    <!--Support development-->
+    <!--Notification Channels-->
+</resources>
