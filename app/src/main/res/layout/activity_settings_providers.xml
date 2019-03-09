@@ -27,8 +27,6 @@
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingEnd="12dp"
-        android:paddingLeft="16dp"
-        android:paddingRight="12dp"
         android:paddingStart="16dp"
         tools:ignore="UseCompoundDrawables">
 
@@ -45,7 +43,6 @@
                 android:layout_height="wrap_content"
                 android:drawablePadding="8dp"
                 android:paddingEnd="8dp"
-                android:paddingRight="8dp"
                 android:text="@string/openstreetmap"
                 android:textSize="16sp"
                 tools:ignore="RtlSymmetry" />
@@ -54,7 +51,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingEnd="8dp"
-                android:paddingRight="8dp"
                 android:text="@string/openstreetmap_desc"
                 android:textColor="?android:textColorSecondary"
                 android:textSize="14sp"
@@ -114,8 +110,6 @@
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingEnd="12dp"
-        android:paddingLeft="16dp"
-        android:paddingRight="12dp"
         android:paddingStart="16dp"
         tools:ignore="UseCompoundDrawables">
 
@@ -132,7 +126,6 @@
                 android:layout_height="wrap_content"
                 android:drawablePadding="8dp"
                 android:paddingEnd="8dp"
-                android:paddingRight="8dp"
                 android:text="@string/tomtom_provider"
                 android:textSize="16sp"
                 tools:ignore="RtlSymmetry" />
@@ -142,7 +135,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingEnd="8dp"
-                android:paddingRight="8dp"
                 android:text="@string/subscribe_placeholder"
                 android:textColor="?android:textColorSecondary"
                 android:textSize="14sp"
@@ -194,8 +186,6 @@
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingEnd="12dp"
-        android:paddingLeft="16dp"
-        android:paddingRight="12dp"
         android:paddingStart="16dp"
         tools:ignore="UseCompoundDrawables">
 
@@ -212,7 +202,6 @@
                 android:layout_height="wrap_content"
                 android:drawablePadding="8dp"
                 android:paddingEnd="8dp"
-                android:paddingRight="8dp"
                 android:text="@string/here_provider"
                 android:textSize="16sp"
                 tools:ignore="RtlSymmetry" />
@@ -222,7 +211,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingEnd="8dp"
-                android:paddingRight="8dp"
                 android:text="@string/subscribe_placeholder"
                 android:textColor="?android:textColorSecondary"
                 android:textSize="14sp"
