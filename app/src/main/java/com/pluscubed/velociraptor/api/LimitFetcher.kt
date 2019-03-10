@@ -37,9 +37,9 @@ class LimitFetcher(private val context: Context) {
 
     private fun buildOkHttpClient(): OkHttpClient {
         val builder = OkHttpClient.Builder()
-                .connectTimeout(15, TimeUnit.SECONDS)
-                .writeTimeout(15, TimeUnit.SECONDS)
-                .readTimeout(15, TimeUnit.SECONDS)
+            .connectTimeout(15, TimeUnit.SECONDS)
+            .writeTimeout(15, TimeUnit.SECONDS)
+            .readTimeout(15, TimeUnit.SECONDS)
         if (BuildConfig.DEBUG) {
             val loggingInterceptor = HttpLoggingInterceptor()
             loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
@@ -72,16 +72,16 @@ class LimitFetcher(private val context: Context) {
         // 1. Always try raptor service if cache didn't hit / didn't contain a limit
         if (limitResponses.last().speedLimit == -1 && networkConnected) {
             val hereResponses =
-                    raptorLimitProvider.getSpeedLimit(location, lastResponse, LimitResponse.ORIGIN_HERE)
+                raptorLimitProvider.getSpeedLimit(location, lastResponse, LimitResponse.ORIGIN_HERE)
             if (hereResponses.isNotEmpty())
                 limitResponses += hereResponses[0]
         }
 
         if (limitResponses.last().speedLimit == -1 && networkConnected) {
             val tomtomResponses = raptorLimitProvider.getSpeedLimit(
-                    location,
-                    lastResponse,
-                    LimitResponse.ORIGIN_TOMTOM
+                location,
+                lastResponse,
+                LimitResponse.ORIGIN_TOMTOM
             )
             if (tomtomResponses.isNotEmpty())
                 limitResponses += tomtomResponses[0]
@@ -105,12 +105,12 @@ class LimitFetcher(private val context: Context) {
 
         //Accumulate debug infos, based on the last response (the one with the speed limit or the last option)
         var finalResponse =
-                if (PrefUtils.isDebuggingEnabled(context))
-                    limitResponses.reduce { acc, next ->
-                        next.copy(debugInfo = acc.debugInfo + "\n" + next.debugInfo)
-                    }
-                else
-                    limitResponses.last()
+            if (PrefUtils.isDebuggingEnabled(context))
+                limitResponses.reduce { acc, next ->
+                    next.copy(debugInfo = acc.debugInfo + "\n" + next.debugInfo)
+                }
+            else
+                limitResponses.last()
 
         //Record the last response's timestamp and network response
         if (finalResponse.timestamp == 0L) {
@@ -129,11 +129,11 @@ class LimitFetcher(private val context: Context) {
     companion object {
         fun buildRetrofit(client: OkHttpClient, baseUrl: String): Retrofit {
             return Retrofit.Builder()
-                    .baseUrl(baseUrl)
-                    .client(client)
-                    .addConverterFactory(ScalarsConverterFactory.create())
-                    .addConverterFactory(JacksonConverterFactory.create())
-                    .build()
+                .baseUrl(baseUrl)
+                .client(client)
+                .addConverterFactory(ScalarsConverterFactory.create())
+                .addConverterFactory(JacksonConverterFactory.create())
+                .build()
         }
     }
 

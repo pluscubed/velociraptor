@@ -57,8 +57,8 @@ class OpacityDialogFragment : DialogFragment() {
 
                 try {
                     PrefUtils.setOpacity(
-                            activity,
-                            Integer.parseInt(percentEditText.text.toString())
+                        activity,
+                        Integer.parseInt(percentEditText.text.toString())
                     )
                     Utils.updateFloatingServicePrefs(activity)
                 } catch (ignored: NumberFormatException) {
@@ -74,8 +74,8 @@ class OpacityDialogFragment : DialogFragment() {
 
                     try {
                         PrefUtils.setOpacity(
-                                activity,
-                                Integer.parseInt(percentEditText.text.toString())
+                            activity,
+                            Integer.parseInt(percentEditText.text.toString())
                         )
                         Utils.updateFloatingServicePrefs(activity)
                     } catch (ignored: NumberFormatException) {
@@ -90,13 +90,13 @@ class OpacityDialogFragment : DialogFragment() {
         })
 
         return MaterialDialog(activity!!)
-                .customView(view = dialog, scrollable = true)
-                .title(R.string.transparency)
-                .negativeButton(android.R.string.cancel) {
-                    PrefUtils.setOpacity(activity, initialTransparency)
-                    Utils.updateFloatingServicePrefs(activity)
-                }
-                .positiveButton(android.R.string.ok)
+            .customView(view = dialog, scrollable = true)
+            .title(R.string.transparency)
+            .negativeButton(android.R.string.cancel) {
+                PrefUtils.setOpacity(activity, initialTransparency)
+                Utils.updateFloatingServicePrefs(activity)
+            }
+            .positiveButton(android.R.string.ok)
     }
 
 }

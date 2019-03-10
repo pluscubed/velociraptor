@@ -703,71 +703,71 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
 
         launch {
             supervisorScope {
-            try {
-                val monthlyDonations = async(Dispatchers.IO) {
-                    querySkuDetails(
-                        billingManager!!,
-                        BillingClient.SkuType.SUBS,
-                        BillingConstants.SKU_D1_MONTHLY,
-                        BillingConstants.SKU_D3_MONTHLY
-                    )
-                }
-                val oneTimeDonations = async(Dispatchers.IO) {
-                    querySkuDetails(
-                        billingManager!!,
-                        BillingClient.SkuType.INAPP,
-                        BillingConstants.SKU_D1,
-                        BillingConstants.SKU_D3,
-                        BillingConstants.SKU_D5,
-                        BillingConstants.SKU_D10,
-                        BillingConstants.SKU_D20
-                    )
-                }
-
-                val skuDetailsList = monthlyDonations.await() + oneTimeDonations.await()
-
-                @Suppress("DEPRECATION")
-                var text = getString(R.string.support_dev_dialog)
-
-                if (PrefUtils.hasSupported(this@SettingsActivity)) {
-                    text += "\n\n\uD83C\uDF89 " + getString(R.string.support_dev_dialog_badge) + " \uD83C\uDF89"
-                }
-
-                var dialog = MaterialDialog(this@SettingsActivity)
-                    .icon(
-                        drawable = AppCompatResources.getDrawable(
-                            this@SettingsActivity,
-                            R.drawable.ic_favorite_black_24dp
+                try {
+                    val monthlyDonations = async(Dispatchers.IO) {
+                        querySkuDetails(
+                            billingManager!!,
+                            BillingClient.SkuType.SUBS,
+                            BillingConstants.SKU_D1_MONTHLY,
+                            BillingConstants.SKU_D3_MONTHLY
                         )
-                    )
-                    .title(R.string.support_development)
-                    .message(text = text, lineHeightMultiplier = 1.2f)
-
-                val purchaseDisplay = ArrayList<String>()
-                for (details in skuDetailsList) {
-                    var amount = details.price
-                    if (details.type == BillingClient.SkuType.SUBS)
-                        amount = getString(R.string.per_month, amount)
-                    else {
-                        amount = getString(R.string.one_time, amount)
                     }
-                    purchaseDisplay.add(amount)
-                }
+                    val oneTimeDonations = async(Dispatchers.IO) {
+                        querySkuDetails(
+                            billingManager!!,
+                            BillingClient.SkuType.INAPP,
+                            BillingConstants.SKU_D1,
+                            BillingConstants.SKU_D3,
+                            BillingConstants.SKU_D5,
+                            BillingConstants.SKU_D10,
+                            BillingConstants.SKU_D20
+                        )
+                    }
 
-                dialog = dialog.listItems(items = purchaseDisplay) { _, which, _ ->
-                    val skuDetails = skuDetailsList[which]
-                    billingManager!!.initiatePurchaseFlow(skuDetails.sku, skuDetails.type)
-                }
+                    val skuDetailsList = monthlyDonations.await() + oneTimeDonations.await()
 
-                dialog.show()
-            } catch (e: Exception) {
-                Snackbar.make(
-                    findViewById(android.R.id.content),
-                    R.string.in_app_unavailable,
-                    Snackbar.LENGTH_SHORT
-                ).show()
-                e.printStackTrace()
-            }
+                    @Suppress("DEPRECATION")
+                    var text = getString(R.string.support_dev_dialog)
+
+                    if (PrefUtils.hasSupported(this@SettingsActivity)) {
+                        text += "\n\n\uD83C\uDF89 " + getString(R.string.support_dev_dialog_badge) + " \uD83C\uDF89"
+                    }
+
+                    var dialog = MaterialDialog(this@SettingsActivity)
+                        .icon(
+                            drawable = AppCompatResources.getDrawable(
+                                this@SettingsActivity,
+                                R.drawable.ic_favorite_black_24dp
+                            )
+                        )
+                        .title(R.string.support_development)
+                        .message(text = text, lineHeightMultiplier = 1.2f)
+
+                    val purchaseDisplay = ArrayList<String>()
+                    for (details in skuDetailsList) {
+                        var amount = details.price
+                        if (details.type == BillingClient.SkuType.SUBS)
+                            amount = getString(R.string.per_month, amount)
+                        else {
+                            amount = getString(R.string.one_time, amount)
+                        }
+                        purchaseDisplay.add(amount)
+                    }
+
+                    dialog = dialog.listItems(items = purchaseDisplay) { _, which, _ ->
+                        val skuDetails = skuDetailsList[which]
+                        billingManager!!.initiatePurchaseFlow(skuDetails.sku, skuDetails.type)
+                    }
+
+                    dialog.show()
+                } catch (e: Exception) {
+                    Snackbar.make(
+                        findViewById(android.R.id.content),
+                        R.string.in_app_unavailable,
+                        Snackbar.LENGTH_SHORT
+                    ).show()
+                    e.printStackTrace()
+                }
             }
         }
     }

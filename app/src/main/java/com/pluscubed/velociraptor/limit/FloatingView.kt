@@ -70,15 +70,17 @@ class FloatingView(private val service: LimitService) : LimitView {
 
     @SuppressLint("InflateParams")
     private fun inflateDebugging() {
-        debuggingText = LayoutInflater.from(ContextThemeWrapper(service, R.style.Theme_Velociraptor))
+        debuggingText =
+            LayoutInflater.from(ContextThemeWrapper(service, R.style.Theme_Velociraptor))
                 .inflate(R.layout.floating_stats, null, false) as TextView
 
         val debuggingParams = WindowManager.LayoutParams(
-                WindowManager.LayoutParams.MATCH_PARENT,
-                WindowManager.LayoutParams.WRAP_CONTENT,
-                windowType,
-                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                PixelFormat.TRANSLUCENT)
+            WindowManager.LayoutParams.MATCH_PARENT,
+            WindowManager.LayoutParams.WRAP_CONTENT,
+            windowType,
+            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+            PixelFormat.TRANSLUCENT
+        )
 
         debuggingParams.gravity = Gravity.BOTTOM
         try {
@@ -98,16 +100,17 @@ class FloatingView(private val service: LimitService) : LimitView {
 
         // System.err errors here are printed by the ArcProgressStackView library
         floatingView = LayoutInflater.from(ContextThemeWrapper(service, R.style.Theme_Velociraptor))
-                .inflate(layout, null, false)
+            .inflate(layout, null, false)
 
         ButterKnife.bind(this, floatingView!!)
 
         val params = WindowManager.LayoutParams(
-                WindowManager.LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.WRAP_CONTENT,
-                windowType,
-                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-                PixelFormat.TRANSLUCENT)
+            WindowManager.LayoutParams.WRAP_CONTENT,
+            WindowManager.LayoutParams.WRAP_CONTENT,
+            windowType,
+            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+            PixelFormat.TRANSLUCENT
+        )
         params.gravity = Gravity.TOP or Gravity.START
         params.alpha = PrefUtils.getOpacity(service) / 100.0f
         if (windowManager != null)
@@ -121,9 +124,13 @@ class FloatingView(private val service: LimitService) : LimitView {
         initMonitorPosition()
 
         val models = ArrayList<ArcProgressStackView.Model>()
-        models.add(ArcProgressStackView.Model("", 0f,
+        models.add(
+            ArcProgressStackView.Model(
+                "", 0f,
                 ContextCompat.getColor(service, R.color.colorPrimary800),
-                ContextCompat.getColor(service, R.color.colorAccent)))
+                ContextCompat.getColor(service, R.color.colorAccent)
+            )
+        )
         arcView!!.textColor = ContextCompat.getColor(service, android.R.color.transparent)
         arcView!!.interpolator = FastOutSlowInInterpolator()
         arcView!!.models = models
@@ -134,11 +141,13 @@ class FloatingView(private val service: LimitService) : LimitView {
         if (floatingView == null) {
             return
         }
-        floatingView!!.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+        floatingView!!.viewTreeObserver.addOnGlobalLayoutListener(object :
+            ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
                 val params = floatingView!!.layoutParams as WindowManager.LayoutParams
 
-                val split = PrefUtils.getFloatingLocation(service).split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+                val split = PrefUtils.getFloatingLocation(service).split(",".toRegex())
+                    .dropLastWhile { it.isEmpty() }.toTypedArray()
                 val left = java.lang.Boolean.parseBoolean(split[0])
                 val yRatio = java.lang.Float.parseFloat(split[1])
 
@@ -192,7 +201,7 @@ class FloatingView(private val service: LimitService) : LimitView {
         PrefUtils.setFloatingLocation(service, params.y.toFloat() / screenSize.y, endX == 0)
 
         val valueAnimator = ValueAnimator.ofInt(params.x, endX)
-                .setDuration(300)
+            .setDuration(300)
         valueAnimator.interpolator = LinearOutSlowInInterpolator()
         valueAnimator.addUpdateListener { animation ->
             val params1 = floatingView!!.layoutParams as WindowManager.LayoutParams
@@ -276,7 +285,8 @@ class FloatingView(private val service: LimitService) : LimitView {
             when (style) {
                 PrefUtils.STYLE_US -> {
                     val cardSidePadding = (2 + (1 - Math.cos(Math.toRadians(45.0))) * 2).toFloat()
-                    val cardTopBottomPadding = (2 * 1.5 + (1 - Math.cos(Math.toRadians(45.0))) * 2).toFloat()
+                    val cardTopBottomPadding =
+                        (2 * 1.5 + (1 - Math.cos(Math.toRadians(45.0))) * 2).toFloat()
 
                     width = speedLimitSize * 56
                     height = speedLimitSize * 80
@@ -331,7 +341,8 @@ class FloatingView(private val service: LimitService) : LimitView {
     }
 
     override fun hideLimit(hideLimit: Boolean) {
-        limitView!!.visibility = if (!PrefUtils.getShowLimits(service)) View.GONE else if (hideLimit) View.INVISIBLE else View.VISIBLE
+        limitView!!.visibility =
+            if (!PrefUtils.getShowLimits(service)) View.GONE else if (hideLimit) View.INVISIBLE else View.VISIBLE
     }
 
     private inner class FloatingOnTouchListener : View.OnTouchListener {

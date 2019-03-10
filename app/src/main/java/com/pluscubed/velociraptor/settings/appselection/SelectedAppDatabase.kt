@@ -47,15 +47,15 @@ object SelectedAppDatabase {
      */
     fun getInstalledApps(context: Context): List<AppInfo> {
         return context.packageManager.getInstalledApplications(0)
-                .map { applicationInfo ->
-                    val appInfo = AppInfo()
-                    appInfo.packageName = applicationInfo.packageName
-                    appInfo.name = applicationInfo.loadLabel(context.packageManager).toString()
-                    appInfo
-                }
-                .filter { appInfoEntity: AppInfo ->
-                    appInfoEntity.packageName != BuildConfig.APPLICATION_ID
-                }
-                .sorted()
+            .map { applicationInfo ->
+                val appInfo = AppInfo()
+                appInfo.packageName = applicationInfo.packageName
+                appInfo.name = applicationInfo.loadLabel(context.packageManager).toString()
+                appInfo
+            }
+            .filter { appInfoEntity: AppInfo ->
+                appInfoEntity.packageName != BuildConfig.APPLICATION_ID
+            }
+            .sorted()
     }
 }

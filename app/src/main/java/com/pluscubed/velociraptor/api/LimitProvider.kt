@@ -10,8 +10,8 @@ interface LimitProvider {
      */
     @WorkerThread
     fun getSpeedLimit(
-            location: Location,
-            lastResponse: LimitResponse?,
-            origin: Int = -1
+        location: Location,
+        lastResponse: LimitResponse?,
+        origin: Int = -1
     ): List<LimitResponse>
 }

@@ -125,24 +125,24 @@ class ToleranceDialogFragment : DialogFragment() {
         }
 
         return MaterialDialog(activity!!)
-                .customView(view = dialog, scrollable = true)
-                .title(R.string.speeding_amount)
-                .negativeButton(android.R.string.cancel)
-                .positiveButton(android.R.string.ok) {
-                    try {
-                        PrefUtils.setSpeedingConstant(
-                                activity,
-                                Integer.parseInt(constantEditText.text.toString())
-                        )
-                        PrefUtils.setSpeedingPercent(
-                                activity,
-                                Integer.parseInt(percentEditText.text.toString())
-                        )
-                    } catch (ignored: NumberFormatException) {
-                    }
-
-                    PrefUtils.setToleranceMode(activity, andButton.isChecked)
+            .customView(view = dialog, scrollable = true)
+            .title(R.string.speeding_amount)
+            .negativeButton(android.R.string.cancel)
+            .positiveButton(android.R.string.ok) {
+                try {
+                    PrefUtils.setSpeedingConstant(
+                        activity,
+                        Integer.parseInt(constantEditText.text.toString())
+                    )
+                    PrefUtils.setSpeedingPercent(
+                        activity,
+                        Integer.parseInt(percentEditText.text.toString())
+                    )
+                } catch (ignored: NumberFormatException) {
                 }
+
+                PrefUtils.setToleranceMode(activity, andButton.isChecked)
+            }
     }
 
     override fun onDismiss(dialog: DialogInterface?) {

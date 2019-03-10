@@ -26,14 +26,14 @@ class App : Application() {
         super.onCreate()
 
         val crashlyticsKit = Crashlytics.Builder()
-                .core(CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build())
-                .build()
+            .core(CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build())
+            .build()
         Fabric.with(this, crashlyticsKit)
 
         FirebaseApp.initializeApp(this)
         val configSettings = FirebaseRemoteConfigSettings.Builder()
-                .setDeveloperModeEnabled(BuildConfig.DEBUG)
-                .build()
+            .setDeveloperModeEnabled(BuildConfig.DEBUG)
+            .build()
         FirebaseRemoteConfig.getInstance().setConfigSettings(configSettings)
 
         if (BuildConfig.DEBUG) {
@@ -43,16 +43,16 @@ class App : Application() {
         LeakCanary.install(this)
 
         Glide.get(this)
-                .register(AppInfo::class.java, InputStream::class.java, AppInfoIconLoader.Factory())
+            .register(AppInfo::class.java, InputStream::class.java, AppInfoIconLoader.Factory())
 
         if (PrefUtils.isFirstRun(this)) {
             GlobalScope.launch {
                 try {
                     val mapApps =
-                            withContext(Dispatchers.IO) { SelectedAppDatabase.getMapApps(this@App) }
-                                    .filter { appInfoEntity ->
-                                        appInfoEntity.packageName != null && !appInfoEntity.packageName.isEmpty()
-                                    }.map { appInfo -> appInfo.packageName }
+                        withContext(Dispatchers.IO) { SelectedAppDatabase.getMapApps(this@App) }
+                            .filter { appInfoEntity ->
+                                appInfoEntity.packageName != null && !appInfoEntity.packageName.isEmpty()
+                            }.map { appInfo -> appInfo.packageName }
 
                     PrefUtils.setApps(this@App, mapApps.toHashSet())
                 } catch (e: Exception) {

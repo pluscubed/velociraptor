@@ -81,10 +81,10 @@ class AppSelectionActivity : AppCompatActivity(), CoroutineScope {
             adapter.setAppInfos(ArrayList())
         }
         swipeRefreshLayout.setColorSchemeColors(
-                ContextCompat.getColor(
-                        this,
-                        R.color.colorAccent
-                )
+            ContextCompat.getColor(
+                this,
+                R.color.colorAccent
+            )
         )
 
         if (savedInstanceState == null) {
@@ -256,9 +256,9 @@ class AppSelectionActivity : AppCompatActivity(), CoroutineScope {
             val app = mAppInfos!![position]
 
             Glide.with(this@AppSelectionActivity)
-                    .load(app)
-                    .crossFade()
-                    .into(holder.icon)
+                .load(app)
+                .crossFade()
+                .into(holder.icon)
 
             holder.title.text = app.name
             holder.desc.text = app.packageName

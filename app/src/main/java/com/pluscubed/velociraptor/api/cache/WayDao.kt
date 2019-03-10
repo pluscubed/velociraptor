@@ -20,7 +20,7 @@ interface WayDao {
     fun selectByCoord(lat: Double, coslat2: Double, lon: Double): List<Way>
 
     @Query(
-            """
+        """
         DELETE FROM way
         WHERE :timestamp - timestamp >  604800000;
     """

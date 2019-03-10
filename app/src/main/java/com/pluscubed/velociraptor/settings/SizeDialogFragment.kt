@@ -46,28 +46,28 @@ class SizeDialogFragment : DialogFragment() {
 
         setup(true, percentTextLimit, percentEditTextLimit, percentSeekbarLimit)
         setup(
-                false,
-                percentTextSpeedometer,
-                percentEditTextSpeedometer,
-                percentSeekbarSpeedometer
+            false,
+            percentTextSpeedometer,
+            percentEditTextSpeedometer,
+            percentSeekbarSpeedometer
         )
 
         return MaterialDialog(activity!!)
-                .customView(view = dialog, scrollable = true)
-                .title(R.string.size)
-                .negativeButton(android.R.string.cancel) {
-                    setSize(true, initialLimitSize)
-                    setSize(false, initialSpeedometerSize)
-                    Utils.updateFloatingServicePrefs(activity)
-                }
-                .positiveButton(android.R.string.ok)
+            .customView(view = dialog, scrollable = true)
+            .title(R.string.size)
+            .negativeButton(android.R.string.cancel) {
+                setSize(true, initialLimitSize)
+                setSize(false, initialSpeedometerSize)
+                Utils.updateFloatingServicePrefs(activity)
+            }
+            .positiveButton(android.R.string.ok)
     }
 
     private fun setup(
-            limit: Boolean,
-            percentText: TextView,
-            percentEditText: EditText,
-            percentSeekbar: SeekBar
+        limit: Boolean,
+        percentText: TextView,
+        percentEditText: EditText,
+        percentSeekbar: SeekBar
     ) {
         percentText.text = getString(R.string.percent, "")
         percentEditText.setText((getSize(limit) * 100).toInt().toString())
@@ -90,8 +90,8 @@ class SizeDialogFragment : DialogFragment() {
 
                 try {
                     setSize(
-                            limit,
-                            java.lang.Float.parseFloat(percentEditText.text.toString()) / 100f
+                        limit,
+                        java.lang.Float.parseFloat(percentEditText.text.toString()) / 100f
                     )
                     Utils.updateFloatingServicePrefs(activity)
                 } catch (ignored: NumberFormatException) {
@@ -107,8 +107,8 @@ class SizeDialogFragment : DialogFragment() {
 
                     try {
                         setSize(
-                                limit,
-                                java.lang.Float.parseFloat(percentEditText.text.toString()) / 100f
+                            limit,
+                            java.lang.Float.parseFloat(percentEditText.text.toString()) / 100f
                         )
                         Utils.updateFloatingServicePrefs(activity)
                     } catch (ignored: NumberFormatException) {
@@ -125,7 +125,7 @@ class SizeDialogFragment : DialogFragment() {
 
     private fun getSize(limit: Boolean): Float {
         return if (limit) PrefUtils.getSpeedLimitSize(activity) else PrefUtils.getSpeedometerSize(
-                activity
+            activity
         )
     }
 
