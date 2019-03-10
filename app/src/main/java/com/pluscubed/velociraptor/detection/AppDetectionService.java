@@ -4,6 +4,7 @@ import android.accessibilityservice.AccessibilityService;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.view.accessibility.AccessibilityEvent;
 
 import com.crashlytics.android.Crashlytics;
@@ -124,10 +125,11 @@ public class AppDetectionService extends AccessibilityService {
     private ActivityInfo tryGetActivity(ComponentName componentName) {
         try {
             return getPackageManager().getActivityInfo(componentName, 0);
+        } catch (PackageManager.NameNotFoundException ignore) {
         } catch (Exception e) {
             Crashlytics.logException(e);
-            return null;
         }
+        return null;
     }
 
     @Override
