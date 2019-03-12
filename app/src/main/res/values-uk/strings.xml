@@ -7,8 +7,8 @@
     <string name="show">Показати</string>
     <string name="hide">Приховати</string>
     <string name="dismiss">Відхилити</string>
-    <string name="kmph">% км/год</string>
-    <string name="mph">% миль/год</string>
+    <string name="kmph">%s км/год</string>
+    <string name="mph">%s миль/год</string>
     <string name="percent">%s%%</string>
     <string name="grant">Грант</string>
     <string name="notif_content">Торкніться, щоб відкрити параметри</string>

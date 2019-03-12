@@ -217,7 +217,7 @@ class FloatingView(private val service: LimitService) : LimitView {
 
     override fun setSpeed(speed: Int, percentOfWarning: Int) {
         if (PrefUtils.getShowSpeedometer(service) && speedometerText != null) {
-            speedometerText!!.text = Integer.toString(speed)
+            speedometerText!!.text = String.format("%d", speed)
             arcView!!.models[0].progress = percentOfWarning.toFloat()
             arcView!!.animateProgress()
         }

@@ -50,6 +50,7 @@
             android:layout_width="48dp"
             android:layout_height="wrap_content"
             android:gravity="end"
+            android:importantForAutofill="no"
             android:inputType="numberSigned" />
 
         <TextView
@@ -115,6 +116,7 @@
             android:layout_width="48dp"
             android:layout_height="wrap_content"
             android:gravity="end"
+            android:importantForAutofill="no"
             android:inputType="numberSigned" />
 
         <TextView

@@ -511,22 +511,8 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
 
         tomtomEditDataButton.setOnClickListener { view -> openLink(TOMTOM_EDITDATA_URL) }
 
-        osmCoverageButton.setOnClickListener { v ->
-            if (Utils.isLocationPermissionGranted(this@SettingsActivity)) {
-                val fusedLocationProvider =
-                    LocationServices.getFusedLocationProviderClient(this@SettingsActivity)
-                fusedLocationProvider.lastLocation
-                    .addOnCompleteListener(this@SettingsActivity) { task ->
-                        var uriString = OSM_COVERAGE_URL
-                        if (task.isSuccessful && task.result != null) {
-                            val lastLocation = task.result
-                            uriString += "?lon=" + lastLocation!!.longitude + "&lat=" + lastLocation.latitude + "&zoom=12"
-                        }
-                        openLink(uriString)
-                    }
-            } else {
-                openLink(OSM_COVERAGE_URL)
-            }
+        osmCoverageButton.setOnClickListener {
+            openOsmCoverage()
         }
 
         osmEditDataButton.setOnClickListener { view ->
@@ -642,6 +628,25 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
 
         PrefUtils.setFirstRun(this, false)
         PrefUtils.setVersionCode(this, BuildConfig.VERSION_CODE)
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun openOsmCoverage() {
+        if (Utils.isLocationPermissionGranted(this@SettingsActivity)) {
+            val fusedLocationProvider =
+                LocationServices.getFusedLocationProviderClient(this@SettingsActivity)
+            fusedLocationProvider.lastLocation
+                .addOnCompleteListener(this@SettingsActivity) { task ->
+                    var uriString = OSM_COVERAGE_URL
+                    if (task.isSuccessful && task.result != null) {
+                        val lastLocation = task.result
+                        uriString += "?lon=" + lastLocation!!.longitude + "&lat=" + lastLocation.latitude + "&zoom=12"
+                    }
+                    openLink(uriString)
+                }
+        } else {
+            openLink(OSM_COVERAGE_URL)
+        }
     }
 
     private fun setSubscriptionState(button: Button?, title: TextView?, subscribed: Boolean) {
