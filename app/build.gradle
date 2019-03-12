@@ -45,8 +45,8 @@ android {
         applicationId "com.pluscubed.velociraptor"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 51
-        versionName "1.6.14"
+        versionCode 52
+        versionName "1.6.15"
         vectorDrawables.useSupportLibrary = true
         manifestPlaceholders = [appName: "@string/app_name"]
         if(project.hasProperty("FABRIC_API_KEY")){
