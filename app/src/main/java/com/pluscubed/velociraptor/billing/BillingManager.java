@@ -17,6 +17,7 @@ import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
 import com.android.billingclient.api.SkuDetailsResponseListener;
+import com.crashlytics.android.Crashlytics;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -269,6 +270,9 @@ public class BillingManager implements PurchasesUpdatedListener {
             @Override
             public void run() {
                 long time = System.currentTimeMillis();
+                if (billingClient == null) {
+                    Crashlytics.logException(new Exception("Billing client null"));
+                }
                 PurchasesResult purchasesResult = billingClient.queryPurchases(SkuType.INAPP);
                 Log.i(TAG, "Querying purchases elapsed time: " + (System.currentTimeMillis() - time)
                         + "ms");

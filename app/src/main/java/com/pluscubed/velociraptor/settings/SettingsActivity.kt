@@ -690,7 +690,7 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
             Arrays.asList(*skuList)
         ) { responseCode, skuDetailsList ->
             if (responseCode != BillingClient.BillingResponse.OK) {
-                cont.resumeWithException(Throwable("Billing error: $responseCode"))
+                cont.resumeWithException(Exception("Billing error: $responseCode"))
             } else {
                 cont.resume(skuDetailsList)
             }
