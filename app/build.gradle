@@ -45,8 +45,8 @@ android {
         applicationId "com.pluscubed.velociraptor"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 52
-        versionName "1.6.15"
+        versionCode 53
+        versionName "1.6.16"
         vectorDrawables.useSupportLibrary = true
         manifestPlaceholders = [appName: "@string/app_name"]
         if(project.hasProperty("FABRIC_API_KEY")){
@@ -110,14 +110,15 @@ repositories {
     maven { url 'https://maven.fabric.io/public' }
     maven { url "https://jitpack.io" }
     maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+    maven { url "https://kotlin.bintray.com/kotlinx/" }
 }
 
 ext{
     retrofit_version = '2.5.0'
-    okhttp_version = '3.13.1'
+    okhttp_version = '3.14.0'
     leakcanary_version = '1.6.3'
     jackson_version = '2.9.8'
-    room_version = '2.1.0-alpha04'
+    room_version = '2.1.0-alpha05'
     butterknife_version = '10.1.0'
 }
 
