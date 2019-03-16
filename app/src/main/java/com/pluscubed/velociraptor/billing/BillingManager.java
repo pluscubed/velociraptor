@@ -17,12 +17,13 @@ import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
 import com.android.billingclient.api.SkuDetailsResponseListener;
-import com.crashlytics.android.Crashlytics;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import androidx.annotation.Nullable;
 
 /**
  * Handles all the interactions with Play Store (via Billing library), maintains connection to
@@ -51,6 +52,7 @@ public class BillingManager implements PurchasesUpdatedListener {
     /**
      * A reference to BillingClient
      **/
+    @Nullable
     private BillingClient billingClient;
     /**
      * True if billing service is connected now.
@@ -120,7 +122,8 @@ public class BillingManager implements PurchasesUpdatedListener {
                 Log.d(TAG, "Launching in-app purchase flow. Replace old SKU? " + (oldSkus != null));
                 BillingFlowParams purchaseParams = BillingFlowParams.newBuilder()
                         .setSku(skuId).setType(billingType).setOldSkus(oldSkus).build();
-                billingClient.launchBillingFlow((Activity) context, purchaseParams);
+                if (billingClient != null)
+                    billingClient.launchBillingFlow((Activity) context, purchaseParams);
             }
         };
 
@@ -152,14 +155,15 @@ public class BillingManager implements PurchasesUpdatedListener {
                 // Query the purchase async
                 SkuDetailsParams.Builder params = SkuDetailsParams.newBuilder();
                 params.setSkusList(skuList).setType(itemType);
-                billingClient.querySkuDetailsAsync(params.build(),
-                        new SkuDetailsResponseListener() {
-                            @Override
-                            public void onSkuDetailsResponse(int responseCode,
-                                                             List<SkuDetails> skuDetailsList) {
-                                listener.onSkuDetailsResponse(responseCode, skuDetailsList);
-                            }
-                        });
+                if (billingClient != null)
+                    billingClient.querySkuDetailsAsync(params.build(),
+                            new SkuDetailsResponseListener() {
+                                @Override
+                                public void onSkuDetailsResponse(int responseCode,
+                                                                 List<SkuDetails> skuDetailsList) {
+                                    listener.onSkuDetailsResponse(responseCode, skuDetailsList);
+                                }
+                            });
             }
         };
 
@@ -193,7 +197,8 @@ public class BillingManager implements PurchasesUpdatedListener {
             @Override
             public void run() {
                 // Consume the purchase async
-                billingClient.consumeAsync(purchaseToken, onConsumeListener);
+                if (billingClient != null)
+                    billingClient.consumeAsync(purchaseToken, onConsumeListener);
             }
         };
 
@@ -269,10 +274,10 @@ public class BillingManager implements PurchasesUpdatedListener {
         Runnable queryToExecute = new Runnable() {
             @Override
             public void run() {
-                long time = System.currentTimeMillis();
                 if (billingClient == null) {
-                    Crashlytics.logException(new Exception("Billing client null"));
+                    return;
                 }
+                long time = System.currentTimeMillis();
                 PurchasesResult purchasesResult = billingClient.queryPurchases(SkuType.INAPP);
                 Log.i(TAG, "Querying purchases elapsed time: " + (System.currentTimeMillis() - time)
                         + "ms");
@@ -310,6 +315,9 @@ public class BillingManager implements PurchasesUpdatedListener {
     }
 
     public void startServiceConnection(final Runnable executeOnSuccess) {
+        if (billingClient == null) {
+            return;
+        }
         billingClient.startConnection(new BillingClientStateListener() {
             @Override
             public void onBillingSetupFinished(@BillingResponse int billingResponseCode) {
