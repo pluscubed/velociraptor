@@ -15,6 +15,7 @@ import android.os.IBinder
 import android.os.Looper
 import android.provider.Settings
 import androidx.core.app.NotificationCompat
+import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.Purchase
 import com.crashlytics.android.Crashlytics
 import com.google.android.gms.location.*
@@ -24,6 +25,7 @@ import com.pluscubed.velociraptor.R
 import com.pluscubed.velociraptor.api.LimitFetcher
 import com.pluscubed.velociraptor.api.LimitResponse
 import com.pluscubed.velociraptor.api.raptor.RaptorLimitProvider
+import com.pluscubed.velociraptor.billing.BillingConstants
 import com.pluscubed.velociraptor.billing.BillingManager
 import com.pluscubed.velociraptor.settings.SettingsActivity
 import com.pluscubed.velociraptor.utils.NotificationUtils
@@ -31,6 +33,7 @@ import com.pluscubed.velociraptor.utils.PrefUtils
 import com.pluscubed.velociraptor.utils.Utils
 import kotlinx.coroutines.*
 import timber.log.Timber
+import java.util.*
 import kotlin.coroutines.CoroutineContext
 
 class LimitService : Service(), CoroutineScope {
@@ -163,8 +166,21 @@ class LimitService : Service(), CoroutineScope {
             }
 
             override fun onPurchasesUpdated(purchases: List<Purchase>) {
+                val purchased = HashSet<Purchase>()
+                val onetime = BillingConstants.getSkuList(BillingClient.SkuType.INAPP)
+                for (purchase in purchases) {
+                    if (purchase.sku in onetime) {
+                        try {
+                            billingManager?.consumeAsync(purchase.purchaseToken);
+                        } catch (e: Exception) {
+                            Crashlytics.logException(e);
+                        }
+                    } else if (purchase.sku == BillingConstants.SKU_HERE || purchase.sku == BillingConstants.SKU_TOMTOM) {
+                        purchased.add(purchase)
+                    }
+                }
                 launch(Dispatchers.IO) {
-                    verifyPurchase(*purchases.toTypedArray())
+                    verifyPurchase(*purchased.toTypedArray())
                 }
             }
         })
@@ -183,14 +199,19 @@ class LimitService : Service(), CoroutineScope {
         try {
             var updated = false
             purchases.forEach { purchase ->
-                updated = limitFetcher!!.verifyRaptorService(purchase) || updated
+                try {
+                    val res = limitFetcher?.verifyRaptorService(purchase) ?: false
+                    if (res)
+                        updated = true
+                } catch (e: Exception) {
+                    Crashlytics.logException(e)
+                }
             }
 
             if (updated) {
                 forceRefetch()
             }
         } catch (e: Exception) {
-            e.printStackTrace()
             if (!BuildConfig.DEBUG) {
                 Crashlytics.logException(e)
             }

@@ -585,7 +585,7 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
             }
 
             override fun onConsumeFinished(token: String, result: Int) {
-
+                PrefUtils.setSupported(this@SettingsActivity, true)
             }
 
             override fun onPurchasesUpdated(purchases: List<Purchase>) {
@@ -595,21 +595,16 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
                     PrefUtils.setSupported(this@SettingsActivity, true)
                 }
 
+                val onetime = BillingConstants.getSkuList(BillingClient.SkuType.INAPP)
                 for (purchase in purchases) {
-                    when (purchase.sku) {
-                        BillingConstants.SKU_D1,
-                        BillingConstants.SKU_D3,
-                        BillingConstants.SKU_D5,
-                        BillingConstants.SKU_D10,
-                        BillingConstants.SKU_D20 -> {
-                            try {
-                                billingManager?.consumeAsync(purchase.purchaseToken);
-                            } catch (e: Exception) {
-                                Crashlytics.logException(e);
-                            }
+                    if (purchase.sku in onetime) {
+                        try {
+                            billingManager?.consumeAsync(purchase.purchaseToken);
+                        } catch (e: Exception) {
+                            Crashlytics.logException(e);
                         }
-                        else ->
-                            purchased.add(purchase.sku)
+                    } else {
+                        purchased.add(purchase.sku)
                     }
                 }
 
