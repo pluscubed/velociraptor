@@ -80,8 +80,8 @@ class RaptorLimitProvider(
         lastResponse: LimitResponse?,
         origin: Int
     ): List<LimitResponse> {
-        val latitude = String.format(Locale.getDefault(), "%.5f", location.latitude)
-        val longitude = String.format(Locale.getDefault(), "%.5f", location.longitude)
+        val latitude = String.format(Locale.ROOT, "%.5f", location.latitude)
+        val longitude = String.format(Locale.ROOT, "%.5f", location.longitude)
 
         when (origin) {
             LimitResponse.ORIGIN_HERE ->

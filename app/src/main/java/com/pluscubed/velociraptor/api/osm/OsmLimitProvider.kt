@@ -85,10 +85,12 @@ class OsmLimitProvider(
     }
 
     private fun buildQueryBody(location: Location): String {
+        val latitude = String.format(Locale.ROOT, "%.5f", location.latitude)
+        val longitude = String.format(Locale.ROOT, "%.5f", location.longitude)
         return ("[out:json];" +
                 "way(around:" + OSM_RADIUS + ","
-                + location.latitude + ","
-                + location.longitude +
+                + latitude + ","
+                + longitude +
                 ")" +
                 "[\"highway\"];out body geom;")
     }
