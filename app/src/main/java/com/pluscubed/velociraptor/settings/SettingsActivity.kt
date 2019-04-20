@@ -893,7 +893,11 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
         if (!start) {
             intent.putExtra(LimitService.EXTRA_CLOSE, true)
         }
-        startService(intent)
+        try {
+            startService(intent)
+        } catch (e: Exception) {
+            Crashlytics.logException(e)
+        }
     }
 
     private fun openSettings(settingsAction: String, packageName: String) {
