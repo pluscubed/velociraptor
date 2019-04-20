@@ -55,7 +55,7 @@
 
         <Button
             android:id="@+id/button_app_selection"
-            style="@style/Widget.Button.Borderless.Colored"
+            style="@style/Widget.Button.Borderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/configure" />
@@ -81,7 +81,7 @@
             android:tint="#8a000000"
             app:srcCompat="@drawable/ic_map_white_24dp" />
 
-        <androidx.appcompat.widget.SwitchCompat
+        <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/switch_gmaps_navigation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -187,7 +187,7 @@
             android:layout_width="8dp"
             android:layout_height="match_parent" />
 
-        <androidx.appcompat.widget.SwitchCompat
+        <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/switch_debugging"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

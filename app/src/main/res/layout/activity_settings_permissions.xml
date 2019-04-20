@@ -163,7 +163,7 @@
 
         <Button
             android:id="@+id/button_troubleshoot"
-            style="@style/Widget.Button.Borderless.Colored"
+            style="@style/Widget.Button.Borderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/troubleshoot" />

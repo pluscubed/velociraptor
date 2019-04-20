@@ -18,7 +18,6 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.appcompat.widget.SwitchCompat
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
@@ -35,6 +34,7 @@ import com.crashlytics.android.Crashlytics
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.switchmaterial.SwitchMaterial
 import com.pluscubed.velociraptor.BuildConfig
 import com.pluscubed.velociraptor.R
 import com.pluscubed.velociraptor.api.cache.CacheLimitProvider
@@ -78,13 +78,13 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
 
     //General
     @BindView(R.id.switch_limits)
-    lateinit var showSpeedLimitsSwitch: SwitchCompat
+    lateinit var showSpeedLimitsSwitch: SwitchMaterial
 
     @BindView(R.id.switch_speedometer)
-    lateinit var showSpeedometerSwitch: SwitchCompat
+    lateinit var showSpeedometerSwitch: SwitchMaterial
 
     @BindView(R.id.switch_beep)
-    lateinit var beepSwitch: SwitchCompat
+    lateinit var beepSwitch: SwitchMaterial
     @BindView(R.id.button_test_beep)
     lateinit var testBeepButton: Button
 
@@ -138,7 +138,7 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
 
     //Advanced
     @BindView(R.id.switch_debugging)
-    lateinit var debuggingSwitch: SwitchCompat
+    lateinit var debuggingSwitch: SwitchMaterial
 
     @BindView(R.id.linear_clear_cache)
     lateinit var clearCacheContainer: View
@@ -149,7 +149,7 @@ class SettingsActivity : AppCompatActivity(), CoroutineScope {
     @BindView(R.id.linear_gmaps_navigation)
     lateinit var gmapsOnlyNavigationContainer: ViewGroup
     @BindView(R.id.switch_gmaps_navigation)
-    lateinit var gmapsOnlyNavigationSwitch: SwitchCompat
+    lateinit var gmapsOnlyNavigationSwitch: SwitchMaterial
 
     @BindView(R.id.switch_notif_controls)
     lateinit var notifControlsContainer: View

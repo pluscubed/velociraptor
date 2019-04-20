@@ -51,7 +51,7 @@
             android:layout_width="8dp"
             android:layout_height="match_parent" />
 
-        <androidx.appcompat.widget.SwitchCompat
+        <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/switch_limits"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -93,7 +93,7 @@
             android:layout_width="8dp"
             android:layout_height="match_parent" />
 
-        <androidx.appcompat.widget.SwitchCompat
+        <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/switch_speedometer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -137,7 +137,7 @@
 
         <Button
             android:id="@+id/button_test_beep"
-            style="@style/Widget.Button.Borderless.Colored"
+            style="@style/Widget.Button.Borderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:minWidth="0dp"
@@ -147,7 +147,7 @@
             android:layout_width="4dp"
             android:layout_height="match_parent" />
 
-        <androidx.appcompat.widget.SwitchCompat
+        <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/switch_beep"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
