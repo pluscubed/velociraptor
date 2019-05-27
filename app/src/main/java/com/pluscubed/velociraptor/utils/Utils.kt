@@ -3,17 +3,21 @@ package com.pluscubed.velociraptor.utils
 import android.Manifest
 import android.accessibilityservice.AccessibilityService
 import android.annotation.SuppressLint
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.media.AudioManager
 import android.media.ToneGenerator
 import android.net.ConnectivityManager
+import android.net.Uri
 import android.os.Build
 import android.os.Handler
 import android.provider.Settings
 import android.text.TextUtils
+import android.view.View
 import androidx.core.content.ContextCompat
+import com.google.android.material.snackbar.Snackbar
 import com.pluscubed.velociraptor.BuildConfig
 import com.pluscubed.velociraptor.R
 import com.pluscubed.velociraptor.limit.LimitService
@@ -22,15 +26,15 @@ import retrofit2.Response
 object Utils {
 
     fun isAccessibilityServiceEnabled(
-        context: Context,
+        context: Context?,
         c: Class<out AccessibilityService>
     ): Boolean {
         var accessibilityEnabled = 0
         val service = BuildConfig.APPLICATION_ID + "/" + c.name
         try {
             accessibilityEnabled = Settings.Secure.getInt(
-                context.contentResolver,
-                android.provider.Settings.Secure.ACCESSIBILITY_ENABLED
+                context?.contentResolver,
+                Settings.Secure.ACCESSIBILITY_ENABLED
             )
         } catch (e: Settings.SettingNotFoundException) {
             e.printStackTrace()
@@ -40,7 +44,7 @@ object Utils {
 
         if (accessibilityEnabled == 1) {
             val settingValue = Settings.Secure.getString(
-                context.contentResolver,
+                context?.contentResolver,
                 Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES
             )
             if (settingValue != null) {
@@ -59,8 +63,8 @@ object Utils {
         return false
     }
 
-    fun convertDpToPx(context: Context, dp: Float): Int {
-        return (dp * context.resources.displayMetrics.density + 0.5f).toInt()
+    fun convertDpToPx(context: Context?, dp: Float): Int {
+        return if (context != null) (dp * context.resources.displayMetrics.density + 0.5f).toInt() else 0
     }
 
     fun convertMphToKmh(speed: Int): Int {
@@ -111,11 +115,14 @@ object Utils {
         return permissionGranted && overlayEnabled
     }
 
-    fun isLocationPermissionGranted(context: Context): Boolean {
-        return ContextCompat.checkSelfPermission(
-            context,
-            Manifest.permission.ACCESS_FINE_LOCATION
-        ) == PackageManager.PERMISSION_GRANTED
+    fun isLocationPermissionGranted(context: Context?): Boolean {
+        if (context != null) {
+            return ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        }
+        return false
     }
 
     fun isNetworkConnected(context: Context): Boolean {
@@ -131,5 +138,18 @@ object Utils {
         if (body == null)
             throw Exception("Null response")
         return body
+    }
+
+    fun openLink(context: Context?, view: View?, uriString: String) {
+        val intent = Intent()
+        intent.data = Uri.parse(uriString)
+        intent.action = Intent.ACTION_VIEW
+        try {
+            context?.startActivity(intent)
+        } catch (e: ActivityNotFoundException) {
+            val str = context?.getString(R.string.open_link_failed, uriString)
+            if (view != null && str != null)
+                Snackbar.make(view, str, Snackbar.LENGTH_LONG).show()
+        }
     }
 }

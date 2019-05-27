@@ -1,0 +1,18 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_permissions"
+        android:icon="@drawable/ic_phonelink_setup_black_24dp"
+        android:title="@string/setup" />
+    <item
+        android:id="@+id/action_providers"
+        android:icon="@drawable/ic_map_white_24dp"
+        android:title="@string/providers" />
+    <item
+        android:id="@+id/action_general"
+        android:icon="@drawable/ic_settings_black_24dp"
+        android:title="@string/general" />
+    <item
+        android:id="@+id/action_advanced"
+        android:icon="@drawable/ic_build_black_24dp"
+        android:title="@string/advanced" />
+</menu>

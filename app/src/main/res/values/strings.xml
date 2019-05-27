@@ -169,5 +169,7 @@
     <!--Notification Channels-->
     <string name="channel_toggles">Show/hide toggles</string>
     <string name="channel_warnings">Warnings</string>
+    <string name="setup">Setup</string>
+    <string name="providers">Providers</string>
 
 </resources>
