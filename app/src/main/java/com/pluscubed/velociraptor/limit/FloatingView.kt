@@ -4,6 +4,7 @@ import android.animation.AnimatorSet
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Color
 import android.graphics.PixelFormat
 import android.graphics.Point
 import android.os.Build
@@ -224,15 +225,21 @@ class FloatingView(private val service: LimitService) : LimitView {
     }
 
     override fun setSpeeding(speeding: Boolean) {
-        val colorRes = if (speeding) R.color.red500 else R.color.primary_text_default_material_light
-        val color = ContextCompat.getColor(service, colorRes)
-        speedometerText!!.setTextColor(color)
-        speedometerUnitsText!!.setTextColor(color)
+        val redColor = ContextCompat.getColor(service, R.color.red500)
+
+        val typedValue = TypedValue()
+        speedometerText?.context?.theme?.resolveAttribute(R.attr.colorOnBackground, typedValue, true)
+        val textColor = speedometerText?.context?.let { ContextCompat.getColor(it, typedValue.resourceId) }
+                ?: Color.BLACK;
+
+        val color = if (speeding) redColor else textColor
+        speedometerText?.setTextColor(color)
+        speedometerUnitsText?.setTextColor(color)
     }
 
     override fun setDebuggingText(text: String) {
         if (debuggingText != null) {
-            debuggingText!!.text = text
+            debuggingText?.text = text
         }
     }
 

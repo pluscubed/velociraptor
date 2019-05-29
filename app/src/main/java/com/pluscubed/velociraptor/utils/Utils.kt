@@ -15,13 +15,24 @@ import android.os.Build
 import android.os.Handler
 import android.provider.Settings
 import android.text.TextUtils
+import android.util.TypedValue
 import android.view.View
+import androidx.annotation.AttrRes
+import androidx.annotation.ColorInt
 import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
 import com.pluscubed.velociraptor.BuildConfig
 import com.pluscubed.velociraptor.R
 import com.pluscubed.velociraptor.limit.LimitService
 import retrofit2.Response
+
+@ColorInt
+fun Context.getColorResCompat(@AttrRes id: Int): Int {
+    val resolvedAttr = TypedValue()
+    this.theme.resolveAttribute(id, resolvedAttr, true)
+    val colorRes = resolvedAttr.run { if (resourceId != 0) resourceId else data }
+    return ContextCompat.getColor(this, colorRes)
+}
 
 object Utils {
 

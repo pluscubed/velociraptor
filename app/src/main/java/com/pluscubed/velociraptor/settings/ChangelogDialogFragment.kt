@@ -3,6 +3,7 @@ package com.pluscubed.velociraptor.settings
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,8 +13,10 @@ import androidx.fragment.app.DialogFragment
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.customview.customView
 import com.pluscubed.velociraptor.R
+import com.pluscubed.velociraptor.utils.getColorResCompat
 import java.io.BufferedReader
 import java.io.InputStreamReader
+
 
 class ChangelogDialogFragment : DialogFragment() {
 
@@ -43,8 +46,15 @@ class ChangelogDialogFragment : DialogFragment() {
             }
             reader.close()
 
+            val primaryColor = activity?.getColorResCompat(android.R.attr.textColorPrimary)
+                    ?: Color.BLACK
+
+            val str = buf.toString().replace("TEXTCOLOR", String.format("#%06X", 0xFFFFFF and primaryColor))
+
             // Inject color values for WebView body background and links
-            webView.loadData(buf.toString(), "text/html; charset=UTF-8", null)
+            webView.loadData(str, "text/html; charset=UTF-8", null)
+
+            webView.setBackgroundColor(Color.TRANSPARENT)
         } catch (e: Throwable) {
             webView.loadData(
                 "<h1>Unable to load</h1><p>${e.localizedMessage}</p>",

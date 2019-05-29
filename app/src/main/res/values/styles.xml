@@ -3,7 +3,7 @@
     <style name="Theme.Velociraptor" parent="Base.Theme.Velociraptor">
     </style>
 
-    <style name="Base.Theme.Velociraptor" parent="Theme.MaterialComponents.Light.NoActionBar">
+    <style name="Base.Theme.Velociraptor" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>

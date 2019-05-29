@@ -185,7 +185,7 @@ dependencies {
         transitive = true;
     }
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     implementation 'androidx.core:core-ktx:1.0.2'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.2.1'
 }
