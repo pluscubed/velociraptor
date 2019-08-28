@@ -116,51 +116,51 @@
     <string name="changelog">Değişiklik kaydı</string>
     <string name="rate">Oyla</string>
     <string name="support">Destek Ol</string>
-        
+
     <!--Notification Channels-->
 <!--    <string name="channel_toggles">Show/hide toggles</string>-->
-<!--    <string name="channel_warnings">Warnings</string>-->
+    <string name="channel_warnings">Uyarılar</string>
 <!--    <string name="setup">Setup</string>-->
-<!--    <string name="providers">Providers</string>-->
+    <string name="providers">Sağlayıcılar</string>
 
     <!--Support development-->
-<!--    <string name="support_development">Support development</string>-->
-<!--    <string name="in_app_unavailable">In-app billing not available</string>-->
-<!--    <string name="support_dev_dialog">Suggested amount is 1 USD per month. This is NOT necessary for using the app (but you will get a little badge here :) </string>-->
-<!--    <string name="per_month">%s per month</string>-->
-<!--    <string name="one_time">%s one-time</string>-->
-<!--    <string name="support_dev_dialog_badge">Thank you for your support!</string>-->
+    <string name="support_development">Destek olun</string>
+    <string name="in_app_unavailable">Uygulama içi satın alma kullanılamıyor</string>
+    <string name="support_dev_dialog">Önerilen miktar aylık 1 dolar. Uygulamayı kullanmak için zorunlu değil. (ama destek olursanız burada isminiz çıkacak :) </string>
+    <string name="per_month">%s her ay</string>
+    <string name="one_time">%s tek seferlik</string>
+    <string name="support_dev_dialog_badge">Desteğiniz için teşekkürler!</string>
 
     <!--About Dialog-->
-<!--    <string name="about">About</string>-->
-<!--    <string name="about_dialog_title">Velociraptor v%s</string>-->
-<!--    <string name="about_body"><![CDATA[-->
-<!--        <b>Velociraptor</b> is a floating speed limit monitor with speedometer and warning features.-->
-<!--        <br/><br/>-->
-<!--        Developed by <b>Daniel Ciao</b><br/>-->
-<!--        <a href="http://pluscubed.com">Website</a>&nbsp;&nbsp;-->
-<!--        <a href="mailto:pluscubed@gmail.com">Email</a>&nbsp;&nbsp;-->
-<!--        <a href="https://twitter.com/plusCubed">Twitter</a>&nbsp;&nbsp;-->
-<!--        <a href="https://google.com/+DanielCiao">Google+</a>&nbsp;&nbsp;-->
-<!--        <a href="https://github.com/pluscubed">GitHub</a>&nbsp;&nbsp;-->
-<!--        <a href="https://www.linkedin.com/in/dciao">LinkedIn</a><br/><br/>-->
-<!--        <a href="https://play.google.com/store/apps/details?id=com.pluscubed.velociraptor">Rate on the Play Store!</a><br/><br/>-->
-<!--        <a href="https://github.com/pluscubed/velociraptor">GitHub</a> - source, issues, feature requests<br/>-->
-<!--        <a href="http://pluscubed.oneskyapp.com/collaboration/project/64120">OneSky</a> - translate the app to your language<br/>-->
-<!--        <a href="https://play.google.com/apps/testing/com.pluscubed.velociraptor">Beta testing</a> - try out upcoming releases-->
-<!--    ]]></string>-->
-<!--    <string name="licenses">Licenses</string>-->
+    <string name="about">Hakkında</string>
+    <string name="about_dialog_title">Velociraptor v%s</string>
+    <string name="about_body"><![CDATA[
+        <b>Velociraptor</b> is a floating speed limit monitor with speedometer and warning features.
+        <br/><br/>
+        Developed by <b>Daniel Ciao</b><br/>
+        <a href="http://pluscubed.com">Website</a>&nbsp;&nbsp;
+        <a href="mailto:pluscubed@gmail.com">Email</a>&nbsp;&nbsp;
+        <a href="https://twitter.com/plusCubed">Twitter</a>&nbsp;&nbsp;
+        <a href="https://google.com/+DanielCiao">Google+</a>&nbsp;&nbsp;
+        <a href="https://github.com/pluscubed">GitHub</a>&nbsp;&nbsp;
+        <a href="https://www.linkedin.com/in/dciao">LinkedIn</a><br/><br/>
+        <a href="https://play.google.com/store/apps/details?id=com.pluscubed.velociraptor">Rate on the Play Store!</a><br/><br/>
+        <a href="https://github.com/pluscubed/velociraptor">GitHub</a> - source, issues, feature requests<br/>
+        <a href="http://pluscubed.oneskyapp.com/collaboration/project/64120">OneSky</a> - translate the app to your language<br/>
+        <a href="https://play.google.com/apps/testing/com.pluscubed.velociraptor">Beta testing</a> - try out upcoming releases
+    ]]></string>
+    <string name="licenses">Lisanslar</string>
 
-<!--    <string name="terms_body"><![CDATA[-->
-<!--        By using Velociraptor, you absolve the developer, speed limit providers, and all other parties of any responsibility-->
-<!--        for accidents, legal consequences, and all other outcomes. The data presented by Velociraptor, including speed limits and current speed,-->
-<!--        is not guaranteed to be accurate. This app is not affiliated or endorsed by OpenStreetMap, HERE, TomTom, or Sygic. All trademarks-->
-<!--        belong to their respective owners.<br/><br/>-->
-<!--        <b>Please pay attention to the road and use with care.</b>-->
-<!--     ]]></string>-->
+    <string name="terms_body"><![CDATA[
+        By using Velociraptor, you absolve the developer, speed limit providers, and all other parties of any responsibility
+        for accidents, legal consequences, and all other outcomes. The data presented by Velociraptor, including speed limits and current speed,
+        is not guaranteed to be accurate. This app is not affiliated or endorsed by OpenStreetMap, HERE, TomTom, or Sygic. All trademarks
+        belong to their respective owners.<br/><br/>
+        <b>Please pay attention to the road and use with care.</b>
+     ]]></string>
 
-<!--    <string name="accept">Accept</string>-->
-<!--    <string name="terms">Terms</string>-->
-<!--    <string name="privacy_policy">Privacy Policy</string>-->
-<!--    <string name="terms_warning">Open Velociraptor to accept the terms of use</string>-->
+    <string name="accept">Kabul et</string>
+    <string name="terms">Şartlar</string>
+    <string name="privacy_policy">Gizlilik Politikası</string>
+    <string name="terms_warning">Kullanım şartlarını kabul etmek için Velociraptor\'u açın</string>
 </resources>
