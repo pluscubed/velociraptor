@@ -66,7 +66,7 @@ class GeneralFragment : Fragment() {
         ButterKnife.bind(this, view)
 
 
-        val unitAdapter = ArrayAdapter(context, R.layout.spinner_item_text, arrayOf("mph", "km/h"))
+        val unitAdapter = ArrayAdapter<String>(requireContext(), R.layout.spinner_item_text, arrayOf("mph", "km/h"))
         unitAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item)
         unitSpinner.adapter = unitAdapter
         unitSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -98,7 +98,7 @@ class GeneralFragment : Fragment() {
             Utils.convertDpToPx(activity, (unitSpinner.selectedItemPosition * -48).toFloat())
 
         val styleAdapter = ArrayAdapter(
-            activity,
+                requireContext(),
             R.layout.spinner_item_text,
             arrayOf(getString(R.string.united_states), getString(R.string.international))
         )

@@ -4,14 +4,14 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import androidx.annotation.IntDef;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.Set;
-
-import androidx.annotation.IntDef;
 
 public abstract class PrefUtils {
 
@@ -36,6 +36,7 @@ public abstract class PrefUtils {
     private static final String PREF_GMAPS_ONLY_NAVIGATION = "pref_gmaps_only_nav";
     private static final String PREF_TERMS_ACCEPTED = "pref_terms_accepted";
     private static final String PREF_SUPPORTED = "pref_supported";
+    private static final String PREF_ALL_MAP_APPS = "pref_all_map_apps";
 
     private static SharedPreferences.Editor edit(Context context) {
         return getSharedPreferences(context).edit();
@@ -214,6 +215,14 @@ public abstract class PrefUtils {
 
     public static void setSupported(Context context, boolean supported) {
         edit(context).putBoolean(PREF_SUPPORTED, supported).apply();
+    }
+
+    public static boolean isAllMapApps(Context context) {
+        return getSharedPreferences(context).getBoolean(PREF_ALL_MAP_APPS, true);
+    }
+
+    public static void setAllMapApps(Context context, boolean appMapApps) {
+        edit(context).putBoolean(PREF_SUPPORTED, appMapApps).apply();
     }
 
     @IntDef({STYLE_US, STYLE_INTERNATIONAL})

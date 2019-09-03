@@ -10,6 +10,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.text.parseAsHtml
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import butterknife.BindView
 import butterknife.ButterKnife
@@ -45,6 +46,8 @@ class ProvidersFragment : Fragment(), CoroutineScope {
     @BindView(R.id.here_editdata)
     lateinit var hereEditDataButton: Button
 
+    @BindView(R.id.tomtom_container)
+    lateinit var tomtomContainer: View
     @BindView(R.id.tomtom_title)
     lateinit var tomtomTitle: TextView
     @BindView(R.id.tomtom_provider_desc)
@@ -116,6 +119,7 @@ class ProvidersFragment : Fragment(), CoroutineScope {
                     R.string.in_app_unavailable,
                     Snackbar.LENGTH_SHORT
                 ).show()
+                return@setOnClickListener
             }
             billingManager!!.initiatePurchaseFlow(
                 BillingConstants.SKU_HERE,
@@ -130,6 +134,7 @@ class ProvidersFragment : Fragment(), CoroutineScope {
                     R.string.in_app_unavailable,
                     Snackbar.LENGTH_SHORT
                 ).show()
+                return@setOnClickListener;
             }
             billingManager!!.initiatePurchaseFlow(
                 BillingConstants.SKU_TOMTOM,
@@ -153,7 +158,9 @@ class ProvidersFragment : Fragment(), CoroutineScope {
                         if (text.contains("%s")) {
                             text = text.format("<b>$OSM_EDITDATA_URL</b>")
                         }
-                        message(text = text.parseAsHtml(), lineHeightMultiplier = 1.2f)
+                        message(text = text.parseAsHtml()) {
+                            lineSpacing(1.2f)
+                        }
                         positiveButton(R.string.share_link) { _ ->
                             val shareIntent = Intent()
                             shareIntent.type = "text/plain"
@@ -239,10 +246,14 @@ class ProvidersFragment : Fragment(), CoroutineScope {
                     hereTitle,
                     purchased.contains(BillingConstants.SKU_HERE)
                 )
+                val tomtomSubscribed = purchased.contains(BillingConstants.SKU_TOMTOM)
+                if (tomtomSubscribed) {
+                    tomtomContainer.isVisible = true
+                }
                 setButtonSubscriptionState(
                     tomtomSubscribeButton,
                     tomtomTitle,
-                    purchased.contains(BillingConstants.SKU_TOMTOM)
+                        tomtomSubscribed
                 )
             }
         })
@@ -331,7 +342,9 @@ class ProvidersFragment : Fragment(), CoroutineScope {
                                 )
                             )
                             .title(R.string.support_development)
-                            .message(text = text, lineHeightMultiplier = 1.2f)
+                                .message(text = text) {
+                                    lineSpacing(1.2f)
+                                }
                     }
 
                     val purchaseDisplay = ArrayList<String>()

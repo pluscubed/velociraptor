@@ -219,6 +219,11 @@ class AppSelectionActivity : AppCompatActivity(), CoroutineScope {
                 AppDetectionService.get().updateSelectedApps()
             }
         }
+
+        val allMapApps = mapApps?.let { mapApps ->
+            (selectedPackageNames?.containsAll(mapApps.map { it.packageName }) == true)
+        } ?: false
+        PrefUtils.setAllMapApps(this@AppSelectionActivity, allMapApps);
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -230,18 +235,18 @@ class AppSelectionActivity : AppCompatActivity(), CoroutineScope {
     }
 
     private inner class AppAdapter : RecyclerView.Adapter<AppAdapter.ViewHolder>() {
-        private var mAppInfos: List<AppInfo>? = null
+        private var appInfos: List<AppInfo>? = null
 
         init {
             setHasStableIds(true)
-            mAppInfos = ArrayList()
+            appInfos = ArrayList()
         }
 
         fun setAppInfos(list: List<AppInfo>?) {
             if (list == null) {
-                mAppInfos = ArrayList()
+                appInfos = ArrayList()
             } else {
-                mAppInfos = list
+                appInfos = list
             }
             notifyDataSetChanged()
         }
@@ -253,7 +258,7 @@ class AppSelectionActivity : AppCompatActivity(), CoroutineScope {
 
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-            val app = mAppInfos!![position]
+            val app = appInfos!![position]
 
             Glide.with(this@AppSelectionActivity)
                 .load(app)
@@ -267,11 +272,11 @@ class AppSelectionActivity : AppCompatActivity(), CoroutineScope {
         }
 
         override fun getItemCount(): Int {
-            return mAppInfos!!.size
+            return appInfos!!.size
         }
 
         override fun getItemId(position: Int): Long {
-            return mAppInfos!![position].packageName.hashCode().toLong()
+            return appInfos!![position].packageName.hashCode().toLong()
         }
 
         internal inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -291,7 +296,7 @@ class AppSelectionActivity : AppCompatActivity(), CoroutineScope {
 
                     val adapterPosition = adapterPosition
                     if (adapterPosition != RecyclerView.NO_POSITION) {
-                        onItemClick(mAppInfos!![adapterPosition], checkbox.isChecked)
+                        onItemClick(appInfos!![adapterPosition], checkbox.isChecked)
                     }
                 }
             }
