@@ -138,7 +138,10 @@ class SettingsActivity : AppCompatActivity() {
         MaterialDialog(this)
             .title(text = getString(R.string.about_dialog_title, BuildConfig.VERSION_NAME))
             .positiveButton(R.string.dismiss)
-            .message(R.string.about_body, html = true, lineHeightMultiplier = 1.2f)
+                .message(R.string.about_body) {
+                    html()
+                    lineSpacing(1.2f)
+                }
             .neutralButton(R.string.licenses) {
                 startActivity(
                     Intent(this@SettingsActivity, OssLicensesMenuActivity::class.java)
@@ -151,7 +154,10 @@ class SettingsActivity : AppCompatActivity() {
 
     private fun showTermsDialog() {
         var dialog = MaterialDialog(this)
-            .message(R.string.terms_body, html = true, lineHeightMultiplier = 1.2f)
+                .message(R.string.terms_body) {
+                    html()
+                    lineSpacing(1.2f)
+                }
             .neutralButton(R.string.privacy_policy) { Utils.openLink(this, toolbar, PRIVACY_URL) }
 
         if (!PrefUtils.isTermsAccepted(this)) {
