@@ -121,7 +121,7 @@ class ProvidersFragment : Fragment(), CoroutineScope {
                 ).show()
                 return@setOnClickListener
             }
-            billingManager!!.initiatePurchaseFlow(
+            billingManager?.initiatePurchaseFlow(
                 BillingConstants.SKU_HERE,
                 BillingClient.SkuType.SUBS
             )
@@ -136,7 +136,7 @@ class ProvidersFragment : Fragment(), CoroutineScope {
                 ).show()
                 return@setOnClickListener;
             }
-            billingManager!!.initiatePurchaseFlow(
+            billingManager?.initiatePurchaseFlow(
                 BillingConstants.SKU_TOMTOM,
                 BillingClient.SkuType.SUBS
             )
@@ -244,8 +244,10 @@ class ProvidersFragment : Fragment(), CoroutineScope {
                 setButtonSubscriptionState(
                     hereSubscribeButton,
                     hereTitle,
-                    purchased.contains(BillingConstants.SKU_HERE)
+                        purchased.contains(BillingConstants.SKU_HERE),
+                        BillingConstants.SKU_HERE
                 )
+
                 val tomtomSubscribed = purchased.contains(BillingConstants.SKU_TOMTOM)
                 if (tomtomSubscribed) {
                     tomtomContainer.isVisible = true
@@ -253,26 +255,43 @@ class ProvidersFragment : Fragment(), CoroutineScope {
                 setButtonSubscriptionState(
                     tomtomSubscribeButton,
                     tomtomTitle,
-                        tomtomSubscribed
+                        tomtomSubscribed,
+                        BillingConstants.SKU_TOMTOM
                 )
             }
         })
 
     }
 
-    private fun setButtonSubscriptionState(button: Button?, title: TextView?, subscribed: Boolean) {
+    private fun setButtonSubscriptionState(button: Button?, title: TextView?, subscribed: Boolean, sku: String) {
         if (subscribed) {
-            button!!.isEnabled = false
-            button.setText(R.string.subscribed)
+            button?.setText(R.string.unsubscribe)
+            button?.setOnClickListener {
+                Utils.openLink(context, it,
+                        "http://play.google.com/store/account/subscriptions?package=com.pluscubed.velociraptor&sku=${sku}")
+            }
             val checkIcon =
                 activity?.let { AppCompatResources.getDrawable(it, R.drawable.ic_done_green_20dp) }
-            title!!.setCompoundDrawablesWithIntrinsicBounds(null, null, checkIcon, null)
+            title?.setCompoundDrawablesWithIntrinsicBounds(null, null, checkIcon, null)
         } else {
-            button!!.isEnabled = true
-            button.setText(R.string.subscribe)
+            button?.setText(R.string.subscribe)
+            button?.setOnClickListener {
+                if (!isBillingManagerReady) {
+                    Snackbar.make(
+                            requireView(),
+                            R.string.in_app_unavailable,
+                            Snackbar.LENGTH_SHORT
+                    ).show()
+                    return@setOnClickListener
+                }
+                billingManager?.initiatePurchaseFlow(
+                        sku,
+                        BillingClient.SkuType.SUBS
+                )
+            }
             val crossIcon =
                 activity?.let { AppCompatResources.getDrawable(it, R.drawable.ic_cross_red_20dp) }
-            title!!.setCompoundDrawablesWithIntrinsicBounds(null, null, crossIcon, null)
+            title?.setCompoundDrawablesWithIntrinsicBounds(null, null, crossIcon, null)
         }
     }
 

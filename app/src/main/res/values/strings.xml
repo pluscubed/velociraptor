@@ -126,6 +126,7 @@
     <string name="edit_data">Edit Data</string>
     <string name="subscribe">Subscribe</string>
     <string name="subscribed">Subscribed</string>
+    <string name="unsubscribe">Unsubscribe</string>
     <string name="coverage">Coverage</string>
 
 
@@ -173,5 +174,6 @@
     <string name="providers">Providers</string>
     <string name="speed_limit_info_explanation">Speed limit information comes from these providers</string>
     <string name="speed_limit_info_explanation_desc">Coverage and accuracy vary. Paid subscription does not necessarily mean better for your area - please use the free trial to determine if it is right for you!</string>
+    <string name="permissions_explanation">To use Velociraptor, grant these permissions:</string>
 
 </resources>
