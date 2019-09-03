@@ -1,25 +1,166 @@
 <?xml version="1.0"?>
 <resources>
     <string name="app_name">Velociraptor</string>
+
+    <!--Generic-->
+    <string name="configure">Seç</string>
+    <string name="done">Tamam</string>
+    <string name="show">Göster</string>
+    <string name="hide">Gizle</string>
+    <string name="dismiss">İptal</string>
+    <string name="kmph">%s km/s</string>
+    <string name="mph">%s mph</string>
+    <string name="percent">%s%%</string>
+
     <string name="notif_content">Ayarları açmak için dokunun</string>
-    <string name="notif_title">Velociraptor Hız Limiti</string>
-    <string name="accessibility_service_description">Uygulamanın ön planda olup olmadığının algılanması ve hız limitinin gösterilmesi için Erişilebilirlik Servisi aktif olmalıdır.</string>
-    <string name="enable_accessibility_service">Erişilebilirlik Servisini Aktifleştir</string>
-    <string name="enable_accessibility_service_desc">Hız limitini harita uygulamaları üzerinde otomatik olarak göstermek için, Erişilebilirlik servisini aktif edin</string>
-    <string name="enable_floating_desc">Görüntünün kaplaması için, \"Diğer uygulamaların üzerinde görüntüleme\" iznini onaylayın</string>
+    <string name="notif_title">Velociraptor çalışıyor</string>
+
+    <!--Permission Settings-->
     <string name="open_settings_page">Ayarlar sayfasını aç</string>
+    <string name="enable_floating_desc">Haritalar üzerinde kullanabilmek için, \"Diğer uygulamaların üzerinde görüntüleme\" iznini onaylayın</string>
+    <string name="open_settings_failed_overlay">Ayarlar açılamıyor. Lütfen manuel olarak \"Diğer uygulamaların üzerinde görüntüleme\" iznini onaylayın</string>
+
+    <string name="enable_accessibility_service">Erişilebilirlik Servisini Aktifleştir</string>
+    <string name="enable_accessibility_service_desc">Hız limitini harita uygulamaları üzerinde otomatik olarak göstermek için, Erişilebilirlik Servisini aktif edin</string>
+    <string name="accessibility_service_summary">Harita uygulamalarında otomatik olarak çalıştır</string>
+    <string name="accessibility_service_description">Velociraptor\'un önplandaki uygulamayı belirleyip otomatik olarak çalışmasına izin verin.\n\nVelociraptor üzerinde çalıştığı uygulama bilgisi dışında hiçbir bilgiyi kullanmaz.</string>
+    <string name="open_settings_failed_accessibility">Ayarlar açılamıyor. Lütfen Velociraptor için manuel olarak Erişilebilirlik Servisini aktif edin</string>
+
     <string name="grant_permission">İzin onayı gerekiyor</string>
     <string name="enable_location_desc">Konumunuzdaki hız limitini algılayabilmek için, lütfen konum iznini onaylayın</string>
-    <string name="speed_unit">Hız Birimleri:</string>
-    <string name="style">Stil:</string>
+
+    <string name="warning_notif_title">Velociraptor can\'t start</string>
+    <string name="permissions_warning">Velociraptor gerekli uygulama izinlerine sahip değil. Lütfen uygulamayı açıp izinleri onaylayın.</string>
+    <string name="location_settings_warning">GPS kapalı. Lütfen Velociraptor\'ın hız limitini görüntüleyebilmesi GPS'i açın.</string>
+    <string name="network_warning">İnternete bağlı değilsiniz</string>
+
+    <string name="troubleshoot_label">Otomatik olarak açılmıyor mu?</string>
+    <string name="troubleshoot">Geribildirim</string>
+
+    <!--General Settings-->
+    <string name="general">Genel</string>
+
+    <string name="show_limits">Hız sınırları</string>
+    <string name="show_speedometer">Hız göstergesini göster</string>
+
+    <string name="sound_alert">Sesli uyarı</string>
+    <string name="test">Test et</string>
+
+    <string name="speed_unit">Hız birimi</string>
+
+    <string name="style">Stil</string>
     <string name="united_states">Amerika</string>
     <string name="international">Uluslararası</string>
-    <string name="open_settings_failed_overlay">Ayarlar açılamıyor. Lütfen manuel olarak \"Diğer uygulamaların üzerinde görüntüleme\" iznini onaylayın</string>
-    <string name="open_settings_failed_accessibility">Ayarlar açılamıyor. Lütfen Velociraptor için manuel olarak Erişilebilirlik Servisini aktif edin</string>
-    <string name="permissions_warning">Velociraptor yeterli izinlere sahip değil. Lütfen uygulamayı açıp izinleri onaylayın.</string>
-    <string name="location_settings_warning">GPS kapalı. Lütfen Velociraptor\'ın hız limitini görüntüleyebilmesi için aktif edin.</string>
-    <string name="speeding_amount">Hız Töleransı:</string>
-    <string name="show_speedometer">Hız Göstergesini Göster</string>
+
+    <string name="size">Boyut</string>
+    <string name="size_limit_overview">Hız sınırı: %s</string>
+    <string name="size_speedometer_overview">Hız göstergesi: %s</string>
+    <string name="size_limit_text">Hız Sınırı</string>
+    <string name="size_speedometer_text">Hız Göstergesi</string>
+
+    <string name="transparency">Saydamlık</string>
+
+    <string name="speeding_amount">Hız toleransı</string>
+    <string name="tolerance_dialog_text">Warn when speed limit exceeded by:</string>
+    <string name="plus">artı</string>
+    <string name="or">ya da</string>
+    <string name="tolerance_desc">%1$s %2$s %3$s</string>
+
+    <string name="tip_tap_hide">İpucu: Göstergeyi geçici olarak saklamak için üstüne tıkla!</string>
+
+    <!--Speed limit providers-->
+    <string name="speed_limit_providers">Hız sınırı bilgisi sağlayıcıları</string>
+
+    <string name="subscribe_placeholder">Abone ol (7 gün ücretsiz deneme)</string>
+
+    <string name="here_provider">HERE Maps</string>
+    <string name="here_desc">%s\'ye abone ol (7 gün ücretsiz deneme)</string>
+
+    <string name="tomtom_provider">TomTom Maps</string>
+    <string name="tomtom_desc">%s\'ye abone ol (7 gün ücretsiz deneme)</string>
+
+    <string name="openstreetmap">OpenStreetMap</string>
+    <string name="share_link">Linki Paylaş</string>
+    <string name="openstreetmap_desc">Ücretsiz</string>
+    <string name="donate">Bağış yap</string>
+    <string name="osm_edit">Hız bilgisi eklemek/değiştirmek için %s\'i ziyaret edin.</string>
+    <string name="open_link_failed">Link açılamadı. Lütfen manuel olarak %s\'e gidin.</string>
+
+    <string name="edit_data">Verileri değiştir</string>
+    <string name="subscribe">Abone ol</string>
+    <string name="subscribed">Abone olundu</string>
+    <string name="coverage">Kapsam</string>
+
+    <!--Activation Settings-->
+    <string name="show_in_apps">Şu uygulamalarda otomatik olarak çalıştır</string>
+
+    <string name="persistent_notification_controls">Bildirim seçeneklerini aç</string>
+    <string name="controls_notif_title">Velociraptor seçenekleri</string>
+    <string name="controls_notif_desc">Hız sınırı izlemeyi aç/kapat</string>
+
+    <string name="gmaps_only_nav">Google Haritalar: Sadece navigasyondayken kullan</string>
+    <string name="gmaps_only_nav_notif_access">Bu özelliği kullanabilmek için, Velociraptor\'un Google Haritalar navigasyonun ne zaman açık olduğunu öğrenmesi için Bildirim Erişimi'ne ihtiyacı var</string>
+    <string name="open_settings_failed_notif_access">Ayarlar açılamadı. lütfen manuel olarak Velociraptor\'a Bildirim Erişimi iznini verin.</string>
+
+    <!--App selection-->
+    <string name="select_apps">Uygulamaları seç</string>
+    <string name="show_map_apps">Harita uygulamalarını göster</string>
+
+    <!---Advanced settings-->
+    <string name="advanced">Gelişmiş</string>
+    <string name="debugging_stats">Nerdler/debugging için statlar</string>
+    <string name="clear_cache">Hız sınırı önbelleğini temizle</string>
+    <string name="cache_cleared">Önbellek temizlendi!</string>
+
+    <!--Changelog-->
+    <string name="changelog">Değişiklik kaydı</string>
+    <string name="rate">Oyla</string>
+    <string name="support">Destek Ol</string>
+
+    <!--Notification Channels-->
+<!--    <string name="channel_toggles">Show/hide toggles</string>-->
+    <string name="channel_warnings">Uyarılar</string>
+<!--    <string name="setup">Setup</string>-->
+    <string name="providers">Sağlayıcılar</string>
+
+    <!--Support development-->
+    <string name="support_development">Destek olun</string>
+    <string name="in_app_unavailable">Uygulama içi satın alma kullanılamıyor</string>
+    <string name="support_dev_dialog">Önerilen miktar aylık 1 dolar. Uygulamayı kullanmak için zorunlu değil. (ama destek olursanız burada isminiz çıkacak :) </string>
+    <string name="per_month">%s her ay</string>
+    <string name="one_time">%s tek seferlik</string>
+    <string name="support_dev_dialog_badge">Desteğiniz için teşekkürler!</string>
+
+    <!--About Dialog-->
+    <string name="about">Hakkında</string>
     <string name="about_dialog_title">Velociraptor v%s</string>
-    <string name="dismiss">Yoksay</string>
+    <string name="about_body"><![CDATA[
+        <b>Velociraptor</b> is a floating speed limit monitor with speedometer and warning features.
+        <br/><br/>
+        Developed by <b>Daniel Ciao</b><br/>
+        <a href="http://pluscubed.com">Website</a>&nbsp;&nbsp;
+        <a href="mailto:pluscubed@gmail.com">Email</a>&nbsp;&nbsp;
+        <a href="https://twitter.com/plusCubed">Twitter</a>&nbsp;&nbsp;
+        <a href="https://google.com/+DanielCiao">Google+</a>&nbsp;&nbsp;
+        <a href="https://github.com/pluscubed">GitHub</a>&nbsp;&nbsp;
+        <a href="https://www.linkedin.com/in/dciao">LinkedIn</a><br/><br/>
+        <a href="https://play.google.com/store/apps/details?id=com.pluscubed.velociraptor">Rate on the Play Store!</a><br/><br/>
+        <a href="https://github.com/pluscubed/velociraptor">GitHub</a> - source, issues, feature requests<br/>
+        <a href="http://pluscubed.oneskyapp.com/collaboration/project/64120">OneSky</a> - translate the app to your language<br/>
+        <a href="https://play.google.com/apps/testing/com.pluscubed.velociraptor">Beta testing</a> - try out upcoming releases
+    ]]></string>
+    <string name="licenses">Lisanslar</string>
+
+    <string name="terms_body"><![CDATA[
+        By using Velociraptor, you absolve the developer, speed limit providers, and all other parties of any responsibility
+        for accidents, legal consequences, and all other outcomes. The data presented by Velociraptor, including speed limits and current speed,
+        is not guaranteed to be accurate. This app is not affiliated or endorsed by OpenStreetMap, HERE, TomTom, or Sygic. All trademarks
+        belong to their respective owners.<br/><br/>
+        <b>Please pay attention to the road and use with care.</b>
+     ]]></string>
+
+    <string name="accept">Kabul et</string>
+    <string name="terms">Şartlar</string>
+    <string name="privacy_policy">Gizlilik Politikası</string>
+    <string name="terms_warning">Kullanım şartlarını kabul etmek için Velociraptor\'u açın</string>
 </resources>
