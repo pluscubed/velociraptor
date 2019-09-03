@@ -14,6 +14,7 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.customview.customView
 import com.pluscubed.velociraptor.R
 import com.pluscubed.velociraptor.utils.getColorResCompat
+import timber.log.Timber
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
@@ -50,16 +51,19 @@ class ChangelogDialogFragment : DialogFragment() {
                     ?: Color.BLACK
 
             val str = buf.toString().replace("TEXTCOLOR", String.format("#%06X", 0xFFFFFF and primaryColor))
+            Timber.d(str)
 
             // Inject color values for WebView body background and links
-            webView.loadData(str, "text/html; charset=UTF-8", null)
+            webView.loadDataWithBaseURL(null, str, "text/html", "UTF-8", null)
 
             webView.setBackgroundColor(Color.TRANSPARENT)
         } catch (e: Throwable) {
-            webView.loadData(
-                "<h1>Unable to load</h1><p>${e.localizedMessage}</p>",
-                "text/html",
-                "UTF-8"
+            webView.loadDataWithBaseURL(
+                    null,
+                    "<h1>Unable to load</h1><p>${e.localizedMessage}</p>",
+                    "text/html",
+                    "UTF-8",
+                    null
             )
         }
 
