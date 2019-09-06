@@ -18,14 +18,14 @@
     <string name="enable_floating_desc">Um das Overlay anzuzeigen, ist die  Berechtigung \"über anderen Apps einblenden\" erforderlich.</string>
     <string name="open_settings_failed_overlay">Einstellungen können nicht geöffnet werden. Bitte erlauben Sie \"über anderen Apps einblenden\" für Velociraptor manuell.</string>
     <string name="enable_accessibility_service">\"Bedienungshilfen\"-Dienst aktivieren</string>
-    <string name="enable_accessibility_service_desc">Erlaube Velociraptor, durch Aktivieren der Bedienungshilfen, eine eine laufende Navigations-App zu erkennen.</string>
+    <string name="enable_accessibility_service_desc">Erlaube Velociraptor, durch Aktivieren der Bedienungshilfen, eine laufende Navigations-App zu erkennen.</string>
     <string name="accessibility_service_summary">Autostart in Navigations-Apps</string>
-    <string name="accessibility_service_description">Erlaube Velociraptor die Vordergrund-App zu ereknnen und automatisch zu starten.\n\nVelociraptor nutzt ausschließlich die Information, welche App im Vordergrund läuft. Dieser Service vereinfacht die Bedienung.</string>
+    <string name="accessibility_service_description">Erlaube Velociraptor die Vordergrund-App zu erkennen und automatisch zu starten.\n\nVelociraptor nutzt ausschließlich die Information, welche App im Vordergrund läuft. Dieser Service vereinfacht die Bedienung.</string>
     <string name="open_settings_failed_accessibility">Einstellungen können nicht geöffnet werden. Bitte aktivieren Sie die Bedienungshilfen in den Systemeinstellungen manuell.</string>
     <string name="grant_permission">Berechtigung erteilen</string>
     <string name="enable_location_desc">Erteile die Berechtigung zur Standortbestimmung.</string>
     <string name="warning_notif_title">Velociraptor kann nicht gestartet werden</string>
-    <string name="permissions_warning">Velociraptor hat nicht die Berechtigungen den Standort zu bestimmen. Um diese zu erteilen, starten Sie bitte die App.</string>
+    <string name="permissions_warning">Velociraptor hat nicht die Berechtigung den Standort zu bestimmen. Um diese zu erteilen, starten Sie bitte die App.</string>
     <string name="location_settings_warning">GPS ist ausgeschaltet.</string>
     <string name="network_warning">Kein Internetzugriff.</string>
     <string name="troubleshoot_label">Startet nicht automatisch?</string>
@@ -78,13 +78,13 @@
     <string name="licenses">Lizenzen</string>
     <string name="terms_body"><![CDATA[Durch die Nutzung von Velociraptor entbinden Sie den Entwickler, die Anbieter der Geschwindigkeitsgrenzen und alle anderen Beteiligten von jeglicher Haftung bezüglich Unfällen, rechtlicher Konsequenzen und aller anderer Folgen. Die Daten, inklusive Geschwindigkeitsbegrenzung und aktueller Geschwindigkeit, welche durch Velociraptor bereit gestellt werden, erheben keinen Anspruch auf Richtigkeit. Diese App ist nicht an OpenStreetMap, HERE, TomTom, oder Sygic angegliedert und wird nicht von diesen Unternehmen unterstützt. Alle Warenzeichen gehören den betreffenden Inhabern.<br/><br/>
 
-<b>Bitte achten SIe auf die Straße und verwenden SIe die App mit Vorsicht.</b> ]]></string>
+<b>Bitte achten Sie auf die Straße und verwenden Sie die App mit Vorsicht.</b> ]]></string>
     <string name="accept">Akzeptieren</string>
     <string name="terms">Bedingungen</string>
     <string name="privacy_policy">Datenschutzerklärung</string>
-    <string name="terms_warning">Öffne Velociraptor und die Nutzungsbedingungen zu akzeptieren</string>
+    <string name="terms_warning">Öffne Velociraptor um die Nutzungsbedingungen zu akzeptieren</string>
     <!--Speed limit providers-->
-    <string name="speed_limit_providers">Geschwindigkeitsbegrenzungsprovider</string>
+    <string name="speed_limit_providers">Anbieter von Geschwindigkeitsbegrenzungsinformationen</string>
     <string name="subscribe_placeholder">Abonniere (7 Tage kostenlos testen)</string>
     <string name="here_provider">HERE Karten</string>
     <string name="here_desc">Abonniere %s (7 Tage kostenlos testen)</string>
@@ -93,26 +93,28 @@
     <string name="openstreetmap">OpenStreetMap</string>
     <string name="share_link">Link teilen</string>
     <string name="openstreetmap_desc">Kostenlos - Der OSM-Server für Velociraptor wird durch Spenden finanziert</string>
+    <string name="donate">Spenden</string>
     <string name="osm_edit">Öffne %s am PC um Geschwindigkeitslimits zu konfigurieren</string>
     <string name="open_link_failed">Link kann nicht geöffnet werden. Bitte gehe zu %s.</string>
-    <string name="edit_data">Bearbeite Daten</string>
+    <string name="edit_data">Daten bearbeiten</string>
     <string name="subscribe">Abonniere</string>
     <string name="subscribed">Abonniert</string>
+    <string name="unsubscribe">Abmelden</string>
     <string name="coverage">Abdeckung</string>
     <!--Activation Settings-->
     <string name="show_in_apps">Zeige in diesen Apps</string>
     <string name="persistent_notification_controls">Zeige Benachrichtigungverwaltung</string>
     <string name="controls_notif_title">Velociraptor Einstellungen</string>
-    <string name="controls_notif_desc">Zeig oder verstecke die Höchstgeschwindigkeitsanzeige</string>
+    <string name="controls_notif_desc">Zeige oder verstecke die Höchstgeschwindigkeitsanzeige</string>
     <string name="gmaps_only_nav">Google Maps: nur während der Navigation</string>
-    <string name="gmaps_only_nav_notif_access">Um dieses Feature zu nutzen benötigt Velociraptor den aktivierten Bedienungshilfen-Dienst demit geprüft werden kann, ob Google Maps läuft</string>
+    <string name="gmaps_only_nav_notif_access">Um dieses Feature zu nutzen benötigt Velociraptor den aktivierten Bedienungshilfen-Dienst damit geprüft werden kann, ob Google Maps läuft</string>
     <string name="open_settings_failed_notif_access">Einstellungen können nicht geöffnet werden. Bitte aktiviere die \"Benachrichtigungseinstellungen\" für Velociraptor manuell.</string>
     <!--App selection-->
     <string name="select_apps">Wähle Apps aus</string>
     <string name="show_map_apps">Zeige Karten Apps</string>
     <!---Advanced settings-->
     <string name="advanced">Fortgeschritten</string>
-    <string name="debugging_stats">Statistik für Nerds / Debugging</string>
+    <string name="debugging_stats">Statistik für Nerds/Debugging</string>
     <string name="clear_cache">Cache der Geschwindigkeitsbegrenzungen leeren</string>
     <string name="cache_cleared">Cache geleert!</string>
     <!--Changelog-->
@@ -125,7 +127,13 @@
     <string name="support_dev_dialog">Wird für die Unterhaltung des OSM-Servers verwendet; empfohlen 1 USD pro Monat (Betrag wird in der Auswahl in € umgerechnet).</string>
     <string name="per_month">%s pro Monat</string>
     <string name="one_time">%s einmalig</string>
+    <string name="support_dev_dialog_badge">Danke für deine Unterstützung</string>
     <!--Notification Channels-->
     <string name="channel_toggles">Anzeige anzeigen/ausblenden</string>
     <string name="channel_warnings">Warnungen</string>
+    <string name="setup">Einstellung</string>
+    <string name="providers">Anbieter</string>
+    <string name="speed_limit_info_explanation">"Informationen zur Geschwindigkeitsbegrenzung werden von den folgenden Anbietern übernommen "</string>
+    <string name="speed_limit_info_explanation_desc">Abdeckung und Genauigkeit variieren. Bezahlte Abonnements bedeuten nicht unbedingt eine bessere Qualität für Deine Wohngegend - bitte nutze die kostenlose Testphase zur Verifizierung der zur Verfügung gestellten Daten!</string>
+    <string name="permissions_explanation">Bitte erteile die folgenden Berechtigungen um Velociraptor zu verwenden:</string>
 </resources>
