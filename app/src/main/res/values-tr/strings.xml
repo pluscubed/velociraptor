@@ -31,7 +31,7 @@
 
     <string name="warning_notif_title">Velociraptor can\'t start</string>
     <string name="permissions_warning">Velociraptor gerekli uygulama izinlerine sahip değil. Lütfen uygulamayı açıp izinleri onaylayın.</string>
-    <string name="location_settings_warning">GPS kapalı. Lütfen Velociraptor\'ın hız limitini görüntüleyebilmesi GPS'i açın.</string>
+    <string name="location_settings_warning">GPS kapalı. Lütfen Velociraptor\'ın hız limitini görüntüleyebilmesi GPS\'i açın.</string>
     <string name="network_warning">İnternete bağlı değilsiniz</string>
 
     <string name="troubleshoot_label">Otomatik olarak açılmıyor mu?</string>
@@ -99,7 +99,7 @@
     <string name="controls_notif_desc">Hız sınırı izlemeyi aç/kapat</string>
 
     <string name="gmaps_only_nav">Google Haritalar: Sadece navigasyondayken kullan</string>
-    <string name="gmaps_only_nav_notif_access">Bu özelliği kullanabilmek için, Velociraptor\'un Google Haritalar navigasyonun ne zaman açık olduğunu öğrenmesi için Bildirim Erişimi'ne ihtiyacı var</string>
+    <string name="gmaps_only_nav_notif_access">Bu özelliği kullanabilmek için, Velociraptor\'un Google Haritalar navigasyonun ne zaman açık olduğunu öğrenmesi için Bildirim Erişimi\'ne ihtiyacı var</string>
     <string name="open_settings_failed_notif_access">Ayarlar açılamadı. lütfen manuel olarak Velociraptor\'a Bildirim Erişimi iznini verin.</string>
 
     <!--App selection-->

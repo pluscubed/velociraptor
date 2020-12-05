@@ -12,9 +12,9 @@ import androidx.fragment.app.Fragment
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.afollestad.materialdialogs.MaterialDialog
-import com.crashlytics.android.Crashlytics
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.pluscubed.velociraptor.BuildConfig
 import com.pluscubed.velociraptor.R
 import com.pluscubed.velociraptor.limit.LimitService
@@ -49,38 +49,38 @@ class SettingsActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         supportFragmentManager.beginTransaction()
-            .add(R.id.main_view, advancedFragment, "advanced").hide(advancedFragment).commit()
+                .add(R.id.main_view, advancedFragment, "advanced").hide(advancedFragment).commit()
         supportFragmentManager.beginTransaction()
-            .add(R.id.main_view, providersFragment, "providers").hide(providersFragment).commit()
+                .add(R.id.main_view, providersFragment, "providers").hide(providersFragment).commit()
         supportFragmentManager.beginTransaction()
-            .add(R.id.main_view, generalFragment, "general").hide(generalFragment).commit()
+                .add(R.id.main_view, generalFragment, "general").hide(generalFragment).commit()
         supportFragmentManager.beginTransaction()
-            .add(R.id.main_view, permissionsFragment, "permissions").commit()
+                .add(R.id.main_view, permissionsFragment, "permissions").commit()
 
 
         bottomNavigationView.setOnNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.action_advanced -> {
                     supportFragmentManager.beginTransaction().hide(active).show(advancedFragment)
-                        .commit()
+                            .commit()
                     active = advancedFragment
                     true
                 }
                 R.id.action_general -> {
                     supportFragmentManager.beginTransaction().hide(active).show(generalFragment)
-                        .commit()
+                            .commit()
                     active = generalFragment
                     true
                 }
                 R.id.action_providers -> {
                     supportFragmentManager.beginTransaction().hide(active).show(providersFragment)
-                        .commit()
+                            .commit()
                     active = providersFragment
                     true
                 }
                 R.id.action_permissions -> {
                     supportFragmentManager.beginTransaction().hide(active).show(permissionsFragment)
-                        .commit()
+                            .commit()
                     active = permissionsFragment
                     true
                 }
@@ -136,20 +136,20 @@ class SettingsActivity : AppCompatActivity() {
 
     private fun showAboutDialog() {
         MaterialDialog(this)
-            .title(text = getString(R.string.about_dialog_title, BuildConfig.VERSION_NAME))
-            .positiveButton(R.string.dismiss)
+                .title(text = getString(R.string.about_dialog_title, BuildConfig.VERSION_NAME))
+                .positiveButton(R.string.dismiss)
                 .message(R.string.about_body) {
                     html()
                     lineSpacing(1.2f)
                 }
-            .neutralButton(R.string.licenses) {
-                startActivity(
-                    Intent(this@SettingsActivity, OssLicensesMenuActivity::class.java)
-                )
-            }
-            .negativeButton(R.string.terms) { showTermsDialog() }
-            .icon(R.mipmap.ic_launcher)
-            .show()
+                .neutralButton(R.string.licenses) {
+                    startActivity(
+                            Intent(this@SettingsActivity, OssLicensesMenuActivity::class.java)
+                    )
+                }
+                .negativeButton(R.string.terms) { showTermsDialog() }
+                .icon(R.mipmap.ic_launcher)
+                .show()
     }
 
     private fun showTermsDialog() {
@@ -158,16 +158,16 @@ class SettingsActivity : AppCompatActivity() {
                     html()
                     lineSpacing(1.2f)
                 }
-            .neutralButton(R.string.privacy_policy) { Utils.openLink(this, toolbar, PRIVACY_URL) }
+                .neutralButton(R.string.privacy_policy) { Utils.openLink(this, toolbar, PRIVACY_URL) }
 
         if (!PrefUtils.isTermsAccepted(this)) {
             dialog = dialog
-                .noAutoDismiss()
-                .cancelOnTouchOutside(false)
-                .positiveButton(R.string.accept) {
-                    PrefUtils.setTermsAccepted(this@SettingsActivity, true)
-                    it.dismiss()
-                }
+                    .noAutoDismiss()
+                    .cancelOnTouchOutside(false)
+                    .positiveButton(R.string.accept) {
+                        PrefUtils.setTermsAccepted(this@SettingsActivity, true)
+                        it.dismiss()
+                    }
         }
 
         dialog.show()
@@ -188,7 +188,7 @@ class SettingsActivity : AppCompatActivity() {
     private fun invalidateStates() {
         val permissionGranted = Utils.isLocationPermissionGranted(this)
         val overlayEnabled =
-            Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(this)
+                Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(this)
         if (permissionGranted && overlayEnabled) {
             startLimitService(true)
         }
@@ -202,7 +202,7 @@ class SettingsActivity : AppCompatActivity() {
         try {
             startService(intent)
         } catch (e: Exception) {
-            Crashlytics.logException(e)
+            FirebaseCrashlytics.getInstance().recordException(e)
         }
     }
 

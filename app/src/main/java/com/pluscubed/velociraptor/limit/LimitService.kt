@@ -17,8 +17,8 @@ import android.provider.Settings
 import androidx.core.app.NotificationCompat
 import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.Purchase
-import com.crashlytics.android.Crashlytics
 import com.google.android.gms.location.*
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.pluscubed.velociraptor.BuildConfig
 import com.pluscubed.velociraptor.R
@@ -78,9 +78,9 @@ class LimitService : Service(), CoroutineScope {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (intent != null) {
             if (!isStartedFromNotification && intent.getBooleanExtra(
-                    EXTRA_CLOSE,
-                    false
-                ) || intent.getBooleanExtra(EXTRA_NOTIF_CLOSE, false)
+                            EXTRA_CLOSE,
+                            false
+                    ) || intent.getBooleanExtra(EXTRA_NOTIF_CLOSE, false)
             ) {
                 onStop()
                 stopSelf()
@@ -140,9 +140,9 @@ class LimitService : Service(), CoroutineScope {
 
         try {
             fusedLocationClient!!.requestLocationUpdates(
-                locationRequest,
-                locationCallback!!,
-                Looper.myLooper()
+                    locationRequest,
+                    locationCallback!!,
+                    Looper.myLooper()
             )
         } catch (unlikely: SecurityException) {
         }
@@ -152,10 +152,10 @@ class LimitService : Service(), CoroutineScope {
                 if (RaptorLimitProvider.USE_DEBUG_ID) {
                     launch(Dispatchers.IO) {
                         verifyPurchase(
-                            Purchase(
-                                """{"productId": "debug", "purchaseToken": "debug"}""",
-                                ""
-                            )
+                                Purchase(
+                                        """{"productId": "debug", "purchaseToken": "debug"}""",
+                                        ""
+                                )
                         )
                     }
                 }
@@ -173,7 +173,7 @@ class LimitService : Service(), CoroutineScope {
                         try {
                             billingManager?.consumeAsync(purchase.purchaseToken);
                         } catch (e: Exception) {
-                            Crashlytics.logException(e);
+                            FirebaseCrashlytics.getInstance().recordException(e)
                         }
                     } else if (purchase.sku == BillingConstants.SKU_HERE || purchase.sku == BillingConstants.SKU_TOMTOM) {
                         purchased.add(purchase)
@@ -188,7 +188,7 @@ class LimitService : Service(), CoroutineScope {
         val remoteConfig = FirebaseRemoteConfig.getInstance()
         remoteConfig.fetch().addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                remoteConfig.activateFetched()
+                remoteConfig.activate()
             }
         }
 
@@ -204,7 +204,7 @@ class LimitService : Service(), CoroutineScope {
                     if (res)
                         updated = true
                 } catch (e: Exception) {
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                 }
             }
 
@@ -212,9 +212,7 @@ class LimitService : Service(), CoroutineScope {
                 forceRefetch()
             }
         } catch (e: Exception) {
-            if (!BuildConfig.DEBUG) {
-                Crashlytics.logException(e)
-            }
+            FirebaseCrashlytics.getInstance().recordException(e)
         }
     }
 
@@ -227,20 +225,20 @@ class LimitService : Service(), CoroutineScope {
     private fun startNotification() {
         val notificationIntent = Intent(this, SettingsActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(
-            this,
-            PENDING_SETTINGS,
-            notificationIntent,
-            PendingIntent.FLAG_CANCEL_CURRENT
+                this,
+                PENDING_SETTINGS,
+                notificationIntent,
+                PendingIntent.FLAG_CANCEL_CURRENT
         )
 
         NotificationUtils.initChannels(this)
         val notification = NotificationCompat.Builder(this, NotificationUtils.CHANNEL_RUNNING)
-            .setContentTitle(getString(R.string.notif_title))
-            .setContentText(getString(R.string.notif_content))
-            .setPriority(Notification.PRIORITY_MIN)
-            .setSmallIcon(R.drawable.ic_speedometer_notif)
-            .setContentIntent(pendingIntent)
-            .build()
+                .setContentTitle(getString(R.string.notif_title))
+                .setContentText(getString(R.string.notif_content))
+                .setPriority(Notification.PRIORITY_MIN)
+                .setSmallIcon(R.drawable.ic_speedometer_notif)
+                .setContentIntent(pendingIntent)
+                .build()
         startForeground(NOTIFICATION_FOREGROUND, notification)
     }
 
@@ -256,8 +254,8 @@ class LimitService : Service(), CoroutineScope {
         }
 
         if (!Utils.isLocationPermissionGranted(this@LimitService) ||
-            Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-            !Settings.canDrawOverlays(this)
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                !Settings.canDrawOverlays(this)
         ) {
             showWarningNotification(R.string.permissions_warning)
             stopSelf()
@@ -296,7 +294,7 @@ class LimitService : Service(), CoroutineScope {
             speedLimitJob = launch {
                 try {
                     val limitResponse =
-                        withContext(Dispatchers.IO) { limitFetcher!!.getSpeedLimit(location) }
+                            withContext(Dispatchers.IO) { limitFetcher!!.getSpeedLimit(location) }
 
                     if (!limitResponse.isEmpty) {
                         currentLimitResponse = limitResponse
@@ -323,9 +321,9 @@ class LimitService : Service(), CoroutineScope {
     }
 
     private fun updateDebuggingText(
-        location: Location,
-        limitResponse: LimitResponse?,
-        error: Throwable?
+            location: Location,
+            limitResponse: LimitResponse?,
+            error: Throwable?
     ) {
         if (!PrefUtils.isDebuggingEnabled(this)) {
             debuggingRequestInfo = ""
@@ -424,22 +422,22 @@ class LimitService : Service(), CoroutineScope {
     internal fun showWarningNotification(stringRes: Int) {
         val notificationIntent = Intent(this, SettingsActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(
-            this,
-            PENDING_SETTINGS,
-            notificationIntent,
-            PendingIntent.FLAG_CANCEL_CURRENT
+                this,
+                PENDING_SETTINGS,
+                notificationIntent,
+                PendingIntent.FLAG_CANCEL_CURRENT
         )
 
         NotificationUtils.initChannels(this)
         val notificationText = getString(stringRes)
         val notification = NotificationCompat.Builder(this, NotificationUtils.CHANNEL_WARNINGS)
-            .setContentTitle(getString(R.string.warning_notif_title))
-            .setContentText(notificationText)
-            .setPriority(Notification.PRIORITY_LOW)
-            .setSmallIcon(R.drawable.ic_speedometer_notif)
-            .setContentIntent(pendingIntent)
-            .setStyle(NotificationCompat.BigTextStyle().bigText(notificationText))
-            .build()
+                .setContentTitle(getString(R.string.warning_notif_title))
+                .setContentText(notificationText)
+                .setPriority(Notification.PRIORITY_LOW)
+                .setSmallIcon(R.drawable.ic_speedometer_notif)
+                .setContentIntent(pendingIntent)
+                .setStyle(NotificationCompat.BigTextStyle().bigText(notificationText))
+                .build()
 
         val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         manager.notify(stringRes, notification)

@@ -10,7 +10,7 @@ interface WayDao {
     // https://stackoverflow.com/a/39298241
     @Transaction
     @Query(
-        """
+            """
         SELECT * FROM way
         WHERE clat between :lat - 0.01 and :lat + 0.01 and clon between :lon - 0.01 and :lon + 0.01
         ORDER BY ((:lat - clat)*(:lat - clat) + ((:lon - clon)*(:lon - clon)* :coslat2)) ASC
@@ -20,7 +20,7 @@ interface WayDao {
     fun selectByCoord(lat: Double, coslat2: Double, lon: Double): List<Way>
 
     @Query(
-        """
+            """
         DELETE FROM way
         WHERE :timestamp - timestamp >  604800000;
     """

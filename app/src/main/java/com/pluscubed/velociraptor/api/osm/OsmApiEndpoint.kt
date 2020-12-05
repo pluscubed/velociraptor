@@ -1,8 +1,7 @@
 package com.pluscubed.velociraptor.api.osm
 
-class OsmApiEndpoint : Comparable<OsmApiEndpoint> {
+class OsmApiEndpoint(val baseUrl: String) : Comparable<OsmApiEndpoint> {
 
-    val baseUrl: String
     var service: OsmService? = null
         get() {
             if (field == null) {
@@ -11,10 +10,6 @@ class OsmApiEndpoint : Comparable<OsmApiEndpoint> {
             return field
         }
     var timeTaken: Int = 0
-
-    constructor(baseUrl: String) {
-        this.baseUrl = baseUrl
-    }
 
     override fun toString(): String {
         val time: String

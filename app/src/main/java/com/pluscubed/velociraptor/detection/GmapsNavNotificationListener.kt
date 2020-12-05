@@ -18,9 +18,9 @@ class GmapsNavNotificationListener : NotificationListenerService() {
 
         val packageName = sbn.packageName
         if (TextUtils.isEmpty(packageName)
-            || packageName != AppDetectionService.GOOGLE_MAPS_PACKAGE
-            || sbn.notification.priority != Notification.PRIORITY_MAX
-            || !PrefUtils.isGmapsOnlyInNavigation(this)
+                || packageName != AppDetectionService.GOOGLE_MAPS_PACKAGE
+                || sbn.notification.priority != Notification.PRIORITY_MAX
+                || !PrefUtils.isGmapsOnlyInNavigation(this)
         ) {
             return
         }
@@ -39,9 +39,9 @@ class GmapsNavNotificationListener : NotificationListenerService() {
 
         val packageName = sbn.packageName
         if (TextUtils.isEmpty(packageName)
-            || packageName != AppDetectionService.GOOGLE_MAPS_PACKAGE
-            || sbn.notification.priority != Notification.PRIORITY_MAX
-            || !PrefUtils.isGmapsOnlyInNavigation(this)
+                || packageName != AppDetectionService.GOOGLE_MAPS_PACKAGE
+                || sbn.notification.priority != Notification.PRIORITY_MAX
+                || !PrefUtils.isGmapsOnlyInNavigation(this)
         ) {
             return
         }

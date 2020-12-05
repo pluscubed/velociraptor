@@ -24,16 +24,16 @@ class ChangelogDialogFragment : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val customView = LayoutInflater.from(activity).inflate(R.layout.dialog_webview, null)
         val dialog = MaterialDialog(activity!!)
-            .title(R.string.changelog)
-            .customView(view = customView)
-            .positiveButton(android.R.string.ok)
-            .neutralButton(R.string.rate) {
-                val intent = Intent()
-                    .setAction(Intent.ACTION_VIEW)
-                    .setData(Uri.parse("https://play.google.com/store/apps/details?id=com.pluscubed.velociraptor"))
-                startActivity(intent)
-            }
-            .negativeButton(R.string.support) { (activity as SettingsActivity).showSupportDialog() }
+                .title(R.string.changelog)
+                .customView(view = customView)
+                .positiveButton(android.R.string.ok)
+                .neutralButton(R.string.rate) {
+                    val intent = Intent()
+                            .setAction(Intent.ACTION_VIEW)
+                            .setData(Uri.parse("https://play.google.com/store/apps/details?id=com.pluscubed.velociraptor"))
+                    startActivity(intent)
+                }
+                .negativeButton(R.string.support) { (activity as SettingsActivity).showSupportDialog() }
 
         val webView = customView.findViewById<View>(R.id.webview) as WebView
         try {

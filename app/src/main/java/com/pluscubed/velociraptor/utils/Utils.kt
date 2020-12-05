@@ -37,15 +37,15 @@ fun Context.getColorResCompat(@AttrRes id: Int): Int {
 object Utils {
 
     fun isAccessibilityServiceEnabled(
-        context: Context?,
-        c: Class<out AccessibilityService>
+            context: Context?,
+            c: Class<out AccessibilityService>
     ): Boolean {
         var accessibilityEnabled = 0
         val service = BuildConfig.APPLICATION_ID + "/" + c.name
         try {
             accessibilityEnabled = Settings.Secure.getInt(
-                context?.contentResolver,
-                Settings.Secure.ACCESSIBILITY_ENABLED
+                    context?.contentResolver,
+                    Settings.Secure.ACCESSIBILITY_ENABLED
             )
         } catch (e: Settings.SettingNotFoundException) {
             e.printStackTrace()
@@ -55,8 +55,8 @@ object Utils {
 
         if (accessibilityEnabled == 1) {
             val settingValue = Settings.Secure.getString(
-                context?.contentResolver,
-                Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES
+                    context?.contentResolver,
+                    Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES
             )
             if (settingValue != null) {
                 splitter.setString(settingValue)
@@ -106,8 +106,8 @@ object Utils {
     @JvmOverloads
     fun getUnitText(context: Context, amount: String = ""): String {
         return if (PrefUtils.getUseMetric(context)) context.getString(
-            R.string.kmph,
-            amount
+                R.string.kmph,
+                amount
         ) else context.getString(R.string.mph, amount).trim { it <= ' ' }
     }
 
@@ -122,15 +122,15 @@ object Utils {
     fun isServiceReady(context: Context): Boolean {
         val permissionGranted = isLocationPermissionGranted(context)
         @SuppressLint("NewApi", "LocalSuppress") val overlayEnabled =
-            Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(context)
+                Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(context)
         return permissionGranted && overlayEnabled
     }
 
     fun isLocationPermissionGranted(context: Context?): Boolean {
         if (context != null) {
             return ContextCompat.checkSelfPermission(
-                context,
-                Manifest.permission.ACCESS_FINE_LOCATION
+                    context,
+                    Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED
         }
         return false

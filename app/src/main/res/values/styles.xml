@@ -1,9 +1,21 @@
 <resources>
 
-    <style name="Theme.Velociraptor" parent="Base.Theme.Velociraptor">
+    <style name="Theme.Velociraptor" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="android:textColor">?android:textColorPrimary</item>
+        <item name="android:windowContentOverlay">@null</item>
+
+        <item name="md_corner_radius">8dp</item>
+        <item name="md_color_button_text">@color/colorAccent</item>
+        <item name="md_ripple_color">#5CFF4081</item>
+
+        <item name="materialButtonStyle">@style/Widget.Button.Colored</item>
     </style>
 
-    <style name="Base.Theme.Velociraptor" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.Velociraptor.Light" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>

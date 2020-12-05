@@ -19,9 +19,9 @@ import com.afollestad.materialdialogs.list.listItems
 import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.Purchase
 import com.android.billingclient.api.SkuDetails
-import com.crashlytics.android.Crashlytics
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.pluscubed.velociraptor.R
 import com.pluscubed.velociraptor.billing.BillingConstants
 import com.pluscubed.velociraptor.billing.BillingManager
@@ -37,32 +37,45 @@ import kotlin.coroutines.suspendCoroutine
 class ProvidersFragment : Fragment(), CoroutineScope {
 
     //Providers
+    @BindView(R.id.here_container)
+    lateinit var hereContainer: View
+
     @BindView(R.id.here_title)
     lateinit var hereTitle: TextView
+
     @BindView(R.id.here_provider_desc)
     lateinit var herePriceDesc: TextView
+
     @BindView(R.id.here_subscribe)
     lateinit var hereSubscribeButton: Button
+
     @BindView(R.id.here_editdata)
     lateinit var hereEditDataButton: Button
 
     @BindView(R.id.tomtom_container)
     lateinit var tomtomContainer: View
+
     @BindView(R.id.tomtom_title)
     lateinit var tomtomTitle: TextView
+
     @BindView(R.id.tomtom_provider_desc)
     lateinit var tomtomPriceDesc: TextView
+
     @BindView(R.id.tomtom_subscribe)
     lateinit var tomtomSubscribeButton: Button
+
     @BindView(R.id.tomtom_editdata)
     lateinit var tomtomEditDataButton: Button
 
     @BindView(R.id.osm_title)
     lateinit var osmTitle: TextView
+
     @BindView(R.id.osm_editdata)
     lateinit var osmEditDataButton: Button
+
     @BindView(R.id.osm_donate)
     lateinit var osmDonateButton: Button
+
     @BindView(R.id.osm_coverage)
     lateinit var osmCoverageButton: Button
 
@@ -96,9 +109,9 @@ class ProvidersFragment : Fragment(), CoroutineScope {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_providers, container, false)
     }
@@ -115,30 +128,30 @@ class ProvidersFragment : Fragment(), CoroutineScope {
         hereSubscribeButton.setOnClickListener {
             if (!isBillingManagerReady) {
                 Snackbar.make(
-                    view,
-                    R.string.in_app_unavailable,
-                    Snackbar.LENGTH_SHORT
+                        view,
+                        R.string.in_app_unavailable,
+                        Snackbar.LENGTH_SHORT
                 ).show()
                 return@setOnClickListener
             }
             billingManager?.initiatePurchaseFlow(
-                BillingConstants.SKU_HERE,
-                BillingClient.SkuType.SUBS
+                    BillingConstants.SKU_HERE,
+                    BillingClient.SkuType.SUBS
             )
         }
 
         tomtomSubscribeButton.setOnClickListener {
             if (!isBillingManagerReady) {
                 Snackbar.make(
-                    view,
-                    R.string.in_app_unavailable,
-                    Snackbar.LENGTH_SHORT
+                        view,
+                        R.string.in_app_unavailable,
+                        Snackbar.LENGTH_SHORT
                 ).show()
                 return@setOnClickListener;
             }
             billingManager?.initiatePurchaseFlow(
-                BillingConstants.SKU_TOMTOM,
-                BillingClient.SkuType.SUBS
+                    BillingConstants.SKU_TOMTOM,
+                    BillingClient.SkuType.SUBS
             )
         }
 
@@ -153,35 +166,35 @@ class ProvidersFragment : Fragment(), CoroutineScope {
         osmEditDataButton.setOnClickListener {
             activity?.let { activity ->
                 MaterialDialog(activity)
-                    .show {
-                        var text = getString(R.string.osm_edit)
-                        if (text.contains("%s")) {
-                            text = text.format("<b>$OSM_EDITDATA_URL</b>")
-                        }
-                        message(text = text.parseAsHtml()) {
-                            lineSpacing(1.2f)
-                        }
-                        positiveButton(R.string.share_link) { _ ->
-                            val shareIntent = Intent()
-                            shareIntent.type = "text/plain"
-                            shareIntent.putExtra(Intent.EXTRA_TEXT, OSM_EDITDATA_URL)
-                            startActivity(
-                                Intent.createChooser(
-                                    shareIntent,
-                                    getString(R.string.share_link)
+                        .show {
+                            var text = getString(R.string.osm_edit)
+                            if (text.contains("%s")) {
+                                text = text.format("<b>$OSM_EDITDATA_URL</b>")
+                            }
+                            message(text = text.parseAsHtml()) {
+                                lineSpacing(1.2f)
+                            }
+                            positiveButton(R.string.share_link) { _ ->
+                                val shareIntent = Intent()
+                                shareIntent.type = "text/plain"
+                                shareIntent.putExtra(Intent.EXTRA_TEXT, OSM_EDITDATA_URL)
+                                startActivity(
+                                        Intent.createChooser(
+                                                shareIntent,
+                                                getString(R.string.share_link)
+                                        )
                                 )
-                            )
+                            }
                         }
-                    }
             }
         }
 
         osmDonateButton.setOnClickListener { Utils.openLink(activity, view, OSM_DONATE_URL) }
 
         val checkIcon =
-            activity?.let { AppCompatResources.getDrawable(it, R.drawable.ic_done_green_20dp) }
+                activity?.let { AppCompatResources.getDrawable(it, R.drawable.ic_done_green_20dp) }
         val crossIcon =
-            activity?.let { AppCompatResources.getDrawable(it, R.drawable.ic_cross_red_20dp) }
+                activity?.let { AppCompatResources.getDrawable(it, R.drawable.ic_cross_red_20dp) }
         osmTitle.setCompoundDrawablesWithIntrinsicBounds(null, null, checkIcon, null)
         hereTitle.setCompoundDrawablesWithIntrinsicBounds(null, null, crossIcon, null)
         tomtomTitle.setCompoundDrawablesWithIntrinsicBounds(null, null, crossIcon, null)
@@ -190,8 +203,8 @@ class ProvidersFragment : Fragment(), CoroutineScope {
             override fun onBillingClientSetupFinished() {
                 try {
                     billingManager?.querySkuDetailsAsync(
-                        BillingClient.SkuType.SUBS,
-                        Arrays.asList(BillingConstants.SKU_HERE, BillingConstants.SKU_TOMTOM)
+                            BillingClient.SkuType.SUBS,
+                            Arrays.asList(BillingConstants.SKU_HERE, BillingConstants.SKU_TOMTOM)
                     ) { responseCode, skuDetailsList ->
                         if (responseCode != BillingClient.BillingResponse.OK) {
                             return@querySkuDetailsAsync
@@ -199,21 +212,21 @@ class ProvidersFragment : Fragment(), CoroutineScope {
                         for (details in skuDetailsList) {
                             if (details.sku == BillingConstants.SKU_HERE) {
                                 herePriceDesc.text = getString(
-                                    R.string.here_desc,
-                                    getString(R.string.per_month, details.price)
+                                        R.string.here_desc,
+                                        getString(R.string.per_month, details.price)
                                 )
                             }
 
                             if (details.sku == BillingConstants.SKU_TOMTOM) {
                                 tomtomPriceDesc.text = getString(
-                                    R.string.tomtom_desc,
-                                    getString(R.string.per_month, details.price)
+                                        R.string.tomtom_desc,
+                                        getString(R.string.per_month, details.price)
                                 )
                             }
                         }
                     }
                 } catch (e: Exception) {
-                    Crashlytics.logException(e);
+                    FirebaseCrashlytics.getInstance().recordException(e);
                 }
             }
 
@@ -234,16 +247,20 @@ class ProvidersFragment : Fragment(), CoroutineScope {
                         try {
                             billingManager?.consumeAsync(purchase.purchaseToken);
                         } catch (e: Exception) {
-                            Crashlytics.logException(e);
+                            FirebaseCrashlytics.getInstance().recordException(e);
                         }
                     } else {
                         purchased.add(purchase.sku)
                     }
                 }
 
+                val hereSubscribed = purchased.contains(BillingConstants.SKU_HERE)
+                if (hereSubscribed) {
+                    hereContainer.isVisible = true
+                }
                 setButtonSubscriptionState(
-                    hereSubscribeButton,
-                    hereTitle,
+                        hereSubscribeButton,
+                        hereTitle,
                         purchased.contains(BillingConstants.SKU_HERE),
                         BillingConstants.SKU_HERE
                 )
@@ -253,8 +270,8 @@ class ProvidersFragment : Fragment(), CoroutineScope {
                     tomtomContainer.isVisible = true
                 }
                 setButtonSubscriptionState(
-                    tomtomSubscribeButton,
-                    tomtomTitle,
+                        tomtomSubscribeButton,
+                        tomtomTitle,
                         tomtomSubscribed,
                         BillingConstants.SKU_TOMTOM
                 )
@@ -271,7 +288,7 @@ class ProvidersFragment : Fragment(), CoroutineScope {
                         "http://play.google.com/store/account/subscriptions?package=com.pluscubed.velociraptor&sku=${sku}")
             }
             val checkIcon =
-                activity?.let { AppCompatResources.getDrawable(it, R.drawable.ic_done_green_20dp) }
+                    activity?.let { AppCompatResources.getDrawable(it, R.drawable.ic_done_green_20dp) }
             title?.setCompoundDrawablesWithIntrinsicBounds(null, null, checkIcon, null)
         } else {
             button?.setText(R.string.subscribe)
@@ -290,19 +307,19 @@ class ProvidersFragment : Fragment(), CoroutineScope {
                 )
             }
             val crossIcon =
-                activity?.let { AppCompatResources.getDrawable(it, R.drawable.ic_cross_red_20dp) }
+                    activity?.let { AppCompatResources.getDrawable(it, R.drawable.ic_cross_red_20dp) }
             title?.setCompoundDrawablesWithIntrinsicBounds(null, null, crossIcon, null)
         }
     }
 
     private suspend fun querySkuDetails(
-        manager: BillingManager?,
-        itemType: String,
-        vararg skuList: String
+            manager: BillingManager?,
+            itemType: String,
+            vararg skuList: String
     ): List<SkuDetails> = suspendCoroutine { cont ->
         manager?.querySkuDetailsAsync(
-            itemType,
-            Arrays.asList(*skuList)
+                itemType,
+                Arrays.asList(*skuList)
         ) { responseCode, skuDetailsList ->
             if (responseCode != BillingClient.BillingResponse.OK) {
                 cont.resumeWithException(Exception("Billing error: $responseCode"))
@@ -325,21 +342,21 @@ class ProvidersFragment : Fragment(), CoroutineScope {
                 try {
                     val monthlyDonations = async(Dispatchers.IO) {
                         querySkuDetails(
-                            billingManager,
-                            BillingClient.SkuType.SUBS,
-                            BillingConstants.SKU_D1_MONTHLY,
-                            BillingConstants.SKU_D3_MONTHLY
+                                billingManager,
+                                BillingClient.SkuType.SUBS,
+                                BillingConstants.SKU_D1_MONTHLY,
+                                BillingConstants.SKU_D3_MONTHLY
                         )
                     }
                     val oneTimeDonations = async(Dispatchers.IO) {
                         querySkuDetails(
-                            billingManager,
-                            BillingClient.SkuType.INAPP,
-                            BillingConstants.SKU_D1,
-                            BillingConstants.SKU_D3,
-                            BillingConstants.SKU_D5,
-                            BillingConstants.SKU_D10,
-                            BillingConstants.SKU_D20
+                                billingManager,
+                                BillingClient.SkuType.INAPP,
+                                BillingConstants.SKU_D1,
+                                BillingConstants.SKU_D3,
+                                BillingConstants.SKU_D5,
+                                BillingConstants.SKU_D10,
+                                BillingConstants.SKU_D20
                         )
                     }
 
@@ -354,13 +371,13 @@ class ProvidersFragment : Fragment(), CoroutineScope {
 
                     var dialog = activity?.let {
                         MaterialDialog(it)
-                            .icon(
-                                drawable = AppCompatResources.getDrawable(
-                                    it,
-                                    R.drawable.ic_favorite_black_24dp
+                                .icon(
+                                        drawable = AppCompatResources.getDrawable(
+                                                it,
+                                                R.drawable.ic_favorite_black_24dp
+                                        )
                                 )
-                            )
-                            .title(R.string.support_development)
+                                .title(R.string.support_development)
                                 .message(text = text) {
                                     lineSpacing(1.2f)
                                 }
@@ -403,7 +420,7 @@ class ProvidersFragment : Fragment(), CoroutineScope {
                     if (task.isSuccessful && task.result != null) {
                         val lastLocation = task.result
                         uriString +=
-                            "?lon=${lastLocation?.longitude}&lat=${lastLocation?.latitude}&zoom=12"
+                                "?lon=${lastLocation?.longitude}&lat=${lastLocation?.latitude}&zoom=12"
                     }
                     Utils.openLink(activity, view, uriString)
                 }

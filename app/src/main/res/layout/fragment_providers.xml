@@ -104,11 +104,6 @@
             android:text="@string/donate" />
     </LinearLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#1f000000" />
-
     <LinearLayout
         android:id="@+id/tomtom_container"
         android:layout_height="wrap_content"
@@ -187,81 +182,84 @@
                 android:text="@string/subscribe" />
         </LinearLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#1f000000" />
-
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/here_provider"
+        android:id="@+id/here_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?selectableItemBackground"
-        android:baselineAligned="false"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingStart="16dp"
-        android:paddingEnd="12dp"
-        tools:ignore="UseCompoundDrawables">
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:id="@+id/here_provider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?selectableItemBackground"
+            android:baselineAligned="false"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="16dp"
+            android:paddingEnd="12dp"
+            tools:ignore="UseCompoundDrawables">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="16dp"
+                android:paddingBottom="4dp">
+
+                <TextView
+                    android:id="@+id/here_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="8dp"
+                    android:paddingEnd="8dp"
+                    android:text="@string/here_provider"
+                    android:textSize="16sp"
+                    tools:ignore="RtlSymmetry" />
+
+                <TextView
+                    android:id="@+id/here_provider_desc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingEnd="8dp"
+                    android:text="@string/subscribe_placeholder"
+                    android:textColor="?android:textColorSecondary"
+                    android:textSize="14sp"
+                    tools:ignore="RtlSymmetry" />
+
+            </LinearLayout>
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingTop="16dp"
-            android:paddingBottom="4dp">
+            android:orientation="horizontal"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:paddingBottom="0dp">
 
-            <TextView
-                android:id="@+id/here_title"
+            <Button
+                android:id="@+id/here_editdata"
+                style="@style/Widget.Button.Borderless"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawablePadding="8dp"
-                android:paddingEnd="8dp"
-                android:text="@string/here_provider"
-                android:textSize="16sp"
-                tools:ignore="RtlSymmetry" />
+                android:text="@string/edit_data" />
 
-            <TextView
-                android:id="@+id/here_provider_desc"
-                android:layout_width="match_parent"
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/here_subscribe"
+                style="@style/Widget.Button.Colored.Unelevated"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingEnd="8dp"
-                android:text="@string/subscribe_placeholder"
-                android:textColor="?android:textColorSecondary"
-                android:textSize="14sp"
-                tools:ignore="RtlSymmetry" />
-
+                android:text="@string/subscribe" />
         </LinearLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingLeft="12dp"
-        android:paddingRight="12dp"
-        android:paddingBottom="0dp">
-
-        <Button
-            android:id="@+id/here_editdata"
-            style="@style/Widget.Button.Borderless"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/edit_data" />
-
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-
-        <Button
-            android:id="@+id/here_subscribe"
-            style="@style/Widget.Button.Colored.Unelevated"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/subscribe" />
     </LinearLayout>
 </LinearLayout>

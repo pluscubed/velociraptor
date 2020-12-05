@@ -33,7 +33,7 @@ public final class BillingConstants {
     /**
      * Returns the list of all SKUs for the billing type specified
      */
-    public static final List<String> getSkuList(@BillingClient.SkuType String billingType) {
+    public static List<String> getSkuList(@BillingClient.SkuType String billingType) {
         return (billingType.equals(SkuType.INAPP)) ? Arrays.asList(IN_APP_SKUS)
                 : Arrays.asList(SUBSCRIPTIONS_SKUS);
     }

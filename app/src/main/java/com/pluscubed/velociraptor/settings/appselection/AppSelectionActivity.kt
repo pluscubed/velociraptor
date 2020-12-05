@@ -19,9 +19,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.bumptech.glide.Glide
-import com.crashlytics.android.Crashlytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.pluscubed.recyclerfastscroll.RecyclerFastScroller
-import com.pluscubed.velociraptor.BuildConfig
 import com.pluscubed.velociraptor.R
 import com.pluscubed.velociraptor.detection.AppDetectionService
 import com.pluscubed.velociraptor.utils.PrefUtils
@@ -35,10 +34,13 @@ class AppSelectionActivity : AppCompatActivity(), CoroutineScope {
 
     @BindView(R.id.fastscroller)
     lateinit var scroller: RecyclerFastScroller
+
     @BindView(R.id.swiperefresh)
     lateinit var swipeRefreshLayout: SwipeRefreshLayout
+
     @BindView(R.id.recyclerview)
     lateinit var recyclerView: RecyclerView
+
     @BindView(R.id.toolbar)
     lateinit var toolbar: Toolbar
 
@@ -81,10 +83,10 @@ class AppSelectionActivity : AppCompatActivity(), CoroutineScope {
             adapter.setAppInfos(ArrayList())
         }
         swipeRefreshLayout.setColorSchemeColors(
-            ContextCompat.getColor(
-                this,
-                R.color.colorAccent
-            )
+                ContextCompat.getColor(
+                        this,
+                        R.color.colorAccent
+                )
         )
 
         if (savedInstanceState == null) {
@@ -94,7 +96,7 @@ class AppSelectionActivity : AppCompatActivity(), CoroutineScope {
             mapApps = savedInstanceState.getParcelableArrayList(STATE_MAP_APPS)
             isMapsOnly = savedInstanceState.getBoolean(STATE_MAPS_ONLY)
             selectedPackageNames =
-                HashSet(savedInstanceState.getStringArrayList(STATE_SELECTED_APPS))
+                    HashSet(savedInstanceState.getStringArrayList(STATE_SELECTED_APPS))
         }
 
         if (mapApps == null) {
@@ -139,9 +141,7 @@ class AppSelectionActivity : AppCompatActivity(), CoroutineScope {
             isLoadingAllApps = false
         } catch (e: Exception) {
             e.printStackTrace()
-            if (!BuildConfig.DEBUG) {
-                Crashlytics.logException(e)
-            }
+            FirebaseCrashlytics.getInstance().recordException(e)
         }
     }
 
@@ -165,9 +165,7 @@ class AppSelectionActivity : AppCompatActivity(), CoroutineScope {
             isLoadingMapApps = false
         } catch (e: Exception) {
             e.printStackTrace()
-            if (!BuildConfig.DEBUG) {
-                Crashlytics.logException(e)
-            }
+            FirebaseCrashlytics.getInstance().recordException(e)
         }
     }
 
@@ -261,9 +259,9 @@ class AppSelectionActivity : AppCompatActivity(), CoroutineScope {
             val app = appInfos!![position]
 
             Glide.with(this@AppSelectionActivity)
-                .load(app)
-                .crossFade()
-                .into(holder.icon)
+                    .load(app)
+                    .crossFade()
+                    .into(holder.icon)
 
             holder.title.text = app.name
             holder.desc.text = app.packageName

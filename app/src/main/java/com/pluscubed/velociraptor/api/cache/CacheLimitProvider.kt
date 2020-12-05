@@ -17,9 +17,9 @@ import kotlin.Comparator
 class CacheLimitProvider(private val context: Context) : LimitProvider {
 
     private val db: AppDatabase =
-        Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, "cache.db")
-            .fallbackToDestructiveMigration()
-            .build()
+            Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, "cache.db")
+                    .fallbackToDestructiveMigration()
+                    .build()
 
     private val normalleven = NormalizedLevenshtein()
 
@@ -40,9 +40,9 @@ class CacheLimitProvider(private val context: Context) : LimitProvider {
      * Returns list with at least 1 element
      */
     override fun getSpeedLimit(
-        location: Location,
-        lastResponse: LimitResponse?,
-        origin: Int
+            location: Location,
+            lastResponse: LimitResponse?,
+            origin: Int
     ): List<LimitResponse> {
         val lastRoadName = lastResponse?.roadName
         return get(lastRoadName, Coord(location))
@@ -56,65 +56,65 @@ class CacheLimitProvider(private val context: Context) : LimitProvider {
         this@CacheLimitProvider.cleanup()
 
         val selectedWays =
-            db.wayDao().selectByCoord(
-                coord.lat,
-                Math.pow(Math.cos(Math.toRadians(coord.lat)), 2.0),
-                coord.lon
-            )
+                db.wayDao().selectByCoord(
+                        coord.lat,
+                        Math.pow(Math.cos(Math.toRadians(coord.lat)), 2.0),
+                        coord.lon
+                )
 
         val onPathWays = selectedWays
-            .filter { (_, _, _, _, lat1, lon1, lat2, lon2) ->
-                val coord1 = Coord(lat1, lon1)
-                val coord2 = Coord(lat2, lon2)
-                isLocationOnPath(coord1, coord2, coord)
-            };
+                .filter { (_, _, _, _, lat1, lon1, lat2, lon2) ->
+                    val coord1 = Coord(lat1, lon1)
+                    val coord2 = Coord(lat2, lon2)
+                    isLocationOnPath(coord1, coord2, coord)
+                };
 
         val debuggingEnabled = PrefUtils.isDebuggingEnabled(context)
 
         if (onPathWays.isEmpty()) {
             return listOf(
-                LimitResponse(
-                    timestamp = System.currentTimeMillis(),
-                    fromCache = true
-                ).initDebugInfo(debuggingEnabled)
+                    LimitResponse(
+                            timestamp = System.currentTimeMillis(),
+                            fromCache = true
+                    ).initDebugInfo(debuggingEnabled)
             )
         }
 
         try {
             return onPathWays
-                .sortedWith(Comparator { way1, way2 ->
-                    // Sort: road name similar, then whether speed exists, then better source
+                    .sortedWith(Comparator { way1, way2 ->
+                        // Sort: road name similar, then whether speed exists, then better source
 
-                    val roadNameSimilar1 = isRoadNameSimilar(way1, previousRoadName)
-                    val roadNameSimilar2 = isRoadNameSimilar(way2, previousRoadName)
+                        val roadNameSimilar1 = isRoadNameSimilar(way1, previousRoadName)
+                        val roadNameSimilar2 = isRoadNameSimilar(way2, previousRoadName)
 
-                    if (roadNameSimilar1 == roadNameSimilar2) {
-                        val speedExists1 = way1.maxspeed != -1
-                        val speedExists2 = way2.maxspeed != -1
+                        if (roadNameSimilar1 == roadNameSimilar2) {
+                            val speedExists1 = way1.maxspeed != -1
+                            val speedExists2 = way2.maxspeed != -1
 
-                        if (speedExists1 == speedExists2) {
-                            //Higher origin = further to the front
-                            way1.origin.compareTo(way2.origin)
+                            if (speedExists1 == speedExists2) {
+                                //Higher origin = further to the front
+                                way1.origin.compareTo(way2.origin)
+                            } else {
+                                speedExists1.compareTo(speedExists2)
+                            }
                         } else {
-                            speedExists1.compareTo(speedExists2)
+                            roadNameSimilar1.compareTo(roadNameSimilar2)
                         }
-                    } else {
-                        roadNameSimilar1.compareTo(roadNameSimilar2)
+                    })
+                    .reversed()
+                    .map { limitCacheWay ->
+                        limitCacheWay.toResponse()
+                                .copy(fromCache = true)
+                                .initDebugInfo(debuggingEnabled)
                     }
-                })
-                .reversed()
-                .map { limitCacheWay ->
-                    limitCacheWay.toResponse()
-                        .copy(fromCache = true)
-                        .initDebugInfo(debuggingEnabled)
-                }
         } catch (e: Exception) {
             return listOf(
-                LimitResponse(
-                    timestamp = System.currentTimeMillis(),
-                    error = e,
-                    fromCache = true
-                ).initDebugInfo(debuggingEnabled)
+                    LimitResponse(
+                            timestamp = System.currentTimeMillis(),
+                            error = e,
+                            fromCache = true
+                    ).initDebugInfo(debuggingEnabled)
             )
         }
     }
@@ -133,19 +133,19 @@ class CacheLimitProvider(private val context: Context) : LimitProvider {
             //Split ref, name
             val roadNameSplittable = roadLower.contains(OsmLimitProvider.ROADNAME_DELIM)
             val previousRoadNameSplittable =
-                prevRoadNameLower.contains(OsmLimitProvider.ROADNAME_DELIM)
+                    prevRoadNameLower.contains(OsmLimitProvider.ROADNAME_DELIM)
 
             if (roadNameSplittable && !previousRoadNameSplittable) {
                 val split = roadLower.split(OsmLimitProvider.ROADNAME_DELIM)
                 return Math.max(
-                    normalleven.similarity(split[0], prevRoadNameLower),
-                    normalleven.similarity(split[1], prevRoadNameLower)
+                        normalleven.similarity(split[0], prevRoadNameLower),
+                        normalleven.similarity(split[1], prevRoadNameLower)
                 )
             } else if (!roadNameSplittable && previousRoadNameSplittable) {
                 val split = prevRoadNameLower.split(OsmLimitProvider.ROADNAME_DELIM)
                 return Math.max(
-                    normalleven.similarity(roadLower, split[0]),
-                    normalleven.similarity(roadLower, split[1])
+                        normalleven.similarity(roadLower, split[0]),
+                        normalleven.similarity(roadLower, split[1])
                 )
             } else {
                 return normalleven.similarity(roadLower, prevRoadNameLower)

@@ -15,9 +15,9 @@ import okhttp3.OkHttpClient
 import java.util.*
 
 class RaptorLimitProvider(
-    private val context: Context,
-    client: OkHttpClient,
-    private val cacheLimitProvider: CacheLimitProvider
+        private val context: Context,
+        client: OkHttpClient,
+        private val cacheLimitProvider: CacheLimitProvider
 ) : LimitProvider {
 
     private val SERVER_URL = "http://overpass.pluscubed.com:4000/"
@@ -36,15 +36,15 @@ class RaptorLimitProvider(
     init {
         val interceptor = LimitInterceptor(LimitInterceptor.Callback())
         val raptorClient = client.newBuilder()
-            .addInterceptor(interceptor)
-            .build()
+                .addInterceptor(interceptor)
+                .build()
         val raptorRest = LimitFetcher.buildRetrofit(raptorClient, SERVER_URL)
         raptorService = raptorRest.create(RaptorService::class.java)
 
         id = UUID.randomUUID().toString()
         if (USE_DEBUG_ID) {
             val resId =
-                context.resources.getIdentifier("debug_id", "string", context.getPackageName())
+                    context.resources.getIdentifier("debug_id", "string", context.getPackageName())
             if (resId != 0) {
                 id = context.getString(resId);
             }
@@ -76,9 +76,9 @@ class RaptorLimitProvider(
     }
 
     override fun getSpeedLimit(
-        location: Location,
-        lastResponse: LimitResponse?,
-        origin: Int
+            location: Location,
+            lastResponse: LimitResponse?,
+            origin: Int
     ): List<LimitResponse> {
         val latitude = String.format(Locale.ROOT, "%.5f", location.latitude)
         val longitude = String.format(Locale.ROOT, "%.5f", location.longitude)
@@ -100,28 +100,28 @@ class RaptorLimitProvider(
     }
 
     private fun queryRaptorApi(
-        isHere: Boolean,
-        latitude: String,
-        longitude: String,
-        location: Location
+            isHere: Boolean,
+            latitude: String,
+            longitude: String,
+            location: Location
     ): LimitResponse {
         val raptorQuery = if (isHere) {
             raptorService.getHere(
-                "Bearer $hereToken",
-                id,
-                latitude,
-                longitude,
-                location.bearing.toInt(),
-                "Metric"
+                    "Bearer $hereToken",
+                    id,
+                    latitude,
+                    longitude,
+                    location.bearing.toInt(),
+                    "Metric"
             )
         } else {
             raptorService.getTomtom(
-                "Bearer $tomtomToken",
-                id,
-                latitude,
-                longitude,
-                location.bearing.toInt(),
-                "Metric"
+                    "Bearer $tomtomToken",
+                    id,
+                    latitude,
+                    longitude,
+                    location.bearing.toInt(),
+                    "Metric"
             )
         }
 
@@ -139,11 +139,11 @@ class RaptorLimitProvider(
                 raptorResponse.generalSpeedLimit!!
             }
             val response = LimitResponse(
-                roadName = if (raptorResponse.name.isEmpty()) "null" else raptorResponse.name,
-                speedLimit = speedLimit,
-                timestamp = System.currentTimeMillis(),
-                coords = coords,
-                origin = getOriginInt(isHere)
+                    roadName = if (raptorResponse.name.isEmpty()) "null" else raptorResponse.name,
+                    speedLimit = speedLimit,
+                    timestamp = System.currentTimeMillis(),
+                    coords = coords,
+                    origin = getOriginInt(isHere)
             ).initDebugInfo(debuggingEnabled)
 
             cacheLimitProvider.put(response)
@@ -151,15 +151,15 @@ class RaptorLimitProvider(
             return response
         } catch (e: Exception) {
             return LimitResponse(
-                error = e,
-                timestamp = System.currentTimeMillis(),
-                origin = getOriginInt(isHere)
+                    error = e,
+                    timestamp = System.currentTimeMillis(),
+                    origin = getOriginInt(isHere)
             ).initDebugInfo(debuggingEnabled)
         }
     }
 
     private fun getOriginInt(here: Boolean) =
-        if (here) LimitResponse.ORIGIN_HERE else LimitResponse.ORIGIN_TOMTOM
+            if (here) LimitResponse.ORIGIN_HERE else LimitResponse.ORIGIN_TOMTOM
 
 
 }

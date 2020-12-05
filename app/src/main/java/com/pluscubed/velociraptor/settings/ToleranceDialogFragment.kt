@@ -23,20 +23,25 @@ class ToleranceDialogFragment : DialogFragment() {
 
     @BindView(R.id.text_constant_unit)
     lateinit var constantUnitText: TextView
+
     @BindView(R.id.edittext_constant)
     lateinit var constantEditText: EditText
+
     @BindView(R.id.seekbar_constant)
     lateinit var constantSeekbar: SeekBar
 
     @BindView(R.id.text_percent)
     lateinit var percentText: TextView
+
     @BindView(R.id.edittext_percent)
     lateinit var percentEditText: EditText
+
     @BindView(R.id.seekbar_percent)
     lateinit var percentSeekbar: SeekBar
 
     @BindView(R.id.button_and)
     lateinit var andButton: ToggleButton
+
     @BindView(R.id.button_or)
     lateinit var orButton: ToggleButton
 
@@ -125,24 +130,24 @@ class ToleranceDialogFragment : DialogFragment() {
         }
 
         return MaterialDialog(activity!!)
-            .customView(view = dialog, scrollable = true)
-            .title(R.string.speeding_amount)
-            .negativeButton(android.R.string.cancel)
-            .positiveButton(android.R.string.ok) {
-                try {
-                    PrefUtils.setSpeedingConstant(
-                        activity,
-                        Integer.parseInt(constantEditText.text.toString())
-                    )
-                    PrefUtils.setSpeedingPercent(
-                        activity,
-                        Integer.parseInt(percentEditText.text.toString())
-                    )
-                } catch (ignored: NumberFormatException) {
-                }
+                .customView(view = dialog, scrollable = true)
+                .title(R.string.speeding_amount)
+                .negativeButton(android.R.string.cancel)
+                .positiveButton(android.R.string.ok) {
+                    try {
+                        PrefUtils.setSpeedingConstant(
+                                activity,
+                                Integer.parseInt(constantEditText.text.toString())
+                        )
+                        PrefUtils.setSpeedingPercent(
+                                activity,
+                                Integer.parseInt(percentEditText.text.toString())
+                        )
+                    } catch (ignored: NumberFormatException) {
+                    }
 
-                PrefUtils.setToleranceMode(activity, andButton.isChecked)
-            }
+                    PrefUtils.setToleranceMode(activity, andButton.isChecked)
+                }
     }
 
     override fun onDismiss(dialog: DialogInterface) {

@@ -3,17 +3,17 @@ package com.pluscubed.velociraptor.api
 import java.util.*
 
 data class LimitResponse(
-    val fromCache: Boolean = false,
-    val debugInfo: String = "",
-    val origin: Int = ORIGIN_INVALID,
-    val error: Throwable? = null,
-    /**
-     * In km/h, -1 if limit does not exist
-     */
-    val speedLimit: Int = -1,
-    val roadName: String = "",
-    val coords: List<Coord> = ArrayList(),
-    val timestamp: Long = 0
+        val fromCache: Boolean = false,
+        val debugInfo: String = "",
+        val origin: Int = ORIGIN_INVALID,
+        val error: Throwable? = null,
+        /**
+         * In km/h, -1 if limit does not exist
+         */
+        val speedLimit: Int = -1,
+        val roadName: String = "",
+        val coords: List<Coord> = ArrayList(),
+        val timestamp: Long = 0
 ) {
 
     val isEmpty: Boolean
