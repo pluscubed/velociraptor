@@ -12,6 +12,7 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.text.parseAsHtml
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.afollestad.materialdialogs.MaterialDialog
@@ -29,12 +30,11 @@ import com.pluscubed.velociraptor.utils.PrefUtils
 import com.pluscubed.velociraptor.utils.Utils
 import kotlinx.coroutines.*
 import java.util.*
-import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
-class ProvidersFragment : Fragment(), CoroutineScope {
+class ProvidersFragment : Fragment() {
 
     //Providers
     @BindView(R.id.here_container)
@@ -81,21 +81,15 @@ class ProvidersFragment : Fragment(), CoroutineScope {
 
     private var billingManager: BillingManager? = null
 
-    protected lateinit var job: Job
-    override val coroutineContext: CoroutineContext
-        get() = job + Dispatchers.Main
-
     private val isBillingManagerReady: Boolean
         get() = billingManager != null && billingManager!!.billingClientResponseCode == BillingClient.BillingResponse.OK
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        job = Job()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        job.cancel()
         if (billingManager != null) {
             billingManager!!.destroy()
         }
@@ -337,7 +331,7 @@ class ProvidersFragment : Fragment(), CoroutineScope {
             return
         }
 
-        launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             supervisorScope {
                 try {
                     val monthlyDonations = async(Dispatchers.IO) {

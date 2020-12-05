@@ -13,6 +13,7 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -26,9 +27,8 @@ import com.pluscubed.velociraptor.detection.AppDetectionService
 import com.pluscubed.velociraptor.utils.PrefUtils
 import kotlinx.coroutines.*
 import java.util.*
-import kotlin.coroutines.CoroutineContext
 
-class AppSelectionActivity : AppCompatActivity(), CoroutineScope {
+class AppSelectionActivity : AppCompatActivity() {
 
     private lateinit var adapter: AppAdapter
 
@@ -53,18 +53,12 @@ class AppSelectionActivity : AppCompatActivity(), CoroutineScope {
     private var isLoadingAllApps: Boolean = false
     private var isLoadingMapApps: Boolean = false
 
-    protected lateinit var job: Job
-    override val coroutineContext: CoroutineContext
-        get() = job + Dispatchers.Main
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_appselection)
         ButterKnife.bind(this)
 
         setSupportActionBar(toolbar)
-
-        job = Job()
 
         adapter = AppAdapter()
         recyclerView.adapter = adapter
@@ -121,7 +115,7 @@ class AppSelectionActivity : AppCompatActivity(), CoroutineScope {
         }
     }
 
-    private fun reloadInstalledApps() = launch {
+    private fun reloadInstalledApps() = lifecycleScope.launch {
         isLoadingAllApps = true
         if (!isMapsOnly)
             swipeRefreshLayout.isRefreshing = true
@@ -145,7 +139,7 @@ class AppSelectionActivity : AppCompatActivity(), CoroutineScope {
         }
     }
 
-    private fun reloadMapApps() = launch {
+    private fun reloadMapApps() = lifecycleScope.launch {
         isLoadingMapApps = true
         if (isMapsOnly)
             swipeRefreshLayout.isRefreshing = true
@@ -167,11 +161,6 @@ class AppSelectionActivity : AppCompatActivity(), CoroutineScope {
             e.printStackTrace()
             FirebaseCrashlytics.getInstance().recordException(e)
         }
-    }
-
-    override fun onDestroy() {
-        job.cancel()
-        super.onDestroy()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

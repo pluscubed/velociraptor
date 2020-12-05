@@ -15,6 +15,7 @@ import android.widget.Button
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.afollestad.materialdialogs.MaterialDialog
@@ -30,9 +31,8 @@ import com.pluscubed.velociraptor.utils.NotificationUtils
 import com.pluscubed.velociraptor.utils.PrefUtils
 import com.pluscubed.velociraptor.utils.Utils
 import kotlinx.coroutines.*
-import kotlin.coroutines.CoroutineContext
 
-class AdvancedFragment : Fragment(), CoroutineScope {
+class AdvancedFragment : Fragment() {
 
     //Advanced
     @BindView(R.id.switch_debugging)
@@ -56,10 +56,6 @@ class AdvancedFragment : Fragment(), CoroutineScope {
     private lateinit var cacheLimitProvider: CacheLimitProvider
 
     private var notificationManager: NotificationManager? = null
-
-    protected lateinit var job: Job
-    override val coroutineContext: CoroutineContext
-        get() = job + Dispatchers.Main
 
     private val isNotificationAccessGranted: Boolean
         get() = context?.let {
@@ -126,7 +122,7 @@ class AdvancedFragment : Fragment(), CoroutineScope {
 
 
         clearCacheContainer.setOnClickListener {
-            launch {
+            viewLifecycleOwner.lifecycleScope.launch {
                 try {
                     withContext(Dispatchers.IO) { cacheLimitProvider.clear() }
                     Snackbar.make(

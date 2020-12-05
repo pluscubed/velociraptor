@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.NotificationManager
 import android.app.PendingIntent
-import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
@@ -15,6 +14,8 @@ import android.os.IBinder
 import android.os.Looper
 import android.provider.Settings
 import androidx.core.app.NotificationCompat
+import androidx.lifecycle.LifecycleService
+import androidx.lifecycle.lifecycleScope
 import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.Purchase
 import com.google.android.gms.location.*
@@ -34,9 +35,8 @@ import com.pluscubed.velociraptor.utils.Utils
 import kotlinx.coroutines.*
 import timber.log.Timber
 import java.util.*
-import kotlin.coroutines.CoroutineContext
 
-class LimitService : Service(), CoroutineScope {
+class LimitService : LifecycleService() {
     private var speedLimitViewType = -1
     private var speedLimitView: LimitView? = null
 
@@ -60,18 +60,14 @@ class LimitService : Service(), CoroutineScope {
 
     private var billingManager: BillingManager? = null
 
-    protected lateinit var job: Job
-    override val coroutineContext: CoroutineContext
-        get() = job + Dispatchers.Main
-
     override fun onBind(intent: Intent): IBinder? {
+        super.onBind(intent)
         return null
     }
 
     override fun onCreate() {
         super.onCreate()
         startNotification()
-        job = Job()
     }
 
     @SuppressLint("InflateParams")
@@ -150,7 +146,7 @@ class LimitService : Service(), CoroutineScope {
         billingManager = BillingManager(this, object : BillingManager.BillingUpdatesListener {
             override fun onBillingClientSetupFinished() {
                 if (RaptorLimitProvider.USE_DEBUG_ID) {
-                    launch(Dispatchers.IO) {
+                    lifecycleScope.launch(Dispatchers.IO) {
                         verifyPurchase(
                                 Purchase(
                                         """{"productId": "debug", "purchaseToken": "debug"}""",
@@ -179,7 +175,7 @@ class LimitService : Service(), CoroutineScope {
                         purchased.add(purchase)
                     }
                 }
-                launch(Dispatchers.IO) {
+                lifecycleScope.launch(Dispatchers.IO) {
                     verifyPurchase(*purchased.toTypedArray())
                 }
             }
@@ -291,7 +287,7 @@ class LimitService : Service(), CoroutineScope {
                 location.distanceTo(lastLocationWithFetchAttempt) > 10
 
         if (speedLimitInactive && !isLimitHidden && showLimits && farFromLastLocation) {
-            speedLimitJob = launch {
+            speedLimitJob = lifecycleScope.launch {
                 try {
                     val limitResponse =
                             withContext(Dispatchers.IO) { limitFetcher!!.getSpeedLimit(location) }
@@ -454,8 +450,6 @@ class LimitService : Service(), CoroutineScope {
     }
 
     private fun onStop() {
-        job.cancel()
-
         if (fusedLocationClient != null) {
             try {
                 fusedLocationClient!!.removeLocationUpdates(locationCallback!!)
